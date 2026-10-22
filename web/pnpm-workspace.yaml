@@ -1,0 +1,5 @@
+# Install scripts stay off: these packages ship prebuilt binaries, so their postinstall steps are not needed.
+allowBuilds:
+  "@parcel/watcher": false
+  "@swc/core": false
+  unrs-resolver: false

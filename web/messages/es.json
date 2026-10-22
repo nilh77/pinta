@@ -1,0 +1,101 @@
+{
+  "metadata": {
+    "title": "Pinta — pintura de viviendas en el distrito de Lisboa",
+    "description": "Di lo que quieres pintar y ve un precio estimado en un minuto. Material incluido y pintores verificados."
+  },
+  "common": {
+    "brand": "Pinta",
+    "home": "Inicio",
+    "language": "Idioma",
+    "languages": {
+      "pt": "Português",
+      "es": "Español",
+      "en": "English"
+    },
+    "loading": "Cargando…"
+  },
+  "nav": {
+    "signIn": "Entrar",
+    "signOut": "Salir",
+    "greeting": "Hola, {name}"
+  },
+  "home": {
+    "badge": "Distrito de Lisboa",
+    "title": "Pinta tu casa sin complicaciones",
+    "subtitle": "Di lo que quieres pintar y ve un precio estimado en un minuto. Material incluido y pintores verificados.",
+    "createAccount": "Crear cuenta",
+    "comingSoon": "La cotización online está en camino. Crea ya tu cuenta.",
+    "signedIn": "Has iniciado sesión como {email}.",
+    "illustration": {
+      "label": "Esquema de una vivienda con estancias y una estimación de precio",
+      "living": "Sala",
+      "kitchen": "Cocina",
+      "bathroom": "Baño",
+      "bedroom": "Dormitorio",
+      "add": "Añadir",
+      "estimate": "Estimación"
+    }
+  },
+  "emailBanner": {
+    "title": "Confirma tu email",
+    "body": "Hemos enviado un enlace a {email}. Ábrelo para que revisemos tus solicitudes.",
+    "resend": "Reenviar email",
+    "resent": "Te hemos enviado un nuevo email."
+  },
+  "signIn": {
+    "title": "Entrar",
+    "subtitle": "Accede a tus solicitudes y sigue tu trabajo.",
+    "email": "Email",
+    "password": "Contraseña",
+    "submit": "Entrar",
+    "noAccount": "¿Aún no tienes cuenta?",
+    "createAccount": "Crear cuenta"
+  },
+  "register": {
+    "title": "Crear cuenta",
+    "subtitle": "Para recibir el precio final y seguir tu trabajo.",
+    "name": "Nombre y apellidos",
+    "namePlaceholder": "Ana Ferreira",
+    "email": "Email",
+    "emailPlaceholder": "ana@email.pt",
+    "phone": "Teléfono",
+    "phoneHint": "Con prefijo, por ejemplo +351 912 345 678.",
+    "password": "Contraseña",
+    "passwordHint": "Mínimo {min} caracteres.",
+    "acceptTerms": "Acepto los Términos y la Política de privacidad.",
+    "marketing": "Quiero recibir novedades de Pinta por email.",
+    "submit": "Crear cuenta",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "signIn": "Entrar"
+  },
+  "confirmEmail": {
+    "title": "Confirmar email",
+    "loading": "Confirmando tu email…",
+    "success": "Email confirmado",
+    "successBody": "Gracias. Ya podemos revisar tus solicitudes.",
+    "goHome": "Ir al inicio",
+    "error": "No se ha podido confirmar",
+    "errorBody": "El enlace no es válido o ha caducado. Pide un email nuevo.",
+    "resend": "Enviar un enlace nuevo",
+    "signInToResend": "Entra en tu cuenta para pedir un enlace nuevo."
+  },
+  "validation": {
+    "required": "Campo obligatorio.",
+    "email": "Introduce un email válido.",
+    "phone": "Introduce el número con prefijo, por ejemplo +351 912 345 678.",
+    "passwordLength": "Usa al menos {min} caracteres.",
+    "acceptTerms": "Debes aceptar los Términos y la Política de privacidad.",
+    "tooLong": "Texto demasiado largo."
+  },
+  "errors": {
+    "unauthenticated": "Tu sesión ha caducado. Vuelve a entrar.",
+    "invalid_credentials": "Email o contraseña incorrectos.",
+    "forbidden": "No tienes permiso para hacer esto.",
+    "antiforgery_failed": "No hemos podido verificar la petición. Inténtalo de nuevo.",
+    "not_found": "No hemos encontrado lo que buscas.",
+    "email_taken": "Este email ya está registrado.",
+    "validation_failed": "Hay datos por corregir.",
+    "rate_limited": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
+    "internal_error": "Algo ha fallado. Inténtalo de nuevo."
+  }
+}
