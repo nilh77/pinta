@@ -3,6 +3,10 @@ using Pinta.SharedKernel;
 
 namespace Pinta.Modules.Identity.Features.Register;
 
+/// <summary>
+/// <see cref="SendConfirmationEmail"/> is false in the quote flow, where the request email carries the confirmation
+/// link (one email instead of two, docs/integrations.md).
+/// </summary>
 public sealed record RegisterRequest(
     string Name,
     string Email,
@@ -10,7 +14,8 @@ public sealed record RegisterRequest(
     string Password,
     bool AcceptTerms,
     bool MarketingConsent,
-    Locale Locale);
+    Locale Locale,
+    bool SendConfirmationEmail = true);
 
 internal sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {

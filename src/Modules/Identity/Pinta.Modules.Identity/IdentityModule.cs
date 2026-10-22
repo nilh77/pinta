@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Identity.Data;
 using Pinta.Modules.Identity.Domain;
 using Pinta.Modules.Identity.Features.Antiforgery;
@@ -70,6 +71,8 @@ public static class IdentityModule
 
         services.AddValidatorsFromAssemblyContaining<RegisterRequest>(includeInternalTypes: true);
         services.AddScoped<ConfirmationEmailSender>();
+        services.AddScoped<IEmailConfirmationLinks>(sp => sp.GetRequiredService<ConfirmationEmailSender>());
+        services.AddScoped<IUserDirectory, UserDirectory>();
         return builder;
     }
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="postal_code_format" xml:space="preserve"><value>Indique o código postal no formato 1234-567.</value></data>
+  <data name="out_of_coverage" xml:space="preserve"><value>Ainda não trabalhamos neste código postal.</value></data>
+  <data name="dates_choose" xml:space="preserve"><value>Escolha «O mais cedo possível» ou um intervalo de datas.</value></data>
+  <data name="dates_too_soon" xml:space="preserve"><value>A primeira data possível é {0}.</value></data>
+  <data name="dates_order" xml:space="preserve"><value>A data final tem de ser igual ou posterior à inicial.</value></data>
+  <data name="dates_too_long" xml:space="preserve"><value>O intervalo não pode passar de 60 dias.</value></data>
+  <data name="tax_id" xml:space="preserve"><value>Indique um NIF português válido (9 dígitos).</value></data>
+  <data name="company_required" xml:space="preserve"><value>Indique o nome da empresa para a fatura.</value></data>
+</root>

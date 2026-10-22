@@ -404,6 +404,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SubmitJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/media/upload-url": {
         parameters: {
             query?: never;
@@ -456,8 +488,19 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddressRequest: {
+            line1: string;
+            floor: null | string;
+            postalCode: string;
+            locality: string;
+            accessNotes: null | string;
+        };
         AntiforgeryTokenResponse: {
             token: string;
+        };
+        BillingRequest: {
+            taxId: null | string;
+            companyName: null | string;
         };
         CatalogOption: {
             id: string;
@@ -597,6 +640,29 @@ export interface components {
             traceId?: string;
         };
         /** @enum {unknown} */
+        JobStatus: "pending_email" | "in_review" | "site_visit" | "quoted" | "expired" | "rejected" | "deposit_paid" | "scheduled" | "in_progress" | "finished" | "closed" | "cancelled";
+        JobSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            overMax: boolean;
+            addressLine1: string;
+            postalCode: string;
+            locality: string;
+            preferredDates: components["schemas"]["PreferredDatesDto"];
+            /** Format: date */
+            reviewDueOn: null | string;
+        };
+        /** @enum {unknown} */
         Locale: "pt" | "es" | "en";
         LocalizedTextDto: {
             pt: string;
@@ -683,6 +749,20 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        PreferredDatesDto: {
+            asap: boolean;
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
+        };
+        PreferredDatesRequest: {
+            asap: boolean;
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
+        };
         PricedLineDto: {
             /** Format: int32 */
             element: number;
@@ -764,6 +844,7 @@ export interface components {
             surfaceTypeId: null | string;
             paintId: string;
             damage: boolean;
+            clientKey?: null | string;
         };
         RegisterRequest: {
             name: string;
@@ -773,6 +854,8 @@ export interface components {
             acceptTerms: boolean;
             marketingConsent: boolean;
             locale: components["schemas"]["Locale"];
+            /** @default true */
+            sendConfirmationEmail: boolean;
         };
         /** @enum {unknown} */
         Role: "client" | "painter" | "admin";
@@ -877,6 +960,22 @@ export interface components {
             occupancy: components["schemas"]["Occupancy"];
             elements: components["schemas"]["QuoteElementRequest"][];
             extras: null | components["schemas"]["SimulateExtraRequest"][];
+        };
+        SubmitJobRequest: {
+            /** Format: uuid */
+            draftId: string;
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+            description: null | string;
+            address: components["schemas"]["AddressRequest"];
+            preferredDates: components["schemas"]["PreferredDatesRequest"];
+            billing: null | components["schemas"]["BillingRequest"];
+        };
+        SubmitJobResponse: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
         };
         SurfaceTypeDto: {
             /** Format: uuid */
@@ -2010,6 +2109,106 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    SubmitJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitJobRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmitJobResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    GetJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobSummaryResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

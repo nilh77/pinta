@@ -1267,6 +1267,127 @@
         }
       }
     },
+    "/api/jobs": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "SubmitJob",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitJobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{id}": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "GetJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/media/upload-url": {
       "post": {
         "tags": [
@@ -1424,6 +1545,39 @@
   },
   "components": {
     "schemas": {
+      "AddressRequest": {
+        "required": [
+          "line1",
+          "floor",
+          "postalCode",
+          "locality",
+          "accessNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "line1": {
+            "type": "string"
+          },
+          "floor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "accessNotes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "AntiforgeryTokenResponse": {
         "required": [
           "token"
@@ -1432,6 +1586,27 @@
         "properties": {
           "token": {
             "type": "string"
+          }
+        }
+      },
+      "BillingRequest": {
+        "required": [
+          "taxId",
+          "companyName"
+        ],
+        "type": "object",
+        "properties": {
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -1929,6 +2104,96 @@
           }
         }
       },
+      "JobStatus": {
+        "enum": [
+          "pending_email",
+          "in_review",
+          "site_visit",
+          "quoted",
+          "expired",
+          "rejected",
+          "deposit_paid",
+          "scheduled",
+          "in_progress",
+          "finished",
+          "closed",
+          "cancelled"
+        ]
+      },
+      "JobSummaryResponse": {
+        "required": [
+          "id",
+          "code",
+          "status",
+          "createdAt",
+          "areaM2",
+          "rangeMinCents",
+          "rangeMaxCents",
+          "overMax",
+          "addressLine1",
+          "postalCode",
+          "locality",
+          "preferredDates",
+          "reviewDueOn"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "areaM2": {
+            "type": "number",
+            "format": "double"
+          },
+          "rangeMinCents": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int64"
+          },
+          "rangeMaxCents": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int64"
+          },
+          "overMax": {
+            "type": "boolean"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "preferredDates": {
+            "$ref": "#/components/schemas/PreferredDatesDto"
+          },
+          "reviewDueOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
       "Locale": {
         "enum": [
           "pt",
@@ -2227,6 +2492,60 @@
               "integer"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "PreferredDatesDto": {
+        "required": [
+          "asap",
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "asap": {
+            "type": "boolean"
+          },
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
+      "PreferredDatesRequest": {
+        "required": [
+          "asap",
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "asap": {
+            "type": "boolean"
+          },
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           }
         }
       },
@@ -2531,6 +2850,12 @@
           },
           "damage": {
             "type": "boolean"
+          },
+          "clientKey": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2566,6 +2891,10 @@
           },
           "locale": {
             "$ref": "#/components/schemas/Locale"
+          },
+          "sendConfirmationEmail": {
+            "type": "boolean",
+            "default": true
           }
         }
       },
@@ -2889,6 +3218,75 @@
           }
         }
       },
+      "SubmitJobRequest": {
+        "required": [
+          "draftId",
+          "occupancy",
+          "elements",
+          "description",
+          "address",
+          "preferredDates",
+          "billing"
+        ],
+        "type": "object",
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "occupancy": {
+            "$ref": "#/components/schemas/Occupancy"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteElementRequest"
+            }
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressRequest"
+          },
+          "preferredDates": {
+            "$ref": "#/components/schemas/PreferredDatesRequest"
+          },
+          "billing": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BillingRequest"
+              }
+            ]
+          }
+        }
+      },
+      "SubmitJobResponse": {
+        "required": [
+          "id",
+          "code",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          }
+        }
+      },
       "SurfaceTypeDto": {
         "required": [
           "id",
@@ -3085,6 +3483,9 @@
     },
     {
       "name": "Admin quotes"
+    },
+    {
+      "name": "Jobs"
     },
     {
       "name": "Media"

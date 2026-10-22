@@ -35,6 +35,13 @@ public sealed class EmailRenderer(IServiceProvider services)
                     [nameof(ConfirmEmailTemplate.Text)] = text,
                     [nameof(ConfirmEmailTemplate.Email)] = confirm,
                 })),
+            RequestReceivedEmail received => (
+                text.Format("RequestReceived.Subject", received.Code),
+                await RenderAsync<RequestReceivedTemplate>(new Dictionary<string, object?>
+                {
+                    [nameof(RequestReceivedTemplate.Text)] = text,
+                    [nameof(RequestReceivedTemplate.Email)] = received,
+                })),
             _ => throw new NotSupportedException($"No template for {email.GetType().Name}."),
         };
     }

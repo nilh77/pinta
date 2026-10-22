@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
+using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Identity.Domain;
+using Pinta.SharedKernel.Events;
 using Pinta.SharedKernel.Http;
 
 namespace Pinta.Modules.Identity.Features.ConfirmEmail;
@@ -28,7 +30,7 @@ internal static class ConfirmEmailEndpoint
             .WithName("ConfirmEmail");
 
     private static async Task<Results<NoContent, ProblemHttpResult>> HandleAsync(
-        ConfirmEmailRequest request, UserManager<User> users)
+        ConfirmEmailRequest request, UserManager<User> users, IEventPublisher events, CancellationToken cancellationToken)
     {
         var user = await users.FindByIdAsync(request.UserId.ToString());
         if (user is { EmailConfirmed: true })
@@ -46,6 +48,7 @@ internal static class ConfirmEmailEndpoint
             });
         }
 
+        await events.PublishAsync(new EmailConfirmed(user.Id), cancellationToken);
         return TypedResults.NoContent();
     }
 }

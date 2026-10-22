@@ -10,4 +10,13 @@
   <data name="ConfirmEmail.Button" xml:space="preserve"><value>Confirm email</value></data>
   <data name="ConfirmEmail.Expiry" xml:space="preserve"><value>The link is valid for 48 hours.</value></data>
   <data name="ConfirmEmail.Ignore" xml:space="preserve"><value>If you didn't create this account, you can ignore this email.</value></data>
+  <data name="RequestReceived.Subject" xml:space="preserve"><value>We've received your request {0}</value></data>
+  <data name="RequestReceived.Greeting" xml:space="preserve"><value>Hello {0},</value></data>
+  <data name="RequestReceived.Body" xml:space="preserve"><value>Thank you for choosing Pinta. Your request {0} is registered.</value></data>
+  <data name="RequestReceived.Code" xml:space="preserve"><value>Code</value></data>
+  <data name="RequestReceived.Area" xml:space="preserve"><value>Area to paint</value></data>
+  <data name="RequestReceived.Estimate" xml:space="preserve"><value>Estimate (VAT included)</value></data>
+  <data name="RequestReceived.Custom" xml:space="preserve"><value>Custom quote</value></data>
+  <data name="RequestReceived.ConfirmFirst" xml:space="preserve"><value>To review the request, please confirm your email first.</value></data>
+  <data name="RequestReceived.Next" xml:space="preserve"><value>An expert reviews the request within {0} working days and sends you the final price.</value></data>
 </root>

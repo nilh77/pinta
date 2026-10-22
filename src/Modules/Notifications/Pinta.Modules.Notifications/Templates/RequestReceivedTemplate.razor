@@ -1,0 +1,47 @@
+@using System.Globalization
+@using Pinta.Modules.Notifications.Contracts
+@using Pinta.Modules.Notifications.Features.SendEmail
+
+<!DOCTYPE html>
+<html lang="@Email.Locale.ToString().ToLowerInvariant()">
+<head><meta charset="utf-8" /><title>@Text.Format("RequestReceived.Subject", Email.Code)</title></head>
+<body style="margin:0;padding:24px;background:#F6F7F5;font-family:Inter,Arial,sans-serif;color:#1C2321;">
+  <table role="presentation" width="100%" style="max-width:520px;margin:0 auto;background:#FFFFFF;border-radius:12px;padding:32px;">
+    <tr><td>
+      <p style="margin:0 0 24px;font-size:20px;font-weight:700;color:#0F766E;">Pinta</p>
+      <p style="margin:0 0 16px;font-size:16px;">@Text.Format("RequestReceived.Greeting", Email.Name)</p>
+      <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">@Text.Format("RequestReceived.Body", Email.Code)</p>
+      <table role="presentation" style="width:100%;margin:0 0 24px;background:#F5FAF8;border-radius:8px;padding:16px;">
+        <tr><td style="font-size:14px;color:#55605C;">@Text["RequestReceived.Code"]</td><td style="font-size:14px;font-weight:600;text-align:right;">@Email.Code</td></tr>
+        <tr><td style="font-size:14px;color:#55605C;">@Text["RequestReceived.Area"]</td><td style="font-size:14px;font-weight:600;text-align:right;">@Area</td></tr>
+        <tr><td style="font-size:14px;color:#55605C;">@Text["RequestReceived.Estimate"]</td><td style="font-size:14px;font-weight:600;text-align:right;">@Range</td></tr>
+      </table>
+      @if (Email.ConfirmationUrl is not null)
+      {
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">@Text["RequestReceived.ConfirmFirst"]</p>
+        <p style="margin:0 0 16px;">
+          <a href="@Email.ConfirmationUrl" style="display:inline-block;background:#0F766E;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px;">@Text["ConfirmEmail.Button"]</a>
+        </p>
+        <p style="margin:0 0 24px;font-size:14px;color:#55605C;">@Text["ConfirmEmail.Expiry"]</p>
+      }
+      <p style="margin:0;font-size:14px;line-height:1.5;color:#55605C;">@Text.Format("RequestReceived.Next", Email.ReviewDays)</p>
+    </td></tr>
+  </table>
+</body>
+</html>
+
+@code {
+    [Parameter, EditorRequired] public EmailText Text { get; set; } = default!;
+    [Parameter, EditorRequired] public RequestReceivedEmail Email { get; set; } = default!;
+
+    // Money and areas as in the web app: "1.270 €" in pt and es (docs/integrations.md).
+    private CultureInfo Numbers => CultureInfo.GetCultureInfo(Email.Locale == Pinta.SharedKernel.Locale.En ? "en-GB" : "es-ES");
+
+    private string Area => $"{Email.AreaM2.ToString("N2", Numbers)} m²";
+
+    private string Range => Email.RangeMinCents is { } min && Email.RangeMaxCents is { } max
+        ? $"{Euros(min)} – {Euros(max)}"
+        : Text["RequestReceived.Custom"];
+
+    private string Euros(long cents) => (cents / 100m).ToString("C0", Numbers).Replace("€", "").Trim() + " €";
+}

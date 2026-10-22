@@ -66,7 +66,9 @@ public sealed class IdempotencyFilter<TRequest>(IdempotencyDbContext db, TimePro
             throw;
         }
 
-        var status = (result as IStatusCodeHttpResult)?.StatusCode ?? StatusCodes.Status200OK;
+        // Results<…> wraps the actual result (Created, Ok, Problem).
+        var inner = result is INestedHttpResult nested ? nested.Result : result;
+        var status = (inner as IStatusCodeHttpResult)?.StatusCode ?? StatusCodes.Status200OK;
         if (status is < 200 or > 299)
         {
             // Failures are not remembered: the client may fix the request and try again with the same key.
@@ -75,12 +77,8 @@ public sealed class IdempotencyFilter<TRequest>(IdempotencyDbContext db, TimePro
         }
 
         record.StatusCode = status;
-        record.ResponseBody = result is IValueHttpResult { Value: { } value } ? JsonSerializer.Serialize(value, value.GetType(), json.Value.SerializerOptions) : null;
-        record.Location = result switch
-        {
-            IResult r when r.GetType().GetProperty("Location")?.GetValue(r) is string location => location,
-            _ => null,
-        };
+        record.ResponseBody = inner is IValueHttpResult { Value: { } value } ? JsonSerializer.Serialize(value, value.GetType(), json.Value.SerializerOptions) : null;
+        record.Location = inner?.GetType().GetProperty("Location")?.GetValue(inner) as string;
         await db.SaveChangesAsync(CancellationToken.None);
         return result;
     }
