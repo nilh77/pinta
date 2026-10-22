@@ -31,7 +31,7 @@ Cada historia tiene un identificador estable y criterios de aceptación en forma
 
 **C2.4 · Vivienda.** Como cliente quiero describir mi casa como un conjunto de estancias.
 
-- Dado el esquema vacío, entonces ve una sala y un dormitorio pendientes de describir y el botón "Añadir estancia".
+- Dado que elige vivienda completa, entonces el esquema empieza con sala, cocina, baño y un dormitorio en talla M, marcados "Sin describir", y el botón "Añadir estancia". Una estancia sin describir no entra en el precio hasta que la abre y la guarda.
 - Cuando añade una estancia, entonces elige su tipo y se crea con nombre por defecto ("Dormitorio 2").
 - Cuando duplica, renombra o elimina una estancia, entonces el esquema y el total se actualizan.
 - Dado el esquema, entonces cada estancia muestra si está descrita y su área, y la barra inferior muestra estancias descritas, área total y rango provisional.

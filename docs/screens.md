@@ -31,19 +31,20 @@ Reglas comunes a todas las pantallas:
 - **Acciones**: «Calcular mi precio» → pantalla 1. Código postal → `POST /api/coverage/check`; si está fuera, formulario de lista de espera (`POST /api/coverage/waitlist`). Selector de idioma en la cabecera. «Entrar» para clientes con cuenta.
 - **Validaciones**: código postal `^\d{4}-\d{3}$`.
 - **Estados**: si el catálogo falla, se oculta el desde-precio y el resto funciona. Cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos».
+- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura ni el desde-precio; ambos llegan en H3 con C4.1. Pendiente de alinear con `docs/api.md`, que define la comprobación como `GET /api/coverage/check?postalCode=`.
 
 ### 1 · Tipo de trabajo
 
 - **Ruta y board**: `/{locale}/cotizar` · Tipo.dc.html. \[C2.1\]
-- **Datos**: tres opciones: vivienda completa, estancias sueltas, superficies sueltas (paredes, techos, fachadas, madera, metal). Ocupación: vacía, con muebles, habitada, con una línea que explica por qué cambia el precio.
-- **Acciones**: elegir tipo y ocupación → pantalla 2. Vivienda completa precarga sala, cocina, baño y un dormitorio en talla M.
-- **Validaciones**: ambas elecciones obligatorias para continuar.
+- **Datos**: tres opciones, como el board: una pared o un techo (superficie suelta), una habitación y una vivienda completa.
+- **Acciones**: elegir tipo → pantalla 2. Vivienda completa precarga sala, cocina, baño y un dormitorio en talla M, sin describir. Superficie y habitación empiezan con un elemento y abren su editor.
+- **Validaciones**: hay que elegir un tipo para continuar. La ocupación se elige en la pantalla 2.
 - **Estados**: si hay borrador guardado, aviso «Tienes una cotización a medias» con «Continuar» y «Empezar de nuevo».
 
 ### 2 · Esquema de la vivienda
 
 - **Ruta y board**: `/{locale}/cotizar/esquema` · Main.dc.html. Es la pieza diferencial del producto. \[C2.2, C2.3\]
-- **Datos**: tarjetas de estancia y superficie dispuestas como un esquema simple (no un plano a escala). Cada tarjeta muestra el nombre, las medidas o la talla, el m² y un punto de color con la pintura. Pie fijo con m² totales y rango estimado en vivo (`POST /api/quotes/estimate` con debounce de 400 ms).
+- **Datos**: ocupación (vacía, con muebles, habitada) con una línea que explica por qué cambia el precio; sin valor por defecto en habitación y vivienda (la estimación en vivo usa vacía hasta elegirla y «Ver mi precio» la pide); en superficie suelta, vacía por defecto. Tarjetas de estancia y superficie dispuestas como un esquema simple (no un plano a escala). Cada tarjeta muestra el nombre, las medidas o la talla, el m² y un punto de color con la pintura. Pie fijo con m² totales y rango estimado en vivo (`POST /api/quotes/estimate` con debounce de 400 ms).
 - **Acciones**: añadir estancia (tipo de la lista) o superficie; tocar una tarjeta → pantalla 3; duplicar; eliminar con deshacer (toast 5 s); renombrar. «Ver estimación» → pantalla 4.
 - **Validaciones**: de 1 a 30 elementos; no se avanza con elementos de área 0 (se marcan en rojo).
 - **Estados**: vacío con ilustración y «Añade tu primera estancia». Si la estimación falla, el pie muestra «No pudimos calcular» con reintentar, y el esquema sigue editable.
@@ -60,7 +61,7 @@ Reglas comunes a todas las pantallas:
 
 - **Ruta y board**: `/{locale}/cotizar/estimacion` · Estimacion.dc.html. \[C2.8\]
 - **Datos**: rango «entre X € y Y € IVA incluido», m² totales, lista de elementos con su m², qué incluye (material, mano de obra, protección y limpieza) y qué sigue (revisión humana en 2 días laborables y precio cerrado válido 15 días). Insignias: «Mínimo aplicado», «Trabajo Premium» y «Rango amplio por tallas o daños».
-- **Acciones**: «Añadir fotos y enviar» → pantalla 5; «Editar» → pantalla 2.
+- **Acciones**: «Añadir fotos y enviar» → pantalla 5 (en H2 se muestra desactivado con «Disponible en breve»; se activa en H3); «Editar» → pantalla 2.
 - **Validaciones**: si `overMax`, no hay rango: se muestra «Este trabajo necesita un presupuesto a medida» y se puede enviar igualmente.
 - **Estados**: el rango nunca se muestra desactualizado; durante el recálculo aparece atenuado.
 
