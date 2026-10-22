@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H1 · Precios y catálogo — rama `h1-pricing`, [PR #2](https://github.com/nilh77/pinta/pull/2)
+Nada todavía.
 
-#### Añadido
+## H1 · Precios y catálogo — 2026-10-22, [PR #2](https://github.com/nilh77/pinta/pull/2)
+
+### Añadido
 
 - Motor de precios `Pinta.Pricing`: librería pura que reproduce `docs/reference/pricing_reference.py` al céntimo, con validación de entradas y política de reembolso. Casos dorados TC01–TC13 como tests.
 - Módulo Catalog con pinturas, tipos de superficie, tipos de estancia (tallas S/M/L y pintura sugerida), modificadores de ocupación, partidas extra, configuración global y zonas de cobertura. Semilla con la configuración del documento 6.3 y los 16 concelhos del distrito de Lisboa.
@@ -20,12 +22,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Tests de arquitectura que prohíben I/O, reloj, aleatoriedad y coma flotante en `Pinta.Pricing`.
 - Este `CHANGELOG.md`.
 
-#### Cambiado
+### Cambiado
 
 - La API solo acepta números JSON (no cadenas), así el cliente TypeScript los tipa como `number`.
 - Glosario: tabla `catalog.modifiers` y claves de catálogo (`paintId: "matte"`) en las peticiones de cotización.
 
-#### Pendiente de revisar
+### Pendiente de revisar
 
 - Los prefijos postales de la semilla de cobertura son aproximados.
 - «Descuento de huecos» de la pantalla A1 queda fuera hasta que el documento 6.3 defina la regla.
