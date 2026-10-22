@@ -30,6 +30,12 @@ const hasWork = (draft: Draft | null) => !!draft && draft.elements.some((e) => e
 const schemaPath = (draft: Draft) =>
   draft.type !== "home" && draft.elements.length === 1 && !draft.elements[0].described ? `/cotizar/esquema?el=${draft.elements[0].id}` : "/cotizar/esquema";
 
+/** Where "Continuar" takes a draft in progress. */
+const resumePath = (draft: Draft) =>
+  ({ estimate: "/cotizar/estimacion", photos: "/cotizar/fotos", address: "/cotizar/direccion", account: "/cotizar/cuenta" })[
+    draft.step as "estimate" | "photos" | "address" | "account"
+  ] ?? schemaPath(draft);
+
 function TypeChooser({ draft, info, update, reset }: QuoteContext) {
   const t = useTranslations("quote.type");
   const router = useRouter();
@@ -59,7 +65,7 @@ function TypeChooser({ draft, info, update, reset }: QuoteContext) {
         <div role="status" className="mb-5 flex flex-col gap-3 rounded-2xl border border-accent bg-accent-soft p-4 text-accent-ink sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm font-semibold">{t("resume.title")}</p>
           <div className="flex gap-2">
-            <Button size="sm" onClick={() => router.push(draft!.step === "estimate" ? "/cotizar/estimacion" : schemaPath(draft!))}>
+            <Button size="sm" onClick={() => router.push(resumePath(draft!))}>
               {t("resume.continue")}
             </Button>
             <Button size="sm" variant="ghost" onClick={() => { reset(); setSelected(null); }}>

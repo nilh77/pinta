@@ -22,7 +22,7 @@ export function EstimateStep() {
   );
 }
 
-function EstimateView({ draft, catalog, info }: QuoteContext) {
+function EstimateView({ draft, catalog, info, update }: QuoteContext) {
   const t = useTranslations("quote.estimate");
   const tSchema = useTranslations("quote.schema");
   const locale = useLocale();
@@ -138,13 +138,16 @@ function EstimateView({ draft, catalog, info }: QuoteContext) {
 
       <div className="fixed inset-x-0 bottom-0 z-30 rounded-t-[20px] border-t border-border bg-card px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:static lg:mt-6 lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0">
         <div className="mx-auto flex max-w-2xl flex-col gap-2">
-          {/* Screen 5 (photos and details) arrives in H3. */}
-          <Button size="lg" className="w-full" disabled aria-describedby="continue-soon">
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => {
+              update((d) => ({ ...d, step: "photos" }));
+              router.push("/cotizar/fotos");
+            }}
+          >
             {t("continue")}
           </Button>
-          <p id="continue-soon" className="text-center text-xs text-muted-foreground">
-            {t("continueSoon")}
-          </p>
           <Button asChild variant="ghost">
             <Link href="/cotizar/esquema">{t("edit")}</Link>
           </Button>

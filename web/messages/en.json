@@ -371,7 +371,13 @@
       "height": "Between 2.00 and 6.00 m.",
       "surfaceLength": "Between 0.50 and 40.00 m.",
       "surfaceHeight": "Between 0.50 and 20.00 m.",
-      "wallsOrCeiling": "Select at least one wall or the ceiling."
+      "wallsOrCeiling": "Select at least one wall or the ceiling.",
+      "postalCode": "Enter the postal code as 1234-567.",
+      "datesChoose": "Choose “As soon as possible” or the dates.",
+      "datesTooSoon": "The earliest possible date is {date}.",
+      "datesOrder": "Must be on or after the start date.",
+      "datesTooLong": "The range can't be longer than 60 days.",
+      "taxId": "Invalid tax number: 9 digits."
     },
     "type": {
       "metaTitle": "What do you want to paint?",
@@ -545,8 +551,142 @@
         "body": "An expert reviews the request within {reviewDays, plural, one {# working day} other {# working days}} and sends you the final price, valid for {validityDays} days."
       },
       "continue": "Continue to the final price",
-      "continueSoon": "Coming soon: photos and sending the request.",
       "edit": "Edit rooms"
+    },
+    "photos": {
+      "metaTitle": "Photos and details",
+      "back": "Back to the estimate",
+      "title": "Photos and details",
+      "subtitle": "With photos we give you a more accurate final price. One per room is enough.",
+      "general": "General photos",
+      "generalHint": "Façade, access or anything useful",
+      "none": "No photos yet",
+      "counter": "{photos}/{maxPhotos} photos · {videos}/{maxVideos} videos",
+      "damageBadge": "Damp",
+      "damageHint": "Add a close-up photo of the damp or cracked area.",
+      "addPhoto": "Photo",
+      "addVideo": "Video",
+      "photoLabel": "Photo {name}",
+      "videoLabel": "Video {name}",
+      "uploading": "Uploading {name}",
+      "retry": "Retry uploading {name}",
+      "remove": "Remove {name}",
+      "description": "Tell us anything else (optional)",
+      "descriptionPlaceholder": "We'd like the living room off-white. There's a crack by the bedroom window.",
+      "coverage": "{withPhotos} of {total} with photos",
+      "noPhotosHint": "With photos the final price stays closer to the estimate.",
+      "waitingUploads": "Finishing uploads…",
+      "continue": "Continue",
+      "errors": {
+        "format": "Unsupported format: {name}",
+        "imageTooLarge": "{name} is larger than 10 MB.",
+        "videoTooLarge": "{name} is larger than 100 MB.",
+        "tooManyPhotos": "Up to {max} photos per room.",
+        "tooManyVideos": "Up to {max} videos per room.",
+        "media_limit_reached": "File limit reached for this room.",
+        "file_too_large": "The file is too large.",
+        "unsupported_media_type": "Unsupported format."
+      }
+    },
+    "address": {
+      "metaTitle": "Address and date",
+      "back": "Back to the photos",
+      "title": "Where and when?",
+      "line1": "Address",
+      "floor": "Floor or door",
+      "optional": "optional",
+      "postalCode": "Postal code",
+      "locality": "Town",
+      "checking": "Checking the area…",
+      "covered": "We work in your area ({municipality}).",
+      "coverageError": "We couldn't check the postal code. Try again.",
+      "accessNotes": "Access notes",
+      "accessNotesPlaceholder": "Lift, parking, times…",
+      "when": "When suits you?",
+      "asap": "As soon as possible",
+      "chooseDates": "Choose dates",
+      "from": "From",
+      "to": "To",
+      "asapHint": "We'll suggest the first available date.",
+      "datesHint": "Dates start at least {days} working days from today, in a range of up to 60 days.",
+      "agreeLater": "We agree the final date with you when we confirm the price.",
+      "continue": "Continue",
+      "waitlist": {
+        "outside": "We don't reach this postal code yet. Leave your email and we'll tell you when we do.",
+        "email": "Your email",
+        "join": "Let me know",
+        "done": "Thank you! We'll let you know when we reach your area.",
+        "error": "Couldn't save it. Check the email."
+      }
+    },
+    "account": {
+      "metaTitle": "Last step",
+      "back": "Back to the address",
+      "title": "Last step",
+      "subtitle": "Create your account to get the final price and follow your job.",
+      "subtitleSignedIn": "Confirm your details and send the request.",
+      "sendingAs": "You're sending as",
+      "notClient": "This is a Pinta team account. Sign out and use a client account to send requests.",
+      "google": "Continue with Google",
+      "googleTerms": "By continuing with Google you accept the Terms and Privacy policy.",
+      "orEmail": "or with your email",
+      "tabsLabel": "Account",
+      "tabs": {
+        "register": "Create account",
+        "login": "I have an account"
+      },
+      "emailTaken": "This email already has an account. Sign in to send the request.",
+      "send": "Send for review",
+      "signInAndSend": "Sign in and send",
+      "billing": {
+        "wanted": "Invoice to a company",
+        "taxId": "Tax number (NIF)",
+        "companyName": "Company name"
+      },
+      "submitErrors": {
+        "outOfCoverage": "We don't work in that postal code yet.",
+        "editAddress": "Change the address",
+        "sessionExpired": "Your session expired. Sign in again; the request is still saved.",
+        "invalid": "Some details need fixing:",
+        "generic": "Couldn't send it. Try again: it won't be duplicated."
+      }
+    },
+    "sent": {
+      "metaTitle": "Request sent",
+      "title": "Request sent",
+      "emailSent": "We've emailed you the confirmation.",
+      "code": "Request {code}",
+      "next": {
+        "title": "What happens now",
+        "review": {
+          "title": "We review your request",
+          "body": "Within 2 working days."
+        },
+        "price": {
+          "title": "You get the final price",
+          "body": "By email and in your area, valid for 15 days."
+        },
+        "book": {
+          "title": "You book the date",
+          "body": "You accept and pay the deposit by card, MB WAY or Multibanco."
+        }
+      },
+      "summary": {
+        "area": "Area",
+        "estimate": "Estimate",
+        "custom": "Custom quote",
+        "address": "Address",
+        "dates": "Preferred date",
+        "asap": "As soon as possible"
+      },
+      "confirm": {
+        "title": "Confirm your email",
+        "body": "We'll review the request as soon as you confirm your email. The link is in the email we sent you.",
+        "resend": "Resend email",
+        "resent": "We've sent a new email.",
+        "wait": "Wait a minute to ask for another."
+      },
+      "home": "Back to home"
     }
   }
 }
