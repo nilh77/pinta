@@ -6,6 +6,12 @@ namespace Pinta.Pricing;
 public sealed record QuoteInput(IReadOnlyList<QuoteElement> Elements, string Occupancy, IReadOnlyList<ExtraLine>? Extras = null)
 {
     public IReadOnlyList<ExtraLine> Extras { get; init; } = Extras ?? [];
+
+    /// <summary>
+    /// Subtotal fixed by the admin (rule "Ajuste manual"): VAT, total, margin and deposit follow it and the minimum does
+    /// not apply.
+    /// </summary>
+    public decimal? ManualSubtotal { get; init; }
 }
 
 /// <summary>A room or a loose surface.</summary>

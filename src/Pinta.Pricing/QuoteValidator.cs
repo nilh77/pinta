@@ -66,6 +66,11 @@ public static class QuoteValidator
             }
         }
 
+        if (input.ManualSubtotal is { } manual)
+        {
+            Amount(manual, "manualSubtotal", errors);
+        }
+
         for (var i = 0; i < input.Extras.Count; i++)
         {
             Amount(input.Extras[i].ClientPrice, $"extras[{i}].clientPrice", errors);
