@@ -80,7 +80,7 @@ Valores de ejemplo para la demo y los tests. Todos se editan en el admin; los ca
 | Ampliación del rango con talla S/M/L | +10 puntos en el límite superior |
 | Ampliación del rango con daños declarados | +10 puntos en el límite superior |
 | Señal | 30% |
-| Validez del precio | 15 días |
+| Validez del precio | 15 días: confirmado el día D, vale hasta D+15 y el día D+16 a las 03:00 (Lisboa) pasa a «Expirado» |
 | Margen mínimo (aviso al admin) | 20% |
 | Precio de visita técnica | 0,00 €, descontable |
 | Plazo de revisión | 2 días laborables |
@@ -118,7 +118,7 @@ El material se vende a precio de coste: el margen sale solo de la mano de obra, 
 | Máximo | Si el total supera 15.000 €, no hay rango: el cliente ve "cotización personalizada" (`overMax`) |
 | Premium | Automático si el área total supera 250 m². El admin también puede marcarlo a mano |
 | Aviso de margen | El admin ve un aviso si el margen % es menor que el margen mínimo (20%) |
-| Ajuste manual | El admin puede fijar el subtotal a mano con motivo obligatorio; el IVA y el margen se recalculan sobre el nuevo subtotal |
+| Ajuste manual | El admin puede fijar el subtotal a mano con motivo obligatorio; el IVA y el margen se recalculan sobre el nuevo subtotal, y con ellos el total, la señal y el resto. No se aplica el mínimo |
 | Señal | Señal = total × 30%, a 2 decimales. Resto = total − señal |
 | Reembolso por cancelación | 100% de la señal si no hay fecha programada o faltan 7 días o más; 50% si faltan menos de 7 días. Después de "En curso" no se puede cancelar |
 | Visita técnica | Si tiene precio, se cobra como pago aparte y se descuenta del subtotal del trabajo cuando es descontable |
