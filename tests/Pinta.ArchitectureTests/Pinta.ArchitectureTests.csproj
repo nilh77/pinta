@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- Brings every module assembly into the output so compiled references can be inspected. -->
+    <ProjectReference Include="..\..\src\Pinta.Api\Pinta.Api.csproj" />
+    <ProjectReference Include="..\..\src\Pinta.Pricing\Pinta.Pricing.csproj" />
+  </ItemGroup>
+</Project>
