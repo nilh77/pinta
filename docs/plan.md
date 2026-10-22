@@ -129,7 +129,7 @@ El seed vive en `src/Pinta.Api/Seed/` y se ejecuta al arrancar en `Development` 
 
 ### Catálogo
 
-El de la configuración semilla del documento 6.3 (cuatro pinturas, cinco superficies, ocupación, tallas y reglas), con nombres en pt, es y en. Cobertura: los 16 concelhos del distrito de Lisboa activos.
+El de la configuración semilla del documento 6.3 (cuatro pinturas, cinco superficies, ocupación, tallas y reglas), con nombres en pt, es y en. Cobertura: los 16 concelhos del distrito de Lisboa activos. Los prefijos postales de cada concelho de la semilla son aproximados (los principales de cada uno) y están **pendientes de revisar** antes de la demo.
 
 ### Usuarios
 

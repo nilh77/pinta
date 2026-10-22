@@ -10,6 +10,7 @@ export const KNOWN_ERROR_CODES = [
   "antiforgery_failed",
   "not_found",
   "email_taken",
+  "concurrency_conflict",
   "validation_failed",
   "rate_limited",
   "internal_error",

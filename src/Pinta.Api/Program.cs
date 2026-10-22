@@ -31,7 +31,11 @@ builder.AddNpgsqlDataSource("pinta");
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = ProblemDetailsSetup.Customize);
 builder.Services.ConfigureHttpJsonOptions(options =>
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower)));
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
+    // Numbers travel as JSON numbers only (amounts in cents, measures in metres), so the OpenAPI types are plain numbers.
+    options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
+});
 builder.Services.AddPintaOpenApi();
 builder.Services.AddRequestLocalization(options =>
 {

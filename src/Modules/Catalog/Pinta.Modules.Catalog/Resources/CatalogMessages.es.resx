@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="key_format" xml:space="preserve"><value>Usa minúsculas, números y _ (p. ej.: matte).</value></data>
+  <data name="key_taken" xml:space="preserve"><value>Ya existe un elemento con esta clave.</value></data>
+  <data name="version_required" xml:space="preserve"><value>Indica la versión que estás editando.</value></data>
+  <data name="two_decimals" xml:space="preserve"><value>Usa como máximo 2 decimales.</value></data>
+  <data name="suggested_paint_in_use" xml:space="preserve"><value>Esta pintura es la sugerida para: {0}. Elige otra sugerencia antes de desactivarla.</value></data>
+  <data name="suggested_paint_inactive" xml:space="preserve"><value>Elige una pintura activa.</value></data>
+  <data name="room_surface_required" xml:space="preserve"><value>Las estancias usan esta superficie; no se puede desactivar.</value></data>
+  <data name="occupancy_key" xml:space="preserve"><value>Ocupación desconocida. Usa empty, furnished o inhabited.</value></data>
+  <data name="min_below_max" xml:space="preserve"><value>El mínimo tiene que ser menor que el máximo.</value></data>
+  <data name="prefix_format" xml:space="preserve"><value>Indica los 4 primeros dígitos del código postal.</value></data>
+  <data name="prefix_taken" xml:space="preserve"><value>Este prefijo ya existe.</value></data>
+</root>

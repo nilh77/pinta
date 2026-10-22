@@ -97,6 +97,200 @@
     "email_taken": "This email is already registered.",
     "validation_failed": "Some details need fixing.",
     "rate_limited": "Too many attempts. Wait a minute and try again.",
-    "internal_error": "Something went wrong. Please try again."
+    "internal_error": "Something went wrong. Please try again.",
+    "concurrency_conflict": "Someone else changed this data. Reload and try again."
+  },
+  "admin": {
+    "loading": "Loading the dashboard…",
+    "badge": "ADMIN",
+    "role": "Administrator",
+    "signOut": "Sign out",
+    "nav": {
+      "label": "Dashboard sections",
+      "pricing": "Pricing"
+    },
+    "forbidden": {
+      "title": "Restricted area",
+      "body": "This area is for the Pinta team only.",
+      "home": "Back to home"
+    },
+    "validation": {
+      "amount": "Enter an amount ≥ 0 with up to 2 decimals.",
+      "factor": "Between 0.50 and 3.00.",
+      "percent": "Between 0 and 100.",
+      "positive": "Enter a number greater than 0.",
+      "side": "Between 0.50 and 30.00 m.",
+      "height": "Between 2.00 and 6.00 m.",
+      "integer": "Enter a whole number within the limit.",
+      "minBelowMax": "Must be greater than the minimum.",
+      "key": "Use lowercase letters, digits and _ (e.g. gloss_paint)."
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Changes apply to new quotes. Jobs already quoted keep their prices.",
+      "loading": "Loading prices…",
+      "loadError": "We couldn't load the prices.",
+      "retry": "Try again",
+      "save": "Save changes",
+      "saved": "Changes saved",
+      "unsaved": "Unsaved changes",
+      "conflict": "Another partner changed these prices.",
+      "reload": "Reload",
+      "saveError": "Couldn't save “{item}”.",
+      "tabHasErrors": "has errors",
+      "add": "Add",
+      "key": "Key",
+      "keyPlaceholder": "unique_key",
+      "tabs": {
+        "label": "Pricing sections",
+        "surfacesPaints": "Surfaces and paints",
+        "sizes": "Room sizes S/M/L",
+        "occupancy": "Occupancy",
+        "extras": "Extra items",
+        "rules": "Rules"
+      },
+      "names": {
+        "pt": "Name in Portuguese",
+        "es": "Name in Spanish",
+        "en": "Name in English",
+        "toggle": "Translations",
+        "fallback": "Empty: uses Portuguese"
+      },
+      "status": {
+        "title": "Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "surfaces": {
+        "title": "Surfaces",
+        "name": "Type",
+        "new": "New surface",
+        "clientRate": "Client €/m²",
+        "painterRate": "Painter €/m²",
+        "factor": "Factor",
+        "labourMargin": "Labour margin"
+      },
+      "paints": {
+        "title": "Paints",
+        "name": "Paint",
+        "new": "New paint",
+        "pricePerLitre": "€/litre",
+        "coverage": "Coverage m²/L",
+        "coats": "Coats"
+      },
+      "sizes": {
+        "title": "Sizes per room type",
+        "hint": "Length × width in metres when the client doesn't know the measures. The height is the default height in the rules.",
+        "roomType": "Room type",
+        "size": "Size {size}",
+        "length": "length",
+        "width": "width",
+        "legend": "For each size: length and width.",
+        "suggestedPaint": "Suggested paint"
+      },
+      "occupancy": {
+        "title": "Occupancy",
+        "hint": "Multiplies labour and painter pay.",
+        "name": "Occupancy",
+        "factor": "Factor"
+      },
+      "extras": {
+        "title": "Extra items",
+        "hint": "Amounts before VAT the reviewer can add to a quote.",
+        "empty": "No extra items yet.",
+        "name": "Description",
+        "new": "New extra item",
+        "clientPrice": "Client €",
+        "painterPay": "Painter €"
+      },
+      "rules": {
+        "groups": {
+          "job": "Job",
+          "price": "Price",
+          "range": "Range shown to the client",
+          "operations": "Site visit, review and cancellation"
+        },
+        "fields": {
+          "minJobAmount": "Minimum job (incl. VAT)",
+          "maxJobAmount": "Maximum for instant price (incl. VAT)",
+          "premiumAreaM2": "Premium threshold",
+          "defaultHeight": "Default height",
+          "vatPct": "VAT",
+          "wastePct": "Material waste",
+          "minMarginPct": "Minimum margin (warning)",
+          "depositPct": "Deposit",
+          "quoteValidityDays": "Price validity",
+          "rangeLowPct": "Lower bound (−)",
+          "rangeHighPct": "Upper bound (+)",
+          "rangeSizeWideningPct": "Widening with S/M/L size",
+          "rangeDamageWideningPct": "Widening with damage",
+          "siteVisitPrice": "Site visit price",
+          "siteVisitDeductible": "The visit is deducted from the job",
+          "reviewDeadlineBusinessDays": "Review deadline (business days)",
+          "fullRefundMinDays": "Full refund up to (days before)",
+          "lateRefundPct": "Refund after that"
+        }
+      }
+    },
+    "simulator": {
+      "title": "Simulator",
+      "subtitle": "Try a job with the saved prices. Nothing is stored.",
+      "occupancy": "Occupancy",
+      "room": "Room {number}",
+      "surface": "Surface {number}",
+      "remove": "Remove item {number}",
+      "roomType": "Room type",
+      "surfaceType": "Surface type",
+      "paint": "Paint",
+      "size": "Size",
+      "exactMeasures": "Exact measures",
+      "length": "Length (m)",
+      "width": "Width (m)",
+      "heightOrWidth": "Height/width (m)",
+      "height": "Height (m)",
+      "defaultHeight": "2.60",
+      "wallsAndCeiling": "Walls and ceiling",
+      "wall": "Wall {wall}",
+      "ceiling": "Ceiling",
+      "damage": "Damp, cracks or peeling",
+      "addRoom": "Room",
+      "addSurface": "Surface",
+      "extras": "Extra items",
+      "extraDescription": "Description",
+      "extraClient": "Client €",
+      "extraPainter": "Painter €",
+      "removeExtra": "Remove extra item {number}",
+      "addExtra": "Extra item",
+      "calculating": "Calculating…",
+      "error": "We couldn't calculate. Try again.",
+      "invalid": "Fix the sample job:",
+      "total": "Client price (incl. VAT)",
+      "clientSees": "The client sees: {min} – {max}",
+      "customQuote": "The client sees: custom quote",
+      "flags": {
+        "minimum": "Minimum job",
+        "overMax": "Over the maximum",
+        "premium": "Premium",
+        "widened": "Wider range"
+      },
+      "lines": {
+        "caption": "Calculation lines",
+        "surface": "Surface",
+        "labour": "Labour",
+        "painter": "Painter"
+      },
+      "area": "Total area",
+      "material": "Materials · {litres} L",
+      "labour": "Labour",
+      "extrasTotal": "Extra items",
+      "subtotal": "Subtotal before VAT",
+      "vat": "VAT",
+      "painterTotal": "Painter pay",
+      "deposit": "Deposit",
+      "balance": "balance {amount}",
+      "margin": "Gross margin",
+      "marginPct": "{pct}% of the price before VAT",
+      "lowMargin": "Below the minimum margin."
+    }
   }
 }

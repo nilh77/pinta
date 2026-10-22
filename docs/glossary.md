@@ -60,6 +60,8 @@ En la interfaz del cliente, «Rechazado» se muestra con una palabra suave («N�
 | Desperdicio | `WastePct` | — | — | Margen de material, 10% por defecto |
 | Factor de dificultad | `DifficultyFactor` | — | — | Multiplicador por superficie |
 | Ocupación | `Occupancy` | Ocupação | Occupancy | Vacía, con muebles o habitada |
+| Modificador | `Modifier` | — | — | Factor que multiplica la mano de obra y el pago al pintor; en el MVP, uno por ocupación (grupo `occupancy`) |
+| Clave de catálogo | `Key` | — | — | Código estable en `snake_case` de una pintura, superficie, tipo de estancia, modificador o partida (`matte`, `bedroom`); las peticiones de cotización la usan como `paintId`, `roomTypeId`, `surfaceTypeId` |
 | Daños | `HasDamage` | Humidade, fissuras ou tinta a descascar | Damp, cracks or peeling | Amplía el rango y avisa al revisor |
 | Partida extra | `QuoteExtra` | Trabalho adicional | Extra item | Importe añadido por el admin, con pago al pintor |
 | Material | `MaterialCost` | Material | Materials | Pintura a precio de coste que aporta Pinta |
@@ -100,6 +102,7 @@ Los diagramas del documento 5.3 usan nombres descriptivos en español; esta es s
 | PARTIDA\_EXTRA | `catalog.extra_items` | `ExtraItem` | Catalog |
 | (ajustes) | `catalog.settings` | `PricingSettings` | Catalog |
 | (cobertura) | `catalog.coverage_areas` | `CoverageArea` | Catalog |
+| (modificador) | `catalog.modifiers` | `Modifier` | Catalog |
 | (lista de espera) | `catalog.waitlist_entries` | `WaitlistEntry` | Catalog |
 | COTIZACION | `quoting.quote_versions` | `QuoteVersion` | Quoting |
 | ESTANCIA | `quoting.quote_elements` | `QuoteElement` (estancia o superficie) | Quoting |

@@ -9,7 +9,7 @@ public static class ApiClient
 {
     public static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
-    public static async Task<HttpClient> CreateAsync(PintaApiFactory factory, string? acceptLanguage = null)
+    public static async Task<HttpClient> CreateAsync(WebApplicationFactory<Program> factory, string? acceptLanguage = null)
     {
         var client = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         if (acceptLanguage is not null)
@@ -27,6 +27,15 @@ public static class ApiClient
         var response = await client.GetFromJsonAsync<JsonElement>("/api/auth/antiforgery", Json);
         client.DefaultRequestHeaders.Remove("X-XSRF-TOKEN");
         client.DefaultRequestHeaders.Add("X-XSRF-TOKEN", response.GetProperty("token").GetString());
+    }
+
+    /// <summary>A client signed in as the demo admin (docs/plan.md, "Datos de demo").</summary>
+    public static async Task<HttpClient> CreateAdminAsync(PintaApiFactory factory, string? acceptLanguage = null)
+    {
+        var client = await CreateAsync(factory, acceptLanguage);
+        var login = await client.LoginAsync(TestData.AdminEmail, TestData.DemoPassword);
+        login.EnsureSuccessStatusCode();
+        return client;
     }
 
     public static async Task<HttpResponseMessage> LoginAsync(this HttpClient client, string email, string password)
@@ -60,6 +69,7 @@ public static class TestData
 {
     public const string Password = "very-long-password";
     public const string DemoPassword = "Pinta-Demo-2026";
+    public const string AdminEmail = "nathan@demo.pinta.pt";
 
     public static string UniqueEmail() => $"user-{Guid.NewGuid():N}@example.test";
 }

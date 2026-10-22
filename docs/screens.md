@@ -209,10 +209,11 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### A1 · Precios y simulador
 
 - **Ruta y board**: `/{locale}/admin/precios` · AdminPrecios.dc.html. \[A1.1–A1.8\]
-- **Datos**: pestañas Pinturas (precio por litro, rendimiento, manos, activa), Superficies (tarifa al cliente, pago al pintor y factor de dificultad), Ocupación, Tallas por tipo de estancia, Reglas (mínimo y máximo del trabajo, umbral Premium, desperdicio, IVA, rango, señal, margen mínimo, validez y descuento de huecos). Simulador lateral con un trabajo de ejemplo editable y el desglose completo de `POST /api/admin/quotes/simulate`.
+- **Datos**: pestañas Pinturas (precio por litro, rendimiento, manos, activa), Superficies (tarifa al cliente, pago al pintor y factor de dificultad), Ocupación, Tallas por tipo de estancia, Reglas (mínimo y máximo del trabajo, umbral Premium, desperdicio, IVA, rango, señal, margen mínimo, validez). Simulador lateral con un trabajo de ejemplo editable y el desglose completo de `POST /api/admin/quotes/simulate`.
 - **Acciones**: editar en línea y «Guardar cambios» (`PUT /api/admin/catalog/*`, `PUT /api/admin/settings`). Los cambios solo afectan a las cotizaciones nuevas; las versiones existentes conservan su `snapshot_precios`. Nombres traducibles en pt, es y en.
 - **Validaciones**: importes ≥ 0; porcentajes entre 0 y 100; mínimo < máximo; no se puede desactivar una pintura sugerida por defecto sin elegir otra.
 - **Estados**: `concurrency_conflict` → «Otro socio cambió estos precios» con recargar. Cambios sin guardar → aviso al salir.
+- **Pendiente**: el board menciona un «descuento de huecos» (puertas y ventanas), pero el documento 6.3 no define esa regla. No se implementa en H1; si se quiere, se define primero en `docs/pricing-engine.md` y en el script de referencia.
 
 ### A2 · Revisión de solicitudes
 

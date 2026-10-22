@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="element_count" xml:space="preserve"><value>Add between 1 and 30 items.</value></data>
+  <data name="out_of_range" xml:space="preserve"><value>Value outside the allowed limits.</value></data>
+  <data name="too_many_decimals" xml:space="preserve"><value>Use at most 2 decimal places.</value></data>
+  <data name="walls_or_ceiling_required" xml:space="preserve"><value>Select at least one wall or the ceiling.</value></data>
+  <data name="size_or_measures_required" xml:space="preserve"><value>Choose a size or enter length and width, not both.</value></data>
+  <data name="unknown_paint" xml:space="preserve"><value>This paint is not available.</value></data>
+  <data name="unknown_surface_type" xml:space="preserve"><value>This surface type is not available.</value></data>
+  <data name="unknown_room_type" xml:space="preserve"><value>This room type is not available.</value></data>
+  <data name="unknown_occupancy" xml:space="preserve"><value>This occupancy is not available.</value></data>
+  <data name="walls_four" xml:space="preserve"><value>Send the four walls A, B, C and D.</value></data>
+</root>

@@ -3,6 +3,7 @@
 Plataforma mobile-first (PWA) para contratar trabajos de pintura en el distrito de Lisboa. Software de NHIT-DEV.
 
 - `CLAUDE.md`: convenciones y reglas para desarrollar con Claude Code.
+- `CHANGELOG.md`: registro de los cambios de cada push y de cada hito.
 - `docs/`: PRD completo (empezar por `docs/prd-overview.md` y `docs/plan.md`).
 
 ## Requisitos

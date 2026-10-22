@@ -4,6 +4,38 @@
  */
 
 export interface paths {
+    "/api/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCatalog"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/quotes/estimate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EstimateQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/antiforgery": {
         parameters: {
             query?: never;
@@ -116,6 +148,230 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/catalog/paints": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListPaints"];
+        put?: never;
+        post: operations["CreatePaint"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/paints/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdatePaint"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/surfaces": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListSurfaceTypes"];
+        put?: never;
+        post: operations["CreateSurfaceType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/surfaces/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateSurfaceType"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/room-types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListRoomTypes"];
+        put?: never;
+        post: operations["CreateRoomType"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/room-types/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateRoomType"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/modifiers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListModifiers"];
+        put?: never;
+        post: operations["CreateModifier"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/modifiers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateModifier"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/extras": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListExtraItems"];
+        put?: never;
+        post: operations["CreateExtraItem"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/catalog/extras/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateExtraItem"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetSettings"];
+        put: operations["UpdateSettings"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/coverage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListCoverageAreas"];
+        put?: never;
+        post: operations["CreateCoverageArea"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/coverage/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateCoverageArea"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/quotes/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SimulateQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -123,16 +379,121 @@ export interface components {
         AntiforgeryTokenResponse: {
             token: string;
         };
+        CatalogOption: {
+            id: string;
+            name: string;
+        };
+        CatalogResponse: {
+            roomTypes: components["schemas"]["CatalogRoomType"][];
+            paints: components["schemas"]["CatalogOption"][];
+            surfaceTypes: components["schemas"]["CatalogOption"][];
+            occupancies: components["schemas"]["CatalogOption"][];
+            /** Format: double */
+            defaultHeight: number;
+        };
+        CatalogRoomSize: {
+            size: components["schemas"]["RoomSize"];
+            /** Format: double */
+            length: number;
+            /** Format: double */
+            width: number;
+        };
+        CatalogRoomType: {
+            id: string;
+            name: string;
+            suggestedPaintId: string;
+            sizes: components["schemas"]["CatalogRoomSize"][];
+        };
         ConfirmEmailRequest: {
             /** Format: uuid */
             userId: string;
             token: string;
         };
+        CoverageAreaDto: {
+            /** Format: uuid */
+            id: string;
+            postalPrefix: string;
+            municipality: string;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CoverageAreaRequest: {
+            postalPrefix: null | string;
+            municipality: string;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        ElementAreaDto: {
+            /** Format: int32 */
+            index: number;
+            /** Format: double */
+            wallsAreaM2: null | number;
+            /** Format: double */
+            ceilingAreaM2: null | number;
+            /** Format: double */
+            areaM2: number;
+        };
+        /** @enum {unknown} */
+        ElementKind: "room" | "surface";
+        EstimateRequest: {
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+        };
+        EstimateResponse: {
+            /** Format: double */
+            areaM2: number;
+            elements: components["schemas"]["ElementAreaDto"][];
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            minimumApplied: boolean;
+            overMax: boolean;
+            premium: boolean;
+            rangeWidened: boolean;
+        };
+        ExtraItemDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            clientPriceCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ExtraItemRequest: {
+            key: null | string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            clientPriceCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        ExtraLineDto: {
+            description: string;
+            /** Format: int64 */
+            clientPriceCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+        };
         HttpValidationProblemDetails: {
             type?: null | string;
             title?: null | string;
             /** Format: int32 */
-            status?: null | number | string;
+            status?: null | number;
             detail?: null | string;
             instance?: null | string;
             errors?: {
@@ -143,6 +504,11 @@ export interface components {
         };
         /** @enum {unknown} */
         Locale: "pt" | "es" | "en";
+        LocalizedTextDto: {
+            pt: string;
+            es: null | string;
+            en: null | string;
+        };
         LoginRequest: {
             email: string;
             password: string;
@@ -156,15 +522,142 @@ export interface components {
             locale: components["schemas"]["Locale"];
             emailConfirmed: boolean;
         };
+        ModifierDto: {
+            /** Format: uuid */
+            id: string;
+            group: string;
+            key: string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: double */
+            factor: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ModifierRequest: {
+            key: null | string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: double */
+            factor: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        /** @enum {unknown} */
+        Occupancy: "empty" | "furnished" | "inhabited";
+        PaintDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            pricePerLitreCents: number;
+            /** Format: double */
+            coverageM2PerLitre: number;
+            /** Format: int32 */
+            coats: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        PaintRequest: {
+            key: null | string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            pricePerLitreCents: number;
+            /** Format: double */
+            coverageM2PerLitre: number;
+            /** Format: int32 */
+            coats: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        PricedLineDto: {
+            /** Format: int32 */
+            element: number;
+            surface: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: double */
+            litres: number;
+            /** Format: int64 */
+            materialCents: number;
+            /** Format: int64 */
+            labourCents: number;
+            /** Format: int64 */
+            painterCents: number;
+        };
         ProblemDetails: {
             type?: null | string;
             title?: null | string;
             /** Format: int32 */
-            status?: null | number | string;
+            status?: null | number;
             detail?: null | string;
             instance?: null | string;
             code: string;
             traceId?: string;
+        };
+        QuoteBreakdownDto: {
+            lines: components["schemas"]["PricedLineDto"][];
+            extras: components["schemas"]["ExtraLineDto"][];
+            elements: components["schemas"]["ElementAreaDto"][];
+            /** Format: double */
+            areaM2: number;
+            /** Format: double */
+            litres: number;
+            /** Format: int64 */
+            materialCents: number;
+            /** Format: int64 */
+            labourCents: number;
+            /** Format: int64 */
+            extrasCents: number;
+            /** Format: int64 */
+            subtotalCents: number;
+            /** Format: int64 */
+            vatCents: number;
+            /** Format: int64 */
+            totalCents: number;
+            /** Format: int64 */
+            painterTotalCents: number;
+            /** Format: int64 */
+            marginCents: number;
+            /** Format: double */
+            marginPct: number;
+            belowMinMargin: boolean;
+            /** Format: int64 */
+            depositCents: number;
+            /** Format: int64 */
+            balanceCents: number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            minimumApplied: boolean;
+            overMax: boolean;
+            premium: boolean;
+            rangeWidened: boolean;
+        };
+        QuoteElementRequest: {
+            kind: components["schemas"]["ElementKind"];
+            name: null | string;
+            roomTypeId: null | string;
+            size: null | components["schemas"]["RoomSize"];
+            /** Format: double */
+            length: null | number;
+            /** Format: double */
+            width: null | number;
+            /** Format: double */
+            height: null | number;
+            walls: null | boolean[];
+            ceiling: boolean;
+            surfaceTypeId: null | string;
+            paintId: string;
+            damage: boolean;
         };
         RegisterRequest: {
             name: string;
@@ -177,6 +670,136 @@ export interface components {
         };
         /** @enum {unknown} */
         Role: "client" | "painter" | "admin";
+        RoomMeasuresDto: {
+            /** Format: double */
+            length: number;
+            /** Format: double */
+            width: number;
+        };
+        /** @enum {unknown} */
+        RoomSize: "S" | "M" | "L";
+        RoomSizesDto: {
+            s: components["schemas"]["RoomMeasuresDto"];
+            m: components["schemas"]["RoomMeasuresDto"];
+            l: components["schemas"]["RoomMeasuresDto"];
+        };
+        RoomTypeDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: components["schemas"]["LocalizedTextDto"];
+            sizes: components["schemas"]["RoomSizesDto"];
+            /** Format: uuid */
+            suggestedPaintId: string;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        RoomTypeRequest: {
+            key: null | string;
+            name: components["schemas"]["LocalizedTextDto"];
+            sizes: components["schemas"]["RoomSizesDto"];
+            /** Format: uuid */
+            suggestedPaintId: string;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        SettingsDto: {
+            /** Format: double */
+            wastePct: number;
+            /** Format: double */
+            vatPct: number;
+            /** Format: int64 */
+            minJobAmountCents: number;
+            /** Format: int64 */
+            maxJobAmountCents: number;
+            /** Format: double */
+            premiumAreaM2: number;
+            /** Format: double */
+            rangeLowPct: number;
+            /** Format: double */
+            rangeHighPct: number;
+            /** Format: double */
+            rangeSizeWideningPct: number;
+            /** Format: double */
+            rangeDamageWideningPct: number;
+            /** Format: double */
+            depositPct: number;
+            /** Format: double */
+            minMarginPct: number;
+            /** Format: double */
+            defaultHeight: number;
+            /** Format: int32 */
+            quoteValidityDays: number;
+            /** Format: int64 */
+            siteVisitPriceCents: number;
+            siteVisitDeductible: boolean;
+            /** Format: int32 */
+            reviewDeadlineBusinessDays: number;
+            /** Format: int32 */
+            fullRefundMinDays: number;
+            /** Format: double */
+            lateRefundPct: number;
+            /** Format: int32 */
+            maxPhotosPerElement: number;
+            /** Format: int32 */
+            maxVideosPerElement: number;
+            /** Format: int32 */
+            maxImageSizeMb: number;
+            /** Format: int32 */
+            maxVideoSizeMb: number;
+            clientPhoneVisibleToPainter: boolean;
+            painterPhoneVisibleToClient: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SimulateExtraRequest: {
+            description: string;
+            /** Format: int64 */
+            clientPriceCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+        };
+        SimulateRequest: {
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+            extras: null | components["schemas"]["SimulateExtraRequest"][];
+        };
+        SurfaceTypeDto: {
+            /** Format: uuid */
+            id: string;
+            key: string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            clientRateCents: number;
+            /** Format: int64 */
+            painterRateCents: number;
+            /** Format: double */
+            difficultyFactor: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SurfaceTypeRequest: {
+            key: null | string;
+            name: components["schemas"]["LocalizedTextDto"];
+            /** Format: int64 */
+            clientRateCents: number;
+            /** Format: int64 */
+            painterRateCents: number;
+            /** Format: double */
+            difficultyFactor: number;
+            isActive: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
     };
     responses: never;
     parameters: never;
@@ -186,6 +809,68 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    GetCatalog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogResponse"];
+                };
+            };
+        };
+    };
+    EstimateQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EstimateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EstimateResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     GetAntiforgeryToken: {
         parameters: {
             query?: never;
@@ -409,6 +1094,737 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListPaints: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaintDto"][];
+                };
+            };
+        };
+    };
+    CreatePaint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PaintRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaintDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdatePaint: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PaintRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaintDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListSurfaceTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SurfaceTypeDto"][];
+                };
+            };
+        };
+    };
+    CreateSurfaceType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SurfaceTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SurfaceTypeDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateSurfaceType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["SurfaceTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SurfaceTypeDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListRoomTypes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomTypeDto"][];
+                };
+            };
+        };
+    };
+    CreateRoomType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RoomTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomTypeDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateRoomType: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RoomTypeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RoomTypeDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListModifiers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModifierDto"][];
+                };
+            };
+        };
+    };
+    CreateModifier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ModifierRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModifierDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateModifier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ModifierRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModifierDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListExtraItems: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExtraItemDto"][];
+                };
+            };
+        };
+    };
+    CreateExtraItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ExtraItemRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExtraItemDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateExtraItem: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["ExtraItemRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExtraItemDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    GetSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsDto"];
+                };
+            };
+        };
+    };
+    UpdateSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingsDto"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SettingsDto"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListCoverageAreas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoverageAreaDto"][];
+                };
+            };
+        };
+    };
+    CreateCoverageArea: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CoverageAreaRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoverageAreaDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateCoverageArea: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CoverageAreaRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoverageAreaDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    SimulateQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteBreakdownDto"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
         };

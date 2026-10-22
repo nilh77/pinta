@@ -12,6 +12,7 @@ public static class RateLimitSetup
     public static IHostApplicationBuilder AddRateLimits(this IHostApplicationBuilder builder)
     {
         var authPerMinute = builder.Configuration.GetValue("RateLimits:AuthPerMinute", 10);
+        var estimatePerMinute = builder.Configuration.GetValue("RateLimits:EstimatePerMinute", 60);
 
         builder.Services.AddRateLimiter(options =>
         {
@@ -19,6 +20,9 @@ public static class RateLimitSetup
             options.AddPolicy(RateLimitPolicies.Auth, context => RateLimitPartition.GetFixedWindowLimiter(
                 context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                 _ => PerMinute(authPerMinute)));
+            options.AddPolicy(RateLimitPolicies.Estimate, context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => PerMinute(estimatePerMinute)));
             options.AddPolicy(RateLimitPolicies.ConfirmationResend, context => RateLimitPartition.GetFixedWindowLimiter(
                 context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous",
                 _ => PerMinute(1)));
