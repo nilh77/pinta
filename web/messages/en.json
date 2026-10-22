@@ -345,5 +345,207 @@
       "marginPct": "{pct}% of the price before VAT",
       "lowMargin": "Below the minimum margin."
     }
+  },
+  "quote": {
+    "progress": {
+      "label": "Request progress",
+      "job": "Job",
+      "price": "Price",
+      "details": "Details",
+      "send": "Send",
+      "done": "done"
+    },
+    "states": {
+      "loading": "Getting your quote ready…",
+      "slow": "This is taking longer than usual.",
+      "retry": "Try again",
+      "errorTitle": "We couldn't load the quote builder",
+      "errorBody": "Check your connection and try again. What you had entered is still saved."
+    },
+    "errors": {
+      "required": "Required.",
+      "number": "Enter a number, e.g. 3.50.",
+      "decimals": "Use at most 2 decimals.",
+      "side": "Between 0.50 and 30.00 m.",
+      "height": "Between 2.00 and 6.00 m.",
+      "surfaceLength": "Between 0.50 and 40.00 m.",
+      "surfaceHeight": "Between 0.50 and 20.00 m.",
+      "wallsOrCeiling": "Select at least one wall or the ceiling."
+    },
+    "type": {
+      "metaTitle": "What do you want to paint?",
+      "back": "Back to home",
+      "title": "What do you want to paint?",
+      "subtitle": "Pick an option. You'll see an estimated price in under a minute.",
+      "required": "Choose what you want to paint.",
+      "continue": "Continue",
+      "options": {
+        "surface": {
+          "title": "A wall or a ceiling",
+          "body": "Just length × height"
+        },
+        "room": {
+          "title": "A room",
+          "body": "Tick which walls and whether the ceiling"
+        },
+        "home": {
+          "title": "A whole home",
+          "body": "Add rooms in a simple layout"
+        }
+      },
+      "trust": {
+        "material": "Materials included",
+        "painters": "Vetted painters",
+        "payment": "Secure payment"
+      },
+      "resume": {
+        "title": "You have a quote in progress.",
+        "continue": "Continue",
+        "restart": "Start again"
+      },
+      "confirm": {
+        "title": "Start a new quote?",
+        "body": "Changing the type of job discards the rooms you have described.",
+        "yes": "Yes, start again",
+        "no": "Keep what I have"
+      }
+    },
+    "occupancy": {
+      "question": "What is the home like?",
+      "hint": "Furniture or people living there means protecting and moving things, so labour costs a little more.",
+      "required": "Tell us what the home is like to see the price."
+    },
+    "schema": {
+      "metaTitle": "Your layout",
+      "back": "Back to the type of job",
+      "title": {
+        "surface": "Your surface",
+        "room": "Your room",
+        "home": "Your home"
+      },
+      "subtitle": "Tap a room to describe it. It's a layout, not a floor plan: it doesn't need to be exact.",
+      "subtitleDesktop": "Pick a room on the left and tick which walls and ceiling to paint.",
+      "surfaceName": "Surface",
+      "listLabel": "Rooms and surfaces",
+      "notDescribed": "Not described yet",
+      "fixIt": "Check the measures",
+      "describe": "Describe",
+      "damageBadge": "Damp",
+      "menu": "Options for {name}",
+      "rename": "Rename",
+      "duplicate": "Duplicate",
+      "remove": "Delete",
+      "removed": "“{name}” deleted",
+      "undo": "Undo",
+      "ceilingOnly": "Ceiling only",
+      "wallsAndCeiling": "{count, plural, one {# wall} other {# walls}} + ceiling",
+      "wallsOnly": "{count, plural, one {# wall} other {# walls}}",
+      "add": "Add room",
+      "addRoomLabel": "Room type",
+      "addSurface": "Single surface (wall, ceiling, façade…)",
+      "maxReached": "Up to {max} items per request.",
+      "emptyTitle": "Add your first room",
+      "emptyBody": "Use the button below to start.",
+      "seePrice": "See my price",
+      "partialHint": "You can see the price even if some rooms are missing.",
+      "describeOne": "Describe at least one room to see the price.",
+      "fixInvalid": "Some items have measures to fix (in red)."
+    },
+    "editor": {
+      "label": "Room editor",
+      "pick": "Pick a room to describe it.",
+      "autosaveHint": "Changes are saved automatically.",
+      "rename": "Rename",
+      "cancel": "Cancel",
+      "save": "Save",
+      "roomType": "Room type",
+      "surfaceType": "Surface type",
+      "wallsTitle": "Walls and ceiling",
+      "wallsHint": "Tap the walls and ceiling you want painted.",
+      "allWalls": "All walls",
+      "noWalls": "None",
+      "wall": "Wall",
+      "ceiling": "Ceiling",
+      "notPainted": "Not painted",
+      "wallsSummary": "{count} of 4 walls · {area}",
+      "announce": {
+        "wallOn": "Wall {wall} selected",
+        "wallOff": "Wall {wall} cleared",
+        "ceilingOn": "Ceiling selected",
+        "ceilingOff": "Ceiling cleared",
+        "allOn": "All walls selected",
+        "allOff": "No walls selected"
+      },
+      "measures": "Measures",
+      "measuresMode": "How to give the measures",
+      "approximateSize": "Approximate size",
+      "exactMeasures": "Exact measures",
+      "size": "Size",
+      "sizes": {
+        "S": "Small",
+        "M": "Medium",
+        "L": "Large"
+      },
+      "sizeHint": "Standard height of {height}. We'll fine-tune the measures with your photos.",
+      "length": "Length (m)",
+      "width": "Width (m)",
+      "surfaceHeight": "Height (m)",
+      "height": "Height (m)",
+      "paint": "Paint",
+      "suggested": "Suggested",
+      "damage": "There's damp, cracks or peeling",
+      "area": "Area to paint"
+    },
+    "rename": {
+      "title": "Rename",
+      "label": "Name",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+    "estimateBar": {
+      "described": "{described} of {total} described",
+      "provisional": "Provisional estimate",
+      "describeFirst": "Describe a room",
+      "calculating": "Calculating…",
+      "error": "We couldn't calculate",
+      "offline": "Offline: we'll calculate when you're back",
+      "custom": "Custom quote"
+    },
+    "estimate": {
+      "metaTitle": "Your estimated price",
+      "back": "Back to your layout",
+      "title": "Your estimated price",
+      "kind": {
+        "surface": "{count, plural, one {Surface} other {# surfaces}}",
+        "room": "{count, plural, one {Room} other {# items}}",
+        "home": "Home · {count, plural, one {# room} other {# rooms}}"
+      },
+      "vatIncluded": "VAT included",
+      "custom": "We'll send you a custom quote",
+      "overMaxNote": "This job needs a custom quote. You can still carry on and send the request.",
+      "error": "We couldn't calculate the price.",
+      "retry": "Try again",
+      "badgesLabel": "Quote details",
+      "badges": {
+        "material": "Materials included",
+        "minimum": "Minimum charge",
+        "premium": "Premium job",
+        "widened": "Wider range for sizes or damage"
+      },
+      "review": "We confirm the final price within {days, plural, one {# working day} other {# working days}}, after reviewing your photos.",
+      "damage": "You reported damp or damage in: {rooms}. It may need extra work or a site visit.",
+      "summary": "Summary by room",
+      "includes": {
+        "title": "What's included",
+        "body": "Materials, labour, protection of floors and furniture, and cleaning at the end."
+      },
+      "next": {
+        "title": "What happens next",
+        "body": "An expert reviews the request within {reviewDays, plural, one {# working day} other {# working days}} and sends you the final price, valid for {validityDays} days."
+      },
+      "continue": "Continue to the final price",
+      "continueSoon": "Coming soon: photos and sending the request.",
+      "edit": "Edit rooms"
+    }
   }
 }
