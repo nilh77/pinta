@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Pinta.Modules.Catalog.Data;
 using Pinta.Modules.Catalog.Domain;
+using Pinta.SharedKernel.Data;
 using Pinta.SharedKernel.Text;
 
 namespace Pinta.Api.Seed;
@@ -40,37 +41,46 @@ public static class CatalogSeeder
         var satin = Paint("satin", "Tinta plástica acetinada", "Plástica satinada", "Satin emulsion", 11.00m, 10m);
         var antiDamp = Paint("anti_damp", "Tinta anti-humidade", "Anti-humedad", "Anti-damp paint", 16.00m, 8m);
         var exterior = Paint("exterior", "Tinta acrílica de exterior", "Exterior acrílica", "Acrylic exterior paint", 14.00m, 9m);
-        db.Paints.AddRange(matte, satin, antiDamp, exterior);
+        Paint[] paints = [matte, satin, antiDamp, exterior];
 
-        db.SurfaceTypes.AddRange(
+        SurfaceType[] surfaces =
+        [
             Surface("interior_wall", "Parede interior", "Pared interior", "Interior wall", 6.00m, 4.00m, 1.00m),
             Surface("ceiling", "Teto", "Techo", "Ceiling", 7.00m, 4.80m, 1.15m),
             Surface("facade", "Fachada", "Fachada", "Façade", 12.00m, 8.50m, 1.40m),
             Surface("wood", "Madeira", "Madera", "Wood", 9.00m, 6.00m, 1.20m),
-            Surface("metal", "Metal", "Metal", "Metal", 10.00m, 7.00m, 1.30m));
+            Surface("metal", "Metal", "Metal", "Metal", 10.00m, 7.00m, 1.30m),
+        ];
 
-        db.Modifiers.AddRange(
+        Modifier[] occupancies =
+        [
             Occupancy("empty", "Vazia", "Vacía", "Empty", 1.00m),
             Occupancy("furnished", "Com móveis", "Con muebles", "Furnished", 1.10m),
-            Occupancy("inhabited", "Habitada", "Habitada", "Lived in", 1.20m));
+            Occupancy("inhabited", "Habitada", "Habitada", "Lived in", 1.20m),
+        ];
 
-        db.RoomTypes.AddRange(
+        RoomType[] rooms =
+        [
             Room("living", "Sala", "Sala", "Living room", matte, (4m, 3m), (5m, 4m), (6m, 5m)),
             Room("bedroom", "Quarto", "Dormitorio", "Bedroom", matte, (3m, 2.5m), (3.5m, 3m), (4.5m, 4m)),
             Room("kitchen", "Cozinha", "Cocina", "Kitchen", satin, (3m, 2m), (3.5m, 3m), (4.5m, 3.5m)),
             Room("bathroom", "Casa de banho", "Baño", "Bathroom", antiDamp, (2m, 1.5m), (2.5m, 2m), (3m, 2.5m)),
             Room("hallway", "Corredor", "Pasillo", "Hallway", matte, (3m, 1m), (5m, 1.2m), (7m, 1.2m)),
-            Room("other", "Outra divisão", "Otra", "Other", matte, (2.5m, 2.5m), (3m, 3m), (4m, 3.5m)));
+            Room("other", "Outra divisão", "Otra", "Other", matte, (2.5m, 2.5m), (3m, 3m), (4m, 3.5m)),
+        ];
 
-        db.ExtraItems.Add(new ExtraItem
-        {
-            Key = "anti_damp_treatment",
-            Name = Text("Tratamento anti-humidade", "Tratamiento anti-humedad", "Anti-damp treatment"),
-            ClientPrice = 121.95m,
-            PainterPay = 75.00m,
-        });
+        ExtraItem[] extras =
+        [
+            new ExtraItem
+            {
+                Key = "anti_damp_treatment",
+                Name = Text("Tratamento anti-humidade", "Tratamiento anti-humedad", "Anti-damp treatment"),
+                ClientPrice = 121.95m,
+                PainterPay = 75.00m,
+            },
+        ];
 
-        db.Settings.Add(new PricingSettings
+        var settings = new PricingSettings
         {
             WastePct = 10m,
             VatPct = 23m,
@@ -96,16 +106,19 @@ public static class CatalogSeeder
             MaxVideoSizeMb = 100,
             ClientPhoneVisibleToPainter = true,
             PainterPhoneVisibleToClient = true,
-        });
+        };
 
-        db.CoverageAreas.AddRange(Coverage.SelectMany(c => c.Prefixes.Select(prefix =>
-            new CoverageArea { PostalPrefix = prefix, Municipality = c.Municipality })));
+        var coverage = Coverage.SelectMany(c => c.Prefixes.Select(prefix =>
+            new CoverageArea { PostalPrefix = prefix, Municipality = c.Municipality })).ToArray();
 
-        foreach (var entry in db.ChangeTracker.Entries<Pinta.SharedKernel.Data.AuditedEntity>())
+        // Lists are ordered by creation time: one millisecond apart keeps the order of docs/pricing-engine.md.
+        AuditedEntity[] all = [.. paints, .. surfaces, .. occupancies, .. rooms, .. extras, settings, .. coverage];
+        for (var i = 0; i < all.Length; i++)
         {
-            entry.Entity.Stamp(now, userId: null);
+            all[i].Stamp(now.AddMilliseconds(i), userId: null);
         }
 
+        db.AddRange(all);
         await db.SaveChangesAsync();
     }
 

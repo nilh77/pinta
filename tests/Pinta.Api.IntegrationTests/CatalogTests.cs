@@ -26,8 +26,9 @@ public class CatalogTests(PintaApiFactory factory)
         var m = bedroom.GetProperty("sizes").EnumerateArray().Single(s => s.GetProperty("size").GetString() == "M");
         Assert.Equal(3.5m, m.GetProperty("length").GetDecimal());
         Assert.Equal(3m, m.GetProperty("width").GetDecimal());
-        Assert.Contains("anti_damp", Ids(catalog, "paints"));
-        Assert.Contains("facade", Ids(catalog, "surfaceTypes"));
+        // Seed order of docs/pricing-engine.md, followed by anything the admin added.
+        Assert.Equal(["matte", "satin", "anti_damp", "exterior"], Ids(catalog, "paints")[..4]);
+        Assert.Equal(["interior_wall", "ceiling", "facade", "wood", "metal"], Ids(catalog, "surfaceTypes")[..5]);
         Assert.Equal(["empty", "furnished", "inhabited"], Ids(catalog, "occupancies"));
     }
 
