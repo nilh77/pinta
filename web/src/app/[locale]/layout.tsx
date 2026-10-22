@@ -42,7 +42,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className="min-h-dvh">
         <a
           href="#main"
-          className="sr-only rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
+          className="sr-only rounded-xl bg-primary font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-3"
         >
           {t("skipToContent")}
         </a>
