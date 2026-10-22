@@ -389,14 +389,14 @@ export interface components {
             surfaceTypes: components["schemas"]["CatalogOption"][];
             occupancies: components["schemas"]["CatalogOption"][];
             /** Format: double */
-            defaultHeight: number | string;
+            defaultHeight: number;
         };
         CatalogRoomSize: {
             size: components["schemas"]["RoomSize"];
             /** Format: double */
-            length: number | string;
+            length: number;
             /** Format: double */
-            width: number | string;
+            width: number;
         };
         CatalogRoomType: {
             id: string;
@@ -416,7 +416,7 @@ export interface components {
             municipality: string;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -425,17 +425,17 @@ export interface components {
             municipality: string;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
         ElementAreaDto: {
             /** Format: int32 */
-            index: number | string;
+            index: number;
             /** Format: double */
-            wallsAreaM2: null | number | string;
+            wallsAreaM2: null | number;
             /** Format: double */
-            ceilingAreaM2: null | number | string;
+            ceilingAreaM2: null | number;
             /** Format: double */
-            areaM2: number | string;
+            areaM2: number;
         };
         /** @enum {unknown} */
         ElementKind: "room" | "surface";
@@ -445,12 +445,12 @@ export interface components {
         };
         EstimateResponse: {
             /** Format: double */
-            areaM2: number | string;
+            areaM2: number;
             elements: components["schemas"]["ElementAreaDto"][];
             /** Format: int64 */
-            rangeMinCents: null | number | string;
+            rangeMinCents: null | number;
             /** Format: int64 */
-            rangeMaxCents: null | number | string;
+            rangeMaxCents: null | number;
             minimumApplied: boolean;
             overMax: boolean;
             premium: boolean;
@@ -462,12 +462,12 @@ export interface components {
             key: string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            clientPriceCents: number | string;
+            clientPriceCents: number;
             /** Format: int64 */
-            painterPayCents: number | string;
+            painterPayCents: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -475,25 +475,25 @@ export interface components {
             key: null | string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            clientPriceCents: number | string;
+            clientPriceCents: number;
             /** Format: int64 */
-            painterPayCents: number | string;
+            painterPayCents: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
         ExtraLineDto: {
             description: string;
             /** Format: int64 */
-            clientPriceCents: number | string;
+            clientPriceCents: number;
             /** Format: int64 */
-            painterPayCents: number | string;
+            painterPayCents: number;
         };
         HttpValidationProblemDetails: {
             type?: null | string;
             title?: null | string;
             /** Format: int32 */
-            status?: null | number | string;
+            status?: null | number;
             detail?: null | string;
             instance?: null | string;
             errors?: {
@@ -529,10 +529,10 @@ export interface components {
             key: string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: double */
-            factor: number | string;
+            factor: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -540,10 +540,10 @@ export interface components {
             key: null | string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: double */
-            factor: number | string;
+            factor: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
         /** @enum {unknown} */
         Occupancy: "empty" | "furnished" | "inhabited";
@@ -553,14 +553,14 @@ export interface components {
             key: string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            pricePerLitreCents: number | string;
+            pricePerLitreCents: number;
             /** Format: double */
-            coverageM2PerLitre: number | string;
+            coverageM2PerLitre: number;
             /** Format: int32 */
-            coats: number | string;
+            coats: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -568,35 +568,35 @@ export interface components {
             key: null | string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            pricePerLitreCents: number | string;
+            pricePerLitreCents: number;
             /** Format: double */
-            coverageM2PerLitre: number | string;
+            coverageM2PerLitre: number;
             /** Format: int32 */
-            coats: number | string;
+            coats: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
         PricedLineDto: {
             /** Format: int32 */
-            element: number | string;
+            element: number;
             surface: string;
             /** Format: double */
-            areaM2: number | string;
+            areaM2: number;
             /** Format: double */
-            litres: number | string;
+            litres: number;
             /** Format: int64 */
-            materialCents: number | string;
+            materialCents: number;
             /** Format: int64 */
-            labourCents: number | string;
+            labourCents: number;
             /** Format: int64 */
-            painterCents: number | string;
+            painterCents: number;
         };
         ProblemDetails: {
             type?: null | string;
             title?: null | string;
             /** Format: int32 */
-            status?: null | number | string;
+            status?: null | number;
             detail?: null | string;
             instance?: null | string;
             code: string;
@@ -607,36 +607,36 @@ export interface components {
             extras: components["schemas"]["ExtraLineDto"][];
             elements: components["schemas"]["ElementAreaDto"][];
             /** Format: double */
-            areaM2: number | string;
+            areaM2: number;
             /** Format: double */
-            litres: number | string;
+            litres: number;
             /** Format: int64 */
-            materialCents: number | string;
+            materialCents: number;
             /** Format: int64 */
-            labourCents: number | string;
+            labourCents: number;
             /** Format: int64 */
-            extrasCents: number | string;
+            extrasCents: number;
             /** Format: int64 */
-            subtotalCents: number | string;
+            subtotalCents: number;
             /** Format: int64 */
-            vatCents: number | string;
+            vatCents: number;
             /** Format: int64 */
-            totalCents: number | string;
+            totalCents: number;
             /** Format: int64 */
-            painterTotalCents: number | string;
+            painterTotalCents: number;
             /** Format: int64 */
-            marginCents: number | string;
+            marginCents: number;
             /** Format: double */
-            marginPct: number | string;
+            marginPct: number;
             belowMinMargin: boolean;
             /** Format: int64 */
-            depositCents: number | string;
+            depositCents: number;
             /** Format: int64 */
-            balanceCents: number | string;
+            balanceCents: number;
             /** Format: int64 */
-            rangeMinCents: null | number | string;
+            rangeMinCents: null | number;
             /** Format: int64 */
-            rangeMaxCents: null | number | string;
+            rangeMaxCents: null | number;
             minimumApplied: boolean;
             overMax: boolean;
             premium: boolean;
@@ -648,11 +648,11 @@ export interface components {
             roomTypeId: null | string;
             size: null | components["schemas"]["RoomSize"];
             /** Format: double */
-            length: null | number | string;
+            length: null | number;
             /** Format: double */
-            width: null | number | string;
+            width: null | number;
             /** Format: double */
-            height: null | number | string;
+            height: null | number;
             walls: null | boolean[];
             ceiling: boolean;
             surfaceTypeId: null | string;
@@ -672,9 +672,9 @@ export interface components {
         Role: "client" | "painter" | "admin";
         RoomMeasuresDto: {
             /** Format: double */
-            length: number | string;
+            length: number;
             /** Format: double */
-            width: number | string;
+            width: number;
         };
         /** @enum {unknown} */
         RoomSize: "S" | "M" | "L";
@@ -693,7 +693,7 @@ export interface components {
             suggestedPaintId: string;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -705,65 +705,65 @@ export interface components {
             suggestedPaintId: string;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
         SettingsDto: {
             /** Format: double */
-            wastePct: number | string;
+            wastePct: number;
             /** Format: double */
-            vatPct: number | string;
+            vatPct: number;
             /** Format: int64 */
-            minJobAmountCents: number | string;
+            minJobAmountCents: number;
             /** Format: int64 */
-            maxJobAmountCents: number | string;
+            maxJobAmountCents: number;
             /** Format: double */
-            premiumAreaM2: number | string;
+            premiumAreaM2: number;
             /** Format: double */
-            rangeLowPct: number | string;
+            rangeLowPct: number;
             /** Format: double */
-            rangeHighPct: number | string;
+            rangeHighPct: number;
             /** Format: double */
-            rangeSizeWideningPct: number | string;
+            rangeSizeWideningPct: number;
             /** Format: double */
-            rangeDamageWideningPct: number | string;
+            rangeDamageWideningPct: number;
             /** Format: double */
-            depositPct: number | string;
+            depositPct: number;
             /** Format: double */
-            minMarginPct: number | string;
+            minMarginPct: number;
             /** Format: double */
-            defaultHeight: number | string;
+            defaultHeight: number;
             /** Format: int32 */
-            quoteValidityDays: number | string;
+            quoteValidityDays: number;
             /** Format: int64 */
-            siteVisitPriceCents: number | string;
+            siteVisitPriceCents: number;
             siteVisitDeductible: boolean;
             /** Format: int32 */
-            reviewDeadlineBusinessDays: number | string;
+            reviewDeadlineBusinessDays: number;
             /** Format: int32 */
-            fullRefundMinDays: number | string;
+            fullRefundMinDays: number;
             /** Format: double */
-            lateRefundPct: number | string;
+            lateRefundPct: number;
             /** Format: int32 */
-            maxPhotosPerElement: number | string;
+            maxPhotosPerElement: number;
             /** Format: int32 */
-            maxVideosPerElement: number | string;
+            maxVideosPerElement: number;
             /** Format: int32 */
-            maxImageSizeMb: number | string;
+            maxImageSizeMb: number;
             /** Format: int32 */
-            maxVideoSizeMb: number | string;
+            maxVideoSizeMb: number;
             clientPhoneVisibleToPainter: boolean;
             painterPhoneVisibleToClient: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
         SimulateExtraRequest: {
             description: string;
             /** Format: int64 */
-            clientPriceCents: number | string;
+            clientPriceCents: number;
             /** Format: int64 */
-            painterPayCents: number | string;
+            painterPayCents: number;
         };
         SimulateRequest: {
             occupancy: components["schemas"]["Occupancy"];
@@ -776,14 +776,14 @@ export interface components {
             key: string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            clientRateCents: number | string;
+            clientRateCents: number;
             /** Format: int64 */
-            painterRateCents: number | string;
+            painterRateCents: number;
             /** Format: double */
-            difficultyFactor: number | string;
+            difficultyFactor: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: number | string;
+            version: number;
             /** Format: date-time */
             updatedAt: string;
         };
@@ -791,14 +791,14 @@ export interface components {
             key: null | string;
             name: components["schemas"]["LocalizedTextDto"];
             /** Format: int64 */
-            clientRateCents: number | string;
+            clientRateCents: number;
             /** Format: int64 */
-            painterRateCents: number | string;
+            painterRateCents: number;
             /** Format: double */
-            difficultyFactor: number | string;
+            difficultyFactor: number;
             isActive: boolean;
             /** Format: uint32 */
-            version: null | number | string;
+            version: null | number;
         };
     };
     responses: never;
