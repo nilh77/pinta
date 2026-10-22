@@ -72,4 +72,5 @@ Local tools: Mailpit UI for emails, MinIO console for files, `/hangfire` (admin 
 - One milestone (H0–H8 in `docs/plan.md`) per branch (`h1-pricing`, `h2-constructor`, …). Propose a plan first and wait for review before writing code.
 - Small tasks, each with tests and its own commit. A task is done only when it meets the definition of done in `docs/plan.md` (tests green, OpenAPI client regenerated, three languages, 390 px and 1440 px, empty/loading/error states, role and ownership checks).
 - Reference user stories by ID in commits and test names (e.g. `C2.3`).
+- Every push updates `CHANGELOG.md` (in Spanish, Keep a Changelog sections) under **Sin publicar**, in the current milestone's block: what changed for users or developers, with story IDs. When a milestone merges into `main`, its block gets the date and the PR link.
 - When something in the PRD is ambiguous or missing, ask instead of guessing; if you must proceed, choose the simplest option and note it for the doc.
