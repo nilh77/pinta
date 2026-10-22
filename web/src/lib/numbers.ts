@@ -1,5 +1,5 @@
 /**
- * Decimal inputs of the admin screens. People type "8,00" or "8.00"; the API wants cents (integers) for amounts and
+ * Decimal inputs (admin screens and the quote builder). People type "8,00" or "8.00"; the API wants cents (integers) for amounts and
  * plain numbers for measures, factors and percentages (docs/api.md).
  */
 

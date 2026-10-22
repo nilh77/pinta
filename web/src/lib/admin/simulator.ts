@@ -1,5 +1,5 @@
 import type { components } from "@/lib/api/schema";
-import { centsFromInput, parseDecimal } from "./numbers";
+import { centsFromInput, parseDecimal } from "@/lib/numbers";
 
 type Schemas = components["schemas"];
 export type SimulateRequest = Schemas["SimulateRequest"];

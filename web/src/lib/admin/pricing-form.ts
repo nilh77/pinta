@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { components } from "@/lib/api/schema";
-import { centsFromInput, centsToInput, decimalPlaces, formatDecimalInput, parseDecimal } from "./numbers";
+import { centsFromInput, centsToInput, decimalPlaces, formatDecimalInput, parseDecimal } from "@/lib/numbers";
 
 type Schemas = components["schemas"];
 export type PaintDto = Schemas["PaintDto"];
