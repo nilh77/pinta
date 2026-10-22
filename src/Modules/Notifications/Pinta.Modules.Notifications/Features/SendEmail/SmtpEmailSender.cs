@@ -1,14 +1,13 @@
-using Hangfire;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Pinta.Modules.Notifications.Features.Outbox;
 
 namespace Pinta.Modules.Notifications.Features.SendEmail;
 
-public sealed class SmtpEmailSender(IOptions<SmtpOptions> options)
+public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IMailTransport
 {
-    [AutomaticRetry(Attempts = 5)]
     public async Task SendAsync(string to, string subject, string html, CancellationToken cancellationToken)
     {
         var smtp = options.Value;

@@ -19,4 +19,31 @@
   <data name="RequestReceived.Custom" xml:space="preserve"><value>Orçamento à medida</value></data>
   <data name="RequestReceived.ConfirmFirst" xml:space="preserve"><value>Para revermos o pedido, confirme primeiro o seu email.</value></data>
   <data name="RequestReceived.Next" xml:space="preserve"><value>Um especialista revê o pedido em {0} dias úteis e envia-lhe o preço fechado.</value></data>
+  <data name="Common.Greeting" xml:space="preserve"><value>Olá {0},</value></data>
+  <data name="Common.Code" xml:space="preserve"><value>Pedido</value></data>
+  <data name="Common.SeeJob" xml:space="preserve"><value>Ver o meu trabalho</value></data>
+  <data name="Common.OpenAdmin" xml:space="preserve"><value>Abrir no painel</value></data>
+  <data name="PriceConfirmed.Subject" xml:space="preserve"><value>O preço do seu pedido {0} está pronto</value></data>
+  <data name="PriceConfirmed.Body" xml:space="preserve"><value>Revimos o seu pedido e o preço final está pronto. Aceite-o e pague o sinal para reservar a data.</value></data>
+  <data name="PriceConfirmed.Total" xml:space="preserve"><value>Preço final (IVA incluído)</value></data>
+  <data name="PriceConfirmed.Deposit" xml:space="preserve"><value>Sinal (30%)</value></data>
+  <data name="PriceConfirmed.ValidUntil" xml:space="preserve"><value>Válido até</value></data>
+  <data name="RequestRejected.Subject" xml:space="preserve"><value>O seu pedido {0} não pode seguir em frente</value></data>
+  <data name="RequestRejected.Body" xml:space="preserve"><value>Revimos o seu pedido e, desta vez, não o podemos realizar. Este é o motivo:</value></data>
+  <data name="PriceExpired.Subject" xml:space="preserve"><value>O preço do pedido {0} expirou</value></data>
+  <data name="PriceExpired.Body" xml:space="preserve"><value>O prazo para aceitar o preço terminou. Se ainda quiser o trabalho, peça um preço novo na sua área.</value></data>
+  <data name="SiteVisitScheduled.Subject" xml:space="preserve"><value>Visita técnica para o pedido {0}</value></data>
+  <data name="SiteVisitScheduled.Body" xml:space="preserve"><value>Para lhe dar um preço exato vamos medir em casa. Estes são os dados da visita:</value></data>
+  <data name="SiteVisitScheduled.When" xml:space="preserve"><value>Data</value></data>
+  <data name="SiteVisitScheduled.Who" xml:space="preserve"><value>Quem vai</value></data>
+  <data name="SiteVisitScheduled.Price" xml:space="preserve"><value>Preço da visita</value></data>
+  <data name="ClientQuestion.Subject" xml:space="preserve"><value>Dúvida do cliente no pedido {0}</value></data>
+  <data name="ClientQuestion.Body" xml:space="preserve"><value>{0} ({1}) tem dúvidas sobre o preço confirmado:</value></data>
+  <data name="ClientRejectedPrice.Subject" xml:space="preserve"><value>O cliente recusou o preço do pedido {0}</value></data>
+  <data name="ClientRejectedPrice.Body" xml:space="preserve"><value>{0} recusou o preço e o pedido ficou cancelado.</value></data>
+  <data name="ClientRejectedPrice.NoReason" xml:space="preserve"><value>Sem motivo indicado.</value></data>
+  <data name="ResetPassword.Subject" xml:space="preserve"><value>Recuperar a palavra-passe</value></data>
+  <data name="ResetPassword.Body" xml:space="preserve"><value>Recebemos um pedido para mudar a sua palavra-passe. O link é válido durante 2 horas.</value></data>
+  <data name="ResetPassword.Button" xml:space="preserve"><value>Escolher nova palavra-passe</value></data>
+  <data name="ResetPassword.Ignore" xml:space="preserve"><value>Se não foi você, pode ignorar este email.</value></data>
 </root>

@@ -19,4 +19,31 @@
   <data name="RequestReceived.Custom" xml:space="preserve"><value>Custom quote</value></data>
   <data name="RequestReceived.ConfirmFirst" xml:space="preserve"><value>To review the request, please confirm your email first.</value></data>
   <data name="RequestReceived.Next" xml:space="preserve"><value>An expert reviews the request within {0} working days and sends you the final price.</value></data>
+  <data name="Common.Greeting" xml:space="preserve"><value>Hello {0},</value></data>
+  <data name="Common.Code" xml:space="preserve"><value>Request</value></data>
+  <data name="Common.SeeJob" xml:space="preserve"><value>See my job</value></data>
+  <data name="Common.OpenAdmin" xml:space="preserve"><value>Open in the dashboard</value></data>
+  <data name="PriceConfirmed.Subject" xml:space="preserve"><value>The price of your request {0} is ready</value></data>
+  <data name="PriceConfirmed.Body" xml:space="preserve"><value>We've reviewed your request and the final price is ready. Accept it and pay the deposit to book the date.</value></data>
+  <data name="PriceConfirmed.Total" xml:space="preserve"><value>Final price (VAT included)</value></data>
+  <data name="PriceConfirmed.Deposit" xml:space="preserve"><value>Deposit (30%)</value></data>
+  <data name="PriceConfirmed.ValidUntil" xml:space="preserve"><value>Valid until</value></data>
+  <data name="RequestRejected.Subject" xml:space="preserve"><value>Your request {0} can't go ahead</value></data>
+  <data name="RequestRejected.Body" xml:space="preserve"><value>We've reviewed your request and this time we can't take it on. This is why:</value></data>
+  <data name="PriceExpired.Subject" xml:space="preserve"><value>The price of request {0} has expired</value></data>
+  <data name="PriceExpired.Body" xml:space="preserve"><value>The time to accept the price is over. If you still want the job, ask for a new price from your area.</value></data>
+  <data name="SiteVisitScheduled.Subject" xml:space="preserve"><value>Site visit for request {0}</value></data>
+  <data name="SiteVisitScheduled.Body" xml:space="preserve"><value>To give you an exact price we'll measure at your home. These are the visit details:</value></data>
+  <data name="SiteVisitScheduled.When" xml:space="preserve"><value>Date</value></data>
+  <data name="SiteVisitScheduled.Who" xml:space="preserve"><value>Who's coming</value></data>
+  <data name="SiteVisitScheduled.Price" xml:space="preserve"><value>Visit price</value></data>
+  <data name="ClientQuestion.Subject" xml:space="preserve"><value>Client question on request {0}</value></data>
+  <data name="ClientQuestion.Body" xml:space="preserve"><value>{0} ({1}) has questions about the confirmed price:</value></data>
+  <data name="ClientRejectedPrice.Subject" xml:space="preserve"><value>The client declined the price of request {0}</value></data>
+  <data name="ClientRejectedPrice.Body" xml:space="preserve"><value>{0} declined the price and the request is cancelled.</value></data>
+  <data name="ClientRejectedPrice.NoReason" xml:space="preserve"><value>No reason given.</value></data>
+  <data name="ResetPassword.Subject" xml:space="preserve"><value>Reset your password</value></data>
+  <data name="ResetPassword.Body" xml:space="preserve"><value>We received a request to change your password. The link is valid for 2 hours.</value></data>
+  <data name="ResetPassword.Button" xml:space="preserve"><value>Choose a new password</value></data>
+  <data name="ResetPassword.Ignore" xml:space="preserve"><value>If it wasn't you, you can ignore this email.</value></data>
 </root>
