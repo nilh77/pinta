@@ -20,9 +20,14 @@ public sealed record CatalogResponse(
     IReadOnlyList<CatalogOption> Paints,
     IReadOnlyList<CatalogOption> SurfaceTypes,
     IReadOnlyList<CatalogOption> Occupancies,
-    decimal DefaultHeight);
+    decimal DefaultHeight,
+    int ReviewDeadlineBusinessDays,
+    int QuoteValidityDays);
 
-/// <summary>GET /api/catalog — what the quote builder offers, in the request language. Never rates or amounts (C2.x).</summary>
+/// <summary>
+/// GET /api/catalog — what the quote builder offers, in the request language, plus the review deadline and price
+/// validity shown on the estimate (C2.8). Never rates or amounts (C2.x).
+/// </summary>
 internal static class GetCatalogEndpoint
 {
     public static void Map(IEndpointRouteBuilder app) =>
@@ -38,7 +43,9 @@ internal static class GetCatalogEndpoint
             .Where(m => m.IsActive && m.Group == Modifier.OccupancyGroup)
             .OrderBy(m => m.Factor)
             .ToListAsync(cancellationToken);
-        var defaultHeight = await db.Settings.AsNoTracking().Select(s => s.DefaultHeight).SingleAsync(cancellationToken);
+        var settings = await db.Settings.AsNoTracking()
+            .Select(s => new { s.DefaultHeight, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays })
+            .SingleAsync(cancellationToken);
 
         return TypedResults.Ok(new CatalogResponse(
             rooms.Select(r => new CatalogRoomType(
@@ -53,6 +60,8 @@ internal static class GetCatalogEndpoint
             paints.Select(p => new CatalogOption(p.Key, p.Name.Current)).ToArray(),
             surfaces.Select(s => new CatalogOption(s.Key, s.Name.Current)).ToArray(),
             occupancies.Select(m => new CatalogOption(m.Key, m.Name.Current)).ToArray(),
-            defaultHeight));
+            settings.DefaultHeight,
+            settings.ReviewDeadlineBusinessDays,
+            settings.QuoteValidityDays));
     }
 }

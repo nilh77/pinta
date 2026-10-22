@@ -20,6 +20,8 @@ public class CatalogTests(PintaApiFactory factory)
 
         var catalog = JsonDocument.Parse(body).RootElement;
         Assert.Equal(2.6m, catalog.GetProperty("defaultHeight").GetDecimal());
+        Assert.Equal(2, catalog.GetProperty("reviewDeadlineBusinessDays").GetInt32());
+        Assert.Equal(15, catalog.GetProperty("quoteValidityDays").GetInt32());
         var bedroom = catalog.GetProperty("roomTypes").EnumerateArray().Single(r => r.GetProperty("id").GetString() == "bedroom");
         Assert.Equal("Dormitorio", bedroom.GetProperty("name").GetString());
         Assert.Equal("matte", bedroom.GetProperty("suggestedPaintId").GetString());

@@ -1239,7 +1239,9 @@
           "paints",
           "surfaceTypes",
           "occupancies",
-          "defaultHeight"
+          "defaultHeight",
+          "reviewDeadlineBusinessDays",
+          "quoteValidityDays"
         ],
         "type": "object",
         "properties": {
@@ -1270,6 +1272,14 @@
           "defaultHeight": {
             "type": "number",
             "format": "double"
+          },
+          "reviewDeadlineBusinessDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quoteValidityDays": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
