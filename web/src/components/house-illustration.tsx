@@ -1,11 +1,12 @@
-import { useFormatter, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { formatEuros } from "@/lib/format";
 
 /** Decorative preview of the home layout builder (board "Inicio"); the real one arrives in H2. */
 export function HouseIllustration() {
   const t = useTranslations("home.illustration");
-  const format = useFormatter();
+  const locale = useLocale();
   const rooms = [t("kitchen"), t("bathroom"), t("bedroom")];
-  const money = (euros: number) => format.number(euros, { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  const money = (euros: number) => formatEuros(locale, euros, 0);
 
   return (
     <figure aria-label={t("label")} className="relative rounded-3xl border border-border bg-card px-5 pt-5 pb-8">
