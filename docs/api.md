@@ -19,7 +19,7 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | Paginación | `?page=1&pageSize=25` (máximo 100). Respuesta `{ items, page, pageSize, total }` |
 | Idempotencia | `POST /api/jobs` y la creación de pagos aceptan `Idempotency-Key` (UUID); repetirla devuelve el mismo resultado |
 | Concurrencia | Recursos editables por el admin llevan `version`; una edición con versión antigua devuelve 409 |
-| Identificadores | UUID en las rutas; el código visible (`PT-2026-0142`) solo como dato |
+| Identificadores | UUID en las rutas; el código visible (`PT-2026-0142`) solo como dato. En las peticiones de cotización, el catálogo se referencia por su clave estable (`paintId: "matte"`, `roomTypeId: "bedroom"`, `surfaceTypeId: "facade"`) |
 
 ## Públicos y cliente
 
