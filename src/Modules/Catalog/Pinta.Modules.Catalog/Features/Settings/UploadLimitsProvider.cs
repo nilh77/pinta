@@ -16,6 +16,15 @@ internal sealed class RequestSettingsProvider(CatalogDbContext db) : IRequestSet
 {
     public Task<RequestSettings> GetAsync(CancellationToken cancellationToken = default) =>
         db.Settings.AsNoTracking()
-            .Select(s => new RequestSettings(s.MinLeadBusinessDays, s.ReviewDeadlineBusinessDays))
+            .Select(s => new RequestSettings(s.MinLeadBusinessDays, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.SiteVisitPrice, s.SiteVisitDeductible))
             .SingleAsync(cancellationToken);
+}
+
+internal sealed class ExtraItemsProvider(CatalogDbContext db) : IExtraItems
+{
+    public async Task<CatalogExtra?> FindActiveAsync(string key, CancellationToken cancellationToken = default) =>
+        await db.ExtraItems.AsNoTracking()
+            .Where(x => x.Key == key && x.IsActive)
+            .Select(x => new CatalogExtra(x.Key, x.Name, x.ClientPrice, x.PainterPay))
+            .SingleOrDefaultAsync(cancellationToken);
 }

@@ -24,6 +24,7 @@ public static class CatalogModule
         builder.Services.AddScoped<ICoverageService, CoverageService>();
         builder.Services.AddScoped<IUploadLimits, UploadLimitsProvider>();
         builder.Services.AddScoped<IRequestSettings, RequestSettingsProvider>();
+        builder.Services.AddScoped<IExtraItems, ExtraItemsProvider>();
         builder.Services.AddValidatorsFromAssemblyContaining<PaintRequest>(includeInternalTypes: true);
         return builder;
     }

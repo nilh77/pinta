@@ -46,15 +46,20 @@ internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
 
     public async Task<PricedQuote> PriceWithSnapshotAsync(
         Occupancy occupancy, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ExtraLine> extras,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken) =>
+        PriceWith(await snapshots.GetCurrentAsync(cancellationToken), occupancy, elements, extras);
+
+    /// <summary>Prices with a given snapshot: a draft keeps the one taken when it started.</summary>
+    public static PricedQuote PriceWith(
+        PriceSnapshot snapshot, Occupancy occupancy, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ExtraLine> extras,
+        decimal? manualSubtotal = null)
     {
-        var snapshot = await snapshots.GetCurrentAsync(cancellationToken);
-        var input = new QuoteInput([.. elements.Select(ToElement)], OccupancyKey(occupancy), extras);
+        var input = new QuoteInput([.. elements.Select(ToElement)], OccupancyKey(occupancy), extras) { ManualSubtotal = manualSubtotal };
         var errors = QuoteValidator.Validate(snapshot, input);
         if (errors.Count > 0)
         {
             return new PricedQuote(snapshot, input, null, errors
-                .GroupBy(e => e.Path)
+                .GroupBy(e => e.Path == "manualSubtotal" ? "manualSubtotalCents" : e.Path)
                 .ToDictionary(g => g.Key, g => g.Select(e => QuotingMessages.Get(e.Code)).ToArray()));
         }
 
@@ -63,13 +68,10 @@ internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
 
     public static string OccupancyKey(Occupancy occupancy) => occupancy.ToString().ToLowerInvariant();
 
-    private static QuoteElement ToElement(QuoteElementRequest e) => e.Kind == ElementKind.Room
+    public static Occupancy ParseOccupancy(string key) => Enum.Parse<Occupancy>(key, ignoreCase: true);
+
+    public static QuoteElement ToElement(QuoteElementRequest e) => e.Kind == ElementKind.Room
         ? new Room(e.RoomTypeId!, e.Size, e.Length, e.Width, e.Height, new Walls(e.Walls![0], e.Walls[1], e.Walls[2], e.Walls[3]),
             e.Ceiling, e.PaintId, e.Damage)
         : new LooseSurface(e.SurfaceTypeId!, e.Length!.Value, e.Width!.Value, e.PaintId, e.Damage);
-}
-
-public sealed record ElementAreaDto(int Index, decimal? WallsAreaM2, decimal? CeilingAreaM2, decimal AreaM2)
-{
-    internal static ElementAreaDto From(ElementArea a) => new(a.Index, a.WallsAreaM2, a.CeilingAreaM2, a.AreaM2);
 }

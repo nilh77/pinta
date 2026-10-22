@@ -14,4 +14,7 @@
   <data name="unknown_room_type" xml:space="preserve"><value>Este tipo de divisão não está disponível.</value></data>
   <data name="unknown_occupancy" xml:space="preserve"><value>Esta ocupação não está disponível.</value></data>
   <data name="walls_four" xml:space="preserve"><value>Indique as quatro paredes A, B, C e D.</value></data>
+  <data name="unknown_extra" xml:space="preserve"><value>Partida extra desconhecida ou inativa.</value></data>
+  <data name="extra_needs_price" xml:space="preserve"><value>Indique a descrição e os preços da partida.</value></data>
+  <data name="adjustment_reason_required" xml:space="preserve"><value>Indique o motivo do ajuste.</value></data>
 </root>

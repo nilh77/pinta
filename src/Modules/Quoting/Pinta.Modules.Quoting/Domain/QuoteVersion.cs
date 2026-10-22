@@ -1,15 +1,8 @@
+using Pinta.Modules.Quoting.Contracts;
 using Pinta.Pricing;
+using Pinta.SharedKernel.Text;
 
 namespace Pinta.Modules.Quoting.Domain;
-
-/// <summary>Serialized as <c>estimate</c>, <c>admin_review</c>, <c>site_visit</c>, <c>revision</c> (docs/api.md).</summary>
-public enum QuoteOrigin
-{
-    Estimate,
-    AdminReview,
-    SiteVisit,
-    Revision,
-}
 
 /// <summary>
 /// One calculation of a job's price with the configuration frozen in <see cref="PriceSnapshot"/>, so changing rates
@@ -27,7 +20,7 @@ public sealed class QuoteVersion
 
     public required PriceSnapshot PriceSnapshot { get; init; }
 
-    public required string Occupancy { get; init; }
+    public required string Occupancy { get; set; }
 
     public decimal AreaM2 { get; set; }
 
@@ -55,11 +48,26 @@ public sealed class QuoteVersion
 
     public bool Premium { get; set; }
 
+    /// <summary>Premium marked or unmarked by hand by the admin; null follows the automatic rule.</summary>
+    public bool? PremiumOverride { get; set; }
+
+    /// <summary>Subtotal fixed by hand (ajuste_manual, rule "Ajuste manual" of docs/pricing-engine.md).</summary>
     public decimal? ManualAdjustment { get; set; }
 
     public string? AdjustmentReason { get; set; }
 
+    /// <summary>Last day the confirmed price can be accepted (Lisbon).</summary>
     public DateOnly? ValidUntil { get; set; }
+
+    /// <summary>Null while it is the estimate or a review draft; set when the admin confirms the price.</summary>
+    public DateTimeOffset? ConfirmedAt { get; set; }
+
+    public Guid? ConfirmedBy { get; set; }
+
+    /// <summary>The reviewer's note to the client.</summary>
+    public string? Note { get; set; }
+
+    public bool IsDraft => ConfirmedAt is null && Origin != QuoteOrigin.Estimate;
 
     public Guid CreatedBy { get; init; }
 
@@ -120,6 +128,12 @@ public sealed class QuoteExtra
     public Guid Id { get; init; } = Guid.CreateVersion7();
 
     public Guid QuoteVersionId { get; init; }
+
+    /// <summary>Catalog key when the item comes from the catalog (PARTIDA_EXTRA); null for a free item.</summary>
+    public string? CatalogKey { get; init; }
+
+    /// <summary>Catalog name in pt/es/en, copied when the item is added; a free item only has <see cref="Description"/>.</summary>
+    public LocalizedText? Name { get; init; }
 
     public required string Description { get; init; }
 

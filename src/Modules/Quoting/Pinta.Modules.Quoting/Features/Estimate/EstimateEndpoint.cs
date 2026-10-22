@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Pinta.Modules.Quoting.Contracts;
 using Pinta.Modules.Quoting.Features.Pricing;
+using Pinta.Modules.Quoting.Features.Versions;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
 
@@ -54,7 +55,7 @@ internal static class EstimateEndpoint
 
         return TypedResults.Ok(new EstimateResponse(
             breakdown!.AreaM2,
-            breakdown.Elements.Select(ElementAreaDto.From).ToArray(),
+            breakdown.Elements.Select(BreakdownMapper.Area).ToArray(),
             breakdown.Range is null ? null : Money.ToCents(breakdown.Range.Min),
             breakdown.Range is null ? null : Money.ToCents(breakdown.Range.Max),
             breakdown.MinimumApplied,
