@@ -11,6 +11,9 @@ using Pinta.Modules.Jobs.Features.Submit;
 using Pinta.SharedKernel.Data;
 using Pinta.SharedKernel.Events;
 
+using Pinta.Modules.Jobs.Contracts;
+using Pinta.Modules.Jobs.Features.Access;
+
 namespace Pinta.Modules.Jobs;
 
 public static class JobsModule
@@ -20,6 +23,7 @@ public static class JobsModule
         builder.Services.AddModuleDbContext<JobsDbContext>(JobsDbContext.Schema);
         builder.Services.AddValidatorsFromAssemblyContaining<SubmitJobRequest>(includeInternalTypes: true);
         builder.Services.AddEventHandler<EmailConfirmed, MoveToReviewWhenEmailConfirmed>();
+        builder.Services.AddScoped<IJobAccess, JobAccess>();
         return builder;
     }
 

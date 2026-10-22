@@ -66,6 +66,7 @@ internal static class UploadEndpoints
             .ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
         media.MapPost("/{fileId:guid}/confirm", ConfirmAsync).WithName("ConfirmUpload").ProducesProblem(StatusCodes.Status404NotFound);
         media.MapDelete("/{fileId:guid}", DeleteAsync).WithName("DeleteUpload").ProducesProblem(StatusCodes.Status404NotFound);
+        ReadUrlEndpoint.Map(media);
     }
 
     private static async Task<Results<Ok<UploadUrlResponse>, ProblemHttpResult>> CreateUploadAsync(

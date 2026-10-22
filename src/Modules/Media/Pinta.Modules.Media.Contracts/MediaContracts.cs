@@ -18,7 +18,12 @@ public enum MediaKind
     Document,
 }
 
-/// <summary>Files of a request, used by the Jobs module when the client sends it.</summary>
+/// <summary>A file of a job with a short-lived signed read URL (C5.5, A2.2).</summary>
+public sealed record JobFile(
+    Guid Id, Guid? QuoteElementId, string? ElementKey, MediaContext Context, MediaKind Kind, string ContentType, long SizeBytes,
+    string Url, DateTimeOffset UrlExpiresAt);
+
+/// <summary>Files of a request, used by the Jobs module when the client sends it and to show them.</summary>
 public interface IMediaService
 {
     /// <summary>
@@ -27,4 +32,7 @@ public interface IMediaService
     /// </summary>
     Task<int> AttachDraftFilesAsync(
         Guid draftId, Guid jobId, Guid clientId, IReadOnlyDictionary<string, Guid> elementIds, CancellationToken cancellationToken = default);
+
+    /// <summary>The job's confirmed files, oldest first, each with a signed read URL.</summary>
+    Task<IReadOnlyList<JobFile>> ListForJobAsync(Guid jobId, CancellationToken cancellationToken = default);
 }

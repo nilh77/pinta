@@ -58,6 +58,11 @@ public sealed class ObjectStorage(StorageOptions options, TimeProvider clock) : 
         new BasicAWSCredentials(options.AccessKey, options.SecretKey),
         new AmazonS3Config { ServiceURL = options.Endpoint.ToString(), ForcePathStyle = true, AuthenticationRegion = StorageOptions.Region });
 
+    // Signs read URLs for the address browsers use; signing needs no request to the storage.
+    private readonly AmazonS3Client _publicS3 = new(
+        new BasicAWSCredentials(options.AccessKey, options.SecretKey),
+        new AmazonS3Config { ServiceURL = options.PublicEndpoint.ToString(), ForcePathStyle = true, AuthenticationRegion = StorageOptions.Region });
+
     private readonly SemaphoreSlim _bucketLock = new(1, 1);
     private bool _bucketReady;
 
@@ -136,6 +141,21 @@ public sealed class ObjectStorage(StorageOptions options, TimeProvider clock) : 
         }, expires);
     }
 
+    /// <summary>A presigned GET URL (SigV4 query string) valid for <paramref name="lifetime"/>.</summary>
+    public (string Url, DateTimeOffset ExpiresAt) CreateDownload(string key, TimeSpan lifetime)
+    {
+        var expires = clock.GetUtcNow().Add(lifetime);
+        var url = _publicS3.GetPreSignedURL(new GetPreSignedUrlRequest
+        {
+            BucketName = options.Bucket,
+            Key = key,
+            Verb = HttpVerb.GET,
+            Expires = expires.UtcDateTime,
+            Protocol = options.PublicEndpoint.Scheme == "https" ? Protocol.HTTPS : Protocol.HTTP,
+        });
+        return (url, expires);
+    }
+
     public async Task<StoredObject?> FindAsync(string key, CancellationToken cancellationToken)
     {
         try
@@ -155,6 +175,7 @@ public sealed class ObjectStorage(StorageOptions options, TimeProvider clock) : 
     public void Dispose()
     {
         _s3.Dispose();
+        _publicS3.Dispose();
         _bucketLock.Dispose();
     }
 
