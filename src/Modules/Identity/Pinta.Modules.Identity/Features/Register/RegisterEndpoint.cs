@@ -64,7 +64,10 @@ internal static class RegisterEndpoint
         }
 
         await users.AddToRoleAsync(user, RoleNames.Client);
-        await confirmation.SendAsync(user, cancellationToken);
+        if (request.SendConfirmationEmail)
+        {
+            await confirmation.SendAsync(user, cancellationToken);
+        }
         await signIn.SignInAsync(user, isPersistent: true);
 
         return TypedResults.Created("/api/auth/me", await MeResponse.ForAsync(user, users));

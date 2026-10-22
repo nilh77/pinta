@@ -13,6 +13,8 @@ using Pinta.Modules.Notifications;
 using Pinta.Modules.Painters;
 using Pinta.Modules.Payments;
 using Pinta.Modules.Quoting;
+using Pinta.SharedKernel.Events;
+using Pinta.SharedKernel.Idempotency;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -45,6 +47,8 @@ builder.Services.AddRequestLocalization(options =>
 });
 builder.AddAntiforgeryHeader();
 builder.AddRateLimits();
+builder.Services.AddIntegrationEvents();
+builder.Services.AddIdempotency();
 builder.AddHangfireJobs();
 
 builder.AddIdentityModule();
@@ -95,6 +99,8 @@ if (app.Environment.IsDevelopment())
     await app.Services.MigrateModulesAsync();
     await DemoSeeder.SeedAsync(app.Services);
 }
+
+app.Services.ScheduleRecurringJobs();
 
 app.Run();
 

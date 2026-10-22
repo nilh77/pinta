@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 const STEPS = ["job", "price", "details", "send"] as const;
 
 /** The 4 steps of the request (boards Tipo, Main, Estimacion). */
-export function QuoteProgress({ current }: { current: 1 | 2 }) {
+export function QuoteProgress({ current }: { current: 1 | 2 | 3 | 4 }) {
   const t = useTranslations("quote.progress");
   return (
     <ol aria-label={t("label")} className="grid grid-cols-4 gap-1.5">
@@ -44,7 +44,7 @@ export type QuoteContext = {
 };
 
 type ShellProps = {
-  step: 1 | 2;
+  step: 1 | 2 | 3 | 4;
   back: { href: string; label: string };
   /** Wide layouts (desktop builder D2) opt out of the centred column. */
   wide?: boolean;

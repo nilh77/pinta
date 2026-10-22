@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="postal_code_format" xml:space="preserve"><value>Indica el código postal con el formato 1234-567.</value></data>
+  <data name="out_of_coverage" xml:space="preserve"><value>Todavía no trabajamos en este código postal.</value></data>
+  <data name="dates_choose" xml:space="preserve"><value>Elige «Lo antes posible» o un rango de fechas.</value></data>
+  <data name="dates_too_soon" xml:space="preserve"><value>La primera fecha posible es {0}.</value></data>
+  <data name="dates_order" xml:space="preserve"><value>La fecha final tiene que ser igual o posterior a la inicial.</value></data>
+  <data name="dates_too_long" xml:space="preserve"><value>El rango no puede superar los 60 días.</value></data>
+  <data name="tax_id" xml:space="preserve"><value>Indica un NIF portugués válido (9 dígitos).</value></data>
+  <data name="company_required" xml:space="preserve"><value>Indica el nombre fiscal para la factura.</value></data>
+</root>

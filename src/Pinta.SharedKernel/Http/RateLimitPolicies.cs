@@ -9,6 +9,12 @@ public static class RateLimitPolicies
     /// <summary>Resend the confirmation email: 1 per minute per user.</summary>
     public const string ConfirmationResend = "confirmation-resend";
 
+    /// <summary>Public forms without an account (waitlist): same limit as login, per IP.</summary>
+    public const string PublicForm = "public-form";
+
+    /// <summary>Upload URLs for photos and videos: 120 per minute per IP (a whole home has many photos).</summary>
+    public const string Uploads = "uploads";
+
     /// <summary>Public price estimate: 60 per minute per IP.</summary>
     public const string Estimate = "estimate";
 }

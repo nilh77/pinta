@@ -15,4 +15,5 @@
   <data name="min_below_max" xml:space="preserve"><value>El mínimo tiene que ser menor que el máximo.</value></data>
   <data name="prefix_format" xml:space="preserve"><value>Indica los 4 primeros dígitos del código postal.</value></data>
   <data name="prefix_taken" xml:space="preserve"><value>Este prefijo ya existe.</value></data>
+  <data name="postal_code_format" xml:space="preserve"><value>Indica el código postal con el formato 1234-567.</value></data>
 </root>

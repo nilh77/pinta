@@ -26,10 +26,11 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | Método | Ruta | Acceso | Uso | Historia |
 | --- | --- | --- | --- | --- |
 | GET | `/api/auth/antiforgery` | Público | Obtiene el token antiforgery | S1 |
-| POST | `/api/auth/register` | Público | Alta con email | C4.3 |
+| POST | `/api/auth/register` | Público | Alta con email. `sendConfirmationEmail: false` en el flujo de cotización, donde el email de la solicitud lleva el enlace | C4.3 |
 | POST | `/api/auth/login` | Público | Inicio de sesión | S1 |
 | POST | `/api/auth/logout` | Sesión | Cierre de sesión | C5.8 |
-| GET | `/api/auth/google?returnUrl=` | Público | Inicia el login con Google | C4.3 |
+| GET | `/api/auth/providers` | Público | Si el login con Google está configurado | C4.3 |
+| GET | `/api/auth/google?returnUrl=` | Público | Inicia el login con Google (404 si no hay credenciales) | C4.3 |
 | GET | `/api/auth/google/callback` | Público | Vuelta de Google | C4.3 |
 | GET | `/api/auth/me` | Sesión | Usuario actual, rol e idioma | S1 |
 | POST | `/api/auth/confirm-email` | Público | Confirma el email con token | C4.5 |
@@ -42,10 +43,11 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | POST | `/api/coverage/waitlist` | Público | Deja email para zonas sin cobertura | C4.1 |
 | POST | `/api/quotes/estimate` | Público, límite 60/min | Calcula área, rango y marcas | C2.8 |
 | POST | `/api/media/upload-url` | Público con límite / sesión | URL firmada de subida y `fileId` | C3.1 |
-| POST | `/api/media/{fileId}/confirm` | Quien subió | Confirma la subida | C3.1 |
+| POST | `/api/media/{fileId}/confirm` | Quien subió (`draftId`) | Confirma la subida | C3.1 |
+| DELETE | `/api/media/{fileId}?draftId=` | Quien subió | Quita un archivo antes de enviar | C3.1 |
 | POST | `/api/jobs` | Cliente | Envía la solicitud (idempotente) | C4.4 |
 | GET | `/api/jobs` | Cliente | Mis trabajos, filtro `active` o `history` | C5.1 |
-| GET | `/api/jobs/{id}` | Cliente dueño | Detalle con precio vigente, línea de tiempo, pintor y fotos | C5.2–C5.5 |
+| GET | `/api/jobs/{id}` | Cliente dueño | Detalle con precio vigente, línea de tiempo, pintor y fotos (H3: resumen para la confirmación) | C5.2–C5.5 |
 | POST | `/api/jobs/{id}/accept-quote` | Cliente dueño | Acepta el precio confirmado | C5.2 |
 | POST | `/api/jobs/{id}/reject-quote` | Cliente dueño | Rechaza el precio, con motivo opcional | C5.2 |
 | POST | `/api/jobs/{id}/questions` | Cliente dueño | "Tengo dudas": mensaje al admin | C5.2 |
@@ -184,15 +186,17 @@ Respuesta 200 (sin tarifas, material, pago al pintor ni margen):
 
 ```json
 {
+  "draftId": "0193a1c0-…",
   "occupancy": "furnished",
-  "elements": [ { "kind": "room", "name": "Sala", "roomTypeId": "living", "size": "M", "walls": [true, true, true, true], "ceiling": true, "paintId": "matte", "damage": false, "fileIds": ["0193a1c2-..."] } ],
+  "elements": [ { "kind": "room", "name": "Sala", "roomTypeId": "living", "size": "M", "walls": [true, true, true, true], "ceiling": true, "paintId": "matte", "damage": false, "clientKey": "el-1" } ],
   "description": "Queremos la sala en blanco roto.",
-  "address": { "line1": "Rua das Flores, 24, 2.º Esq.", "postalCode": "2710-123", "locality": "Sintra" },
+  "address": { "line1": "Rua das Flores, 24", "floor": "2.º Esq.", "postalCode": "2710-123", "locality": "Sintra", "accessNotes": "Ascensor" },
   "preferredDates": { "asap": false, "from": "2026-11-09", "to": "2026-11-13" },
-  "billing": { "nif": null, "companyName": null },
-  "generalFileIds": []
+  "billing": { "taxId": null, "companyName": null }
 }
 ```
+
+Las fotos no viajan en la petición: se suben antes con `POST /api/media/upload-url` indicando el `draftId` y el `clientKey` del elemento (o ninguno para las generales), y al enviar se unen al trabajo las confirmadas de ese borrador.
 
 Respuesta 201 con `Location: /api/jobs/{id}` y `{ "id": "…", "code": "PT-2026-0142", "status": "in_review" }` (o `pending_email`).
 

@@ -10,7 +10,7 @@ export type EstimateRequest = Schemas["EstimateRequest"];
 /** What the client chose in step 1 (board Tipo). */
 export type JobType = "surface" | "room" | "home";
 export type MeasureMode = "size" | "exact";
-export type QuoteStep = "type" | "schema" | "estimate";
+export type QuoteStep = "type" | "schema" | "estimate" | "photos" | "address" | "account";
 
 /** One room or loose surface as the client describes it. Measures stay as typed ("3,5") until sent. */
 export type DraftElement = {
@@ -35,14 +35,58 @@ export type DraftElement = {
   described: boolean;
 };
 
+/** A photo or video of the request; `key` in `DraftDetails.files` is the element id or "general". */
+export type DraftFile = {
+  id: string;
+  kind: "image" | "video";
+  name: string;
+  /** Small JPEG data URL for images, so thumbnails survive a reload. */
+  thumbnail: string | null;
+  status: "uploading" | "done" | "error";
+  progress: number;
+};
+
+/** Screens 5–7: photos, description, address, dates and invoice (C3.1–C4.3). */
+export type DraftDetails = {
+  /** Random id that ties anonymous uploads to this draft (docs/api.md, POST /api/jobs). */
+  draftId: string;
+  /** Sent as Idempotency-Key, so a retry never creates a second job (C4.4). */
+  idempotencyKey: string;
+  description: string;
+  files: Record<string, DraftFile[]>;
+  address: { line1: string; floor: string; postalCode: string; locality: string; accessNotes: string; municipality: string | null };
+  dates: { asap: boolean | null; from: string; to: string };
+  billing: { wanted: boolean; taxId: string; companyName: string };
+};
+
 export type Draft = {
   version: 1;
   type: JobType;
   occupancy: Occupancy | null;
   elements: DraftElement[];
   step: QuoteStep;
+  details: DraftDetails;
   savedAt: number;
 };
+
+/** UUID v4 from getRandomValues, which (unlike randomUUID) also works on plain-http LAN addresses. */
+export function newUuid(): string {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+export const emptyDetails = (): DraftDetails => ({
+  draftId: newUuid(),
+  idempotencyKey: newUuid(),
+  description: "",
+  files: {},
+  address: { line1: "", floor: "", postalCode: "", locality: "", accessNotes: "", municipality: null },
+  dates: { asap: null, from: "", to: "" },
+  billing: { wanted: false, taxId: "", companyName: "" },
+});
 
 /** What the builder needs from GET /api/catalog: sizes, suggestions and defaults. */
 export type CatalogInfo = {
@@ -108,7 +152,15 @@ export function startDraft(type: JobType, catalog: CatalogInfo, now: number): Dr
         ? [newRoom("bedroom" in catalog.roomTypes ? "bedroom" : Object.keys(catalog.roomTypes)[0], catalog)]
         : [newSurface(catalog)];
   // Loose surfaces are priced as an empty home by default (docs/pricing-engine.md).
-  return { version: 1, type, occupancy: type === "surface" ? "empty" : null, elements, step: "schema", savedAt: now };
+  return {
+    version: 1,
+    type,
+    occupancy: type === "surface" ? "empty" : null,
+    elements,
+    step: "schema",
+    details: emptyDetails(),
+    savedAt: now,
+  };
 }
 
 const withElements = (draft: Draft, elements: DraftElement[]): Draft => ({ ...draft, elements });
@@ -268,6 +320,8 @@ export function toEstimateRequest(draft: Draft, catalog: CatalogInfo): EstimateR
         surfaceTypeId: e.kind === "surface" ? e.surfaceTypeId : null,
         paintId: e.paintId,
         damage: e.damage,
+        // Photos uploaded for the element carry the same key (docs/api.md).
+        clientKey: e.id,
       };
     }),
   };

@@ -24,11 +24,14 @@ public sealed class ValidationFilter<T> : IEndpointFilter
             return await next(context);
         }
 
-        var errors = result.Errors
+        return ApiProblem.Validation(ToErrors(result));
+    }
+
+    /// <summary>Errors by camelCase JSON path (<c>elements[0].walls</c>), as the API reports them.</summary>
+    public static Dictionary<string, string[]> ToErrors(FluentValidation.Results.ValidationResult result) =>
+        result.Errors
             .GroupBy(e => ToCamelCasePath(e.PropertyName))
             .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
-        return ApiProblem.Validation(errors);
-    }
 
     private static string ToCamelCasePath(string propertyName) =>
         string.Join('.', propertyName.Split('.').Select(JsonNamingPolicy.CamelCase.ConvertName));

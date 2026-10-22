@@ -148,6 +148,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetAuthProviders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GoogleLogin"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GoogleCallback"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coverage/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CheckCoverage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coverage/waitlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["JoinWaitlist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/catalog/paints": {
         parameters: {
             query?: never;
@@ -372,12 +452,106 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SubmitJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/media/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CreateUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/media/{fileId}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConfirmUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/media/{fileId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["DeleteUpload"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddressRequest: {
+            line1: string;
+            floor: null | string;
+            postalCode: string;
+            locality: string;
+            accessNotes: null | string;
+        };
         AntiforgeryTokenResponse: {
             token: string;
+        };
+        AuthProvidersResponse: {
+            google: boolean;
+        };
+        BillingRequest: {
+            taxId: null | string;
+            companyName: null | string;
         };
         CatalogOption: {
             id: string;
@@ -394,6 +568,8 @@ export interface components {
             reviewDeadlineBusinessDays: number;
             /** Format: int32 */
             quoteValidityDays: number;
+            /** Format: int32 */
+            minLeadBusinessDays: number;
         };
         CatalogRoomSize: {
             size: components["schemas"]["RoomSize"];
@@ -430,6 +606,14 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        CoverageCheckResponse: {
+            covered: boolean;
+            municipality: null | string;
+        };
+        DraftFileRequest: {
+            /** Format: uuid */
+            draftId: string;
         };
         ElementAreaDto: {
             /** Format: int32 */
@@ -507,6 +691,29 @@ export interface components {
             traceId?: string;
         };
         /** @enum {unknown} */
+        JobStatus: "pending_email" | "in_review" | "site_visit" | "quoted" | "expired" | "rejected" | "deposit_paid" | "scheduled" | "in_progress" | "finished" | "closed" | "cancelled";
+        JobSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            overMax: boolean;
+            addressLine1: string;
+            postalCode: string;
+            locality: string;
+            preferredDates: components["schemas"]["PreferredDatesDto"];
+            /** Format: date */
+            reviewDueOn: null | string;
+        };
+        /** @enum {unknown} */
         Locale: "pt" | "es" | "en";
         LocalizedTextDto: {
             pt: string;
@@ -517,6 +724,18 @@ export interface components {
             email: string;
             password: string;
         };
+        MediaFileDto: {
+            /** Format: uuid */
+            id: string;
+            elementKey: null | string;
+            kind: components["schemas"]["MediaKind"];
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            confirmed: boolean;
+        };
+        /** @enum {unknown} */
+        MediaKind: "image" | "video" | "document";
         MeResponse: {
             /** Format: uuid */
             id: string;
@@ -580,6 +799,20 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        PreferredDatesDto: {
+            asap: boolean;
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
+        };
+        PreferredDatesRequest: {
+            asap: boolean;
+            /** Format: date */
+            from: null | string;
+            /** Format: date */
+            to: null | string;
         };
         PricedLineDto: {
             /** Format: int32 */
@@ -662,6 +895,7 @@ export interface components {
             surfaceTypeId: null | string;
             paintId: string;
             damage: boolean;
+            clientKey?: null | string;
         };
         RegisterRequest: {
             name: string;
@@ -671,6 +905,8 @@ export interface components {
             acceptTerms: boolean;
             marketingConsent: boolean;
             locale: components["schemas"]["Locale"];
+            /** @default true */
+            sendConfirmationEmail: boolean;
         };
         /** @enum {unknown} */
         Role: "client" | "painter" | "admin";
@@ -738,6 +974,8 @@ export interface components {
             defaultHeight: number;
             /** Format: int32 */
             quoteValidityDays: number;
+            /** Format: int32 */
+            minLeadBusinessDays: number;
             /** Format: int64 */
             siteVisitPriceCents: number;
             siteVisitDeductible: boolean;
@@ -774,6 +1012,22 @@ export interface components {
             elements: components["schemas"]["QuoteElementRequest"][];
             extras: null | components["schemas"]["SimulateExtraRequest"][];
         };
+        SubmitJobRequest: {
+            /** Format: uuid */
+            draftId: string;
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+            description: null | string;
+            address: components["schemas"]["AddressRequest"];
+            preferredDates: components["schemas"]["PreferredDatesRequest"];
+            billing: null | components["schemas"]["BillingRequest"];
+        };
+        SubmitJobResponse: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+        };
         SurfaceTypeDto: {
             /** Format: uuid */
             id: string;
@@ -803,6 +1057,30 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        UploadUrlRequest: {
+            /** Format: uuid */
+            draftId: string;
+            elementKey: null | string;
+            kind: components["schemas"]["MediaKind"];
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
+        };
+        UploadUrlResponse: {
+            /** Format: uuid */
+            fileId: string;
+            url: string;
+            fields: {
+                [key: string]: string;
+            };
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        WaitlistRequest: {
+            email: string;
+            postalCode: string;
+            locale: components["schemas"]["Locale"];
         };
     };
     responses: never;
@@ -1098,6 +1376,121 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetAuthProviders: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthProvidersResponse"];
+                };
+            };
+        };
+    };
+    GoogleLogin: {
+        parameters: {
+            query?: {
+                returnUrl?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GoogleCallback: {
+        parameters: {
+            query?: {
+                returnUrl?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CheckCoverage: {
+        parameters: {
+            query: {
+                postalCode: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoverageCheckResponse"];
+                };
+            };
+        };
+    };
+    JoinWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WaitlistRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
         };
@@ -1829,6 +2222,223 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    SubmitJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitJobRequest"];
+            };
+        };
+        responses: {
+            /** @description Created */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SubmitJobResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    GetJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobSummaryResponse"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CreateUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UploadUrlRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadUrlResponse"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ConfirmUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftFileRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MediaFileDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    DeleteUpload: {
+        parameters: {
+            query: {
+                draftId: string;
+            };
+            header?: never;
+            path: {
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

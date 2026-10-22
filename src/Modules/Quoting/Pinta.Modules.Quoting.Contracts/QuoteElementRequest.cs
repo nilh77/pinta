@@ -20,6 +20,7 @@ public enum Occupancy
 /// <summary>
 /// A room (<see cref="RoomTypeId"/>, <see cref="Size"/> or measures, <see cref="Walls"/> A–D, <see cref="Ceiling"/>) or a
 /// loose surface (<see cref="SurfaceTypeId"/>, length × width). Catalog items are referenced by key (docs/api.md).
+/// <see cref="ClientKey"/> is the builder's id for the element; photos uploaded for it carry the same key.
 /// </summary>
 public sealed record QuoteElementRequest(
     ElementKind Kind,
@@ -33,4 +34,5 @@ public sealed record QuoteElementRequest(
     bool Ceiling,
     string? SurfaceTypeId,
     string PaintId,
-    bool Damage);
+    bool Damage,
+    string? ClientKey = null);

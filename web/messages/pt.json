@@ -281,7 +281,8 @@
           "siteVisitDeductible": "A visita desconta-se do trabalho",
           "reviewDeadlineBusinessDays": "Prazo de revisão (dias úteis)",
           "fullRefundMinDays": "Reembolso total até (dias antes)",
-          "lateRefundPct": "Reembolso depois desse prazo"
+          "lateRefundPct": "Reembolso depois desse prazo",
+          "minLeadBusinessDays": "Antecedência mínima das datas (dias úteis)"
         }
       }
     },
@@ -370,7 +371,13 @@
       "height": "Entre 2,00 e 6,00 m.",
       "surfaceLength": "Entre 0,50 e 40,00 m.",
       "surfaceHeight": "Entre 0,50 e 20,00 m.",
-      "wallsOrCeiling": "Selecione pelo menos uma parede ou o teto."
+      "wallsOrCeiling": "Selecione pelo menos uma parede ou o teto.",
+      "postalCode": "Indique o código postal no formato 1234-567.",
+      "datesChoose": "Escolha «O mais cedo possível» ou as datas.",
+      "datesTooSoon": "A primeira data possível é {date}.",
+      "datesOrder": "Tem de ser igual ou posterior à data de início.",
+      "datesTooLong": "O intervalo não pode passar de 60 dias.",
+      "taxId": "NIF inválido: 9 dígitos."
     },
     "type": {
       "metaTitle": "O que quer pintar?",
@@ -544,8 +551,142 @@
         "body": "Um especialista revê o pedido em {reviewDays, plural, one {# dia útil} other {# dias úteis}} e envia-lhe o preço fechado, válido {validityDays} dias."
       },
       "continue": "Continuar para o preço final",
-      "continueSoon": "Disponível em breve: fotos e envio do pedido.",
       "edit": "Editar divisões"
+    },
+    "photos": {
+      "metaTitle": "Fotos e detalhes",
+      "back": "Voltar à estimativa",
+      "title": "Fotos e detalhes",
+      "subtitle": "Com fotos damos-lhe um preço final mais preciso. Uma por divisão é suficiente.",
+      "general": "Fotos gerais",
+      "generalHint": "Fachada, acessos ou o que achar útil",
+      "none": "Ainda sem fotos",
+      "counter": "{photos}/{maxPhotos} fotos · {videos}/{maxVideos} vídeos",
+      "damageBadge": "Humidade",
+      "damageHint": "Junte uma foto de perto da zona com humidade ou fissuras.",
+      "addPhoto": "Foto",
+      "addVideo": "Vídeo",
+      "photoLabel": "Foto {name}",
+      "videoLabel": "Vídeo {name}",
+      "uploading": "A enviar {name}",
+      "retry": "Tentar enviar {name} outra vez",
+      "remove": "Remover {name}",
+      "description": "Conte-nos algo mais (opcional)",
+      "descriptionPlaceholder": "Queremos a sala em branco-pérola. Há uma fissura junto à janela do quarto.",
+      "coverage": "{withPhotos} de {total} com fotos",
+      "noPhotosHint": "Com fotos o preço final fica mais perto da estimativa.",
+      "waitingUploads": "A terminar os envios…",
+      "continue": "Continuar",
+      "errors": {
+        "format": "Formato não suportado: {name}",
+        "imageTooLarge": "{name} tem mais de 10 MB.",
+        "videoTooLarge": "{name} tem mais de 100 MB.",
+        "tooManyPhotos": "Máximo de {max} fotos por divisão.",
+        "tooManyVideos": "Máximo de {max} vídeos por divisão.",
+        "media_limit_reached": "Limite de ficheiros atingido nesta divisão.",
+        "file_too_large": "O ficheiro é demasiado grande.",
+        "unsupported_media_type": "Formato não suportado."
+      }
+    },
+    "address": {
+      "metaTitle": "Morada e data",
+      "back": "Voltar às fotos",
+      "title": "Onde e quando?",
+      "line1": "Morada",
+      "floor": "Andar ou porta",
+      "optional": "opcional",
+      "postalCode": "Código postal",
+      "locality": "Localidade",
+      "checking": "A verificar a zona…",
+      "covered": "Trabalhamos na sua zona ({municipality}).",
+      "coverageError": "Não conseguimos verificar o código postal. Tente outra vez.",
+      "accessNotes": "Notas de acesso",
+      "accessNotesPlaceholder": "Elevador, estacionamento, horários…",
+      "when": "Quando lhe dá jeito?",
+      "asap": "O mais cedo possível",
+      "chooseDates": "Escolher datas",
+      "from": "A partir de",
+      "to": "Até",
+      "asapHint": "Propomos-lhe a primeira data disponível.",
+      "datesHint": "As datas começam pelo menos {days} dias úteis depois de hoje, num intervalo de até 60 dias.",
+      "agreeLater": "A data final combinamos consigo ao confirmar o preço.",
+      "continue": "Continuar",
+      "waitlist": {
+        "outside": "Ainda não chegamos a este código postal. Deixe o seu email e avisamos quando chegarmos.",
+        "email": "O seu email",
+        "join": "Avisem-me",
+        "done": "Obrigado! Avisamos quando chegarmos à sua zona.",
+        "error": "Não foi possível guardar. Verifique o email."
+      }
+    },
+    "account": {
+      "metaTitle": "Último passo",
+      "back": "Voltar à morada",
+      "title": "Último passo",
+      "subtitle": "Crie a sua conta para receber o preço final e acompanhar o trabalho.",
+      "subtitleSignedIn": "Confirme os seus dados e envie o pedido.",
+      "sendingAs": "Vai enviar como",
+      "notClient": "Esta conta é da equipa Pinta. Saia e entre com uma conta de cliente para enviar pedidos.",
+      "google": "Continuar com Google",
+      "googleTerms": "Ao continuar com Google aceita os Termos e a Política de privacidade.",
+      "orEmail": "ou com o seu email",
+      "tabsLabel": "Conta",
+      "tabs": {
+        "register": "Criar conta",
+        "login": "Já tenho conta"
+      },
+      "emailTaken": "Este email já tem conta. Entre para enviar o pedido.",
+      "send": "Enviar para revisão",
+      "signInAndSend": "Entrar e enviar",
+      "billing": {
+        "wanted": "Fatura em nome de uma empresa",
+        "taxId": "NIF",
+        "companyName": "Nome da empresa"
+      },
+      "submitErrors": {
+        "outOfCoverage": "Ainda não trabalhamos neste código postal.",
+        "editAddress": "Mudar a morada",
+        "sessionExpired": "A sua sessão terminou. Entre outra vez; o pedido continua guardado.",
+        "invalid": "Há dados por corrigir:",
+        "generic": "Não foi possível enviar. Tente outra vez: não será duplicado."
+      }
+    },
+    "sent": {
+      "metaTitle": "Pedido enviado",
+      "title": "Pedido enviado",
+      "emailSent": "Enviámos-lhe a confirmação por email.",
+      "code": "Pedido {code}",
+      "next": {
+        "title": "O que acontece agora",
+        "review": {
+          "title": "Revemos o seu pedido",
+          "body": "Em até 2 dias úteis."
+        },
+        "price": {
+          "title": "Recebe o preço final",
+          "body": "Por email e na sua área, válido 15 dias."
+        },
+        "book": {
+          "title": "Reserva a data",
+          "body": "Aceita e paga o sinal com cartão, MB WAY ou Multibanco."
+        }
+      },
+      "summary": {
+        "area": "Área",
+        "estimate": "Estimativa",
+        "custom": "Orçamento à medida",
+        "address": "Morada",
+        "dates": "Data preferida",
+        "asap": "O mais cedo possível"
+      },
+      "confirm": {
+        "title": "Confirme o seu email",
+        "body": "Revemos o pedido assim que confirmar o email. O link está no email que lhe enviámos.",
+        "resend": "Reenviar email",
+        "resent": "Enviámos um novo email.",
+        "wait": "Aguarde um minuto para pedir outro."
+      },
+      "home": "Voltar ao início"
     }
   }
 }

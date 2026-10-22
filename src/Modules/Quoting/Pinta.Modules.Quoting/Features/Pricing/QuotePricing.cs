@@ -30,10 +30,21 @@ internal sealed class QuoteElementRequestValidator : AbstractValidator<QuoteElem
     }
 }
 
+/// <summary>A priced request: the snapshot used, the engine's input and result, or the validation errors.</summary>
+internal sealed record PricedQuote(PriceSnapshot Snapshot, QuoteInput Input, QuoteBreakdown? Breakdown, Dictionary<string, string[]>? Errors);
+
 /// <summary>Turns API requests into <see cref="QuoteInput"/>, prices them with the current snapshot and reports 422s.</summary>
 internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
 {
     public async Task<(QuoteBreakdown? Breakdown, ProblemHttpResult? Problem)> PriceAsync(
+        Occupancy occupancy, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ExtraLine> extras,
+        CancellationToken cancellationToken)
+    {
+        var priced = await PriceWithSnapshotAsync(occupancy, elements, extras, cancellationToken);
+        return priced.Errors is null ? (priced.Breakdown, null) : (null, ApiProblem.Validation(priced.Errors));
+    }
+
+    public async Task<PricedQuote> PriceWithSnapshotAsync(
         Occupancy occupancy, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ExtraLine> extras,
         CancellationToken cancellationToken)
     {
@@ -42,15 +53,15 @@ internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
         var errors = QuoteValidator.Validate(snapshot, input);
         if (errors.Count > 0)
         {
-            return (null, ApiProblem.Validation(errors
+            return new PricedQuote(snapshot, input, null, errors
                 .GroupBy(e => e.Path)
-                .ToDictionary(g => g.Key, g => g.Select(e => QuotingMessages.Get(e.Code)).ToArray())));
+                .ToDictionary(g => g.Key, g => g.Select(e => QuotingMessages.Get(e.Code)).ToArray()));
         }
 
-        return (PricingEngine.Calculate(snapshot, input), null);
+        return new PricedQuote(snapshot, input, PricingEngine.Calculate(snapshot, input), null);
     }
 
-    private static string OccupancyKey(Occupancy occupancy) => occupancy.ToString().ToLowerInvariant();
+    public static string OccupancyKey(Occupancy occupancy) => occupancy.ToString().ToLowerInvariant();
 
     private static QuoteElement ToElement(QuoteElementRequest e) => e.Kind == ElementKind.Room
         ? new Room(e.RoomTypeId!, e.Size, e.Length, e.Width, e.Height, new Walls(e.Walls![0], e.Walls[1], e.Walls[2], e.Walls[3]),

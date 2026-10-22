@@ -31,7 +31,7 @@ export function RegisterForm() {
 
   const onSubmit = form.handleSubmit((values) =>
     register.mutate(
-      { ...values, locale },
+      { ...values, locale, sendConfirmationEmail: true },
       {
         onSuccess: () => router.push("/"),
         onError: (error) => applyServerFieldErrors(error, FIELDS, form.setError),

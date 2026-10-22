@@ -21,6 +21,9 @@ public static class CatalogModule
     {
         builder.Services.AddModuleDbContext<CatalogDbContext>(CatalogDbContext.Schema);
         builder.Services.AddScoped<IPriceSnapshotProvider, PriceSnapshotProvider>();
+        builder.Services.AddScoped<ICoverageService, CoverageService>();
+        builder.Services.AddScoped<IUploadLimits, UploadLimitsProvider>();
+        builder.Services.AddScoped<IRequestSettings, RequestSettingsProvider>();
         builder.Services.AddValidatorsFromAssemblyContaining<PaintRequest>(includeInternalTypes: true);
         return builder;
     }
@@ -28,6 +31,7 @@ public static class CatalogModule
     public static IEndpointRouteBuilder MapCatalogEndpoints(this IEndpointRouteBuilder app)
     {
         GetCatalogEndpoint.Map(app);
+        PublicCoverageEndpoints.Map(app);
 
         var catalog = app.MapGroup("/api/admin/catalog").WithTags("Admin catalog")
             .RequireAuthorization(policy => policy.RequireRole(RoleNames.Admin));

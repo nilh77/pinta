@@ -28,6 +28,7 @@ public sealed record SettingsDto(
     decimal MinMarginPct,
     decimal DefaultHeight,
     int QuoteValidityDays,
+    int MinLeadBusinessDays,
     long SiteVisitPriceCents,
     bool SiteVisitDeductible,
     int ReviewDeadlineBusinessDays,
@@ -60,6 +61,7 @@ internal sealed class SettingsDtoValidator : AbstractValidator<SettingsDto>
         RuleFor(s => s.MinMarginPct).Percentage();
         RuleFor(s => s.DefaultHeight).InclusiveBetween(QuoteValidator.MinHeight, QuoteValidator.MaxHeight).TwoDecimals();
         RuleFor(s => s.QuoteValidityDays).InclusiveBetween(1, 365);
+        RuleFor(s => s.MinLeadBusinessDays).InclusiveBetween(0, 30);
         RuleFor(s => s.SiteVisitPriceCents).GreaterThanOrEqualTo(0);
         RuleFor(s => s.ReviewDeadlineBusinessDays).InclusiveBetween(1, 30);
         RuleFor(s => s.FullRefundMinDays).InclusiveBetween(0, 365);
@@ -101,6 +103,7 @@ internal static class SettingsEndpoints
         settings.MinMarginPct = request.MinMarginPct;
         settings.DefaultHeight = request.DefaultHeight;
         settings.QuoteValidityDays = request.QuoteValidityDays;
+        settings.MinLeadBusinessDays = request.MinLeadBusinessDays;
         settings.SiteVisitPrice = Money.FromCents(request.SiteVisitPriceCents);
         settings.SiteVisitDeductible = request.SiteVisitDeductible;
         settings.ReviewDeadlineBusinessDays = request.ReviewDeadlineBusinessDays;
@@ -136,6 +139,7 @@ internal static class SettingsEndpoints
         s.MinMarginPct,
         s.DefaultHeight,
         s.QuoteValidityDays,
+        s.MinLeadBusinessDays,
         Money.ToCents(s.SiteVisitPrice),
         s.SiteVisitDeductible,
         s.ReviewDeadlineBusinessDays,

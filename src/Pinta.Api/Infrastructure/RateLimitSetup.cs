@@ -20,6 +20,12 @@ public static class RateLimitSetup
             options.AddPolicy(RateLimitPolicies.Auth, context => RateLimitPartition.GetFixedWindowLimiter(
                 context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                 _ => PerMinute(authPerMinute)));
+            options.AddPolicy(RateLimitPolicies.PublicForm, context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => PerMinute(authPerMinute)));
+            options.AddPolicy(RateLimitPolicies.Uploads, context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                _ => PerMinute(builder.Configuration.GetValue("RateLimits:UploadsPerMinute", 120))));
             options.AddPolicy(RateLimitPolicies.Estimate, context => RateLimitPartition.GetFixedWindowLimiter(
                 context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                 _ => PerMinute(estimatePerMinute)));

@@ -14,7 +14,7 @@ const name = { pt: "Tinta plástica mate", es: "Plástica mate", en: null };
 const settings = {
   wastePct: 10, vatPct: 23, minJobAmountCents: 15000, maxJobAmountCents: 1500000, premiumAreaM2: 250,
   rangeLowPct: 10, rangeHighPct: 15, rangeSizeWideningPct: 10, rangeDamageWideningPct: 10, depositPct: 30,
-  minMarginPct: 20, defaultHeight: 2.6, quoteValidityDays: 15, siteVisitPriceCents: 0, siteVisitDeductible: true,
+  minMarginPct: 20, defaultHeight: 2.6, quoteValidityDays: 15, minLeadBusinessDays: 3, siteVisitPriceCents: 0, siteVisitDeductible: true,
   reviewDeadlineBusinessDays: 2, fullRefundMinDays: 7, lateRefundPct: 50, maxPhotosPerElement: 10,
   maxVideosPerElement: 2, maxImageSizeMb: 10, maxVideoSizeMb: 100, clientPhoneVisibleToPainter: true,
   painterPhoneVisibleToClient: true, version: 7, updatedAt: "2026-10-22T10:00:00Z",

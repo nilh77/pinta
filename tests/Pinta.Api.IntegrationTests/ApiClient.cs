@@ -45,7 +45,8 @@ public static class ApiClient
         return response;
     }
 
-    public static async Task<HttpResponseMessage> RegisterAsync(this HttpClient client, string email, string password = TestData.Password, string locale = "pt")
+    public static async Task<HttpResponseMessage> RegisterAsync(
+        this HttpClient client, string email, string password = TestData.Password, string locale = "pt", bool sendConfirmationEmail = true)
     {
         var response = await client.PostAsJsonAsync("/api/auth/register", new
         {
@@ -56,6 +57,7 @@ public static class ApiClient
             acceptTerms = true,
             marketingConsent = false,
             locale,
+            sendConfirmationEmail,
         }, Json);
         await client.RefreshAntiforgeryAsync();
         return response;

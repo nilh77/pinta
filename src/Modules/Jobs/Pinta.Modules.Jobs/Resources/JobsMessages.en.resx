@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="postal_code_format" xml:space="preserve"><value>Enter the postal code as 1234-567.</value></data>
+  <data name="out_of_coverage" xml:space="preserve"><value>We don't work in this postal code yet.</value></data>
+  <data name="dates_choose" xml:space="preserve"><value>Choose “As soon as possible” or a date range.</value></data>
+  <data name="dates_too_soon" xml:space="preserve"><value>The earliest possible date is {0}.</value></data>
+  <data name="dates_order" xml:space="preserve"><value>The end date must be on or after the start date.</value></data>
+  <data name="dates_too_long" xml:space="preserve"><value>The range can't be longer than 60 days.</value></data>
+  <data name="tax_id" xml:space="preserve"><value>Enter a valid Portuguese tax number (9 digits).</value></data>
+  <data name="company_required" xml:space="preserve"><value>Enter the company name for the invoice.</value></data>
+</root>

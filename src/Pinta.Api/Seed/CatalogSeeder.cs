@@ -95,6 +95,7 @@ public static class CatalogSeeder
             MinMarginPct = 20m,
             DefaultHeight = 2.60m,
             QuoteValidityDays = 15,
+            MinLeadBusinessDays = 3,
             SiteVisitPrice = 0.00m,
             SiteVisitDeductible = true,
             ReviewDeadlineBusinessDays = 2,

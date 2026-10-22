@@ -314,6 +314,140 @@
         }
       }
     },
+    "/api/auth/providers": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "GetAuthProviders",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthProvidersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/google": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "GoogleLogin",
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/google/callback": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "GoogleCallback",
+        "parameters": [
+          {
+            "name": "returnUrl",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/coverage/check": {
+      "get": {
+        "tags": [
+          "Coverage"
+        ],
+        "operationId": "CheckCoverage",
+        "parameters": [
+          {
+            "name": "postalCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoverageCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coverage/waitlist": {
+      "post": {
+        "tags": [
+          "Coverage"
+        ],
+        "operationId": "JoinWaitlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaitlistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/catalog/paints": {
       "get": {
         "tags": [
@@ -1203,10 +1337,318 @@
           }
         }
       }
+    },
+    "/api/jobs": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "SubmitJob",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitJobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitJobResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{id}": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "operationId": "GetJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobSummaryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/media/upload-url": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "operationId": "CreateUploadUrl",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadUrlRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadUrlResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/media/{fileId}/confirm": {
+      "post": {
+        "tags": [
+          "Media"
+        ],
+        "operationId": "ConfirmUpload",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftFileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaFileDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/media/{fileId}": {
+      "delete": {
+        "tags": [
+          "Media"
+        ],
+        "operationId": "DeleteUpload",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "draftId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AddressRequest": {
+        "required": [
+          "line1",
+          "floor",
+          "postalCode",
+          "locality",
+          "accessNotes"
+        ],
+        "type": "object",
+        "properties": {
+          "line1": {
+            "type": "string"
+          },
+          "floor": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "accessNotes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
       "AntiforgeryTokenResponse": {
         "required": [
           "token"
@@ -1215,6 +1657,38 @@
         "properties": {
           "token": {
             "type": "string"
+          }
+        }
+      },
+      "AuthProvidersResponse": {
+        "required": [
+          "google"
+        ],
+        "type": "object",
+        "properties": {
+          "google": {
+            "type": "boolean"
+          }
+        }
+      },
+      "BillingRequest": {
+        "required": [
+          "taxId",
+          "companyName"
+        ],
+        "type": "object",
+        "properties": {
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -1241,7 +1715,8 @@
           "occupancies",
           "defaultHeight",
           "reviewDeadlineBusinessDays",
-          "quoteValidityDays"
+          "quoteValidityDays",
+          "minLeadBusinessDays"
         ],
         "type": "object",
         "properties": {
@@ -1278,6 +1753,10 @@
             "format": "int32"
           },
           "quoteValidityDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLeadBusinessDays": {
             "type": "integer",
             "format": "int32"
           }
@@ -1407,6 +1886,36 @@
               "integer"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "CoverageCheckResponse": {
+        "required": [
+          "covered",
+          "municipality"
+        ],
+        "type": "object",
+        "properties": {
+          "covered": {
+            "type": "boolean"
+          },
+          "municipality": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "DraftFileRequest": {
+        "required": [
+          "draftId"
+        ],
+        "type": "object",
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -1677,6 +2186,96 @@
           }
         }
       },
+      "JobStatus": {
+        "enum": [
+          "pending_email",
+          "in_review",
+          "site_visit",
+          "quoted",
+          "expired",
+          "rejected",
+          "deposit_paid",
+          "scheduled",
+          "in_progress",
+          "finished",
+          "closed",
+          "cancelled"
+        ]
+      },
+      "JobSummaryResponse": {
+        "required": [
+          "id",
+          "code",
+          "status",
+          "createdAt",
+          "areaM2",
+          "rangeMinCents",
+          "rangeMaxCents",
+          "overMax",
+          "addressLine1",
+          "postalCode",
+          "locality",
+          "preferredDates",
+          "reviewDueOn"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "areaM2": {
+            "type": "number",
+            "format": "double"
+          },
+          "rangeMinCents": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int64"
+          },
+          "rangeMaxCents": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int64"
+          },
+          "overMax": {
+            "type": "boolean"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "preferredDates": {
+            "$ref": "#/components/schemas/PreferredDatesDto"
+          },
+          "reviewDueOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
       "Locale": {
         "enum": [
           "pt",
@@ -1723,6 +2322,49 @@
             "type": "string"
           }
         }
+      },
+      "MediaFileDto": {
+        "required": [
+          "id",
+          "elementKey",
+          "kind",
+          "contentType",
+          "sizeBytes",
+          "confirmed"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "elementKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/MediaKind"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "confirmed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MediaKind": {
+        "enum": [
+          "image",
+          "video",
+          "document"
+        ]
       },
       "MeResponse": {
         "required": [
@@ -1932,6 +2574,60 @@
               "integer"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "PreferredDatesDto": {
+        "required": [
+          "asap",
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "asap": {
+            "type": "boolean"
+          },
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          }
+        }
+      },
+      "PreferredDatesRequest": {
+        "required": [
+          "asap",
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "asap": {
+            "type": "boolean"
+          },
+          "from": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "to": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           }
         }
       },
@@ -2236,6 +2932,12 @@
           },
           "damage": {
             "type": "boolean"
+          },
+          "clientKey": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2271,6 +2973,10 @@
           },
           "locale": {
             "$ref": "#/components/schemas/Locale"
+          },
+          "sendConfirmationEmail": {
+            "type": "boolean",
+            "default": true
           }
         }
       },
@@ -2421,6 +3127,7 @@
           "minMarginPct",
           "defaultHeight",
           "quoteValidityDays",
+          "minLeadBusinessDays",
           "siteVisitPriceCents",
           "siteVisitDeductible",
           "reviewDeadlineBusinessDays",
@@ -2486,6 +3193,10 @@
             "format": "double"
           },
           "quoteValidityDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLeadBusinessDays": {
             "type": "integer",
             "format": "int32"
           },
@@ -2589,6 +3300,75 @@
           }
         }
       },
+      "SubmitJobRequest": {
+        "required": [
+          "draftId",
+          "occupancy",
+          "elements",
+          "description",
+          "address",
+          "preferredDates",
+          "billing"
+        ],
+        "type": "object",
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "occupancy": {
+            "$ref": "#/components/schemas/Occupancy"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteElementRequest"
+            }
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "address": {
+            "$ref": "#/components/schemas/AddressRequest"
+          },
+          "preferredDates": {
+            "$ref": "#/components/schemas/PreferredDatesRequest"
+          },
+          "billing": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/BillingRequest"
+              }
+            ]
+          }
+        }
+      },
+      "SubmitJobResponse": {
+        "required": [
+          "id",
+          "code",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          }
+        }
+      },
       "SurfaceTypeDto": {
         "required": [
           "id",
@@ -2682,6 +3462,85 @@
             "format": "uint32"
           }
         }
+      },
+      "UploadUrlRequest": {
+        "required": [
+          "draftId",
+          "elementKey",
+          "kind",
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "elementKey": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "kind": {
+            "$ref": "#/components/schemas/MediaKind"
+          },
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UploadUrlResponse": {
+        "required": [
+          "fileId",
+          "url",
+          "fields",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WaitlistRequest": {
+        "required": [
+          "email",
+          "postalCode",
+          "locale"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          }
+        }
       }
     }
   },
@@ -2696,6 +3555,9 @@
       "name": "Auth"
     },
     {
+      "name": "Coverage"
+    },
+    {
       "name": "Admin catalog"
     },
     {
@@ -2703,6 +3565,12 @@
     },
     {
       "name": "Admin quotes"
+    },
+    {
+      "name": "Jobs"
+    },
+    {
+      "name": "Media"
     }
   ]
 }

@@ -3,6 +3,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
     <ProjectReference Include="..\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="..\..\Notifications\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />

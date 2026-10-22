@@ -2,6 +2,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Testcontainers.Minio" />
     <ProjectReference Include="..\..\src\Pinta.Api\Pinta.Api.csproj" />
   </ItemGroup>
 </Project>

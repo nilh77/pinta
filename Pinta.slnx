@@ -47,5 +47,6 @@
     <Project Path="tests/Pinta.Api.IntegrationTests/Pinta.Api.IntegrationTests.csproj" />
     <Project Path="tests/Pinta.ArchitectureTests/Pinta.ArchitectureTests.csproj" />
     <Project Path="tests/Pinta.Pricing.Tests/Pinta.Pricing.Tests.csproj" />
+    <Project Path="tests/Pinta.SharedKernel.Tests/Pinta.SharedKernel.Tests.csproj" />
   </Folder>
 </Solution>

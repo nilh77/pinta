@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pinta.Modules.Catalog.Domain;
+using Pinta.SharedKernel;
 
 namespace Pinta.Modules.Catalog.Data;
 
@@ -15,6 +16,7 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
     public DbSet<ExtraItem> ExtraItems => Set<ExtraItem>();
     public DbSet<PricingSettings> Settings => Set<PricingSettings>();
     public DbSet<CoverageArea> CoverageAreas => Set<CoverageArea>();
+    public DbSet<WaitlistEntry> WaitlistEntries => Set<WaitlistEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -61,6 +63,7 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         modelBuilder.Entity<PricingSettings>(settings =>
         {
             settings.ToTable("settings");
+            settings.Property(s => s.MinLeadBusinessDays).HasDefaultValue(3);
             settings.Property(s => s.Version).IsRowVersion();
             foreach (var property in settings.Metadata.GetProperties().Where(p => p.ClrType == typeof(decimal)))
             {
@@ -75,6 +78,14 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
             area.Property(a => a.PostalPrefix).HasMaxLength(4).IsFixedLength();
             area.HasIndex(a => a.PostalPrefix).IsUnique();
             area.Property(a => a.Municipality).HasMaxLength(100);
+        });
+        modelBuilder.Entity<WaitlistEntry>(entry =>
+        {
+            entry.ToTable("waitlist_entries");
+            entry.Property(e => e.Email).HasMaxLength(256);
+            entry.Property(e => e.PostalCode).HasMaxLength(8);
+            entry.Property(e => e.Locale).HasConversion(l => l.ToString().ToLowerInvariant(), s => Enum.Parse<Locale>(s, true)).HasMaxLength(2);
+            entry.HasIndex(e => new { e.Email, e.PostalCode }).IsUnique();
         });
     }
 
