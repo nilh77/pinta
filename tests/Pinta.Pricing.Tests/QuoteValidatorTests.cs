@@ -85,6 +85,24 @@ public class QuoteValidatorTests
     }
 
     [Fact]
+    public void Rooms_need_the_wall_and_ceiling_surface_types_in_the_snapshot()
+    {
+        var snapshot = SeedSnapshot.Value with
+        {
+            SurfaceTypes = SeedSnapshot.Value.SurfaceTypes
+                .Where(s => s.Key is not ("interior_wall" or "ceiling"))
+                .ToDictionary(s => s.Key, s => s.Value),
+        };
+
+        Assert.Equal(
+            [
+                new QuoteError("elements[0].walls", QuoteErrorCodes.UnknownSurfaceType),
+                new QuoteError("elements[0].ceiling", QuoteErrorCodes.UnknownSurfaceType),
+            ],
+            QuoteValidator.Validate(snapshot, new QuoteInput([Exact(4m, 3m)], "empty")));
+    }
+
+    [Fact]
     public void Extra_amounts_must_be_non_negative_with_two_decimals()
     {
         var input = new QuoteInput([Exact(4m, 3m)], "empty", [new ExtraLine(-1m, 10.005m)]);

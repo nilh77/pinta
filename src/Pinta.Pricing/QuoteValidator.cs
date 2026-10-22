@@ -87,6 +87,17 @@ public static class QuoteValidator
             errors.Add(new($"{path}.walls", QuoteErrorCodes.WallsOrCeilingRequired));
         }
 
+        // Rooms are priced with the wall and ceiling surface types; a snapshot without them cannot price a room.
+        if (room.Walls.Any && !snapshot.SurfaceTypes.ContainsKey(PricingEngine.WallsSurfaceType))
+        {
+            errors.Add(new($"{path}.walls", QuoteErrorCodes.UnknownSurfaceType));
+        }
+
+        if (room.Ceiling && !snapshot.SurfaceTypes.ContainsKey(PricingEngine.CeilingSurfaceType))
+        {
+            errors.Add(new($"{path}.ceiling", QuoteErrorCodes.UnknownSurfaceType));
+        }
+
         var hasMeasures = room.Length is not null || room.Width is not null || room.Height is not null;
         if (room.Size is not null)
         {
