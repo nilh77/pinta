@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/quotes/estimate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EstimateQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/antiforgery": {
         parameters: {
             query?: never;
@@ -340,6 +356,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/quotes/simulate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SimulateQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -395,6 +427,35 @@ export interface components {
             /** Format: uint32 */
             version: null | number | string;
         };
+        ElementAreaDto: {
+            /** Format: int32 */
+            index: number | string;
+            /** Format: double */
+            wallsAreaM2: null | number | string;
+            /** Format: double */
+            ceilingAreaM2: null | number | string;
+            /** Format: double */
+            areaM2: number | string;
+        };
+        /** @enum {unknown} */
+        ElementKind: "room" | "surface";
+        EstimateRequest: {
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+        };
+        EstimateResponse: {
+            /** Format: double */
+            areaM2: number | string;
+            elements: components["schemas"]["ElementAreaDto"][];
+            /** Format: int64 */
+            rangeMinCents: null | number | string;
+            /** Format: int64 */
+            rangeMaxCents: null | number | string;
+            minimumApplied: boolean;
+            overMax: boolean;
+            premium: boolean;
+            rangeWidened: boolean;
+        };
         ExtraItemDto: {
             /** Format: uuid */
             id: string;
@@ -420,6 +481,13 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number | string;
+        };
+        ExtraLineDto: {
+            description: string;
+            /** Format: int64 */
+            clientPriceCents: number | string;
+            /** Format: int64 */
+            painterPayCents: number | string;
         };
         HttpValidationProblemDetails: {
             type?: null | string;
@@ -477,6 +545,8 @@ export interface components {
             /** Format: uint32 */
             version: null | number | string;
         };
+        /** @enum {unknown} */
+        Occupancy: "empty" | "furnished" | "inhabited";
         PaintDto: {
             /** Format: uuid */
             id: string;
@@ -507,6 +577,21 @@ export interface components {
             /** Format: uint32 */
             version: null | number | string;
         };
+        PricedLineDto: {
+            /** Format: int32 */
+            element: number | string;
+            surface: string;
+            /** Format: double */
+            areaM2: number | string;
+            /** Format: double */
+            litres: number | string;
+            /** Format: int64 */
+            materialCents: number | string;
+            /** Format: int64 */
+            labourCents: number | string;
+            /** Format: int64 */
+            painterCents: number | string;
+        };
         ProblemDetails: {
             type?: null | string;
             title?: null | string;
@@ -516,6 +601,63 @@ export interface components {
             instance?: null | string;
             code: string;
             traceId?: string;
+        };
+        QuoteBreakdownDto: {
+            lines: components["schemas"]["PricedLineDto"][];
+            extras: components["schemas"]["ExtraLineDto"][];
+            elements: components["schemas"]["ElementAreaDto"][];
+            /** Format: double */
+            areaM2: number | string;
+            /** Format: double */
+            litres: number | string;
+            /** Format: int64 */
+            materialCents: number | string;
+            /** Format: int64 */
+            labourCents: number | string;
+            /** Format: int64 */
+            extrasCents: number | string;
+            /** Format: int64 */
+            subtotalCents: number | string;
+            /** Format: int64 */
+            vatCents: number | string;
+            /** Format: int64 */
+            totalCents: number | string;
+            /** Format: int64 */
+            painterTotalCents: number | string;
+            /** Format: int64 */
+            marginCents: number | string;
+            /** Format: double */
+            marginPct: number | string;
+            belowMinMargin: boolean;
+            /** Format: int64 */
+            depositCents: number | string;
+            /** Format: int64 */
+            balanceCents: number | string;
+            /** Format: int64 */
+            rangeMinCents: null | number | string;
+            /** Format: int64 */
+            rangeMaxCents: null | number | string;
+            minimumApplied: boolean;
+            overMax: boolean;
+            premium: boolean;
+            rangeWidened: boolean;
+        };
+        QuoteElementRequest: {
+            kind: components["schemas"]["ElementKind"];
+            name: null | string;
+            roomTypeId: null | string;
+            size: null | components["schemas"]["RoomSize"];
+            /** Format: double */
+            length: null | number | string;
+            /** Format: double */
+            width: null | number | string;
+            /** Format: double */
+            height: null | number | string;
+            walls: null | boolean[];
+            ceiling: boolean;
+            surfaceTypeId: null | string;
+            paintId: string;
+            damage: boolean;
         };
         RegisterRequest: {
             name: string;
@@ -616,6 +758,18 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        SimulateExtraRequest: {
+            description: string;
+            /** Format: int64 */
+            clientPriceCents: number | string;
+            /** Format: int64 */
+            painterPayCents: number | string;
+        };
+        SimulateRequest: {
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+            extras: null | components["schemas"]["SimulateExtraRequest"][];
+        };
         SurfaceTypeDto: {
             /** Format: uuid */
             id: string;
@@ -671,6 +825,48 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CatalogResponse"];
+                };
+            };
+        };
+    };
+    EstimateQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EstimateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EstimateResponse"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };
@@ -1587,6 +1783,39 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    SimulateQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["QuoteBreakdownDto"];
                 };
             };
             /** @description Unprocessable Entity */

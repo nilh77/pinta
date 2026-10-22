@@ -30,6 +30,7 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseEnvironment("Development");
         builder.UseSetting("ConnectionStrings:pinta", _postgres.GetConnectionString());
         builder.UseSetting("RateLimits:AuthPerMinute", "1000");
+        builder.UseSetting("RateLimits:EstimatePerMinute", "1000");
         builder.UseSetting("Web:BaseUrl", "http://web.test");
         builder.ConfigureTestServices(services => services.AddSingleton<IEmailQueue>(Emails));
     }

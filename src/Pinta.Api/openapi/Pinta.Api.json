@@ -25,6 +25,56 @@
         }
       }
     },
+    "/api/quotes/estimate": {
+      "post": {
+        "tags": [
+          "Quotes"
+        ],
+        "operationId": "EstimateQuote",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EstimateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EstimateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/antiforgery": {
       "get": {
         "tags": [
@@ -1113,6 +1163,46 @@
           }
         }
       }
+    },
+    "/api/admin/quotes/simulate": {
+      "post": {
+        "tags": [
+          "Admin quotes"
+        ],
+        "operationId": "SimulateQuote",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuoteBreakdownDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1328,6 +1418,134 @@
           }
         }
       },
+      "ElementAreaDto": {
+        "required": [
+          "index",
+          "wallsAreaM2",
+          "ceilingAreaM2",
+          "areaM2"
+        ],
+        "type": "object",
+        "properties": {
+          "index": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "wallsAreaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "ceilingAreaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "areaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "ElementKind": {
+        "enum": [
+          "room",
+          "surface"
+        ]
+      },
+      "EstimateRequest": {
+        "required": [
+          "occupancy",
+          "elements"
+        ],
+        "type": "object",
+        "properties": {
+          "occupancy": {
+            "$ref": "#/components/schemas/Occupancy"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteElementRequest"
+            }
+          }
+        }
+      },
+      "EstimateResponse": {
+        "required": [
+          "areaM2",
+          "elements",
+          "rangeMinCents",
+          "rangeMaxCents",
+          "minimumApplied",
+          "overMax",
+          "premium",
+          "rangeWidened"
+        ],
+        "type": "object",
+        "properties": {
+          "areaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ElementAreaDto"
+            }
+          },
+          "rangeMinCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "rangeMaxCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "minimumApplied": {
+            "type": "boolean"
+          },
+          "overMax": {
+            "type": "boolean"
+          },
+          "premium": {
+            "type": "boolean"
+          },
+          "rangeWidened": {
+            "type": "boolean"
+          }
+        }
+      },
       "ExtraItemDto": {
         "required": [
           "id",
@@ -1431,6 +1649,35 @@
               "string"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "ExtraLineDto": {
+        "required": [
+          "description",
+          "clientPriceCents",
+          "painterPayCents"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "clientPriceCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "painterPayCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
           }
         }
       },
@@ -1661,6 +1908,13 @@
           }
         }
       },
+      "Occupancy": {
+        "enum": [
+          "empty",
+          "furnished",
+          "inhabited"
+        ]
+      },
       "PaintDto": {
         "required": [
           "id",
@@ -1785,6 +2039,71 @@
           }
         }
       },
+      "PricedLineDto": {
+        "required": [
+          "element",
+          "surface",
+          "areaM2",
+          "litres",
+          "materialCents",
+          "labourCents",
+          "painterCents"
+        ],
+        "type": "object",
+        "properties": {
+          "element": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "surface": {
+            "type": "string"
+          },
+          "areaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "litres": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "materialCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "labourCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "painterCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        }
+      },
       "ProblemDetails": {
         "required": [
           "code"
@@ -1829,6 +2148,286 @@
           },
           "traceId": {
             "type": "string"
+          }
+        }
+      },
+      "QuoteBreakdownDto": {
+        "required": [
+          "lines",
+          "extras",
+          "elements",
+          "areaM2",
+          "litres",
+          "materialCents",
+          "labourCents",
+          "extrasCents",
+          "subtotalCents",
+          "vatCents",
+          "totalCents",
+          "painterTotalCents",
+          "marginCents",
+          "marginPct",
+          "belowMinMargin",
+          "depositCents",
+          "balanceCents",
+          "rangeMinCents",
+          "rangeMaxCents",
+          "minimumApplied",
+          "overMax",
+          "premium",
+          "rangeWidened"
+        ],
+        "type": "object",
+        "properties": {
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricedLineDto"
+            }
+          },
+          "extras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExtraLineDto"
+            }
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ElementAreaDto"
+            }
+          },
+          "areaM2": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "litres": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "materialCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "labourCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "extrasCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "subtotalCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "vatCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "totalCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "painterTotalCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "marginCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "marginPct": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "belowMinMargin": {
+            "type": "boolean"
+          },
+          "depositCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "balanceCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "rangeMinCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "rangeMaxCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "minimumApplied": {
+            "type": "boolean"
+          },
+          "overMax": {
+            "type": "boolean"
+          },
+          "premium": {
+            "type": "boolean"
+          },
+          "rangeWidened": {
+            "type": "boolean"
+          }
+        }
+      },
+      "QuoteElementRequest": {
+        "required": [
+          "kind",
+          "name",
+          "roomTypeId",
+          "size",
+          "length",
+          "width",
+          "height",
+          "walls",
+          "ceiling",
+          "surfaceTypeId",
+          "paintId",
+          "damage"
+        ],
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/ElementKind"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "roomTypeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "size": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RoomSize"
+              }
+            ]
+          },
+          "length": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "width": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "height": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
+            "type": [
+              "null",
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "walls": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "boolean"
+            }
+          },
+          "ceiling": {
+            "type": "boolean"
+          },
+          "surfaceTypeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "paintId": {
+            "type": "string"
+          },
+          "damage": {
+            "type": "boolean"
           }
         }
       },
@@ -2235,6 +2834,63 @@
           }
         }
       },
+      "SimulateExtraRequest": {
+        "required": [
+          "description",
+          "clientPriceCents",
+          "painterPayCents"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "clientPriceCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          },
+          "painterPayCents": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int64"
+          }
+        }
+      },
+      "SimulateRequest": {
+        "required": [
+          "occupancy",
+          "elements",
+          "extras"
+        ],
+        "type": "object",
+        "properties": {
+          "occupancy": {
+            "$ref": "#/components/schemas/Occupancy"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuoteElementRequest"
+            }
+          },
+          "extras": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/SimulateExtraRequest"
+            }
+          }
+        }
+      },
       "SurfaceTypeDto": {
         "required": [
           "id",
@@ -2366,6 +3022,9 @@
       "name": "Catalog"
     },
     {
+      "name": "Quotes"
+    },
+    {
       "name": "Auth"
     },
     {
@@ -2373,6 +3032,9 @@
     },
     {
       "name": "Admin settings"
+    },
+    {
+      "name": "Admin quotes"
     }
   ]
 }

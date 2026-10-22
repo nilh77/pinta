@@ -8,4 +8,7 @@ public static class RateLimitPolicies
 
     /// <summary>Resend the confirmation email: 1 per minute per user.</summary>
     public const string ConfirmationResend = "confirmation-resend";
+
+    /// <summary>Public price estimate: 60 per minute per IP.</summary>
+    public const string Estimate = "estimate";
 }

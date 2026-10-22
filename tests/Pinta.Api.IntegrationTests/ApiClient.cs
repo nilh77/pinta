@@ -9,7 +9,7 @@ public static class ApiClient
 {
     public static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web);
 
-    public static async Task<HttpClient> CreateAsync(PintaApiFactory factory, string? acceptLanguage = null)
+    public static async Task<HttpClient> CreateAsync(WebApplicationFactory<Program> factory, string? acceptLanguage = null)
     {
         var client = factory.CreateClient(new WebApplicationFactoryClientOptions { HandleCookies = true });
         if (acceptLanguage is not null)
