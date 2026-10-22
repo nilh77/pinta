@@ -17,7 +17,13 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
 
     public InMemoryEmailQueue Emails { get; } = new();
 
-    public async ValueTask InitializeAsync() => await _postgres.StartAsync();
+    public async ValueTask InitializeAsync()
+    {
+        await _postgres.StartAsync();
+        // Build the host once, before tests run in parallel: the lazy first CreateClient is not thread-safe and two
+        // hosts would migrate and seed the same database at the same time.
+        _ = Server;
+    }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
