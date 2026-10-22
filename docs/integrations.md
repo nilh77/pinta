@@ -68,7 +68,7 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 
 | Email | Destinatario | Cuándo |
 | --- | --- | --- |
-| Confirmación de solicitud y de email | Cliente | Al enviar la solicitud |
+| Confirmación de solicitud y de email | Cliente | Al enviar la solicitud: un solo email con el código y, si el email no está confirmado, el enlace de confirmación (el registro dentro del flujo no envía otro) |
 | Precio confirmado | Cliente | Al confirmar el admin |
 | Precio a punto de expirar | Cliente | 3 días antes del vencimiento |
 | Pago recibido | Cliente | Webhook de pago correcto |

@@ -28,10 +28,10 @@ Reglas comunes a todas las pantallas:
 
 - **Ruta y board**: `/{locale}` · Inicio.dc.html. Pública, sin sesión. \[C1.1\]
 - **Datos**: textos estáticos traducidos; desde-precio por m² tomado de `GET /api/catalog` (tarifa mínima de `interior_wall`); comprobador de cobertura.
-- **Acciones**: «Calcular mi precio» → pantalla 1. Código postal → `POST /api/coverage/check`; si está fuera, formulario de lista de espera (`POST /api/coverage/waitlist`). Selector de idioma en la cabecera. «Entrar» para clientes con cuenta.
+- **Acciones**: «Calcular mi precio» → pantalla 1. Código postal → `GET /api/coverage/check?postalCode=`; si está fuera, formulario de lista de espera (`POST /api/coverage/waitlist`). Selector de idioma en la cabecera. «Entrar» para clientes con cuenta.
 - **Validaciones**: código postal `^\d{4}-\d{3}$`.
 - **Estados**: si el catálogo falla, se oculta el desde-precio y el resto funciona. Cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos».
-- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura ni el desde-precio; ambos llegan en H3 con C4.1. Pendiente de alinear con `docs/api.md`, que define la comprobación como `GET /api/coverage/check?postalCode=`.
+- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura ni el desde-precio; ambos llegan en H3 con C4.1. La comprobación es `GET /api/coverage/check?postalCode=` (docs/api.md).
 
 ### 1 · Tipo de trabajo
 
@@ -70,17 +70,17 @@ Reglas comunes a todas las pantallas:
 ### 5 · Fotos y detalles
 
 - **Ruta y board**: `/{locale}/cotizar/fotos` · Fotos.dc.html. \[C3.1, C3.2\]
-- **Datos**: un bloque por elemento con miniaturas y contador («3/10 fotos · 0/2 vídeos»), un bloque de fotos generales y una descripción libre (máx. 1.000 caracteres).
+- **Datos**: un bloque por elemento con miniaturas y contador («3/10 fotos · 0/2 vídeos»), un bloque de fotos generales y una descripción libre (máx. 2.000 caracteres, como C3.2).
 - **Acciones**: añadir desde cámara o galería. Cada archivo pide `POST /api/media/upload-url`, sube directo a S3 con barra de progreso y confirma con `POST /api/media/confirm`. Se puede quitar un archivo antes de enviar. «Continuar» → pantalla 6. Las fotos son recomendadas, no obligatorias.
-- **Validaciones**: imágenes JPEG, PNG, HEIC o WebP de hasta 10 MB; vídeos MP4 o MOV de hasta 100 MB; 10 fotos y 2 vídeos por estancia. Se rechazan en el cliente antes de subir.
+- **Validaciones**: imágenes JPEG, PNG, HEIC o WebP de hasta 10 MB; vídeos MP4 o MOV de hasta 100 MB; 10 fotos y 2 vídeos por estancia. Se rechazan en el cliente antes de subir. JPEG, PNG y WebP se comprimen a unos 2 MP en el dispositivo; HEIC se sube tal cual porque la mayoría de navegadores no lo pueden decodificar. Las subidas anónimas se asocian a un identificador aleatorio del borrador y se unen al trabajo al enviarlo.
 - **Estados**: subida fallida → miniatura con icono de reintentar. «Continuar» espera a que terminen las subidas en curso y lo indica. Sin fotos, un aviso suave: «Con fotos el precio final se parece más a la estimación».
 
 ### 6 · Dirección y fecha
 
 - **Ruta y board**: `/{locale}/cotizar/direccion` · Direccion.dc.html. \[C4.1, C4.2\]
 - **Datos**: dirección, código postal, localidad (rellenada desde la cobertura), piso o puerta y notas de acceso (ascensor, aparcamiento). Calendario de fechas preferidas: «Lo antes posible» o un rango de inicio.
-- **Acciones**: el código postal llama a `POST /api/coverage/check` al perder el foco. «Continuar» → pantalla 7, o directamente al envío si ya hay sesión.
-- **Validaciones**: código postal con formato y en cobertura; dirección obligatoria; las fechas empiezan como mínimo 3 días laborables después de hoy (configurable) y el rango dura como mucho 60 días.
+- **Acciones**: el código postal llama a `GET /api/coverage/check?postalCode=` al perder el foco. «Continuar» → pantalla 7, o directamente al envío si ya hay sesión.
+- **Validaciones**: código postal con formato y en cobertura; dirección obligatoria; las fechas empiezan como mínimo 3 días laborables después de hoy (ajuste `MinLeadBusinessDays` en A1; laborables = lunes a viernes en hora de Lisboa, sin festivos en el MVP) y el rango dura como mucho 60 días.
 - **Estados**: fuera de cobertura → bloque con lista de espera; el borrador se conserva.
 
 ### 7 · Cuenta
@@ -239,7 +239,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 
 ### Cobertura (no dibujado)
 
-- **Ruta**: `/{locale}/admin/cobertura`.
+- **Ruta**: `/{locale}/admin/cobertura`. Llega en H4; en H3 solo existen la comprobación pública y la lista de espera.
 - **Datos**: concelhos del distrito de Lisboa con interruptor activo y prefijos postales asociados; lista de espera con exportación.
 - **Acciones**: activar o desactivar zonas; añadir prefijos.
 
