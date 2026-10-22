@@ -19,7 +19,7 @@ export function SiteHeader() {
       <div className="flex items-center gap-2">
         <LocaleSwitcher />
         {me.isPending ? (
-          <span aria-hidden="true" className="h-11 w-20 animate-pulse rounded-xl bg-primary-soft" />
+          <span aria-hidden="true" className="h-11 w-20 animate-pulse motion-reduce:animate-none rounded-xl bg-primary-soft" />
         ) : me.data ? (
           <div className="flex items-center gap-2">
             <span className="hidden text-sm font-medium sm:inline">{t("greeting", { name: me.data.name })}</span>

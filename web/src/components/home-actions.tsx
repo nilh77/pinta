@@ -12,7 +12,7 @@ export function HomeActions() {
   return (
     <div className="mt-6 flex flex-col gap-3 sm:max-w-sm">
       {me.isPending ? (
-        <span aria-hidden="true" className="h-[52px] animate-pulse rounded-[14px] bg-primary-soft" />
+        <span aria-hidden="true" className="h-[52px] animate-pulse motion-reduce:animate-none rounded-[14px] bg-primary-soft" />
       ) : me.data ? (
         <p className="text-sm text-muted-foreground">{t("signedIn", { email: me.data.email })}</p>
       ) : (

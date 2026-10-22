@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
@@ -18,6 +18,8 @@ const jakarta = Plus_Jakarta_Sans({
 
 type Props = { children: ReactNode; params: Promise<{ locale: string }> };
 
+export const viewport: Viewport = { themeColor: "#f5faf8" };
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -33,10 +35,17 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
 
 export default async function LocaleLayout({ children, params }: Props) {
   const locale = await pageLocale(params);
+  const t = await getTranslations({ locale, namespace: "common" });
 
   return (
     <html lang={locale} className={`${inter.variable} ${jakarta.variable}`}>
       <body className="min-h-dvh">
+        <a
+          href="#main"
+          className="sr-only rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50"
+        >
+          {t("skipToContent")}
+        </a>
         <NextIntlClientProvider>
           <Providers locale={locale}>{children}</Providers>
         </NextIntlClientProvider>

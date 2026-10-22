@@ -12,7 +12,8 @@
       "es": "Español",
       "en": "English"
     },
-    "loading": "Cargando…"
+    "loading": "Cargando…",
+    "skipToContent": "Saltar al contenido"
   },
   "nav": {
     "signIn": "Entrar",

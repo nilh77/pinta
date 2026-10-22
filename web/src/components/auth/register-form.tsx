@@ -59,6 +59,7 @@ export function RegisterForm() {
       <FormField
         id="email"
         type="email"
+        spellCheck={false}
         autoComplete="email"
         label={t("register.email")}
         placeholder={t("register.emailPlaceholder")}
@@ -85,11 +86,6 @@ export function RegisterForm() {
         {...form.register("password")}
       />
       <CheckboxField id="acceptTerms" label={t("register.acceptTerms")} control={form.control} name="acceptTerms" />
-      {errors.acceptTerms?.message && (
-        <p id="acceptTerms-error" className="-mt-2 text-[13px] font-medium text-destructive">
-          {t(errors.acceptTerms.message as never)}
-        </p>
-      )}
       <CheckboxField id="marketingConsent" label={t("register.marketing")} control={form.control} name="marketingConsent" />
       <Button type="submit" size="lg" disabled={register.isPending} className="mt-2 w-full">
         {register.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
@@ -116,25 +112,33 @@ function CheckboxField({
   name: "acceptTerms" | "marketingConsent";
   control: ReturnType<typeof useForm<RegisterInput, unknown, RegisterValues>>["control"];
 }) {
+  const t = useTranslations();
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <div className="flex min-h-11 items-start gap-3">
-          <Checkbox
-            id={id}
-            ref={field.ref}
-            checked={field.value}
-            onCheckedChange={(checked) => field.onChange(checked === true)}
-            onBlur={field.onBlur}
-            aria-invalid={fieldState.error ? true : undefined}
-            aria-describedby={fieldState.error ? `${id}-error` : undefined}
-            className="mt-0.5 size-5"
-          />
-          <Label htmlFor={id} className="text-sm leading-normal font-normal text-muted-foreground">
-            {label}
-          </Label>
+        <div className="flex flex-col gap-1">
+          <div className="flex min-h-11 items-start gap-3">
+            <Checkbox
+              id={id}
+              ref={field.ref}
+              checked={field.value}
+              onCheckedChange={(checked) => field.onChange(checked === true)}
+              onBlur={field.onBlur}
+              aria-invalid={fieldState.error ? true : undefined}
+              aria-describedby={fieldState.error ? `${id}-error` : undefined}
+              className="mt-0.5 size-5"
+            />
+            <Label htmlFor={id} className="text-sm leading-normal font-normal text-muted-foreground">
+              {label}
+            </Label>
+          </div>
+          {fieldState.error?.message && (
+            <p id={`${id}-error`} className="pl-8 text-[13px] font-medium text-destructive">
+              {t(fieldState.error.message as never)}
+            </p>
+          )}
         </div>
       )}
     />

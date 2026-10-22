@@ -25,7 +25,15 @@ export function SignInForm({ next }: { next?: string }) {
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
       <FormError error={signIn.error} />
-      <FormField id="email" type="email" autoComplete="email" label={t("email")} error={errors.email} {...form.register("email")} />
+      <FormField
+        id="email"
+        type="email"
+        spellCheck={false}
+        autoComplete="email"
+        label={t("email")}
+        error={errors.email}
+        {...form.register("email")}
+      />
       <FormField
         id="password"
         type="password"

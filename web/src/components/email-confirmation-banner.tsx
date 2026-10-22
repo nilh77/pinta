@@ -23,9 +23,9 @@ export function EmailConfirmationBanner() {
         <div className="flex gap-3">
           <MailCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
           <div>
-            <h2 id="email-banner-title" className="text-base font-bold">
+            <p id="email-banner-title" className="text-base font-bold">
               {t("emailBanner.title")}
-            </h2>
+            </p>
             <p className="text-sm">{t("emailBanner.body", { email: me.data.email })}</p>
             <p role="status" className="text-sm font-medium">
               {resend.isSuccess && t("emailBanner.resent")}

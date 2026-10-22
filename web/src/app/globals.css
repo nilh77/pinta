@@ -66,6 +66,7 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    touch-action: manipulation;
   }
   h1, h2, h3 {
     @apply font-display;
