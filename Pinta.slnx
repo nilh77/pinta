@@ -43,6 +43,7 @@
     <Project Path="src/Modules/Quoting/Pinta.Modules.Quoting/Pinta.Modules.Quoting.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Pinta.Api.IntegrationTests/Pinta.Api.IntegrationTests.csproj" />
     <Project Path="tests/Pinta.ArchitectureTests/Pinta.ArchitectureTests.csproj" />
     <Project Path="tests/Pinta.Pricing.Tests/Pinta.Pricing.Tests.csproj" />
   </Folder>

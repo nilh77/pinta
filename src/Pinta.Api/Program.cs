@@ -62,10 +62,11 @@ if (!OpenApiGeneration.IsRunning)
 
 var app = builder.Build();
 
+// First, so error responses written on the way out still see the request language.
+app.UseRequestLocalization();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseSerilogRequestLogging();
-app.UseRequestLocalization();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
