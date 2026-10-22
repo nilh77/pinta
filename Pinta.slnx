@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Pinta.Api/Pinta.Api.csproj" />
+    <Project Path="src/Pinta.AppHost/Pinta.AppHost.csproj" />
     <Project Path="src/Pinta.Pricing/Pinta.Pricing.csproj" />
     <Project Path="src/Pinta.ServiceDefaults/Pinta.ServiceDefaults.csproj" />
     <Project Path="src/Pinta.SharedKernel/Pinta.SharedKernel.csproj" />
