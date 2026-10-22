@@ -85,7 +85,7 @@ La numeración de C3–C4 se ha revisado respecto a la Fase 3, porque la estimac
 **C4.3 · Cuenta.** Como cliente quiero crear mi cuenta en el último paso.
 
 - Cuando elige Google, entonces crea la cuenta o entra con ella y vuelve al envío con el borrador intacto.
-- Cuando elige email, entonces debe indicar nombre, email, teléfono con prefijo y contraseña de al menos 8 caracteres, y aceptar términos y privacidad.
+- Cuando elige email, entonces debe indicar nombre, email, teléfono con prefijo y contraseña de al menos 10 caracteres, y aceptar términos y privacidad.
 - Cuando marca "Factura a nombre de una empresa", entonces NIF (9 dígitos, válido) y nombre fiscal pasan a ser obligatorios.
 - Dado un email ya registrado, entonces ve la opción de entrar con su cuenta.
 - Dado un cliente con sesión iniciada, entonces este paso solo pide confirmar sus datos.

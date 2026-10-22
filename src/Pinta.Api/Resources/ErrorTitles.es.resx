@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="bad_request" xml:space="preserve"><value>Petición no válida</value></data>
+  <data name="idempotency_key_required" xml:space="preserve"><value>Falta la clave de idempotencia</value></data>
+  <data name="unauthenticated" xml:space="preserve"><value>Necesitas iniciar sesión</value></data>
+  <data name="invalid_credentials" xml:space="preserve"><value>Email o contraseña incorrectos</value></data>
+  <data name="forbidden" xml:space="preserve"><value>Sin permiso</value></data>
+  <data name="email_not_confirmed" xml:space="preserve"><value>Email sin confirmar</value></data>
+  <data name="antiforgery_failed" xml:space="preserve"><value>Petición no verificada</value></data>
+  <data name="not_found" xml:space="preserve"><value>No encontrado</value></data>
+  <data name="invalid_transition" xml:space="preserve"><value>Acción no permitida en este estado</value></data>
+  <data name="concurrency_conflict" xml:space="preserve"><value>Otra persona ha modificado estos datos</value></data>
+  <data name="idempotency_conflict" xml:space="preserve"><value>Petición repetida con datos distintos</value></data>
+  <data name="email_taken" xml:space="preserve"><value>Este email ya está registrado</value></data>
+  <data name="assignment_taken" xml:space="preserve"><value>Esta asignación ya no está disponible</value></data>
+  <data name="quote_expired" xml:space="preserve"><value>El precio ha caducado</value></data>
+  <data name="file_too_large" xml:space="preserve"><value>Archivo demasiado grande</value></data>
+  <data name="unsupported_media_type" xml:space="preserve"><value>Tipo de archivo no permitido</value></data>
+  <data name="validation_failed" xml:space="preserve"><value>Hay datos por corregir</value></data>
+  <data name="media_limit_reached" xml:space="preserve"><value>Límite de archivos alcanzado</value></data>
+  <data name="out_of_coverage" xml:space="preserve"><value>Todavía no llegamos a esta zona</value></data>
+  <data name="over_max_amount" xml:space="preserve"><value>Este trabajo necesita un presupuesto a medida</value></data>
+  <data name="payment_method_not_allowed" xml:space="preserve"><value>Método de pago no disponible para este importe</value></data>
+  <data name="payment_already_made" xml:space="preserve"><value>Este pago ya está hecho</value></data>
+  <data name="refund_not_allowed" xml:space="preserve"><value>Reembolso no permitido</value></data>
+  <data name="period_closed" xml:space="preserve"><value>El mes ya está cerrado</value></data>
+  <data name="rate_limited" xml:space="preserve"><value>Demasiadas peticiones</value></data>
+  <data name="payment_provider_error" xml:space="preserve"><value>Error del proveedor de pagos</value></data>
+  <data name="internal_error" xml:space="preserve"><value>Error inesperado</value></data>
+</root>

@@ -1,0 +1,102 @@
+{
+  "metadata": {
+    "title": "Pinta — home painting in the Lisbon district",
+    "description": "Tell us what you want painted and see an estimated price in a minute. Materials included, vetted painters."
+  },
+  "common": {
+    "brand": "Pinta",
+    "home": "Home",
+    "language": "Language",
+    "languages": {
+      "pt": "Português",
+      "es": "Español",
+      "en": "English"
+    },
+    "loading": "Loading…",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "greeting": "Hi, {name}"
+  },
+  "home": {
+    "badge": "Lisbon district",
+    "title": "Get your home painted, minus the hassle",
+    "subtitle": "Tell us what you want painted and see an estimated price in a minute. Materials included, vetted painters.",
+    "createAccount": "Create account",
+    "comingSoon": "Online quotes are on their way. Create your account now.",
+    "signedIn": "You're signed in as {email}.",
+    "illustration": {
+      "label": "Layout of a home with rooms and a price estimate",
+      "living": "Living room",
+      "kitchen": "Kitchen",
+      "bathroom": "Bathroom",
+      "bedroom": "Bedroom",
+      "add": "Add",
+      "estimate": "Estimate"
+    }
+  },
+  "emailBanner": {
+    "title": "Confirm your email",
+    "body": "We sent a link to {email}. Open it so we can review your requests.",
+    "resend": "Resend email",
+    "resent": "We've sent you a new email."
+  },
+  "signIn": {
+    "title": "Sign in",
+    "subtitle": "See your requests and follow your job.",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "noAccount": "Don't have an account yet?",
+    "createAccount": "Create account"
+  },
+  "register": {
+    "title": "Create account",
+    "subtitle": "To get your final price and follow your job.",
+    "name": "Full name",
+    "namePlaceholder": "Ana Ferreira",
+    "email": "Email",
+    "emailPlaceholder": "ana@email.pt",
+    "phone": "Mobile phone",
+    "phoneHint": "With country code, for example +351 912 345 678.",
+    "password": "Password",
+    "passwordHint": "At least {min} characters.",
+    "acceptTerms": "I accept the Terms and the Privacy policy.",
+    "marketing": "Send me Pinta news by email.",
+    "submit": "Create account",
+    "haveAccount": "Already have an account?",
+    "signIn": "Sign in"
+  },
+  "confirmEmail": {
+    "title": "Confirm email",
+    "loading": "Confirming your email…",
+    "success": "Email confirmed",
+    "successBody": "Thanks. We can now review your requests.",
+    "goHome": "Go to home",
+    "error": "We couldn't confirm it",
+    "errorBody": "The link is invalid or has expired. Ask for a new email.",
+    "resend": "Send a new link",
+    "signInToResend": "Sign in to ask for a new link."
+  },
+  "validation": {
+    "required": "Required.",
+    "email": "Enter a valid email.",
+    "phone": "Enter the number with its country code, for example +351 912 345 678.",
+    "passwordLength": "Use at least {min} characters.",
+    "acceptTerms": "You need to accept the Terms and the Privacy policy.",
+    "tooLong": "Too long."
+  },
+  "errors": {
+    "unauthenticated": "Your session has ended. Please sign in again.",
+    "invalid_credentials": "Incorrect email or password.",
+    "forbidden": "You're not allowed to do this.",
+    "antiforgery_failed": "We couldn't verify the request. Please try again.",
+    "not_found": "We couldn't find what you're looking for.",
+    "email_taken": "This email is already registered.",
+    "validation_failed": "Some details need fixing.",
+    "rate_limited": "Too many attempts. Wait a minute and try again.",
+    "internal_error": "Something went wrong. Please try again."
+  }
+}

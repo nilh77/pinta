@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet:
+    name: .NET build and tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: dotnet build Pinta.slnx --configuration Release
+      - name: OpenAPI document is committed and current
+        run: git diff --exit-code -- src/Pinta.Api/openapi
+      # Testcontainers uses the runner's Docker for a real PostgreSQL.
+      - run: dotnet test --solution Pinta.slnx --configuration Release --no-build
+
+  web:
+    name: Web lint, typecheck and tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: API client matches the OpenAPI document
+        run: pnpm api:generate && git diff --exit-code -- src/lib/api/schema.d.ts
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test

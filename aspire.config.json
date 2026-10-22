@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "src/Pinta.AppHost/Pinta.AppHost.csproj"
+  }
+}

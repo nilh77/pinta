@@ -97,6 +97,28 @@ Reglas comunes a todas las pantallas:
 - **Acciones**: «Ver mi trabajo» → pantalla 10. Si el estado es `pending_email`: «Confirma tu email para que revisemos tu solicitud» con reenvío (`POST /api/auth/resend-confirmation`, uno por minuto).
 - **Estados**: el borrador local se borra al llegar aquí.
 
+## Acceso (sin board)
+
+Formularios sencillos con el estilo de la pantalla 7. Las rutas son las mismas en los tres idiomas; los `pathnames` traducidos llegan en H8.
+
+### Entrar
+
+- **Ruta**: `/{locale}/entrar?next=…`. \[S1\]
+- **Acciones**: `POST /api/auth/login`; después vuelve a `next` (solo rutas internas) o al inicio. Enlace a «Crear cuenta».
+- **Estados**: `invalid_credentials` como error general; cuenta bloqueada tras 5 intentos (mismo mensaje genérico).
+
+### Crear cuenta
+
+- **Ruta**: `/{locale}/registro`. Fuera del flujo de cotización (en el flujo, la pantalla 7). \[C4.3\]
+- **Datos y validaciones**: los de la pantalla 7 sin NIF ni razón social (van con la solicitud).
+- **Acciones**: `POST /api/auth/register`. La cuenta queda con sesión iniciada y el email sin confirmar; el inicio muestra «Confirma tu email» con reenvío.
+- **Estados**: `email_taken` → enlace a «Entrar».
+
+### Confirmar email
+
+- **Ruta**: `/{locale}/confirmar-email?userId=…&token=…`, destino del enlace del email. \[C4.5\]
+- **Acciones**: al abrirla llama a `POST /api/auth/confirm-email` y muestra éxito con enlace al inicio, o error (enlace caducado o no válido) con reenvío si hay sesión.
+
 ## Cliente · área privada
 
 Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?next=…`.

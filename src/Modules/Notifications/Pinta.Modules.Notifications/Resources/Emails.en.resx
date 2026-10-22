@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="ConfirmEmail.Subject" xml:space="preserve"><value>Confirm your email</value></data>
+  <data name="ConfirmEmail.Greeting" xml:space="preserve"><value>Hi {0},</value></data>
+  <data name="ConfirmEmail.Body" xml:space="preserve"><value>Thanks for creating your Pinta account. Confirm your email so we can review your requests.</value></data>
+  <data name="ConfirmEmail.Button" xml:space="preserve"><value>Confirm email</value></data>
+  <data name="ConfirmEmail.Expiry" xml:space="preserve"><value>The link is valid for 48 hours.</value></data>
+  <data name="ConfirmEmail.Ignore" xml:space="preserve"><value>If you didn't create this account, you can ignore this email.</value></data>
+</root>

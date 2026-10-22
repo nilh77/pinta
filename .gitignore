@@ -1,0 +1,25 @@
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Python (docs/reference)
+.venv/
+__pycache__/
+
+# .NET
+bin/
+obj/
+*.user
+TestResults/
+.artifacts/
+
+# Node / Next.js
+node_modules/
+web/.next/
+web/out/
+web/coverage/
+web/next-env.d.ts
+*.tsbuildinfo
+.env*.local
