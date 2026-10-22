@@ -103,7 +103,8 @@
     "password": "Password",
     "submit": "Sign in",
     "noAccount": "Don't have an account yet?",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "forgot": "Forgot your password?"
   },
   "register": {
     "title": "Create account",
@@ -132,6 +133,26 @@
     "errorBody": "The link is invalid or has expired. Ask for a new email.",
     "resend": "Send a new link",
     "signInToResend": "Sign in to ask for a new link."
+  },
+  "forgotPassword": {
+    "title": "Reset password",
+    "subtitle": "Enter your email and we'll send you a link to choose a new one.",
+    "email": "Email",
+    "submit": "Send link",
+    "sent": "If there's an account for {email}, you'll get an email with a link valid for 2 hours.",
+    "backToSignIn": "Back to sign in"
+  },
+  "resetPassword": {
+    "title": "New password",
+    "password": "New password",
+    "passwordHint": "At least {min} characters.",
+    "submit": "Save password",
+    "success": "Password changed",
+    "successBody": "You can now sign in with your new password.",
+    "signIn": "Sign in",
+    "invalid": "The link is invalid or has expired",
+    "invalidBody": "Reset links last 2 hours and work once.",
+    "requestAgain": "Request a new link"
   },
   "validation": {
     "required": "Required.",

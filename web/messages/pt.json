@@ -103,7 +103,8 @@
     "password": "Palavra-passe",
     "submit": "Entrar",
     "noAccount": "Ainda não tem conta?",
-    "createAccount": "Criar conta"
+    "createAccount": "Criar conta",
+    "forgot": "Esqueceu-se da palavra-passe?"
   },
   "register": {
     "title": "Criar conta",
@@ -132,6 +133,26 @@
     "errorBody": "O link é inválido ou expirou. Peça um novo email.",
     "resend": "Enviar novo link",
     "signInToResend": "Entre na sua conta para pedir um novo link."
+  },
+  "forgotPassword": {
+    "title": "Recuperar palavra-passe",
+    "subtitle": "Indique o seu email e enviamos-lhe um link para escolher uma nova.",
+    "email": "Email",
+    "submit": "Enviar link",
+    "sent": "Se existir uma conta com {email}, vai receber um email com um link válido durante 2 horas.",
+    "backToSignIn": "Voltar a entrar"
+  },
+  "resetPassword": {
+    "title": "Nova palavra-passe",
+    "password": "Nova palavra-passe",
+    "passwordHint": "Pelo menos {min} caracteres.",
+    "submit": "Guardar palavra-passe",
+    "success": "Palavra-passe alterada",
+    "successBody": "Já pode entrar com a nova palavra-passe.",
+    "signIn": "Entrar",
+    "invalid": "O link é inválido ou expirou",
+    "invalidBody": "Os links de recuperação valem 2 horas e só se usam uma vez.",
+    "requestAgain": "Pedir um novo link"
   },
   "validation": {
     "required": "Campo obrigatório.",

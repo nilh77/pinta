@@ -103,7 +103,8 @@
     "password": "Contraseña",
     "submit": "Entrar",
     "noAccount": "¿Aún no tienes cuenta?",
-    "createAccount": "Crear cuenta"
+    "createAccount": "Crear cuenta",
+    "forgot": "¿Has olvidado la contraseña?"
   },
   "register": {
     "title": "Crear cuenta",
@@ -132,6 +133,26 @@
     "errorBody": "El enlace no es válido o ha caducado. Pide un email nuevo.",
     "resend": "Enviar un enlace nuevo",
     "signInToResend": "Entra en tu cuenta para pedir un enlace nuevo."
+  },
+  "forgotPassword": {
+    "title": "Recuperar contraseña",
+    "subtitle": "Indica tu email y te enviamos un enlace para elegir una nueva.",
+    "email": "Email",
+    "submit": "Enviar enlace",
+    "sent": "Si existe una cuenta con {email}, recibirás un email con un enlace válido durante 2 horas.",
+    "backToSignIn": "Volver a entrar"
+  },
+  "resetPassword": {
+    "title": "Nueva contraseña",
+    "password": "Nueva contraseña",
+    "passwordHint": "Al menos {min} caracteres.",
+    "submit": "Guardar contraseña",
+    "success": "Contraseña cambiada",
+    "successBody": "Ya puedes entrar con la nueva contraseña.",
+    "signIn": "Entrar",
+    "invalid": "El enlace no es válido o ha caducado",
+    "invalidBody": "Los enlaces de recuperación valen 2 horas y solo se usan una vez.",
+    "requestAgain": "Pedir un enlace nuevo"
   },
   "validation": {
     "required": "Campo obligatorio.",

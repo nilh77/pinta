@@ -22,6 +22,14 @@ export const registerSchema = z.object({
   marketingConsent: z.boolean(),
 });
 
+export const forgotPasswordSchema = z.object({ email: z.email("validation.email").max(256, "validation.tooLong") });
+
+export const resetPasswordSchema = z.object({
+  password: z.string().min(PASSWORD_MIN_LENGTH, "validation.passwordLength").max(128, "validation.tooLong"),
+});
+
+export type ForgotPasswordValues = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordValues = z.infer<typeof resetPasswordSchema>;
 export type SignInValues = z.infer<typeof signInSchema>;
 export type RegisterInput = z.input<typeof registerSchema>;
 export type RegisterValues = z.output<typeof registerSchema>;
