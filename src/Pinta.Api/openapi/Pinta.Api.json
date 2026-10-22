@@ -314,6 +314,69 @@
         }
       }
     },
+    "/api/coverage/check": {
+      "get": {
+        "tags": [
+          "Coverage"
+        ],
+        "operationId": "CheckCoverage",
+        "parameters": [
+          {
+            "name": "postalCode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoverageCheckResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/coverage/waitlist": {
+      "post": {
+        "tags": [
+          "Coverage"
+        ],
+        "operationId": "JoinWaitlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaitlistRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/catalog/paints": {
       "get": {
         "tags": [
@@ -1241,7 +1304,8 @@
           "occupancies",
           "defaultHeight",
           "reviewDeadlineBusinessDays",
-          "quoteValidityDays"
+          "quoteValidityDays",
+          "minLeadBusinessDays"
         ],
         "type": "object",
         "properties": {
@@ -1278,6 +1342,10 @@
             "format": "int32"
           },
           "quoteValidityDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLeadBusinessDays": {
             "type": "integer",
             "format": "int32"
           }
@@ -1407,6 +1475,24 @@
               "integer"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "CoverageCheckResponse": {
+        "required": [
+          "covered",
+          "municipality"
+        ],
+        "type": "object",
+        "properties": {
+          "covered": {
+            "type": "boolean"
+          },
+          "municipality": {
+            "type": [
+              "null",
+              "string"
+            ]
           }
         }
       },
@@ -2421,6 +2507,7 @@
           "minMarginPct",
           "defaultHeight",
           "quoteValidityDays",
+          "minLeadBusinessDays",
           "siteVisitPriceCents",
           "siteVisitDeductible",
           "reviewDeadlineBusinessDays",
@@ -2486,6 +2573,10 @@
             "format": "double"
           },
           "quoteValidityDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLeadBusinessDays": {
             "type": "integer",
             "format": "int32"
           },
@@ -2682,6 +2773,25 @@
             "format": "uint32"
           }
         }
+      },
+      "WaitlistRequest": {
+        "required": [
+          "email",
+          "postalCode",
+          "locale"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          }
+        }
       }
     }
   },
@@ -2694,6 +2804,9 @@
     },
     {
       "name": "Auth"
+    },
+    {
+      "name": "Coverage"
     },
     {
       "name": "Admin catalog"

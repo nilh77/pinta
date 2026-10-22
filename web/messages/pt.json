@@ -281,7 +281,8 @@
           "siteVisitDeductible": "A visita desconta-se do trabalho",
           "reviewDeadlineBusinessDays": "Prazo de revisão (dias úteis)",
           "fullRefundMinDays": "Reembolso total até (dias antes)",
-          "lateRefundPct": "Reembolso depois desse prazo"
+          "lateRefundPct": "Reembolso depois desse prazo",
+          "minLeadBusinessDays": "Antecedência mínima das datas (dias úteis)"
         }
       }
     },

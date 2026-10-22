@@ -305,6 +305,12 @@ namespace Pinta.Modules.Catalog.Data.Migrations
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("min_job_amount");
 
+                    b.Property<int>("MinLeadBusinessDays")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(3)
+                        .HasColumnName("min_lead_business_days");
+
                     b.Property<decimal>("MinMarginPct")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
@@ -496,6 +502,45 @@ namespace Pinta.Modules.Catalog.Data.Migrations
                         .HasDatabaseName("ix_surface_types_key");
 
                     b.ToTable("surface_types", "catalog");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Catalog.Domain.WaitlistEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Locale")
+                        .IsRequired()
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)")
+                        .HasColumnName("locale");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("character varying(8)")
+                        .HasColumnName("postal_code");
+
+                    b.HasKey("Id")
+                        .HasName("pk_waitlist_entries");
+
+                    b.HasIndex("Email", "PostalCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_waitlist_entries_email_postal_code");
+
+                    b.ToTable("waitlist_entries", "catalog");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Catalog.Domain.ExtraItem", b =>

@@ -42,6 +42,7 @@ const GROUPS: { key: "job" | "price" | "range" | "operations"; fields: Field[] }
     fields: [
       { name: "siteVisitPrice", suffix: "€" },
       { name: "reviewDeadlineBusinessDays", suffix: "d" },
+      { name: "minLeadBusinessDays", suffix: "d" },
       { name: "fullRefundMinDays", suffix: "d" },
       { name: "lateRefundPct", suffix: "%" },
     ],

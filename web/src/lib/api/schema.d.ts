@@ -148,6 +148,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/coverage/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CheckCoverage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/coverage/waitlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["JoinWaitlist"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/catalog/paints": {
         parameters: {
             query?: never;
@@ -394,6 +426,8 @@ export interface components {
             reviewDeadlineBusinessDays: number;
             /** Format: int32 */
             quoteValidityDays: number;
+            /** Format: int32 */
+            minLeadBusinessDays: number;
         };
         CatalogRoomSize: {
             size: components["schemas"]["RoomSize"];
@@ -430,6 +464,10 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        CoverageCheckResponse: {
+            covered: boolean;
+            municipality: null | string;
         };
         ElementAreaDto: {
             /** Format: int32 */
@@ -738,6 +776,8 @@ export interface components {
             defaultHeight: number;
             /** Format: int32 */
             quoteValidityDays: number;
+            /** Format: int32 */
+            minLeadBusinessDays: number;
             /** Format: int64 */
             siteVisitPriceCents: number;
             siteVisitDeductible: boolean;
@@ -803,6 +843,11 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        WaitlistRequest: {
+            email: string;
+            postalCode: string;
+            locale: components["schemas"]["Locale"];
         };
     };
     responses: never;
@@ -1098,6 +1143,59 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CheckCoverage: {
+        parameters: {
+            query: {
+                postalCode: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoverageCheckResponse"];
+                };
+            };
+        };
+    };
+    JoinWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WaitlistRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
         };

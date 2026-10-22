@@ -22,6 +22,8 @@ public sealed class PricingSettings : AuditedEntity
     public decimal MinMarginPct { get; set; }
     public decimal DefaultHeight { get; set; }
     public int QuoteValidityDays { get; set; }
+    /// <summary>Preferred dates start at least this many working days after today (C4.2).</summary>
+    public int MinLeadBusinessDays { get; set; } = 3;
     public decimal SiteVisitPrice { get; set; }
     public bool SiteVisitDeductible { get; set; }
     public int ReviewDeadlineBusinessDays { get; set; }

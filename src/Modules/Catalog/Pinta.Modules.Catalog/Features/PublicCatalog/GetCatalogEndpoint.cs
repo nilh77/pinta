@@ -22,7 +22,8 @@ public sealed record CatalogResponse(
     IReadOnlyList<CatalogOption> Occupancies,
     decimal DefaultHeight,
     int ReviewDeadlineBusinessDays,
-    int QuoteValidityDays);
+    int QuoteValidityDays,
+    int MinLeadBusinessDays);
 
 /// <summary>
 /// GET /api/catalog — what the quote builder offers, in the request language, plus the review deadline and price
@@ -44,7 +45,7 @@ internal static class GetCatalogEndpoint
             .OrderBy(m => m.Factor)
             .ToListAsync(cancellationToken);
         var settings = await db.Settings.AsNoTracking()
-            .Select(s => new { s.DefaultHeight, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays })
+            .Select(s => new { s.DefaultHeight, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.MinLeadBusinessDays })
             .SingleAsync(cancellationToken);
 
         return TypedResults.Ok(new CatalogResponse(
@@ -62,6 +63,7 @@ internal static class GetCatalogEndpoint
             occupancies.Select(m => new CatalogOption(m.Key, m.Name.Current)).ToArray(),
             settings.DefaultHeight,
             settings.ReviewDeadlineBusinessDays,
-            settings.QuoteValidityDays));
+            settings.QuoteValidityDays,
+            settings.MinLeadBusinessDays));
     }
 }

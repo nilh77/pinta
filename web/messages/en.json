@@ -281,7 +281,8 @@
           "siteVisitDeductible": "The visit is deducted from the job",
           "reviewDeadlineBusinessDays": "Review deadline (business days)",
           "fullRefundMinDays": "Full refund up to (days before)",
-          "lateRefundPct": "Refund after that"
+          "lateRefundPct": "Refund after that",
+          "minLeadBusinessDays": "Minimum notice for dates (working days)"
         }
       }
     },
