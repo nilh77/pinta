@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H3 · Envío de la solicitud — rama `h3-envio`
+Nada todavía.
 
-#### Añadido
+## H3 · Envío de la solicitud — 2026-10-22, [PR #4](https://github.com/nilh77/pinta/pull/4)
+
+### Añadido
 
 - Pantalla 5 · Fotos y detalles: fotos y vídeos por estancia y generales, subida directa al almacenamiento con progreso, reintento y quitar; compresión a unos 2 MP en el dispositivo; descripción de hasta 2.000 caracteres (C3.1, C3.2).
 - Pantalla 6 · Dirección y fecha: comprobación del código postal con su concelho, lista de espera fuera de cobertura, «Lo antes posible» o un rango de fechas a partir de 3 días laborables y de hasta 60 días (C4.1, C4.2).
@@ -20,11 +22,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Subidas firmadas a S3/MinIO con límites de tipo, tamaño y número; limpieza diaria de subidas sin confirmar.
 - `GET /api/coverage/check`, `POST /api/coverage/waitlist` y el ajuste «antelación mínima de las fechas» en A1.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: descripción de 2.000 caracteres, comprobación de cobertura por `GET`, días laborables de lunes a viernes, un solo email al enviar y nuevo formato de `POST /api/jobs` con `draftId`.
 
-#### Pendiente
+### Pendiente
 
 - La pantalla de admin de Cobertura llega en H4.
 - «Ver mi trabajo» desde la confirmación llega con el área del cliente.
