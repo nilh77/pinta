@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="MailKit" />
+    <ProjectReference Include="..\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+@using Pinta.Modules.Notifications.Contracts
+@using Pinta.Modules.Notifications.Features.SendEmail
+
+<!DOCTYPE html>
+<html lang="@Email.Locale.ToString().ToLowerInvariant()">
+<head><meta charset="utf-8" /><title>@Text["ConfirmEmail.Subject"]</title></head>
+<body style="margin:0;padding:24px;background:#F6F7F5;font-family:Inter,Arial,sans-serif;color:#1C2321;">
+  <table role="presentation" width="100%" style="max-width:520px;margin:0 auto;background:#FFFFFF;border-radius:12px;padding:32px;">
+    <tr><td>
+      <p style="margin:0 0 24px;font-size:20px;font-weight:700;color:#0F766E;">Pinta</p>
+      <p style="margin:0 0 16px;font-size:16px;">@Text.Format("ConfirmEmail.Greeting", Email.Name)</p>
+      <p style="margin:0 0 24px;font-size:16px;line-height:1.5;">@Text["ConfirmEmail.Body"]</p>
+      <p style="margin:0 0 24px;">
+        <a href="@Email.ConfirmationUrl" style="display:inline-block;background:#0F766E;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px;">@Text["ConfirmEmail.Button"]</a>
+      </p>
+      <p style="margin:0 0 8px;font-size:14px;color:#55605C;">@Text["ConfirmEmail.Expiry"]</p>
+      <p style="margin:0;font-size:14px;color:#55605C;">@Text["ConfirmEmail.Ignore"]</p>
+    </td></tr>
+  </table>
+</body>
+</html>
+
+@code {
+    [Parameter, EditorRequired] public EmailText Text { get; set; } = default!;
+    [Parameter, EditorRequired] public ConfirmEmailEmail Email { get; set; } = default!;
+}
