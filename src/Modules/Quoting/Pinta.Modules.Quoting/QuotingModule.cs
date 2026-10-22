@@ -8,6 +8,8 @@ using Pinta.Modules.Quoting.Data;
 using Pinta.Modules.Quoting.Features.Estimate;
 using Pinta.Modules.Quoting.Features.Pricing;
 using Pinta.Modules.Quoting.Features.Simulate;
+using Pinta.Modules.Quoting.Features.Versions;
+using Pinta.Modules.Quoting.Contracts;
 using Pinta.SharedKernel.Data;
 
 namespace Pinta.Modules.Quoting;
@@ -18,6 +20,7 @@ public static class QuotingModule
     {
         builder.Services.AddModuleDbContext<QuotingDbContext>(QuotingDbContext.Schema);
         builder.Services.AddScoped<QuotePricing>();
+        builder.Services.AddScoped<IQuoteVersions, QuoteVersions>();
         builder.Services.AddValidatorsFromAssemblyContaining<EstimateRequest>(includeInternalTypes: true);
         return builder;
     }
