@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\Pinta.Pricing\Pinta.Pricing.csproj" />
   </ItemGroup>
 </Project>

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Pinta.Pricing;
 
 /// <summary>A job to price: its elements, the occupancy key and, after review, the extra items.</summary>
@@ -33,11 +35,12 @@ public sealed record Walls(bool A, bool B, bool C, bool D)
     public bool Any => A || B || C || D;
 }
 
+/// <summary>Room size when the measures are unknown. Serialized as <c>S</c>, <c>M</c>, <c>L</c> (docs/api.md).</summary>
 public enum RoomSize
 {
-    S,
-    M,
-    L,
+    [JsonStringEnumMemberName("S")] S,
+    [JsonStringEnumMemberName("M")] M,
+    [JsonStringEnumMemberName("L")] L,
 }
 
 /// <summary>An extra item added by the admin: client price and painter pay, before VAT.</summary>

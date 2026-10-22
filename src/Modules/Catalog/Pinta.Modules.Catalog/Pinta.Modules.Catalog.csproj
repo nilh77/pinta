@@ -2,6 +2,8 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\Pinta.Modules.Catalog.Contracts\Pinta.Modules.Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\..\Pinta.Pricing\Pinta.Pricing.csproj" />
   </ItemGroup>
 </Project>

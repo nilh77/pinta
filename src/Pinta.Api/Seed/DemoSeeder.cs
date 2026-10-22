@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Pinta.Modules.Catalog.Data;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Identity.Domain;
 using Pinta.SharedKernel;
 
 namespace Pinta.Api.Seed;
 
-/// <summary>Demo data on an empty database in Development (docs/plan.md, "Datos de demo"). H0 seeds the two admins.</summary>
+/// <summary>Demo data on an empty database in Development (docs/plan.md, "Datos de demo"): the catalog and the two admins.</summary>
 public static class DemoSeeder
 {
     private static readonly (string Name, string Email)[] Admins =
@@ -18,6 +19,9 @@ public static class DemoSeeder
     public static async Task SeedAsync(IServiceProvider services)
     {
         await using var scope = services.CreateAsyncScope();
+        var now = scope.ServiceProvider.GetRequiredService<TimeProvider>().GetUtcNow();
+        await CatalogSeeder.SeedAsync(scope.ServiceProvider.GetRequiredService<CatalogDbContext>(), now);
+
         var users = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         if (await users.Users.AnyAsync())
         {
@@ -26,7 +30,6 @@ public static class DemoSeeder
 
         var password = scope.ServiceProvider.GetRequiredService<IConfiguration>()["Seed:DemoPassword"]
             ?? throw new InvalidOperationException("Seed:DemoPassword is not configured.");
-        var now = scope.ServiceProvider.GetRequiredService<TimeProvider>().GetUtcNow();
 
         foreach (var (name, email) in Admins)
         {
