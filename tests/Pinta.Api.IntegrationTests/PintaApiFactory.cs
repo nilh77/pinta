@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Pinta.Modules.Notifications.Contracts;
+using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
 
 [assembly: AssemblyFixture(typeof(Pinta.Api.IntegrationTests.PintaApiFactory))]
@@ -15,11 +16,14 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
 {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine").Build();
 
+    // Same image as the AppHost: MinIO no longer publishes images on Docker Hub.
+    private readonly MinioContainer _minio = new MinioBuilder("cgr.dev/chainguard/minio:latest").Build();
+
     public InMemoryEmailQueue Emails { get; } = new();
 
     public async ValueTask InitializeAsync()
     {
-        await _postgres.StartAsync();
+        await Task.WhenAll(_postgres.StartAsync(), _minio.StartAsync());
         // Build the host once, before tests run in parallel: the lazy first CreateClient is not thread-safe and two
         // hosts would migrate and seed the same database at the same time.
         _ = Server;
@@ -29,8 +33,10 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
     {
         builder.UseEnvironment("Development");
         builder.UseSetting("ConnectionStrings:pinta", _postgres.GetConnectionString());
+        builder.UseSetting("ConnectionStrings:minio", $"Endpoint={_minio.GetConnectionString()};AccessKey={_minio.GetAccessKey()};SecretKey={_minio.GetSecretKey()}");
         builder.UseSetting("RateLimits:AuthPerMinute", "1000");
         builder.UseSetting("RateLimits:EstimatePerMinute", "1000");
+        builder.UseSetting("RateLimits:UploadsPerMinute", "1000");
         builder.UseSetting("Web:BaseUrl", "http://web.test");
         builder.ConfigureTestServices(services => services.AddSingleton<IEmailQueue>(Emails));
     }
@@ -39,6 +45,7 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
     {
         await base.DisposeAsync();
         await _postgres.DisposeAsync();
+        await _minio.DisposeAsync();
     }
 }
 

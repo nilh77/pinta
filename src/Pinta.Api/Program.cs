@@ -100,6 +100,8 @@ if (app.Environment.IsDevelopment())
     await DemoSeeder.SeedAsync(app.Services);
 }
 
+app.Services.ScheduleRecurringJobs();
+
 app.Run();
 
 public partial class Program;

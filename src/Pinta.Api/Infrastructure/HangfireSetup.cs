@@ -2,6 +2,8 @@ using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Pinta.Modules.Identity.Contracts;
+using Pinta.Modules.Media.Features.Uploads;
+using Pinta.SharedKernel.Time;
 
 namespace Pinta.Api.Infrastructure;
 
@@ -25,6 +27,18 @@ public static class HangfireSetup
                 new PostgreSqlStorageOptions { SchemaName = "hangfire" }));
         builder.Services.AddHangfireServer();
         return builder;
+    }
+
+    /// <summary>Recurring jobs of the modules (docs/integrations.md, scheduled tasks).</summary>
+    public static void ScheduleRecurringJobs(this IServiceProvider services)
+    {
+        if (OpenApiGeneration.IsRunning)
+        {
+            return;
+        }
+
+        var jobs = services.GetRequiredService<IRecurringJobManager>();
+        jobs.AddOrUpdate<MediaCleanup>(MediaCleanup.JobId, cleanup => cleanup.RunAsync(), Cron.Daily(3), new RecurringJobOptions { TimeZone = BusinessDays.Lisbon });
     }
 
     public static IEndpointRouteBuilder MapHangfireAdminDashboard(this IEndpointRouteBuilder app)

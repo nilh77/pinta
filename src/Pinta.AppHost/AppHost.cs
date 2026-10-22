@@ -7,7 +7,7 @@ var database = postgres.AddDatabase("pinta");
 
 // Object storage for photos and videos (Media module, H3). MinIO no longer publishes images on Docker Hub or
 // quay.io, so the toolkit's default image cannot be pulled; Chainguard's free build only offers `latest`.
-builder.AddMinioContainer("minio")
+var minio = builder.AddMinioContainer("minio")
     .WithImageRegistry("cgr.dev")
     .WithImage("chainguard/minio", "latest")
     .WithDataVolume("pinta-minio")
@@ -17,7 +17,8 @@ var mailpit = builder.AddMailPit("mailpit");
 
 var api = builder.AddProject<Projects.Pinta_Api>("api")
     .WithReference(database).WaitFor(database)
-    .WithReference(mailpit).WaitFor(mailpit);
+    .WithReference(mailpit).WaitFor(mailpit)
+    .WithReference(minio).WaitFor(minio);
 
 var web = builder.AddJavaScriptApp("web", "../../web", "dev")
     .WithPnpm()

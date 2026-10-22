@@ -22,6 +22,7 @@ public static class CatalogModule
         builder.Services.AddModuleDbContext<CatalogDbContext>(CatalogDbContext.Schema);
         builder.Services.AddScoped<IPriceSnapshotProvider, PriceSnapshotProvider>();
         builder.Services.AddScoped<ICoverageService, CoverageService>();
+        builder.Services.AddScoped<IUploadLimits, UploadLimitsProvider>();
         builder.Services.AddValidatorsFromAssemblyContaining<PaintRequest>(includeInternalTypes: true);
         return builder;
     }

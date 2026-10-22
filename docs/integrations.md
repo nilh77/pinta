@@ -56,9 +56,9 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 | Pieza | Diseño |
 | --- | --- |
 | Almacenamiento | S3-compatible con el SDK de AWS para .NET. MinIO en local; proveedor de producción a elegir al desplegar (cambio por configuración) |
-| Subida | URL firmada de subida válida 10 min, con tipo y tamaño máximo; el móvil sube directo y luego confirma a la API |
+| Subida | Formulario POST firmado (política SigV4) válido 10 min: S3 rechaza otra clave, otro tipo o un archivo mayor del máximo; el móvil sube directo y luego confirma a la API |
 | Límites | Fotos comprimidas en el navegador a unos 2 MP; vídeos de hasta 100 MB (unos 60 s); 10 fotos y 2 vídeos por estancia |
-| Organización | `trabajos/{id}/{cliente\|visita\|resultado}/{uuid}.ext` en un bucket privado |
+| Organización | Bucket privado. Las subidas del cliente van a `uploads/{borrador}/{uuid}.ext` y no se mueven al enviar: el trabajo se enlaza en la tabla de archivos. Visitas y resultados (H6) seguirán `jobs/{id}/{visita\|resultado}/{uuid}.ext` |
 | Visualización | URLs firmadas de lectura de corta duración; ninguna foto es accesible sin permiso |
 | Limpieza | Tarea nocturna que borra las subidas nunca confirmadas |
 
