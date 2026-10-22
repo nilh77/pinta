@@ -10,6 +10,7 @@ using Pinta.Modules.Identity.Data;
 using Pinta.Modules.Identity.Domain;
 using Pinta.Modules.Identity.Features.Antiforgery;
 using Pinta.Modules.Identity.Features.ConfirmEmail;
+using Pinta.Modules.Identity.Features.Google;
 using Pinta.Modules.Identity.Features.Login;
 using Pinta.Modules.Identity.Features.Logout;
 using Pinta.Modules.Identity.Features.Me;
@@ -49,7 +50,19 @@ public static class IdentityModule
             .AddDefaultTokenProviders();
         services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(48));
 
-        services.AddAuthentication(IdentityConstants.ApplicationScheme).AddIdentityCookies();
+        var authentication = services.AddAuthentication(IdentityConstants.ApplicationScheme);
+        authentication.AddIdentityCookies();
+        if (GoogleLoginEndpoints.IsConfigured(builder.Configuration))
+        {
+            authentication.AddGoogle(GoogleLoginEndpoints.Scheme, options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+                options.SignInScheme = IdentityConstants.ExternalScheme;
+                // Under /api, which the web app proxies to the API.
+                options.CallbackPath = GoogleLoginEndpoints.CallbackPath;
+            });
+        }
         services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.Name = SessionCookieName;
@@ -86,6 +99,7 @@ public static class IdentityModule
         MeEndpoint.Map(auth);
         ConfirmEmailEndpoint.Map(auth);
         ResendConfirmationEndpoint.Map(auth);
+        GoogleLoginEndpoints.Map(auth);
         return app;
     }
 

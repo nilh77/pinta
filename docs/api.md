@@ -29,7 +29,8 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | POST | `/api/auth/register` | Público | Alta con email. `sendConfirmationEmail: false` en el flujo de cotización, donde el email de la solicitud lleva el enlace | C4.3 |
 | POST | `/api/auth/login` | Público | Inicio de sesión | S1 |
 | POST | `/api/auth/logout` | Sesión | Cierre de sesión | C5.8 |
-| GET | `/api/auth/google?returnUrl=` | Público | Inicia el login con Google | C4.3 |
+| GET | `/api/auth/providers` | Público | Si el login con Google está configurado | C4.3 |
+| GET | `/api/auth/google?returnUrl=` | Público | Inicia el login con Google (404 si no hay credenciales) | C4.3 |
 | GET | `/api/auth/google/callback` | Público | Vuelta de Google | C4.3 |
 | GET | `/api/auth/me` | Sesión | Usuario actual, rol e idioma | S1 |
 | POST | `/api/auth/confirm-email` | Público | Confirma el email con token | C4.5 |

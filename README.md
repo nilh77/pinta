@@ -53,6 +53,13 @@ Nunca en el repositorio. Para reenviar webhooks de Stripe (desde H5):
 dotnet user-secrets set "Parameters:stripe-secret-key" "sk_test_..." --project src/Pinta.AppHost
 ```
 
+Login con Google (opcional; sin estas claves el botón no aparece). En Google Cloud, la URI de redirección autorizada es `http://localhost:<puerto web>/api/auth/google/signin`:
+
+```bash
+dotnet user-secrets set "Authentication:Google:ClientId" "..." --project src/Pinta.Api
+dotnet user-secrets set "Authentication:Google:ClientSecret" "..." --project src/Pinta.Api
+```
+
 ## Tests
 
 ```bash
