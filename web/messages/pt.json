@@ -97,6 +97,200 @@
     "email_taken": "Este email já está registado.",
     "validation_failed": "Há dados por corrigir.",
     "rate_limited": "Demasiadas tentativas. Aguarde um minuto e tente outra vez.",
-    "internal_error": "Algo correu mal. Tente outra vez."
+    "internal_error": "Algo correu mal. Tente outra vez.",
+    "concurrency_conflict": "Outra pessoa alterou estes dados. Recarregue e tente outra vez."
+  },
+  "admin": {
+    "loading": "A carregar o painel…",
+    "badge": "ADMIN",
+    "role": "Administrador",
+    "signOut": "Sair",
+    "nav": {
+      "label": "Secções do painel",
+      "pricing": "Preços"
+    },
+    "forbidden": {
+      "title": "Área reservada",
+      "body": "Esta área é só para a equipa Pinta.",
+      "home": "Voltar ao início"
+    },
+    "validation": {
+      "amount": "Indique um valor ≥ 0 com até 2 casas decimais.",
+      "factor": "Entre 0,50 e 3,00.",
+      "percent": "Entre 0 e 100.",
+      "positive": "Indique um número maior que 0.",
+      "side": "Entre 0,50 e 30,00 m.",
+      "height": "Entre 2,00 e 6,00 m.",
+      "integer": "Indique um número inteiro dentro do limite.",
+      "minBelowMax": "Tem de ser maior que o valor mínimo.",
+      "key": "Use minúsculas, números e _ (ex.: gloss_paint)."
+    },
+    "pricing": {
+      "title": "Preços",
+      "subtitle": "As alterações aplicam-se aos novos orçamentos. Os trabalhos já orçamentados mantêm os seus preços.",
+      "loading": "A carregar os preços…",
+      "loadError": "Não conseguimos carregar os preços.",
+      "retry": "Tentar outra vez",
+      "save": "Guardar alterações",
+      "saved": "Alterações guardadas",
+      "unsaved": "Alterações por guardar",
+      "conflict": "Outro sócio alterou estes preços entretanto.",
+      "reload": "Recarregar",
+      "saveError": "Não foi possível guardar «{item}».",
+      "tabHasErrors": "tem erros",
+      "add": "Adicionar",
+      "key": "Chave",
+      "keyPlaceholder": "chave_unica",
+      "tabs": {
+        "label": "Secções de preços",
+        "surfacesPaints": "Superfícies e tintas",
+        "sizes": "Tamanhos S/M/L",
+        "occupancy": "Ocupação",
+        "extras": "Trabalhos adicionais",
+        "rules": "Regras"
+      },
+      "names": {
+        "pt": "Nome em português",
+        "es": "Nome em espanhol",
+        "en": "Nome em inglês",
+        "toggle": "Traduções",
+        "fallback": "Vazio: usa o português"
+      },
+      "status": {
+        "title": "Estado",
+        "active": "Ativo",
+        "inactive": "Inativo"
+      },
+      "surfaces": {
+        "title": "Superfícies",
+        "name": "Tipo",
+        "new": "Nova superfície",
+        "clientRate": "Cliente €/m²",
+        "painterRate": "Pintor €/m²",
+        "factor": "Fator",
+        "labourMargin": "Margem MO"
+      },
+      "paints": {
+        "title": "Tintas",
+        "name": "Tinta",
+        "new": "Nova tinta",
+        "pricePerLitre": "€/litro",
+        "coverage": "Rendimento m²/L",
+        "coats": "Demãos"
+      },
+      "sizes": {
+        "title": "Tamanhos por tipo de divisão",
+        "hint": "Comprimento × largura em metros quando o cliente não sabe as medidas. A altura é a altura por defeito das regras.",
+        "roomType": "Tipo de divisão",
+        "size": "Tamanho {size}",
+        "length": "comprimento",
+        "width": "largura",
+        "legend": "Em cada tamanho: comprimento e largura.",
+        "suggestedPaint": "Tinta sugerida"
+      },
+      "occupancy": {
+        "title": "Ocupação",
+        "hint": "Multiplica a mão de obra e o pagamento ao pintor.",
+        "name": "Ocupação",
+        "factor": "Fator"
+      },
+      "extras": {
+        "title": "Trabalhos adicionais",
+        "hint": "Valores sem IVA que o revisor pode juntar a um orçamento.",
+        "empty": "Ainda não há trabalhos adicionais.",
+        "name": "Descrição",
+        "new": "Novo trabalho adicional",
+        "clientPrice": "Cliente €",
+        "painterPay": "Pintor €"
+      },
+      "rules": {
+        "groups": {
+          "job": "Trabalho",
+          "price": "Preço",
+          "range": "Intervalo mostrado ao cliente",
+          "operations": "Visita, revisão e cancelamento"
+        },
+        "fields": {
+          "minJobAmount": "Trabalho mínimo (com IVA)",
+          "maxJobAmount": "Máximo para preço imediato (com IVA)",
+          "premiumAreaM2": "Limiar Premium",
+          "defaultHeight": "Altura por defeito",
+          "vatPct": "IVA",
+          "wastePct": "Desperdício de material",
+          "minMarginPct": "Margem mínima (aviso)",
+          "depositPct": "Sinal",
+          "quoteValidityDays": "Validade do preço",
+          "rangeLowPct": "Limite inferior (−)",
+          "rangeHighPct": "Limite superior (+)",
+          "rangeSizeWideningPct": "Alargamento com tamanho S/M/L",
+          "rangeDamageWideningPct": "Alargamento com danos",
+          "siteVisitPrice": "Preço da visita técnica",
+          "siteVisitDeductible": "A visita desconta-se do trabalho",
+          "reviewDeadlineBusinessDays": "Prazo de revisão (dias úteis)",
+          "fullRefundMinDays": "Reembolso total até (dias antes)",
+          "lateRefundPct": "Reembolso depois desse prazo"
+        }
+      }
+    },
+    "simulator": {
+      "title": "Simulador",
+      "subtitle": "Experimente um trabalho com os preços guardados. Não se guarda nada.",
+      "occupancy": "Ocupação",
+      "room": "Divisão {number}",
+      "surface": "Superfície {number}",
+      "remove": "Remover elemento {number}",
+      "roomType": "Tipo de divisão",
+      "surfaceType": "Tipo de superfície",
+      "paint": "Tinta",
+      "size": "Tamanho",
+      "exactMeasures": "Medidas exatas",
+      "length": "Comprimento (m)",
+      "width": "Largura (m)",
+      "heightOrWidth": "Altura/largura (m)",
+      "height": "Altura (m)",
+      "defaultHeight": "2,60",
+      "wallsAndCeiling": "Paredes e teto",
+      "wall": "Parede {wall}",
+      "ceiling": "Teto",
+      "damage": "Humidade, fissuras ou tinta a descascar",
+      "addRoom": "Divisão",
+      "addSurface": "Superfície",
+      "extras": "Trabalhos adicionais",
+      "extraDescription": "Descrição",
+      "extraClient": "Cliente €",
+      "extraPainter": "Pintor €",
+      "removeExtra": "Remover trabalho adicional {number}",
+      "addExtra": "Trabalho adicional",
+      "calculating": "A calcular…",
+      "error": "Não conseguimos calcular. Tente outra vez.",
+      "invalid": "Corrija o trabalho de exemplo:",
+      "total": "Preço ao cliente (com IVA)",
+      "clientSees": "O cliente vê: {min} – {max}",
+      "customQuote": "O cliente vê: orçamento à medida",
+      "flags": {
+        "minimum": "Trabalho mínimo",
+        "overMax": "Acima do máximo",
+        "premium": "Premium",
+        "widened": "Intervalo alargado"
+      },
+      "lines": {
+        "caption": "Linhas do cálculo",
+        "surface": "Superfície",
+        "labour": "MO",
+        "painter": "Pintor"
+      },
+      "area": "Área total",
+      "material": "Material · {litres} L",
+      "labour": "Mão de obra",
+      "extrasTotal": "Trabalhos adicionais",
+      "subtotal": "Subtotal sem IVA",
+      "vat": "IVA",
+      "painterTotal": "Pagamento ao pintor",
+      "deposit": "Sinal",
+      "balance": "restante {amount}",
+      "margin": "Margem bruta",
+      "marginPct": "{pct}% sobre o preço sem IVA",
+      "lowMargin": "Abaixo da margem mínima."
+    }
   }
 }
