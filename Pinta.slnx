@@ -1,0 +1,45 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Pinta.Api/Pinta.Api.csproj" />
+    <Project Path="src/Pinta.Pricing/Pinta.Pricing.csproj" />
+    <Project Path="src/Pinta.ServiceDefaults/Pinta.ServiceDefaults.csproj" />
+    <Project Path="src/Pinta.SharedKernel/Pinta.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Catalog/">
+    <Project Path="src/Modules/Catalog/Pinta.Modules.Catalog.Contracts/Pinta.Modules.Catalog.Contracts.csproj" />
+    <Project Path="src/Modules/Catalog/Pinta.Modules.Catalog/Pinta.Modules.Catalog.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Finance/">
+    <Project Path="src/Modules/Finance/Pinta.Modules.Finance.Contracts/Pinta.Modules.Finance.Contracts.csproj" />
+    <Project Path="src/Modules/Finance/Pinta.Modules.Finance/Pinta.Modules.Finance.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/Pinta.Modules.Identity.Contracts/Pinta.Modules.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/Pinta.Modules.Identity/Pinta.Modules.Identity.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Jobs/">
+    <Project Path="src/Modules/Jobs/Pinta.Modules.Jobs.Contracts/Pinta.Modules.Jobs.Contracts.csproj" />
+    <Project Path="src/Modules/Jobs/Pinta.Modules.Jobs/Pinta.Modules.Jobs.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Media/">
+    <Project Path="src/Modules/Media/Pinta.Modules.Media.Contracts/Pinta.Modules.Media.Contracts.csproj" />
+    <Project Path="src/Modules/Media/Pinta.Modules.Media/Pinta.Modules.Media.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Notifications/">
+    <Project Path="src/Modules/Notifications/Pinta.Modules.Notifications.Contracts/Pinta.Modules.Notifications.Contracts.csproj" />
+    <Project Path="src/Modules/Notifications/Pinta.Modules.Notifications/Pinta.Modules.Notifications.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Painters/">
+    <Project Path="src/Modules/Painters/Pinta.Modules.Painters.Contracts/Pinta.Modules.Painters.Contracts.csproj" />
+    <Project Path="src/Modules/Painters/Pinta.Modules.Painters/Pinta.Modules.Painters.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Payments/">
+    <Project Path="src/Modules/Payments/Pinta.Modules.Payments.Contracts/Pinta.Modules.Payments.Contracts.csproj" />
+    <Project Path="src/Modules/Payments/Pinta.Modules.Payments/Pinta.Modules.Payments.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Quoting/">
+    <Project Path="src/Modules/Quoting/Pinta.Modules.Quoting.Contracts/Pinta.Modules.Quoting.Contracts.csproj" />
+    <Project Path="src/Modules/Quoting/Pinta.Modules.Quoting/Pinta.Modules.Quoting.csproj" />
+  </Folder>
+</Solution>
