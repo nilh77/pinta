@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>pinta-api</UserSecretsId>
+    <!-- The OpenAPI document is written on build and committed; `pnpm api:generate` reads it. -->
+    <OpenApiDocumentsDirectory>$(MSBuildProjectDirectory)/openapi</OpenApiDocumentsDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.Extensions.ApiDescription.Server">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Hangfire.AspNetCore" />
+    <PackageReference Include="Hangfire.PostgreSql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pinta.ServiceDefaults\Pinta.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
+    <ProjectReference Include="..\Modules\Identity\Pinta.Modules.Identity\Pinta.Modules.Identity.csproj" />
+    <ProjectReference Include="..\Modules\Catalog\Pinta.Modules.Catalog\Pinta.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\Modules\Quoting\Pinta.Modules.Quoting\Pinta.Modules.Quoting.csproj" />
+    <ProjectReference Include="..\Modules\Jobs\Pinta.Modules.Jobs\Pinta.Modules.Jobs.csproj" />
+    <ProjectReference Include="..\Modules\Painters\Pinta.Modules.Painters\Pinta.Modules.Painters.csproj" />
+    <ProjectReference Include="..\Modules\Payments\Pinta.Modules.Payments\Pinta.Modules.Payments.csproj" />
+    <ProjectReference Include="..\Modules\Media\Pinta.Modules.Media\Pinta.Modules.Media.csproj" />
+    <ProjectReference Include="..\Modules\Notifications\Pinta.Modules.Notifications\Pinta.Modules.Notifications.csproj" />
+    <ProjectReference Include="..\Modules\Finance\Pinta.Modules.Finance\Pinta.Modules.Finance.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,96 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.DataProtection;
+using Pinta.Api.Infrastructure;
+using Pinta.Api.Seed;
+using Pinta.Modules.Catalog;
+using Pinta.Modules.Finance;
+using Pinta.Modules.Identity;
+using Pinta.Modules.Identity.Data;
+using Pinta.Modules.Jobs;
+using Pinta.Modules.Media;
+using Pinta.Modules.Notifications;
+using Pinta.Modules.Painters;
+using Pinta.Modules.Payments;
+using Pinta.Modules.Quoting;
+using Serilog;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
+// writeToProviders keeps the OpenTelemetry logger from ServiceDefaults, so logs reach the Aspire dashboard.
+builder.Services.AddSerilog(
+    (services, logger) => logger
+        .ReadFrom.Configuration(builder.Configuration)
+        .Enrich.FromLogContext()
+        .WriteTo.Console(outputTemplate:
+            "[{Timestamp:HH:mm:ss} {Level:u3}] {SourceContext}: {Message:lj} {TraceId}{NewLine}{Exception}"),
+    writeToProviders: true);
+
+builder.AddNpgsqlDataSource("pinta");
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddProblemDetails(options => options.CustomizeProblemDetails = ProblemDetailsSetup.Customize);
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower)));
+builder.Services.AddPintaOpenApi();
+builder.Services.AddRequestLocalization(options =>
+{
+    string[] cultures = ["pt", "es", "en"];
+    options.SetDefaultCulture(cultures[0]).AddSupportedCultures(cultures).AddSupportedUICultures(cultures);
+    options.ApplyCurrentCultureToResponseHeaders = true;
+});
+builder.AddAntiforgeryHeader();
+builder.AddRateLimits();
+builder.AddHangfireJobs();
+
+builder.AddIdentityModule();
+builder.AddCatalogModule();
+builder.AddQuotingModule();
+builder.AddJobsModule();
+builder.AddPaintersModule();
+builder.AddPaymentsModule();
+builder.AddMediaModule();
+builder.AddNotificationsModule();
+builder.AddFinanceModule();
+
+// Keys in PostgreSQL so sessions survive restarts (docs/integrations.md); not while the OpenAPI document is generated on build.
+var dataProtection = builder.Services.AddDataProtection().SetApplicationName("Pinta");
+if (!OpenApiGeneration.IsRunning)
+{
+    dataProtection.PersistKeysToDbContext<IdentityModuleDbContext>();
+}
+
+var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+app.UseSerilogRequestLogging();
+app.UseRequestLocalization();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseRateLimiter();
+app.UseMiddleware<AntiforgeryValidationMiddleware>();
+
+app.MapDefaultEndpoints();
+app.MapOpenApi();
+app.MapHangfireAdminDashboard();
+
+app.MapIdentityEndpoints();
+app.MapCatalogEndpoints();
+app.MapQuotingEndpoints();
+app.MapJobsEndpoints();
+app.MapPaintersEndpoints();
+app.MapPaymentsEndpoints();
+app.MapMediaEndpoints();
+app.MapNotificationsEndpoints();
+app.MapFinanceEndpoints();
+
+if (app.Environment.IsDevelopment())
+{
+    await app.Services.MigrateModulesAsync();
+    await DemoSeeder.SeedAsync(app.Services);
+}
+
+app.Run();
+
+public partial class Program;
