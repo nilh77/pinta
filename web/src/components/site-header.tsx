@@ -1,13 +1,15 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useMe, useSignOut } from "@/lib/auth/use-auth";
 import { LocaleSwitcher } from "./locale-switcher";
 import { Logo } from "./logo";
 
-export function SiteHeader() {
+/** `children`: page-specific links shown before the language switcher on wide screens (landing D1). */
+export function SiteHeader({ children }: { children?: ReactNode }) {
   const t = useTranslations("nav");
   const me = useMe();
   const signOut = useSignOut();
@@ -17,6 +19,7 @@ export function SiteHeader() {
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
       <Logo />
       <div className="flex items-center gap-2">
+        {children}
         <LocaleSwitcher />
         {me.isPending ? (
           <span aria-hidden="true" className="h-11 w-20 animate-pulse motion-reduce:animate-none rounded-xl bg-primary-soft" />

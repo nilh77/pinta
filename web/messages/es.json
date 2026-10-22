@@ -24,9 +24,6 @@
     "badge": "Distrito de Lisboa",
     "title": "Pinta tu casa sin complicaciones",
     "subtitle": "Di lo que quieres pintar y ve un precio estimado en un minuto. Material incluido y pintores verificados.",
-    "createAccount": "Crear cuenta",
-    "comingSoon": "La cotización online está en camino. Crea ya tu cuenta.",
-    "signedIn": "Has iniciado sesión como {email}.",
     "illustration": {
       "label": "Esquema de una vivienda con estancias y una estimación de precio",
       "living": "Sala",
@@ -35,7 +32,63 @@
       "bedroom": "Dormitorio",
       "add": "Añadir",
       "estimate": "Estimación"
-    }
+    },
+    "cta": "Cotizar gratis",
+    "howLink": "Cómo funciona",
+    "sectionsLabel": "Secciones de la página",
+    "nav": {
+      "como": "Cómo funciona",
+      "que": "Qué pintamos",
+      "garantias": "Garantías"
+    },
+    "how": {
+      "title": "Cómo funciona",
+      "describe": {
+        "title": "Describe tu casa en un esquema",
+        "body": "Añade estancias y marca qué paredes y techos pintar. Verás el precio estimado al momento."
+      },
+      "price": {
+        "title": "Recibe tu precio final",
+        "body": "Un experto revisa tus fotos y te confirma el precio en 2 días laborables."
+      },
+      "book": {
+        "title": "Reserva y pintamos",
+        "body": "Pagas una señal para reservar la fecha y el resto cuando el trabajo está terminado."
+      }
+    },
+    "promises": {
+      "title": "Sin sorpresas",
+      "subtitle": "Un único responsable de principio a fin: precio claro, material, pintores y garantía.",
+      "material": {
+        "title": "Material incluido",
+        "body": "La pintura la ponemos nosotros."
+      },
+      "painters": {
+        "title": "Pintores verificados",
+        "body": "Un equipo seleccionado, no un directorio abierto."
+      },
+      "payment": {
+        "title": "Pago seguro",
+        "body": "Con tarjeta, MB WAY o Multibanco."
+      },
+      "reviewed": {
+        "title": "Precio revisado",
+        "body": "Un experto confirma cada presupuesto."
+      }
+    },
+    "works": {
+      "title": "Qué pintamos",
+      "rooms": "Habitaciones",
+      "homes": "Viviendas completas",
+      "ceilings": "Techos",
+      "walls": "Paredes sueltas",
+      "facades": "Fachadas"
+    },
+    "ctaBand": {
+      "title": "¿Cuánto costaría pintar tu casa?",
+      "body": "Descúbrelo en un minuto, sin compromiso."
+    },
+    "footer": "Pintura de viviendas en el distrito de Lisboa."
   },
   "emailBanner": {
     "title": "Confirma tu email",

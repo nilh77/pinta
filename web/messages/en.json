@@ -24,9 +24,6 @@
     "badge": "Lisbon district",
     "title": "Get your home painted, minus the hassle",
     "subtitle": "Tell us what you want painted and see an estimated price in a minute. Materials included, vetted painters.",
-    "createAccount": "Create account",
-    "comingSoon": "Online quotes are on their way. Create your account now.",
-    "signedIn": "You're signed in as {email}.",
     "illustration": {
       "label": "Layout of a home with rooms and a price estimate",
       "living": "Living room",
@@ -35,7 +32,63 @@
       "bedroom": "Bedroom",
       "add": "Add",
       "estimate": "Estimate"
-    }
+    },
+    "cta": "Get a free quote",
+    "howLink": "How it works",
+    "sectionsLabel": "Page sections",
+    "nav": {
+      "como": "How it works",
+      "que": "What we paint",
+      "garantias": "Guarantees"
+    },
+    "how": {
+      "title": "How it works",
+      "describe": {
+        "title": "Describe your home in a simple layout",
+        "body": "Add rooms and tick which walls and ceilings to paint. You see the estimated price straight away."
+      },
+      "price": {
+        "title": "Get your final price",
+        "body": "An expert reviews your photos and confirms the price within 2 working days."
+      },
+      "book": {
+        "title": "Book and we paint",
+        "body": "Pay a deposit to book the date and the rest when the job is done."
+      }
+    },
+    "promises": {
+      "title": "No surprises",
+      "subtitle": "One company from start to finish: clear price, materials, painters and guarantee.",
+      "material": {
+        "title": "Materials included",
+        "body": "We supply the paint."
+      },
+      "painters": {
+        "title": "Vetted painters",
+        "body": "A selected team, not an open directory."
+      },
+      "payment": {
+        "title": "Secure payment",
+        "body": "By card, MB WAY or Multibanco."
+      },
+      "reviewed": {
+        "title": "Reviewed price",
+        "body": "An expert confirms every quote."
+      }
+    },
+    "works": {
+      "title": "What we paint",
+      "rooms": "Rooms",
+      "homes": "Whole homes",
+      "ceilings": "Ceilings",
+      "walls": "Single walls",
+      "facades": "Façades"
+    },
+    "ctaBand": {
+      "title": "How much would it cost to paint your home?",
+      "body": "Find out in a minute, no strings attached."
+    },
+    "footer": "Home painting in the Lisbon district."
   },
   "emailBanner": {
     "title": "Confirm your email",
