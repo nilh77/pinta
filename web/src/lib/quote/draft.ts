@@ -145,9 +145,12 @@ export function restoreElement(draft: Draft, { element, index }: RemovedElement)
   return withElements(draft, elements);
 }
 
-/** The editor works on a copy; saving it back marks the element as described. */
+/**
+ * The editor works on a copy; saving it back marks the element as described. The name is kept from the draft: it is
+ * renamed from the schema, never in the editor, so a stale copy cannot undo a rename.
+ */
 export const saveElement = (draft: Draft, element: DraftElement): Draft =>
-  withElements(draft, draft.elements.map((e) => (e.id === element.id ? { ...element, described: true } : e)));
+  withElements(draft, draft.elements.map((e) => (e.id === element.id ? { ...element, customName: e.customName, described: true } : e)));
 
 /** Exact measures start from the size's metres (C2.3). */
 export function setMeasureMode(element: DraftElement, mode: MeasureMode, catalog: CatalogInfo, locale: string): DraftElement {

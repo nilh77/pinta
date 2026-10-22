@@ -7,6 +7,7 @@ import {
   elementAreaOf,
   MAX_ELEMENTS,
   removeElement,
+  renameElement,
   restoreElement,
   saveElement,
   setMeasureMode,
@@ -106,6 +107,13 @@ describe("editing", () => {
     const draft = startDraft("home", catalog, NOW);
     const saved = saveElement(draft, { ...draft.elements[0], damage: true });
     expect(saved.elements[0]).toMatchObject({ described: true, damage: true });
+  });
+
+  it("saving an editor copy keeps a rename made meanwhile", () => {
+    const draft = startDraft("home", catalog, NOW);
+    const copy = draft.elements[0];
+    const renamed = renameElement(draft, copy.id, "Sala grande");
+    expect(saveElement(renamed, { ...copy, size: "L" }).elements[0]).toMatchObject({ customName: "Sala grande", size: "L" });
   });
 });
 
