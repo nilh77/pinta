@@ -390,6 +390,10 @@ export interface components {
             occupancies: components["schemas"]["CatalogOption"][];
             /** Format: double */
             defaultHeight: number;
+            /** Format: int32 */
+            reviewDeadlineBusinessDays: number;
+            /** Format: int32 */
+            quoteValidityDays: number;
         };
         CatalogRoomSize: {
             size: components["schemas"]["RoomSize"];

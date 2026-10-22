@@ -8,6 +8,28 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 Nada todavía.
 
+## H2 · Constructor del cliente — 2026-10-22, [PR #3](https://github.com/nilh77/pinta/pull/3)
+
+### Añadido
+
+- Landing del board Inicio (y escritorio D1) con «Cotizar gratis»; el idioma elegido se recuerda en el dispositivo y la primera visita es siempre en portugués (C1.1).
+- Paso 1 · Tipo de trabajo: pared o techo, habitación o vivienda completa; aviso de cotización a medias y confirmación antes de descartar estancias (C2.1).
+- `RoomEditor`: vista cenital con paredes A–D y techo que se tocan, tallas S/M/L o medidas exactas, pintura sugerida, daños y m² al instante (C2.2, C2.3, C2.5, C2.6).
+- Paso 2 · Esquema: ocupación, estancias con área y estado, renombrar, duplicar, eliminar con deshacer, máximo de 30 elementos y estimación provisional en vivo; editor en hoja inferior en móvil y constructor en tres columnas desde 1024 px (C2.4).
+- Paso 4 · Estimación con rango con IVA, área, insignias, aviso de daños y resumen por estancia; sin tarifas, material ni margen (C2.8).
+- Borrador en el dispositivo que sobrevive a recargas y caduca a los 30 días (C2.7).
+- Cálculo de área en el navegador con las mismas reglas de redondeo que `Pinta.Pricing`, probado con los casos dorados.
+- `GET /api/catalog` incluye el plazo de revisión y la validez del precio (solo días).
+
+### Cambiado
+
+- La vivienda completa empieza con sala, cocina, baño y dormitorio sin describir; la ocupación se elige en el esquema (documentos 6.2 y 6.4 actualizados).
+
+### Pendiente
+
+- El botón «Continuar para precio final» queda desactivado hasta H3 (fotos y envío).
+- La landing aún no tiene el comprobador de cobertura ni el desde-precio (H3, C4.1).
+
 ## H1 · Precios y catálogo — 2026-10-22, [PR #2](https://github.com/nilh77/pinta/pull/2)
 
 ### Añadido

@@ -17,3 +17,20 @@ export function formatEuros(locale: string, euros: number, fractionDigits = 2): 
     useGrouping: "always",
   }).format(euros);
 }
+
+/** m² with 2 decimals in the format of each language ("48,40 m²" in PT and ES). Takes hundredths of m² (lib/quote/area). */
+export function formatArea(locale: string, hundredths: number): string {
+  return `${new Intl.NumberFormat(INTL_LOCALES[locale as keyof typeof INTL_LOCALES] ?? INTL_LOCALES.pt, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: "always",
+  }).format(hundredths / 100)} m²`;
+}
+
+/** Metres for labels ("3,50 m"). */
+export function formatMetres(locale: string, metres: number): string {
+  return `${new Intl.NumberFormat(INTL_LOCALES[locale as keyof typeof INTL_LOCALES] ?? INTL_LOCALES.pt, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(metres)} m`;
+}

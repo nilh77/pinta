@@ -24,9 +24,6 @@
     "badge": "Distrito de Lisboa",
     "title": "Pinta tu casa sin complicaciones",
     "subtitle": "Di lo que quieres pintar y ve un precio estimado en un minuto. Material incluido y pintores verificados.",
-    "createAccount": "Crear cuenta",
-    "comingSoon": "La cotización online está en camino. Crea ya tu cuenta.",
-    "signedIn": "Has iniciado sesión como {email}.",
     "illustration": {
       "label": "Esquema de una vivienda con estancias y una estimación de precio",
       "living": "Sala",
@@ -35,7 +32,63 @@
       "bedroom": "Dormitorio",
       "add": "Añadir",
       "estimate": "Estimación"
-    }
+    },
+    "cta": "Cotizar gratis",
+    "howLink": "Cómo funciona",
+    "sectionsLabel": "Secciones de la página",
+    "nav": {
+      "como": "Cómo funciona",
+      "que": "Qué pintamos",
+      "garantias": "Garantías"
+    },
+    "how": {
+      "title": "Cómo funciona",
+      "describe": {
+        "title": "Describe tu casa en un esquema",
+        "body": "Añade estancias y marca qué paredes y techos pintar. Verás el precio estimado al momento."
+      },
+      "price": {
+        "title": "Recibe tu precio final",
+        "body": "Un experto revisa tus fotos y te confirma el precio en 2 días laborables."
+      },
+      "book": {
+        "title": "Reserva y pintamos",
+        "body": "Pagas una señal para reservar la fecha y el resto cuando el trabajo está terminado."
+      }
+    },
+    "promises": {
+      "title": "Sin sorpresas",
+      "subtitle": "Un único responsable de principio a fin: precio claro, material, pintores y garantía.",
+      "material": {
+        "title": "Material incluido",
+        "body": "La pintura la ponemos nosotros."
+      },
+      "painters": {
+        "title": "Pintores verificados",
+        "body": "Un equipo seleccionado, no un directorio abierto."
+      },
+      "payment": {
+        "title": "Pago seguro",
+        "body": "Con tarjeta, MB WAY o Multibanco."
+      },
+      "reviewed": {
+        "title": "Precio revisado",
+        "body": "Un experto confirma cada presupuesto."
+      }
+    },
+    "works": {
+      "title": "Qué pintamos",
+      "rooms": "Habitaciones",
+      "homes": "Viviendas completas",
+      "ceilings": "Techos",
+      "walls": "Paredes sueltas",
+      "facades": "Fachadas"
+    },
+    "ctaBand": {
+      "title": "¿Cuánto costaría pintar tu casa?",
+      "body": "Descúbrelo en un minuto, sin compromiso."
+    },
+    "footer": "Pintura de viviendas en el distrito de Lisboa."
   },
   "emailBanner": {
     "title": "Confirma tu email",
@@ -291,6 +344,208 @@
       "margin": "Margen bruto",
       "marginPct": "{pct}% sobre el precio sin IVA",
       "lowMargin": "Por debajo del margen mínimo."
+    }
+  },
+  "quote": {
+    "progress": {
+      "label": "Progreso de la solicitud",
+      "job": "Trabajo",
+      "price": "Precio",
+      "details": "Detalles",
+      "send": "Envío",
+      "done": "completado"
+    },
+    "states": {
+      "loading": "Preparando la cotización…",
+      "slow": "Está tardando más de lo normal.",
+      "retry": "Reintentar",
+      "errorTitle": "No pudimos cargar la cotización",
+      "errorBody": "Comprueba la conexión e inténtalo de nuevo. Lo que ya tenías sigue guardado."
+    },
+    "errors": {
+      "required": "Campo obligatorio.",
+      "number": "Indica un número, por ejemplo 3,50.",
+      "decimals": "Usa como máximo 2 decimales.",
+      "side": "Entre 0,50 y 30,00 m.",
+      "height": "Entre 2,00 y 6,00 m.",
+      "surfaceLength": "Entre 0,50 y 40,00 m.",
+      "surfaceHeight": "Entre 0,50 y 20,00 m.",
+      "wallsOrCeiling": "Selecciona al menos una pared o el techo."
+    },
+    "type": {
+      "metaTitle": "¿Qué quieres pintar?",
+      "back": "Volver al inicio",
+      "title": "¿Qué quieres pintar?",
+      "subtitle": "Elige una opción. Verás un precio estimado en menos de un minuto.",
+      "required": "Elige qué quieres pintar.",
+      "continue": "Continuar",
+      "options": {
+        "surface": {
+          "title": "Una pared o un techo",
+          "body": "Solo largo × alto"
+        },
+        "room": {
+          "title": "Una habitación",
+          "body": "Marca qué paredes y si el techo"
+        },
+        "home": {
+          "title": "Una vivienda completa",
+          "body": "Añade estancias en un esquema sencillo"
+        }
+      },
+      "trust": {
+        "material": "Material incluido",
+        "painters": "Pintores verificados",
+        "payment": "Pago seguro"
+      },
+      "resume": {
+        "title": "Tienes una cotización a medias.",
+        "continue": "Continuar",
+        "restart": "Empezar de nuevo"
+      },
+      "confirm": {
+        "title": "¿Empezar una cotización nueva?",
+        "body": "Al cambiar el tipo de trabajo se descartan las estancias que ya describiste.",
+        "yes": "Sí, empezar de nuevo",
+        "no": "Mantener lo que tengo"
+      }
+    },
+    "occupancy": {
+      "question": "¿Cómo está la vivienda?",
+      "hint": "Con muebles o habitada hay que proteger y mover cosas, por eso la mano de obra cuesta algo más.",
+      "required": "Indica cómo está la vivienda para ver el precio."
+    },
+    "schema": {
+      "metaTitle": "Tu esquema",
+      "back": "Volver al tipo de trabajo",
+      "title": {
+        "surface": "Tu superficie",
+        "room": "Tu habitación",
+        "home": "Tu vivienda"
+      },
+      "subtitle": "Toca una estancia para describirla. Es un esquema, no un plano: no hace falta que sea exacto.",
+      "subtitleDesktop": "Elige una estancia a la izquierda y marca qué paredes y techo pintar.",
+      "surfaceName": "Superficie",
+      "listLabel": "Estancias y superficies",
+      "notDescribed": "Sin describir",
+      "fixIt": "Revisa las medidas",
+      "describe": "Describir",
+      "damageBadge": "Humedad",
+      "menu": "Opciones de {name}",
+      "rename": "Renombrar",
+      "duplicate": "Duplicar",
+      "remove": "Eliminar",
+      "removed": "«{name}» eliminada",
+      "undo": "Deshacer",
+      "ceilingOnly": "Solo techo",
+      "wallsAndCeiling": "{count, plural, one {# pared} other {# paredes}} + techo",
+      "wallsOnly": "{count, plural, one {# pared} other {# paredes}}",
+      "add": "Añadir estancia",
+      "addRoomLabel": "Tipo de estancia",
+      "addSurface": "Superficie suelta (pared, techo, fachada…)",
+      "maxReached": "Máximo de {max} elementos por solicitud.",
+      "emptyTitle": "Añade tu primera estancia",
+      "emptyBody": "Usa el botón de abajo para empezar.",
+      "seePrice": "Ver mi precio",
+      "partialHint": "Puedes ver el precio aunque falten estancias.",
+      "describeOne": "Describe al menos una estancia para ver el precio.",
+      "fixInvalid": "Hay elementos con medidas por corregir (en rojo)."
+    },
+    "editor": {
+      "label": "Editor de estancia",
+      "pick": "Elige una estancia para describirla.",
+      "autosaveHint": "Los cambios se guardan solos.",
+      "rename": "Renombrar",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "roomType": "Tipo de estancia",
+      "surfaceType": "Tipo de superficie",
+      "wallsTitle": "Paredes y techo",
+      "wallsHint": "Toca las paredes y el techo que quieres pintar.",
+      "allWalls": "Todas las paredes",
+      "noWalls": "Ninguna",
+      "wall": "Pared",
+      "ceiling": "Techo",
+      "notPainted": "Sin pintar",
+      "wallsSummary": "{count} de 4 paredes · {area}",
+      "announce": {
+        "wallOn": "Pared {wall} marcada",
+        "wallOff": "Pared {wall} desmarcada",
+        "ceilingOn": "Techo marcado",
+        "ceilingOff": "Techo desmarcado",
+        "allOn": "Todas las paredes marcadas",
+        "allOff": "Ninguna pared marcada"
+      },
+      "measures": "Medidas",
+      "measuresMode": "Cómo quieres indicar las medidas",
+      "approximateSize": "Tamaño aproximado",
+      "exactMeasures": "Medidas exactas",
+      "size": "Tamaño",
+      "sizes": {
+        "S": "Pequeña",
+        "M": "Mediana",
+        "L": "Grande"
+      },
+      "sizeHint": "Alto estándar de {height}. Afinaremos las medidas con tus fotos.",
+      "length": "Largo (m)",
+      "width": "Ancho (m)",
+      "surfaceHeight": "Alto (m)",
+      "height": "Alto (m)",
+      "paint": "Pintura",
+      "suggested": "Sugerida",
+      "damage": "Hay humedad, grietas o desconchados",
+      "area": "Área a pintar"
+    },
+    "rename": {
+      "title": "Renombrar",
+      "label": "Nombre",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+    "estimateBar": {
+      "described": "{described} de {total} descritas",
+      "provisional": "Estimación provisional",
+      "describeFirst": "Describe una estancia",
+      "calculating": "Calculando…",
+      "error": "No pudimos calcular",
+      "offline": "Sin conexión: calcularemos al volver",
+      "custom": "Cotización personalizada"
+    },
+    "estimate": {
+      "metaTitle": "Tu precio estimado",
+      "back": "Volver a tu esquema",
+      "title": "Tu precio estimado",
+      "kind": {
+        "surface": "{count, plural, one {Superficie} other {# superficies}}",
+        "room": "{count, plural, one {Habitación} other {# elementos}}",
+        "home": "Vivienda · {count, plural, one {# estancia} other {# estancias}}"
+      },
+      "vatIncluded": "IVA incluido",
+      "custom": "Te enviaremos una cotización personalizada",
+      "overMaxNote": "Este trabajo necesita un presupuesto a medida. Puedes continuar y enviar la solicitud igualmente.",
+      "error": "No pudimos calcular el precio.",
+      "retry": "Reintentar",
+      "badgesLabel": "Características de la cotización",
+      "badges": {
+        "material": "Material incluido",
+        "minimum": "Trabajo mínimo",
+        "premium": "Trabajo Premium",
+        "widened": "Rango amplio por tallas o daños"
+      },
+      "review": "Te confirmamos el precio final en {days, plural, one {# día laborable} other {# días laborables}}, tras revisar tus fotos.",
+      "damage": "Indicaste humedad o daños en: {rooms}. Puede requerir trabajos extra o una visita técnica.",
+      "summary": "Resumen por estancia",
+      "includes": {
+        "title": "Qué incluye",
+        "body": "Material, mano de obra, protección de suelos y muebles y limpieza al terminar."
+      },
+      "next": {
+        "title": "Qué sigue",
+        "body": "Un experto revisa la solicitud en {reviewDays, plural, one {# día laborable} other {# días laborables}} y te envía el precio cerrado, válido {validityDays} días."
+      },
+      "continue": "Continuar para precio final",
+      "continueSoon": "Disponible en breve: fotos y envío de la solicitud.",
+      "edit": "Editar estancias"
     }
   }
 }
