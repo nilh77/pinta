@@ -193,7 +193,9 @@
       "jobs": "Jobs",
       "review": "Review",
       "coverage": "Coverage",
-      "painters": "Painters"
+      "painters": "Painters",
+      "finance": "Finance",
+      "settings": "Settings"
     },
     "forbidden": {
       "title": "Restricted area",
@@ -800,6 +802,112 @@
           "paid": "Paid"
         },
         "markLater": "Marking as paid arrives with Finance."
+      }
+    },
+    "finance": {
+      "title": "Finance",
+      "subtitle": "Income, costs and the 50/50 split between partners, month by month.",
+      "month": "Month",
+      "export": "Export CSV",
+      "loading": "Loading…",
+      "error": "We could not load the finances.",
+      "retry": "Try again",
+      "closedOn": "Month closed on {date}",
+      "figures": {
+        "title": "Month figures",
+        "income": "Income without VAT",
+        "incomeHint": "VAT collected {vat}",
+        "material": "Material",
+        "painters": "Painters",
+        "margin": "Gross margin",
+        "marginPct": "{pct}% of income",
+        "costs": "Operating costs",
+        "profit": "Profit",
+        "split": "Split between partners (50/50)",
+        "each": "{amount} each"
+      },
+      "categories": {
+        "infrastructure": "Infrastructure",
+        "payment_fees": "Payment fees",
+        "accounting": "Invoicing and accountant",
+        "insurance": "Insurance",
+        "marketing": "Marketing"
+      },
+      "jobs": {
+        "title": "Jobs of the month",
+        "empty": "No closed jobs or cancellations with a kept deposit this month.",
+        "columns": {
+          "code": "Job",
+          "date": "Date",
+          "income": "Income",
+          "material": "Material",
+          "painter": "Painter",
+          "margin": "Margin"
+        }
+      },
+      "costs": {
+        "title": "Operating costs",
+        "add": "Add",
+        "empty": "No costs this month.",
+        "closed": "The month is closed: costs no longer change.",
+        "edit": "Edit {description}",
+        "remove": "Delete {description}",
+        "removeTitle": "Delete this cost?",
+        "removeConfirm": "Delete",
+        "removed": "Cost deleted.",
+        "addTitle": "New cost",
+        "editTitle": "Edit cost",
+        "date": "Date",
+        "category": "Category",
+        "description": "Description",
+        "amount": "Amount (€, VAT included)",
+        "save": "Save",
+        "saved": "Cost saved.",
+        "cancel": "Back"
+      },
+      "payouts": {
+        "title": "Painter payouts to make",
+        "empty": "All paid.",
+        "since": "since {date}",
+        "markPaid": "Mark as paid",
+        "dialogTitle": "Payout for {code}",
+        "dialogBody": "Transfer of {amount} to {painter}. The painter will see it paid.",
+        "paidOn": "Transfer date",
+        "reference": "Reference",
+        "done": "Payout marked as paid.",
+        "cancel": "Back"
+      },
+      "close": {
+        "button": "Close month",
+        "title": "Close {month}?",
+        "body": "The figures are frozen: profit {profit}, {each} for each partner. This month's costs can no longer change.",
+        "confirm": "Close month",
+        "cancel": "Back",
+        "done": "Month closed."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "loading": "Loading…",
+      "error": "We could not load the requests.",
+      "retry": "Try again",
+      "deletion": {
+        "title": "Account deletion",
+        "body": "Clients who asked to delete their account. Executing it cancels active jobs under the usual policy, removes personal data and keeps the accounts.",
+        "empty": "No pending requests.",
+        "requested": "requested on {date}",
+        "execute": "Anonymise",
+        "actions": {
+          "cancel": "Will be cancelled · refund {refund}",
+          "blocked": "In progress or balance due",
+          "keep": "Stays in the accounts without personal data"
+        },
+        "blocked": "Wait until the jobs in progress are finished and paid.",
+        "confirmTitle": "Anonymise {name}?",
+        "confirmCancels": "These are cancelled and refunded: {jobs}. This cannot be undone.",
+        "confirmBody": "Personal data is removed and the account can no longer sign in. This cannot be undone.",
+        "cancel": "Back",
+        "done": "Account anonymised."
       }
     }
   },

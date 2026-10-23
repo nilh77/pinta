@@ -193,7 +193,9 @@
       "jobs": "Trabajos",
       "review": "Revisión",
       "coverage": "Cobertura",
-      "painters": "Pintores"
+      "painters": "Pintores",
+      "finance": "Finanzas",
+      "settings": "Ajustes"
     },
     "forbidden": {
       "title": "Área reservada",
@@ -800,6 +802,112 @@
           "paid": "Pagado"
         },
         "markLater": "Marcar como pagado llega con Finanzas."
+      }
+    },
+    "finance": {
+      "title": "Finanzas",
+      "subtitle": "Cobrado, costes y el reparto 50/50 entre socios, mes a mes.",
+      "month": "Mes",
+      "export": "Exportar CSV",
+      "loading": "Cargando…",
+      "error": "No hemos podido cargar las finanzas.",
+      "retry": "Reintentar",
+      "closedOn": "Mes cerrado el {date}",
+      "figures": {
+        "title": "Cifras del mes",
+        "income": "Ingresos sin IVA",
+        "incomeHint": "IVA cobrado {vat}",
+        "material": "Material",
+        "painters": "Pintores",
+        "margin": "Margen bruto",
+        "marginPct": "{pct}% de los ingresos",
+        "costs": "Costes de operación",
+        "profit": "Beneficio",
+        "split": "Reparto entre socios (50/50)",
+        "each": "{amount} cada uno"
+      },
+      "categories": {
+        "infrastructure": "Infraestructura",
+        "payment_fees": "Comisiones de pago",
+        "accounting": "Facturación y contabilista",
+        "insurance": "Seguro",
+        "marketing": "Marketing"
+      },
+      "jobs": {
+        "title": "Trabajos del mes",
+        "empty": "Ningún trabajo cerrado ni cancelado con señal retenida este mes.",
+        "columns": {
+          "code": "Trabajo",
+          "date": "Fecha",
+          "income": "Ingreso",
+          "material": "Material",
+          "painter": "Pintor",
+          "margin": "Margen"
+        }
+      },
+      "costs": {
+        "title": "Costes de operación",
+        "add": "Añadir",
+        "empty": "Sin costes este mes.",
+        "closed": "El mes está cerrado: los costes ya no cambian.",
+        "edit": "Editar {description}",
+        "remove": "Borrar {description}",
+        "removeTitle": "¿Borrar este coste?",
+        "removeConfirm": "Borrar",
+        "removed": "Coste borrado.",
+        "addTitle": "Nuevo coste",
+        "editTitle": "Editar coste",
+        "date": "Fecha",
+        "category": "Categoría",
+        "description": "Descripción",
+        "amount": "Importe (€, IVA incluido)",
+        "save": "Guardar",
+        "saved": "Coste guardado.",
+        "cancel": "Volver"
+      },
+      "payouts": {
+        "title": "Pagos a pintores pendientes",
+        "empty": "Todo pagado.",
+        "since": "desde el {date}",
+        "markPaid": "Marcar como pagado",
+        "dialogTitle": "Pago de {code}",
+        "dialogBody": "Transferencia de {amount} a {painter}. El pintor la verá como pagada.",
+        "paidOn": "Fecha de la transferencia",
+        "reference": "Referencia",
+        "done": "Pago marcado como pagado.",
+        "cancel": "Volver"
+      },
+      "close": {
+        "button": "Cerrar mes",
+        "title": "¿Cerrar {month}?",
+        "body": "Las cifras quedan congeladas: beneficio {profit}, {each} para cada socio. Los costes de este mes ya no se podrán cambiar.",
+        "confirm": "Cerrar mes",
+        "cancel": "Volver",
+        "done": "Mes cerrado."
+      }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "loading": "Cargando…",
+      "error": "No hemos podido cargar las solicitudes.",
+      "retry": "Reintentar",
+      "deletion": {
+        "title": "Supresión de cuentas",
+        "body": "Clientes que han pedido borrar su cuenta. Al ejecutarla: los trabajos activos se cancelan con la política habitual, los datos personales se borran y la contabilidad se conserva.",
+        "empty": "Ninguna solicitud pendiente.",
+        "requested": "pedida el {date}",
+        "execute": "Anonimizar",
+        "actions": {
+          "cancel": "Se cancelará · reembolso {refund}",
+          "blocked": "En curso o con resto por pagar",
+          "keep": "Queda en la contabilidad sin datos personales"
+        },
+        "blocked": "Espera a que los trabajos en curso terminen y se paguen.",
+        "confirmTitle": "¿Anonimizar a {name}?",
+        "confirmCancels": "Se cancelan y reembolsan: {jobs}. No se puede deshacer.",
+        "confirmBody": "Los datos personales se borran y la cuenta ya no podrá entrar. No se puede deshacer.",
+        "cancel": "Volver",
+        "done": "Cuenta anonimizada."
       }
     }
   },
