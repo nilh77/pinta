@@ -1433,7 +1433,9 @@
         "declineSubmit": "Rechazar oferta",
         "reason": "Motivo",
         "cancel": "Volver"
-      }
+      },
+      "visitTag": "Visita",
+      "openVisit": "Abrir visita"
     },
     "job": {
       "title": "Trabajo",
@@ -1484,18 +1486,93 @@
       "result": {
         "title": "Fotos del resultado",
         "body": "Haz al menos {min} fotos del trabajo terminado: el cliente las verá.",
-        "add": "Añadir",
-        "photo": "Foto {n}",
-        "remove": "Quitar foto {n}",
-        "error": "Error",
-        "format": "{name}: usa JPG, PNG o WebP.",
-        "failed": "No hemos podido subir {name}.",
         "count": "{count} de {min} fotos",
         "finish": "Marcar como terminado",
         "confirmTitle": "¿Terminar el trabajo?",
         "confirmBody": "Enviamos las fotos al cliente y le pedimos el pago del resto.",
         "cancel": "Volver",
         "finished": "Trabajo terminado. ¡Gracias!"
+      }
+    },
+    "nav": {
+      "label": "Secciones del pintor",
+      "jobs": "Trabajos",
+      "payouts": "Pagos"
+    },
+    "photos": {
+      "add": "Añadir",
+      "photo": "Foto {n}",
+      "remove": "Quitar foto {n}",
+      "error": "Error",
+      "format": "{name}: usa JPG, PNG o WebP.",
+      "failed": "No hemos podido subir {name}."
+    },
+    "visit": {
+      "title": "Visita técnica",
+      "loading": "Cargando la visita…",
+      "error": "No hemos podido cargar la visita.",
+      "notFound": "No encontramos esta visita.",
+      "retry": "Reintentar",
+      "back": "Mis trabajos",
+      "at": "Visita el {date}",
+      "address": "Dirección",
+      "access": "Acceso: {notes}",
+      "map": "Abrir en el mapa",
+      "client": "Cliente",
+      "call": "Llamar al {phone}",
+      "declared": "Lo que indicó el cliente",
+      "sent": "Informe enviado el {date}. Pinta revisará el precio.",
+      "report": {
+        "loading": "Preparando el informe…",
+        "title": "Informe de la visita",
+        "body": "Corrige las medidas reales, indica trabajos extra, haz fotos y deja una nota para quien revisa el precio.",
+        "correct": "Corregir",
+        "doneEditing": "Hecho",
+        "remove": "Quitar {name}",
+        "addRoom": "Añadir estancia",
+        "chooseRoom": "Elige el tipo",
+        "extras": "Trabajos extra",
+        "extrasHint": "Lo que encontraste y cuánto cobrarías por ello. Pinta pone el precio al cliente.",
+        "extraDescription": "Descripción",
+        "extraPay": "Tu pago (€)",
+        "removeExtra": "Quitar trabajo extra {n}",
+        "addExtra": "Añadir trabajo extra",
+        "photos": "Fotos",
+        "notes": "Nota para Pinta",
+        "send": "Enviar informe",
+        "kept": "El informe se guarda en este móvil hasta que lo envíes.",
+        "fixElement": "Corrige las medidas de {name}.",
+        "fixExtras": "Cada trabajo extra necesita descripción y pago.",
+        "done": "Informe enviado. ¡Gracias!"
+      }
+    },
+    "payouts": {
+      "title": "Mis pagos",
+      "month": "Mes",
+      "loading": "Cargando…",
+      "error": "No hemos podido cargar los pagos.",
+      "retry": "Reintentar",
+      "pending": "Pendiente",
+      "paidIn": "Pagado en {month}",
+      "empty": "Aún no hay pagos",
+      "emptyBody": "Cada trabajo cerrado aparece aquí como pendiente.",
+      "since": "Pendiente desde el {date}",
+      "paidOn": "Pagado el {date} · ref. {reference}",
+      "status": {
+        "pending": "Pendiente",
+        "paid": "Pagado"
+      },
+      "iban": {
+        "title": "IBAN para los pagos",
+        "none": "Sin IBAN",
+        "change": "Cambiar IBAN",
+        "add": "Indicar IBAN",
+        "body": "IBAN portugués (PT50…). Para cambiarlo, confirma tu contraseña.",
+        "iban": "Nuevo IBAN",
+        "password": "Contraseña",
+        "save": "Guardar",
+        "cancel": "Volver",
+        "saved": "IBAN guardado."
       }
     }
   }

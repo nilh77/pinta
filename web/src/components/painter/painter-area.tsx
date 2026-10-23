@@ -37,7 +37,29 @@ export function PainterArea({ children }: { children: ReactNode }) {
             </Button>
           </div>
         ) : (
-          children
+          <>
+            <nav aria-label={t("nav.label")} className="mb-4 flex gap-1 border-b border-border">
+              {(
+                [
+                  ["/pintor", "jobs"],
+                  ["/pintor/pagos", "payouts"],
+                ] as const
+              ).map(([href, key]) => {
+                const current = key === "payouts" ? pathname.startsWith("/pintor/pagos") : !pathname.startsWith("/pintor/pagos");
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    aria-current={current ? "page" : undefined}
+                    className="-mb-px inline-flex min-h-11 items-center border-b-2 border-transparent px-3 text-sm font-semibold text-muted-foreground aria-[current=page]:border-primary aria-[current=page]:text-primary"
+                  >
+                    {t(`nav.${key}`)}
+                  </Link>
+                );
+              })}
+            </nav>
+            {children}
+          </>
         )}
       </main>
     </div>

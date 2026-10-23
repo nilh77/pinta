@@ -10,8 +10,8 @@ import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { formatArea, formatCents, formatDate } from "@/lib/format";
-import { useAcceptOffer, useDeclineOffer, usePainterJobs, type PainterJobItem } from "@/lib/painter/use-painter";
+import { formatArea, formatCents, formatDate, formatDateTime } from "@/lib/format";
+import { useAcceptOffer, useDeclineOffer, usePainterJobs, type PainterJobItem, type PainterVisitItem } from "@/lib/painter/use-painter";
 
 const TABS = ["offers", "upcoming", "inProgress", "done"] as const;
 type Tab = (typeof TABS)[number];
@@ -24,6 +24,8 @@ export function PainterJobsScreen() {
   // Offers first when there are any, as they wait on the painter's answer.
   const tab = chosen ?? (jobs.data && jobs.data.offers.length === 0 ? "upcoming" : "offers");
   const items = jobs.data?.[tab] ?? [];
+  // Site visits show in «Próximos», before the jobs, soonest first (P1.1).
+  const visits = tab === "upcoming" ? (jobs.data?.visits ?? []) : [];
 
   return (
     <div className="flex flex-col gap-5">
@@ -31,7 +33,7 @@ export function PainterJobsScreen() {
 
       <div role="tablist" aria-label={t("tabs.label")} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1 sm:grid-cols-4">
         {TABS.map((key) => {
-          const count = jobs.data?.[key].length ?? 0;
+          const count = (jobs.data?.[key].length ?? 0) + (key === "upcoming" ? (jobs.data?.visits.length ?? 0) : 0);
           return (
             <button
               key={key}
@@ -61,13 +63,18 @@ export function PainterJobsScreen() {
               {t("retry")}
             </Button>
           </div>
-        ) : items.length === 0 ? (
+        ) : items.length === 0 && visits.length === 0 ? (
           <div className="flex flex-col items-center gap-2 rounded-[20px] border border-dashed border-border bg-card px-6 py-12 text-center">
             <p className="text-lg font-bold">{t(`empty.${tab}`)}</p>
             {tab === "offers" && <p className="text-sm text-muted-foreground">{t("empty.offersBody")}</p>}
           </div>
         ) : (
           <ul className="flex flex-col gap-3">
+            {visits.map((visit) => (
+              <li key={visit.jobId}>
+                <VisitCard visit={visit} />
+              </li>
+            ))}
             {items.map((job) => (
               <li key={job.assignmentId}>{tab === "offers" ? <OfferCard job={job} onAccepted={() => setChosen("upcoming")} /> : <JobCard job={job} />}</li>
             ))}
@@ -193,6 +200,37 @@ function JobCard({ job }: { job: PainterJobItem }) {
       <Facts job={job} />
       <span className="inline-flex items-center gap-1 self-end text-sm font-semibold text-primary">
         {t("open")}
+        <ChevronRight aria-hidden="true" className="size-4" />
+      </span>
+    </Link>
+  );
+}
+
+/** A site visit to do (P3): where and when, never an amount. */
+function VisitCard({ visit }: { visit: PainterVisitItem }) {
+  const t = useTranslations("painter.jobs");
+  const locale = useLocale();
+  return (
+    <Link
+      href={`/pintor/visitas/${visit.jobId}`}
+      className="flex flex-col gap-2 rounded-[20px] border border-border bg-card p-4 transition-colors hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[13px] font-semibold text-muted-foreground">{visit.code}</p>
+          <p className="flex items-center gap-1.5 truncate text-base font-bold">
+            <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
+            {visit.locality}, {visit.municipality}
+          </p>
+        </div>
+        <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold whitespace-nowrap text-accent-ink">{t("visitTag")}</span>
+      </div>
+      <p className="flex items-center gap-1.5 text-sm">
+        <CalendarDays aria-hidden="true" className="size-3.5" />
+        {formatDateTime(locale, visit.at)} · {formatArea(locale, Math.round(visit.areaM2 * 100))}
+      </p>
+      <span className="inline-flex items-center gap-1 self-end text-sm font-semibold text-primary">
+        {t("openVisit")}
         <ChevronRight aria-hidden="true" className="size-4" />
       </span>
     </Link>

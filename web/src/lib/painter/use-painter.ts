@@ -110,3 +110,43 @@ export async function uploadResultPhoto(jobId: string, blob: Blob, contentType: 
 
 /** Where each role lands after signing in without a `next` path. */
 export const homeFor = (role: string | undefined) => (role === "painter" ? "/pintor" : role === "admin" ? "/admin/revision" : "/");
+
+export type PainterVisitItem = Schemas["PainterVisitItem"];
+export type PainterPayouts = Schemas["PainterPayouts"];
+const visitKey = (id: string) => ["painter", "visit", id] as const;
+
+/** P3: the visit and what the client declared. */
+export function usePainterVisit(id: string) {
+  const locale = useLocale();
+  return useQuery({
+    queryKey: [...visitKey(id), locale],
+    queryFn: async () => orThrow(await api.GET("/api/painter/visits/{id}", { params: { path: { id } } })),
+    retry: false,
+  });
+}
+
+export function useReportVisit(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: Schemas["SiteVisitReportRequest"]) =>
+      orThrow(await api.POST("/api/painter/visits/{id}/report", { params: { path: { id } }, body })),
+    onSettled: () => Promise.all([queryClient.invalidateQueries({ queryKey: jobsKey }), queryClient.invalidateQueries({ queryKey: visitKey(id) })]),
+  });
+}
+
+/** A visit photo: signed URL, then straight to storage; attached when the report is sent (P3.1). */
+export async function uploadVisitPhoto(jobId: string, blob: Blob, contentType: string, onProgress: (percent: number) => void): Promise<string> {
+  const upload = orThrow(
+    await api.POST("/api/painter/visits/{id}/media/upload-url", { params: { path: { id: jobId } }, body: { contentType, sizeBytes: blob.size } }),
+  );
+  await postToStorage(upload, blob, onProgress);
+  return upload.fileId;
+}
+
+/** P4: what is still owed and what was paid in `month` (YYYY-MM). */
+export function usePainterPayouts(month: string) {
+  return useQuery({
+    queryKey: ["painter", "payouts", month],
+    queryFn: async () => orThrow(await api.GET("/api/painter/payouts", { params: { query: { month } } })),
+  });
+}
