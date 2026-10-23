@@ -59,6 +59,9 @@ static void AddStripeCli(IDistributedApplicationBuilder builder, IResourceBuilde
         .WithArgs(context =>
         {
             context.Args.Add("listen");
+            // Newer Stripe CLIs forward nothing unless told which events; these are the ones the webhook handles (S4).
+            context.Args.Add("--events");
+            context.Args.Add("payment_intent.succeeded,payment_intent.payment_failed,payment_intent.requires_action,charge.refunded,refund.updated,charge.dispute.created");
             context.Args.Add("--forward-to");
             context.Args.Add(ReferenceExpression.Create($"{api.GetEndpoint("http")}/api/webhooks/stripe"));
         })
