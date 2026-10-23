@@ -242,7 +242,7 @@ function Report({ visit }: { visit: VisitDetail }) {
                 <p className="font-semibold">{names[index]}</p>
                 <span className="flex items-center gap-1">
                   <span className={invalid ? "text-sm font-semibold text-destructive" : "text-sm font-semibold"}>
-                    {area ? formatArea(locale, Math.round(area.total * 100)) : "—"}
+                    {area ? formatArea(locale, area.total) : "—"}
                   </span>
                   <Button
                     variant="ghost"
