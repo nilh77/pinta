@@ -172,7 +172,18 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 
 ### Finanzas
 
-Mes anterior con dos trabajos cerrados, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe reales de los pagos de prueba) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto, con los pagos a pintores pendientes.
+Mes anterior con dos trabajos cerrados por Rui y una cancelación tardía, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe de los cinco pagos estimadas en 1,5% + 0,25 € cada uno, porque los pagos de la demo no pasan por Stripe) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto. Lo siembra H7 (`src/Pinta.Api/Seed/FinanceDemoSeeder.cs`); los demás trabajos de demo, H8.
+
+Cálculo a mano del mes anterior (criterio de salida de H7; importes del documento 6.3):
+
+| Trabajo | Ingreso sin IVA | IVA | Material | Pintor | Margen |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| PT-…-0091 · TC08 cerrado | 1.456,00 | 334,88 | 246,40 | 856,80 | 352,80 |
+| PT-…-0092 · TC05 cerrado | 121,95 | 28,05 | 13,76 | 31,20 | 76,99 |
+| PT-…-0093 · TC03 cancelado: señal 170,92, devueltos 85,46, retenidos 85,46 × 463,20 ÷ 569,74 | 69,48 | 15,98 | — | — | 69,48 |
+| **Total** | **1.647,43** | **378,91** | **260,16** | **888,00** | **499,27** |
+
+Costes: alojamiento 25,00 + dominio y correo 6,00 + Stripe 32,93 (8,31 + 19,05 + 0,93 + 1,83 + 2,81) = 63,93. Beneficio 499,27 − 63,93 = **435,34**; cada socio **217,67**.
 
 ## Guion de la demo
 

@@ -154,3 +154,26 @@ public class FinanceTests(PintaApiFactory factory)
         await ProblemAssert.HasCodeAsync(await s.Job.Client.GetAsync("/api/admin/finance/summary"), HttpStatusCode.Forbidden, "forbidden");
     }
 }
+
+/// <summary>H7 exit criterion: the demo's closed month matches the hand calculation in docs/plan.md («Datos de demo» › Finanzas).</summary>
+public class DemoFinanceTests(PintaApiFactory factory)
+{
+    [Fact]
+    public async Task H7_the_seeded_last_month_is_closed_and_matches_the_hand_calculation()
+    {
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var lisbon = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, Pinta.SharedKernel.Time.BusinessDays.Lisbon).DateTime);
+        var month = new DateOnly(lisbon.Year, lisbon.Month, 1).AddMonths(-1).ToString("yyyy-MM");
+
+        var summary = await (await admin.GetAsync($"/api/admin/finance/summary?month={month}")).ReadJsonAsync();
+
+        Assert.Equal((true, 164743L, 37891L, 26016L, 88800L, 49927L), (summary.GetProperty("closed").GetBoolean(), summary.GetProperty("incomeCents").GetInt64(),
+            summary.GetProperty("vatCents").GetInt64(), summary.GetProperty("materialCents").GetInt64(), summary.GetProperty("painterPayCents").GetInt64(),
+            summary.GetProperty("grossMarginCents").GetInt64()));
+        Assert.Equal((6393L, 43534L, 21767L), (summary.GetProperty("costsCents").GetInt64(), summary.GetProperty("profitCents").GetInt64(),
+            summary.GetProperty("perPartnerCents").GetInt64()));
+        Assert.Equal(["0091", "0093", "0092"], summary.GetProperty("jobs").EnumerateArray().Select(j => j.GetProperty("code").GetString()![^4..]));
+        await ProblemAssert.HasCodeAsync(await admin.PostAsJsonAsync("/api/admin/finance/costs",
+            new { date = $"{month}-15", category = "marketing", description = "Folhetos", amountCents = 5000 }, ApiClient.Json), System.Net.HttpStatusCode.UnprocessableEntity, "period_closed");
+    }
+}

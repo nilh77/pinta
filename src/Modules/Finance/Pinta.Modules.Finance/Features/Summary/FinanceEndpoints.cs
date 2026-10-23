@@ -73,7 +73,7 @@ internal sealed class CloseMonthRequestValidator : AbstractValidator<CloseMonthR
 }
 
 /// <summary>The month's figures (docs/data-model.md, "Cifras del mes"): one calculation for the panel, the closing and the CSV.</summary>
-internal sealed class MonthFigures(FinanceDbContext db, IFinanceJobs jobs)
+public sealed class MonthFigures(FinanceDbContext db, IFinanceJobs jobs)
 {
     public sealed record Figures(
         IReadOnlyList<FinanceJobLine> Jobs, IReadOnlyList<OperatingCost> Costs, decimal Income, decimal Vat, decimal Material, decimal PainterPay,
