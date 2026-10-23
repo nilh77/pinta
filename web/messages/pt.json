@@ -1455,7 +1455,8 @@
       },
       "pay": {
         "title": "Vai receber",
-        "body": "Inclui as partidas extra. A Pinta paga por transferência depois de fechar o trabalho."
+        "body": "A Pinta paga por transferência depois de fechar o trabalho.",
+        "bodyExtras": "Inclui as partidas extra. A Pinta paga por transferência depois de fechar o trabalho."
       },
       "work": {
         "title": "O que pintar",

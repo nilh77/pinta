@@ -6,7 +6,32 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-Nada todavía.
+### H6a · Pintores: alta, asignación y ejecución
+
+#### Añadido
+
+- Admin › Pintores: lista con estado (invitado, activo, inactivo), zonas, trabajos hechos y valoración; alta con nombre, email e idioma y, si se quiere, teléfono, NIF, especialidades, concelhos, IBAN y notas, que envía la invitación (válida 72 h). Ficha para editar los datos (IBAN cifrado y siempre enmascarado, valoración interna), reenviar la invitación, activar o desactivar (un pintor desactivado no puede entrar ni recibir ofertas), documentos con caducidad y sus trabajos (A4.1–A4.4).
+- `/pintor/alta`: el pintor elige la contraseña desde el enlace del email y confirma o completa la ficha que preparó el admin (teléfono, NIF, concelhos e IBAN); un enlace caducado pide una nueva invitación (A4.2).
+- Asignación: pestaña «Asignación» del trabajo con los pintores activos que cubren el concelho, fecha de inicio y el historial de ofertas y respuestas; una oferta nueva retira la anterior. El pintor acepta (el trabajo pasa a «Programado» con esa fecha y el cliente recibe el email) o rechaza con motivo (aviso al admin); una oferta ya respondida o retirada da `assignment_taken`; sin respuesta en 48 h se avisa una vez a los admins (A3.2, P1.1, P1.2).
+- P1 · `/pintor`: pestañas Ofertas, Próximos, En curso y Hechos; tras entrar, el pintor llega aquí.
+- P2 · `/pintor/trabajos/{id}`: dirección con enlace al mapa, cliente con botón de llamar (según la configuración), qué pintar con medidas y litros, material por pintura, partidas extra con su pago y lo que cobra; «Empezar trabajo» desde el día programado; fotos del resultado directas a almacenamiento y «Marcar como terminado» con al menos 3; después queda en solo lectura (P1.3, P2.1, P2.2).
+- Cliente: en la pantalla 10 ve el nombre del pintor con el sello de verificado al programarse y las fotos del resultado al terminar, con el email para pagar el resto (C5.4, C5.5).
+- Test de contrato: ninguna respuesta de `/api/painter/*` lleva precio al cliente, IVA, señal, resto, tarifas ni margen.
+- Datos de demo: Rui y Carla activos con zonas y valoración, João invitado.
+- Emails: invitación del pintor, oferta nueva, oferta rechazada y sin respuesta (admins), trabajo programado y trabajo terminado (cliente).
+
+#### Cambiado
+
+- Documentos: H6 en dos PR, al menos 3 fotos para terminar (P2.2), alta preparada por el admin, invitación de 72 h y el pintor que acepta como actor de «Señal pagada → Programado» en `docs/plan.md`, `docs/functional-requirements.md`, `docs/screens.md`, `docs/states.md`, `docs/api.md` y `docs/data-model.md`.
+
+#### Verificado
+
+- En el navegador a 390 y 1440 px y en pt, es y en, con la señal de TC01 pagada en Stripe modo test: el admin invita a un pintor, el pintor se da de alta con el enlace de Mailpit, el admin le ofrece el trabajo, el pintor lo acepta, lo empieza el día programado, sube 3 fotos y lo termina; el cliente ve las fotos y el botón para pagar el resto.
+
+#### Pendiente
+
+- H6b: informe de la visita técnica del pintor (P3.1), pagos al pintor pendientes al cerrar el trabajo y pantalla P4 «Mis pagos».
+- H8: fotos de avance y «reportar incidencia» en P2.
 
 ## H5 · Pagos — 2026-10-23, [PR #6](https://github.com/nilh77/pinta/pull/6)
 

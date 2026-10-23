@@ -1455,7 +1455,8 @@
       },
       "pay": {
         "title": "You earn",
-        "body": "Extras included. Pinta pays by bank transfer once the job is closed."
+        "body": "Pinta pays by bank transfer once the job is closed.",
+        "bodyExtras": "Extras included. Pinta pays by bank transfer once the job is closed."
       },
       "work": {
         "title": "What to paint",

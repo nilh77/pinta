@@ -122,7 +122,7 @@ export function PainterJobScreen({ id }: { id: string }) {
 
       <Card title={t("pay.title")}>
         <p className="text-2xl font-extrabold text-primary">{formatCents(locale, data.painterPayCents)}</p>
-        <p className="mt-1 text-sm text-muted-foreground">{t("pay.body")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t(data.extras.length > 0 ? "pay.bodyExtras" : "pay.body")}</p>
       </Card>
 
       <Work job={data} />

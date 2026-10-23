@@ -1455,7 +1455,8 @@
       },
       "pay": {
         "title": "Cobras",
-        "body": "Incluye las partidas extra. Pinta paga por transferencia al cerrar el trabajo."
+        "body": "Pinta paga por transferencia al cerrar el trabajo.",
+        "bodyExtras": "Incluye las partidas extra. Pinta paga por transferencia al cerrar el trabajo."
       },
       "work": {
         "title": "Qué pintar",
