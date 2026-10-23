@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CalendarClock, CircleAlert, CircleCheck, Clock, Loader2, MessageCircleQuestion } from "lucide-react";
+import { ArrowLeft, BadgeCheck, CalendarClock, CircleAlert, CircleCheck, Clock, Loader2, MessageCircleQuestion } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
@@ -146,12 +146,22 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
           title={t(`${job.status === "in_progress" ? "inProgress" : job.status === "scheduled" ? "scheduled" : "depositPaid"}.title`)}
           body={job.scheduledOn ? t("scheduled.body", { date: formatDate(locale, job.scheduledOn) }) : t("depositPaid.body")}
         >
+          {job.painter && (
+            <p className="mt-3 flex items-center gap-1.5 text-sm">
+              {t("painter", { name: job.painter.firstName })}
+              <span className="inline-flex items-center gap-1 rounded-full bg-primary-soft px-2 py-0.5 text-xs font-semibold text-primary">
+                <BadgeCheck aria-hidden="true" className="size-3.5" />
+                {t("verified")}
+              </span>
+            </p>
+          )}
           {job.quote && <p className="mt-3 text-sm">{t("balanceDue", { amount: formatCents(locale, job.quote.balanceCents) })}</p>}
         </Notice>
       );
     case "finished":
       return (
         <Notice icon={<CircleCheck aria-hidden="true" />} title={t("finished.title")} body={t("finished.body")}>
+          <ResultPhotos job={job} />
           {job.quote && (
             <Button asChild className="mt-4">
               <Link href={`/mis-trabajos/${job.id}/pagar?tipo=balance`}>{t("finished.pay", { amount: formatCents(locale, job.quote.balanceCents) })}</Link>
@@ -160,7 +170,11 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
         </Notice>
       );
     case "closed":
-      return <Notice icon={<CircleCheck aria-hidden="true" />} title={t("closed.title")} body={t("closed.body")} />;
+      return (
+        <Notice icon={<CircleCheck aria-hidden="true" />} title={t("closed.title")} body={t("closed.body")}>
+          <ResultPhotos job={job} />
+        </Notice>
+      );
     case "expired":
       return <Notice icon={<Clock aria-hidden="true" />} title={t("expired.title")} body={t("expired.body")} />;
     case "rejected":
@@ -170,6 +184,24 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
     default:
       return null;
   }
+}
+
+/** C5.5: the painter's result photos, each opening full size. */
+function ResultPhotos({ job }: { job: ClientJobDetail }) {
+  const t = useTranslations("myJobs.detail");
+  if (job.resultPhotos.length === 0) return null;
+  return (
+    <ul aria-label={t("resultPhotos")} className="mt-3 grid grid-cols-3 gap-2">
+      {job.resultPhotos.map((photo, i) => (
+        <li key={photo.id} className="aspect-square overflow-hidden rounded-xl bg-muted">
+          <a href={photo.url} target="_blank" rel="noopener noreferrer">
+            {/* eslint-disable-next-line @next/next/no-img-element -- signed storage URLs, not optimisable */}
+            <img src={photo.url} alt={t("resultPhoto", { n: i + 1 })} className="size-full object-cover" loading="lazy" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function Notice({ icon, title, body, children }: { icon: React.ReactNode; title: string; body: string; children?: React.ReactNode }) {

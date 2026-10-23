@@ -16,6 +16,9 @@ public sealed class MediaFile
 
     public Guid? JobId { get; set; }
 
+    /// <summary>A painter's document (A4.3); such files belong to no job.</summary>
+    public Guid? PainterId { get; init; }
+
     /// <summary>The builder's element id while drafting; replaced by the quote element id when attached.</summary>
     public string? ElementKey { get; init; }
 

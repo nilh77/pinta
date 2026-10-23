@@ -3,17 +3,31 @@ using Microsoft.EntityFrameworkCore;
 using Pinta.Modules.Catalog.Data;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Identity.Domain;
+using Pinta.Modules.Painters.Contracts;
+using Pinta.Modules.Painters.Data;
+using Pinta.Modules.Painters.Domain;
+using Pinta.Modules.Painters.Features;
 using Pinta.SharedKernel;
 
 namespace Pinta.Api.Seed;
 
-/// <summary>Demo data on an empty database in Development (docs/plan.md, "Datos de demo"): the catalog and the two admins.</summary>
+/// <summary>
+/// Demo data on an empty database in Development (docs/plan.md, "Datos de demo"): the catalog, the two admins and the
+/// three painters (Rui and Carla signed up, João only invited).
+/// </summary>
 public static class DemoSeeder
 {
     private static readonly (string Name, string Email)[] Admins =
     [
         ("Nathan", "nathan@demo.pinta.pt"),
         ("Socio pintor", "socio@demo.pinta.pt"),
+    ];
+
+    private static readonly (string Name, string Email, string Phone, string[] Zones, decimal Rating, string Iban, bool SignedUp)[] Painters =
+    [
+        ("Rui Almeida", "rui@demo.pinta.pt", "+351912000001", ["Lisboa", "Oeiras", "Amadora"], 4.8m, "PT50000201231234567890154", true),
+        ("Carla Santos", "carla@demo.pinta.pt", "+351912000002", ["Sintra", "Cascais"], 4.6m, "PT50003501239876543210921", true),
+        ("João Ferreira", "joao@demo.pinta.pt", "+351912000003", ["Loures"], 0m, "", false),
     ];
 
     public static async Task SeedAsync(IServiceProvider services)
@@ -46,6 +60,32 @@ public static class DemoSeeder
             Ensure(await users.CreateAsync(admin, password));
             Ensure(await users.AddToRoleAsync(admin, RoleNames.Admin));
         }
+
+        var painters = scope.ServiceProvider.GetRequiredService<PaintersDbContext>();
+        var protector = scope.ServiceProvider.GetRequiredService<IbanProtector>();
+        foreach (var (name, email, phone, zones, rating, iban, signedUp) in Painters)
+        {
+            var user = new User { UserName = email, Email = email, EmailConfirmed = signedUp, PhoneNumber = phone, Name = name, Locale = Locale.Pt, CreatedAt = now };
+            Ensure(signedUp ? await users.CreateAsync(user, password) : await users.CreateAsync(user));
+            Ensure(await users.AddToRoleAsync(user, RoleNames.Painter));
+            var painter = new Painter
+            {
+                UserId = user.Id,
+                Name = name,
+                Email = email,
+                Phone = phone,
+                Specialties = ["interior", "exterior"],
+                Municipalities = [.. zones],
+                Rating = signedUp ? rating : null,
+                Status = signedUp ? PainterStatus.Active : PainterStatus.Invited,
+                IbanEncrypted = iban.Length > 0 ? protector.Protect(iban) : null,
+                IbanLast4 = iban.Length > 0 ? iban[^4..] : null,
+            };
+            painter.Stamp(now, null);
+            painters.Painters.Add(painter);
+        }
+
+        await painters.SaveChangesAsync();
     }
 
     private static void Ensure(IdentityResult result)

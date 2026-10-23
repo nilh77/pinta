@@ -77,10 +77,21 @@ export async function uploadFile(options: {
     await api.POST("/api/media/upload-url", { body: { draftId, elementKey, kind, contentType, sizeBytes: blob.size } }),
   );
 
+  await postToStorage(upload, blob, onProgress);
+  orThrow(await api.POST("/api/media/{fileId}/confirm", { params: { path: { fileId: upload.fileId } }, body: { draftId } }));
+  return upload.fileId;
+}
+
+/** The signed form straight to storage, with upload progress. */
+export function postToStorage(
+  upload: { url: string; fields: Record<string, string> },
+  blob: Blob,
+  onProgress: (percent: number) => void,
+): Promise<void> {
   const form = new FormData();
   for (const [name, value] of Object.entries(upload.fields)) form.append(name, value);
   form.append("file", blob);
-  await new Promise<void>((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", upload.url);
     xhr.upload.onprogress = (event) => event.lengthComputable && onProgress(Math.round((event.loaded / event.total) * 100));
@@ -88,9 +99,6 @@ export async function uploadFile(options: {
     xhr.onerror = () => reject(new Error("network"));
     xhr.send(form);
   });
-
-  orThrow(await api.POST("/api/media/{fileId}/confirm", { params: { path: { fileId: upload.fileId } }, body: { draftId } }));
-  return upload.fileId;
 }
 
 export async function deleteUpload(draftId: string, fileId: string): Promise<void> {

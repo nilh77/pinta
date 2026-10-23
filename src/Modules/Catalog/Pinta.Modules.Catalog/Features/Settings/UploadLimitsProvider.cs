@@ -16,7 +16,8 @@ internal sealed class RequestSettingsProvider(CatalogDbContext db) : IRequestSet
 {
     public Task<RequestSettings> GetAsync(CancellationToken cancellationToken = default) =>
         db.Settings.AsNoTracking()
-            .Select(s => new RequestSettings(s.MinLeadBusinessDays, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.SiteVisitPrice, s.SiteVisitDeductible))
+            .Select(s => new RequestSettings(s.MinLeadBusinessDays, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.SiteVisitPrice, s.SiteVisitDeductible,
+                s.ClientPhoneVisibleToPainter))
             .SingleAsync(cancellationToken);
 }
 

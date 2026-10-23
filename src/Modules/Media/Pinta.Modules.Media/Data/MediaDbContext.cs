@@ -23,6 +23,7 @@ public sealed class MediaDbContext(DbContextOptions<MediaDbContext> options) : D
             file.Property(f => f.Kind).HasSnakeCaseConversion(10);
             file.HasIndex(f => new { f.DraftId, f.JobId });
             file.HasIndex(f => f.JobId);
+            file.HasIndex(f => f.PainterId);
         });
     }
 }

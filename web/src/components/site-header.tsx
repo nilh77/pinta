@@ -27,14 +27,12 @@ export function SiteHeader({ children }: { children?: ReactNode }) {
         ) : me.data ? (
           <div className="flex items-center gap-2">
             <span className="hidden text-sm font-medium sm:inline">{t("greeting", { name: me.data.name })}</span>
-            {me.data.role !== "painter" && (
-              <Button asChild variant="outline" size="sm" className="max-sm:size-11 max-sm:px-0">
-                <Link href={me.data.role === "admin" ? "/admin/revision" : "/mis-trabajos"}>
-                  <Briefcase aria-hidden="true" className="sm:hidden" />
-                  <span className="max-sm:sr-only">{t(me.data.role === "admin" ? "admin" : "myJobs")}</span>
-                </Link>
-              </Button>
-            )}
+            <Button asChild variant="outline" size="sm" className="max-sm:size-11 max-sm:px-0">
+              <Link href={me.data.role === "admin" ? "/admin/revision" : me.data.role === "painter" ? "/pintor" : "/mis-trabajos"}>
+                <Briefcase aria-hidden="true" className="sm:hidden" />
+                <span className="max-sm:sr-only">{t(me.data.role === "admin" ? "admin" : me.data.role === "painter" ? "painterJobs" : "myJobs")}</span>
+              </Link>
+            </Button>
             <Button
               variant="ghost"
               size="sm"

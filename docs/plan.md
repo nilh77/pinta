@@ -85,6 +85,8 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 - **Historias**: P1.1–P4.1, A4.1–A4.4.
 - **Criterio de salida**: el admin invita a un pintor, este se da de alta, acepta TC01, lo empieza el día programado, lo termina con 3 fotos y el cliente las ve; el pintor no recibe en ninguna respuesta el precio al cliente ni el margen (test de contrato).
 - **Prompt**: «Lee CLAUDE.md, docs/functional-requirements.md (P1–P4, A4) y docs/screens.md (Pintor). Implementa el hito H6.»
+- **Reparto acordado en H6**: dos PR. H6a: alta e invitación de pintores, pantallas de pintores del admin, asignación con oferta, aceptación y rechazo, empezar y terminar con fotos y el cliente viéndolas (el criterio de salida). H6b: visita técnica hecha por un pintor con su informe (P3.1), pagos pendientes al pintor creados al cerrarse un trabajo y pantalla P4. Marcar esos pagos como hechos sigue en H7 (A5.4).
+- **Decisiones de H6**: terminar exige al menos 3 fotos del resultado; el admin invita con nombre y email y puede rellenar el resto (NIF, teléfono, especialidades, zonas, IBAN, notas), y el pintor lo completa o corrige al darse de alta; la invitación vale 72 h; al aceptar la oferta, el pintor pasa el trabajo a «Programado» con la fecha de la oferta; las fotos de avance y «reportar incidencia» pasan a H8.
 
 ### H7 · Finanzas y área del cliente
 

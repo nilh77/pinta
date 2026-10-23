@@ -73,6 +73,10 @@ namespace Pinta.Modules.Media.Data.Migrations
                         .HasColumnType("character varying(10)")
                         .HasColumnName("kind");
 
+                    b.Property<Guid?>("PainterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("painter_id");
+
                     b.Property<Guid?>("QuoteElementId")
                         .HasColumnType("uuid")
                         .HasColumnName("quote_element_id");
@@ -96,6 +100,9 @@ namespace Pinta.Modules.Media.Data.Migrations
 
                     b.HasIndex("JobId")
                         .HasDatabaseName("ix_files_job_id");
+
+                    b.HasIndex("PainterId")
+                        .HasDatabaseName("ix_files_painter_id");
 
                     b.HasIndex("DraftId", "JobId")
                         .HasDatabaseName("ix_files_draft_id_job_id");

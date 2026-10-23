@@ -65,4 +65,26 @@
   <data name="Dispute.Subject" xml:space="preserve"><value>Disputa de pagamento no pedido {0}</value></data>
   <data name="Dispute.Body" xml:space="preserve"><value>O cliente abriu uma disputa no Stripe. Responda no painel do Stripe dentro do prazo.</value></data>
   <data name="Common.OpenStripe" xml:space="preserve"><value>Abrir no painel</value></data>
+  <data name="PainterInvitation.Subject" xml:space="preserve"><value>Convite para pintar com a Pinta</value></data>
+  <data name="PainterInvitation.Body" xml:space="preserve"><value>A equipa da Pinta convidou-o para fazer parte da rede de pintores. Escolha a sua palavra-passe e confirme os seus dados.</value></data>
+  <data name="PainterInvitation.Validity" xml:space="preserve"><value>O link é válido durante 72 horas.</value></data>
+  <data name="PainterInvitation.Button" xml:space="preserve"><value>Criar a minha conta</value></data>
+  <data name="AssignmentOffered.Subject" xml:space="preserve"><value>Novo trabalho para si: {0}</value></data>
+  <data name="AssignmentOffered.Body" xml:space="preserve"><value>A Pinta oferece-lhe este trabalho. Aceite ou recuse na sua área.</value></data>
+  <data name="AssignmentOffered.Where" xml:space="preserve"><value>Concelho</value></data>
+  <data name="AssignmentOffered.When" xml:space="preserve"><value>Início</value></data>
+  <data name="AssignmentOffered.Pay" xml:space="preserve"><value>O seu pagamento</value></data>
+  <data name="AssignmentOffered.Button" xml:space="preserve"><value>Ver o trabalho</value></data>
+  <data name="AssignmentDeclined.Subject" xml:space="preserve"><value>Pintor recusou o pedido {0}</value></data>
+  <data name="AssignmentDeclined.Body" xml:space="preserve"><value>{0} recusou a oferta. Motivo:</value></data>
+  <data name="AssignmentUnanswered.Subject" xml:space="preserve"><value>Oferta sem resposta no pedido {0}</value></data>
+  <data name="AssignmentUnanswered.Body" xml:space="preserve"><value>{0} ainda não respondeu à oferta há 48 horas. Pode retirá-la e oferecer a outro pintor.</value></data>
+  <data name="JobScheduled.Subject" xml:space="preserve"><value>O seu trabalho {0} está agendado</value></data>
+  <data name="JobScheduled.Body" xml:space="preserve"><value>Já temos pintor e data para o seu trabalho.</value></data>
+  <data name="JobScheduled.Painter" xml:space="preserve"><value>Pintor</value></data>
+  <data name="JobScheduled.Start" xml:space="preserve"><value>Início</value></data>
+  <data name="JobFinished.Subject" xml:space="preserve"><value>O seu trabalho {0} está terminado</value></data>
+  <data name="JobFinished.Body" xml:space="preserve"><value>O pintor terminou o trabalho. Veja as fotos do resultado e pague o restante para o fecharmos.</value></data>
+  <data name="JobFinished.Balance" xml:space="preserve"><value>Restante a pagar</value></data>
+  <data name="JobFinished.Button" xml:space="preserve"><value>Ver fotos e pagar</value></data>
 </root>

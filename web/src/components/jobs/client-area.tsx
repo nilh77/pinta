@@ -32,7 +32,7 @@ export function ClientArea({ children }: { children: ReactNode }) {
           <div className="flex flex-col items-start gap-4 py-16">
             <p className="text-muted-foreground">{t("notClient")}</p>
             <Button asChild>
-              <Link href={me.data?.role === "admin" ? "/admin/revision" : "/"}>{t("goHome")}</Link>
+              <Link href={me.data?.role === "admin" ? "/admin/revision" : me.data?.role === "painter" ? "/pintor" : "/"}>{t("goHome")}</Link>
             </Button>
           </div>
         ) : (

@@ -20,7 +20,8 @@
     "signOut": "Sign out",
     "greeting": "Hi, {name}",
     "myJobs": "My jobs",
-    "admin": "Dashboard"
+    "admin": "Dashboard",
+    "painterJobs": "Jobs"
   },
   "home": {
     "badge": "Lisbon district",
@@ -178,7 +179,8 @@
     "invalid_transition": "This action is no longer possible in the current state. Reload the page.",
     "quote_expired": "This price has expired. Ask for a new one.",
     "payment_already_made": "This payment has already been made.",
-    "payment_provider_error": "Payments are unavailable right now. Please try later."
+    "payment_provider_error": "Payments are unavailable right now. Please try later.",
+    "assignment_taken": "This offer is no longer available."
   },
   "admin": {
     "loading": "Loading the dashboard…",
@@ -190,7 +192,8 @@
       "pricing": "Pricing",
       "jobs": "Jobs",
       "review": "Review",
-      "coverage": "Coverage"
+      "coverage": "Coverage",
+      "painters": "Painters"
     },
     "forbidden": {
       "title": "Restricted area",
@@ -423,9 +426,6 @@
         "payments": "Payments",
         "assignment": "Assignment"
       },
-      "later": {
-        "assignment": "Painter assignment arrives in phase H6."
-      },
       "files": {
         "empty": "The client sent no photos.",
         "open": "Open file {index}",
@@ -601,7 +601,31 @@
         }
       },
       "noPayments": "No payments yet.",
-      "scheduledOn": "Starts: {date}"
+      "scheduledOn": "Starts: {date}",
+      "assignment": {
+        "offers": "Offers",
+        "none": "Not offered to any painter yet.",
+        "line": "{date} · {pay} · offered {offered}",
+        "answered": "answered {date}",
+        "reason": "Reason: {reason}",
+        "status": {
+          "offered": "Waiting",
+          "accepted": "Accepted",
+          "completed": "Completed",
+          "declined": "Declined",
+          "withdrawn": "Withdrawn"
+        },
+        "onlyPaid": "Jobs are offered to painters once the deposit is paid.",
+        "new": "Offer to a painter",
+        "loading": "Finding painters…",
+        "noPainters": "No active painter works in {municipality}.",
+        "painter": "Painter",
+        "choose": "Choose a painter",
+        "date": "Start date",
+        "replaces": "An offer is waiting: the new one withdraws it.",
+        "submit": "Send offer",
+        "sent": "Offer sent to {name}."
+      }
     },
     "jobs": {
       "title": "Jobs",
@@ -663,6 +687,98 @@
       "loading": "Loading…",
       "loadError": "We couldn't load the data.",
       "retry": "Try again"
+    },
+    "painters": {
+      "title": "Painters",
+      "subtitle": "Painter team, zones, documents and jobs.",
+      "invite": "Invite painter",
+      "loading": "Loading…",
+      "loadError": "We could not load the painters.",
+      "notFound": "We could not find this painter.",
+      "retry": "Try again",
+      "back": "Painters",
+      "empty": "No painters yet",
+      "noZones": "No zones",
+      "jobsDone": "{count, plural, =0 {No jobs} one {# job} other {# jobs}}",
+      "columns": {
+        "name": "Name",
+        "status": "Status",
+        "zones": "Zones",
+        "jobs": "Jobs done",
+        "rating": "Rating"
+      },
+      "status": {
+        "invited": "Invited",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "new": {
+        "title": "Invite painter",
+        "subtitle": "We send an invitation valid for 72 hours. The painter checks the details and chooses a password.",
+        "submit": "Create and send invitation",
+        "sent": "Invitation sent to {email}."
+      },
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "locale": "Email language",
+        "phone": "Phone",
+        "phoneHint": "With country code, e.g. +351 912 345 678.",
+        "taxId": "Tax number (NIF)",
+        "iban": "IBAN",
+        "ibanHint": "Portuguese IBAN (PT50…). Stored encrypted.",
+        "ibanKeep": "Current: {iban}. Leave blank to keep it.",
+        "rating": "Internal rating",
+        "ratingHint": "1 to 5, one decimal. Only Pinta sees it.",
+        "ratingError": "Use a value from 1 to 5 with one decimal at most.",
+        "specialties": "Specialties",
+        "specialty": {
+          "interior": "Interior",
+          "exterior": "Exterior",
+          "wood": "Wood",
+          "metal": "Metal"
+        },
+        "zones": "Municipalities covered",
+        "loadingZones": "Loading municipalities…",
+        "notes": "Internal notes"
+      },
+      "detail": {
+        "title": "Painter profile",
+        "data": "Details",
+        "save": "Save changes",
+        "saved": "Details saved.",
+        "resend": "Resend invitation",
+        "resent": "Invitation resent.",
+        "activate": "Activate",
+        "activated": "Painter active.",
+        "deactivate": "Deactivate",
+        "deactivated": "Painter deactivated.",
+        "deactivateTitle": "Deactivate {name}?",
+        "deactivateBody": "They can no longer sign in or get offers. You can activate them again.",
+        "cancel": "Back"
+      },
+      "documents": {
+        "title": "Documents",
+        "empty": "No documents.",
+        "kind": "Type",
+        "expiresOn": "Expiry",
+        "upload": "Upload document",
+        "uploaded": "Document saved.",
+        "expires": "Valid until {date}",
+        "expired": "Expired on {date}",
+        "noExpiry": "No expiry",
+        "remove": "Remove {kind}",
+        "kinds": {
+          "insurance": "Insurance",
+          "activity": "Business registration",
+          "contract": "Contract",
+          "other": "Other"
+        }
+      },
+      "jobs": {
+        "title": "Jobs",
+        "empty": "No jobs yet."
+      }
     }
   },
   "quote": {
@@ -1176,7 +1292,11 @@
       "closed": {
         "title": "Job closed",
         "body": "Everything is paid. Thank you!"
-      }
+      },
+      "painter": "Painter: {name}",
+      "verified": "Verified by Pinta",
+      "resultPhotos": "Result photos",
+      "resultPhoto": "Result photo {n}"
     }
   },
   "payment": {
@@ -1248,5 +1368,135 @@
       "failed": "Refund of {amount} failed"
     },
     "receipt": "Receipt (PDF)"
+  },
+  "painter": {
+    "loading": "Loading…",
+    "notPainter": "This area is for Pinta painters.",
+    "goHome": "Go to my area",
+    "onboarding": {
+      "title": "Welcome to Pinta",
+      "passwordIntro": "Choose the password for your painter area.",
+      "password": "Password",
+      "passwordHint": "At least {min} characters.",
+      "continue": "Continue",
+      "invalid": "The invitation is invalid or has expired",
+      "invalidBody": "Ask the Pinta team for a new invitation.",
+      "loading": "Loading your profile…",
+      "error": "We could not load your profile.",
+      "retry": "Try again",
+      "profileIntro": "{name}, check or complete your details. We use them to offer you jobs and pay you.",
+      "phone": "Phone",
+      "phoneHint": "With country code, e.g. +351 912 345 678.",
+      "taxId": "Tax number (NIF, optional)",
+      "zones": "Municipalities you work in",
+      "iban": "IBAN for payouts",
+      "ibanHint": "Portuguese IBAN (PT50…). You can add it later.",
+      "ibanKeep": "We have {iban}. Leave blank to keep it.",
+      "finish": "Save and see jobs",
+      "errors": {
+        "taxId": "The NIF has 9 digits.",
+        "zones": "Choose at least one municipality.",
+        "iban": "Enter a valid Portuguese IBAN (PT50 and 21 digits)."
+      }
+    },
+    "jobs": {
+      "title": "My jobs",
+      "loading": "Loading…",
+      "error": "We could not load your jobs.",
+      "retry": "Try again",
+      "tabs": {
+        "label": "Filter jobs",
+        "offers": "Offers",
+        "upcoming": "Upcoming",
+        "inProgress": "In progress",
+        "done": "Done"
+      },
+      "empty": {
+        "offers": "No offers right now",
+        "offersBody": "We will email you when there is a job in your area.",
+        "upcoming": "No scheduled jobs",
+        "inProgress": "No jobs in progress",
+        "done": "No finished jobs yet"
+      },
+      "date": "Date",
+      "area": "Area",
+      "pay": "You earn",
+      "open": "Open job",
+      "offer": {
+        "accept": "Accept",
+        "decline": "Decline",
+        "accepted": "Job accepted for {date}.",
+        "declined": "Offer declined. Thanks for letting us know.",
+        "taken": "This offer is no longer available.",
+        "declineTitle": "Decline {code}",
+        "declineBody": "Tell us why, so we can offer the job to another painter.",
+        "declineSubmit": "Decline offer",
+        "reason": "Reason",
+        "cancel": "Back"
+      }
+    },
+    "job": {
+      "title": "Job",
+      "loading": "Loading the job…",
+      "error": "We could not load the job.",
+      "notFound": "We could not find this job.",
+      "retry": "Try again",
+      "back": "My jobs",
+      "scheduledOn": "Scheduled for {date}",
+      "address": {
+        "title": "Address",
+        "access": "Access",
+        "map": "Open in maps"
+      },
+      "client": {
+        "title": "Client",
+        "call": "Call {phone}",
+        "noPhone": "To reach the client, contact Pinta."
+      },
+      "pay": {
+        "title": "You earn",
+        "body": "Pinta pays by bank transfer once the job is closed.",
+        "bodyExtras": "Extras included. Pinta pays by bank transfer once the job is closed."
+      },
+      "work": {
+        "title": "What to paint",
+        "element": "Item",
+        "walls": "Walls {walls}",
+        "ceiling": "ceiling",
+        "damage": "needs repairs",
+        "litres": "{litres} L",
+        "material": "Material",
+        "materialNote": "Pinta delivers the paint on site.",
+        "extras": "Extra items"
+      },
+      "notes": {
+        "title": "Notes",
+        "client": "From the client",
+        "reviewer": "From Pinta"
+      },
+      "clientPhotos": "Client photos",
+      "photo": "Photo {n}",
+      "start": "Start job",
+      "started": "Job in progress. Good work!",
+      "startFrom": "You can start from {date}.",
+      "pendingClose": "Finished. Waiting for Pinta to close it.",
+      "closed": "Job closed.",
+      "result": {
+        "title": "Result photos",
+        "body": "Take at least {min} photos of the finished work: the client will see them.",
+        "add": "Add",
+        "photo": "Photo {n}",
+        "remove": "Remove photo {n}",
+        "error": "Error",
+        "format": "{name}: use JPG, PNG or WebP.",
+        "failed": "We could not upload {name}.",
+        "count": "{count} of {min} photos",
+        "finish": "Mark as finished",
+        "confirmTitle": "Finish the job?",
+        "confirmBody": "We send the photos to the client and ask for the balance.",
+        "cancel": "Back",
+        "finished": "Job finished. Thank you!"
+      }
+    }
   }
 }
