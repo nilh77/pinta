@@ -1348,6 +1348,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/finance/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetFinanceSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/finance/costs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListOperatingCosts"];
+        put?: never;
+        post: operations["AddOperatingCost"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/finance/costs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UpdateOperatingCost"];
+        post?: never;
+        delete: operations["DeleteOperatingCost"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/finance/closings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CloseMonth"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1545,6 +1609,11 @@ export interface components {
             suggestedPaintId: string;
             sizes: components["schemas"]["CatalogRoomSize"][];
         };
+        CategoryTotal: {
+            category: components["schemas"]["OperatingCostCategory"];
+            /** Format: int64 */
+            amountCents: number;
+        };
         ClientCancelRequest: {
             reason: null | string;
         };
@@ -1665,6 +1734,9 @@ export interface components {
             at: string;
             reason: null | string;
         };
+        CloseMonthRequest: {
+            month: string;
+        };
         ConfirmEmailRequest: {
             /** Format: uuid */
             userId: string;
@@ -1673,6 +1745,28 @@ export interface components {
         ConfirmQuoteRequest: {
             note: null | string;
             acknowledgeLowMargin: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        CostDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date */
+            date: string;
+            category: components["schemas"]["OperatingCostCategory"];
+            description: string;
+            /** Format: int64 */
+            amountCents: number;
+            /** Format: uint32 */
+            version: number;
+        };
+        CostRequest: {
+            /** Format: date */
+            date: string;
+            category: components["schemas"]["OperatingCostCategory"];
+            description: string;
+            /** Format: int64 */
+            amountCents: number;
             /** Format: uint32 */
             version: null | number;
         };
@@ -1814,6 +1908,24 @@ export interface components {
             /** Format: int64 */
             painterPayCents: number;
         };
+        FinanceJobLine: {
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            at: string;
+            /** Format: int64 */
+            incomeCents: number;
+            /** Format: int64 */
+            vatCents: number;
+            /** Format: int64 */
+            materialCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+            /** Format: int64 */
+            marginCents: number;
+        };
         FinishJobRequest: {
             fileIds: string[];
         };
@@ -1918,6 +2030,35 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        MonthSummary: {
+            month: string;
+            closed: boolean;
+            /** Format: date-time */
+            closedAt: null | string;
+            canClose: boolean;
+            /** Format: int64 */
+            incomeCents: number;
+            /** Format: int64 */
+            vatCents: number;
+            /** Format: int64 */
+            materialCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+            /** Format: int64 */
+            grossMarginCents: number;
+            /** Format: double */
+            marginPct: number;
+            /** Format: int64 */
+            costsCents: number;
+            /** Format: int64 */
+            profitCents: number;
+            /** Format: int64 */
+            perPartnerCents: number;
+            costsByCategory: components["schemas"]["CategoryTotal"][];
+            jobs: components["schemas"]["FinanceJobLine"][];
+            costs: components["schemas"]["CostDto"][];
+            pendingPayouts: components["schemas"]["PayoutDto"][];
+        };
         MultibancoDto: {
             entity: string;
             reference: string;
@@ -1934,6 +2075,8 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        /** @enum {unknown} */
+        OperatingCostCategory: "infrastructure" | "payment_fees" | "accounting" | "insurance" | "marketing";
         PagedOfAdminJobListItem: {
             items: components["schemas"]["AdminJobListItem"][];
             /** Format: int32 */
@@ -6270,6 +6413,279 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PayoutDto"][];
+                };
+            };
+        };
+    };
+    GetFinanceSummary: {
+        parameters: {
+            query?: {
+                month?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonthSummary"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListOperatingCosts: {
+        parameters: {
+            query?: {
+                month?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CostDto"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    AddOperatingCost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CostRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CostDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    UpdateOperatingCost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CostRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CostDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    DeleteOperatingCost: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CloseMonth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CloseMonthRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MonthSummary"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
         };

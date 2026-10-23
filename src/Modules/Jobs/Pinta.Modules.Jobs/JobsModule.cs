@@ -35,6 +35,7 @@ public static class JobsModule
         builder.Services.AddScoped<JobCancellation>();
         builder.Services.AddScoped<OfferReminders>();
         builder.Services.AddScoped<IPainterWork, PainterWork>();
+        builder.Services.AddScoped<IFinanceJobs, Features.Finance.FinanceJobs>();
         builder.Services.AddEventHandler<PaymentSucceeded, MoveJobWhenPaid>();
         builder.Services.TryAddSingleton<WebLinks>();
         builder.Services.AddScoped<ExpireQuotes>();

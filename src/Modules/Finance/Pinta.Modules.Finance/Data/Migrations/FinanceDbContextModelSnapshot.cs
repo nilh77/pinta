@@ -23,6 +23,131 @@ namespace Pinta.Modules.Finance.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Pinta.Modules.Finance.Domain.MonthlyClosing", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("ClosedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("closed_at");
+
+                    b.Property<Guid>("ClosedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("closed_by");
+
+                    b.Property<decimal>("Costs")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("costs");
+
+                    b.Property<decimal>("GrossMargin")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("gross_margin");
+
+                    b.Property<decimal>("Income")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("income");
+
+                    b.Property<decimal>("Material")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("material");
+
+                    b.Property<decimal>("PainterPay")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("painter_pay");
+
+                    b.Property<decimal>("PerPartner")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("per_partner");
+
+                    b.Property<DateOnly>("Period")
+                        .HasColumnType("date")
+                        .HasColumnName("period");
+
+                    b.Property<decimal>("Profit")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("profit");
+
+                    b.Property<decimal>("Vat")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("vat");
+
+                    b.HasKey("Id")
+                        .HasName("pk_monthly_closings");
+
+                    b.HasIndex("Period")
+                        .IsUnique()
+                        .HasDatabaseName("ix_monthly_closings_period");
+
+                    b.ToTable("monthly_closings", "finance");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Finance.Domain.OperatingCost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("category");
+
+                    b.Property<Guid?>("ClosingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("closing_id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date")
+                        .HasColumnName("date");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("description");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_operating_costs");
+
+                    b.HasIndex("ClosingId")
+                        .HasDatabaseName("ix_operating_costs_closing_id");
+
+                    b.HasIndex("Date")
+                        .HasDatabaseName("ix_operating_costs_date");
+
+                    b.ToTable("operating_costs", "finance");
+                });
+
             modelBuilder.Entity("Pinta.Modules.Finance.Domain.PainterPayout", b =>
                 {
                     b.Property<Guid>("Id")
@@ -84,6 +209,14 @@ namespace Pinta.Modules.Finance.Data.Migrations
                         .HasDatabaseName("ix_painter_payouts_painter_id_status");
 
                     b.ToTable("painter_payouts", "finance");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Finance.Domain.OperatingCost", b =>
+                {
+                    b.HasOne("Pinta.Modules.Finance.Domain.MonthlyClosing", null)
+                        .WithMany()
+                        .HasForeignKey("ClosingId")
+                        .HasConstraintName("fk_operating_costs_monthly_closings_closing_id");
                 });
 #pragma warning restore 612, 618
         }

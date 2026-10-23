@@ -45,13 +45,7 @@ internal static class PayoutEndpoints
     private static async Task<Results<Ok<PainterPayouts>, ProblemHttpResult>> PainterAsync(
         string? month, HttpContext http, FinanceDbContext db, IPainterDirectory painters, TimeProvider clock, CancellationToken cancellationToken)
     {
-        DateOnly first;
-        if (month is null)
-        {
-            var today = BusinessDays.Today(clock);
-            first = new DateOnly(today.Year, today.Month, 1);
-        }
-        else if (!DateOnly.TryParseExact($"{month}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out first))
+        if (!Months.TryParse(month, clock, out var first))
         {
             return ApiProblem.Validation(new Dictionary<string, string[]> { ["month"] = ["Use YYYY-MM."] });
         }
@@ -62,15 +56,14 @@ internal static class PayoutEndpoints
             return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);
         }
 
-        var from = LisbonStart(first);
-        var to = LisbonStart(first.AddMonths(1));
+        var (from, to) = Months.Bounds(first);
         var items = await db.PainterPayouts.AsNoTracking()
             .Where(p => p.PainterId == painter.Id
                 && (p.Status == PayoutStatus.Pending || (p.Status == PayoutStatus.Paid && p.PaidAt >= from && p.PaidAt < to)))
             .OrderBy(p => p.Status).ThenByDescending(p => p.CreatedAt)
             .ToListAsync(cancellationToken);
         return TypedResults.Ok(new PainterPayouts(
-            first.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+            Months.Format(first),
             items.Where(p => p.Status == PayoutStatus.Pending).Sum(p => Money.ToCents(p.Amount)),
             items.Where(p => p.Status == PayoutStatus.Paid).Sum(p => Money.ToCents(p.Amount)),
             [.. items.Select(ToDto)]));
@@ -93,13 +86,7 @@ internal static class PayoutEndpoints
         return TypedResults.Ok<IReadOnlyList<PayoutDto>>([.. (await query.OrderByDescending(p => p.CreatedAt).ToListAsync(cancellationToken)).Select(ToDto)]);
     }
 
-    private static DateTimeOffset LisbonStart(DateOnly day)
-    {
-        var local = day.ToDateTime(TimeOnly.MinValue);
-        return new DateTimeOffset(local, BusinessDays.Lisbon.GetUtcOffset(local)).ToUniversalTime();
-    }
-
-    private static PayoutDto ToDto(PainterPayout p) =>
+    internal static PayoutDto ToDto(PainterPayout p) =>
         new(p.Id, p.PainterId, p.JobId, p.JobCode, Money.ToCents(p.Amount), p.Status, p.CreatedAt, p.PaidAt, p.Reference);
 }
 

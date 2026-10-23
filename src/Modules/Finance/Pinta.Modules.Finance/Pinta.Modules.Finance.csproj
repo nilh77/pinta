@@ -4,6 +4,7 @@
     <ProjectReference Include="..\..\Identity\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="..\..\Jobs\Pinta.Modules.Jobs.Contracts\Pinta.Modules.Jobs.Contracts.csproj" />
     <ProjectReference Include="..\..\Painters\Pinta.Modules.Painters.Contracts\Pinta.Modules.Painters.Contracts.csproj" />
+    <ProjectReference Include="..\..\Payments\Pinta.Modules.Payments.Contracts\Pinta.Modules.Payments.Contracts.csproj" />
     <ProjectReference Include="..\Pinta.Modules.Finance.Contracts\Pinta.Modules.Finance.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
   </ItemGroup>
