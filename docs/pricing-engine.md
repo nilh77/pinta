@@ -143,6 +143,7 @@ Resultados esperados con la configuración semilla, en euros. Cada caso es un te
 | TC11 | 8 dormitorios talla L + sala talla L; mate; vacía | 584,80 | 1.028,96 | 3.865,50 | 4.894,46 | 6.020,19 | 2.603,68 | 1.261,82 (25,8%) | 5.415 – 7.530 | 1.806,06 | Premium |
 | TC12 | Fachada 40 × 20; exterior | 800,00 | 2.737,84 | 13.440,00 | 16.177,84 | 19.898,74 | 9.520,00 | 3.920,00 (24,2%) | — | 5.969,62 | Supera el máximo; Premium |
 | TC14 | TC10 con el subtotal ajustado a mano a 2.500,00 € | 266,44 | 573,41 | 1.893,81 | 2.500,00 | 3.075,00 | 1.347,67 | 578,92 (23,2%) | 2.765 – 4.155 | 922,50 | Ajuste manual; Premium |
+| TC15 | TC10 tras una visita técnica pagada de 50,00 € descontable (resta 40,65 € del subtotal) | 266,44 | 573,41 | 1.893,81 | 2.548,52 | 3.134,68 | 1.347,67 | 627,44 (24,6%) | 2.820 – 4.235 | 940,40 | Visita descontada; Premium |
 | TC13 | Dormitorio sin paredes ni techo | — | — | — | — | — | — | — | — | — | Error 422 de validación |
 
 **Vivienda de TC09:** sala exacta 5 × 4 (mate); cocina exacta 3,5 × 3 (satinada); dormitorio 1 exacto 4 × 3,5 (mate); dormitorio 2 talla M con paredes A, B, C + techo (mate); baño exacto 2,5 × 2 con daños (anti-humedad); pasillo exacto 6 × 1,2 solo paredes (mate). Todas con alto 2,60 y, salvo indicación, 4 paredes + techo.

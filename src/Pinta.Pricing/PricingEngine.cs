@@ -36,7 +36,13 @@ public static class PricingEngine
         var net = material + labour + extrasPrice;
         var minNet = R2(rules.MinJobGross / (1 + Pct(rules.VatPct)));
         var minimumApplied = input.ManualSubtotal is null && net < minNet;
-        var subtotal = input.ManualSubtotal ?? (minimumApplied ? minNet : net);
+        // A paid deductible site visit (VAT included) comes off the subtotal without its VAT; no minimum again.
+        var subtotal = (input.ManualSubtotal ?? (minimumApplied ? minNet : net)) - R2(input.SiteVisitCredit / (1 + Pct(rules.VatPct)));
+        if (subtotal <= 0)
+        {
+            throw new ArgumentException("The site visit credit leaves nothing to charge.", nameof(input));
+        }
+
         var vat = R2(subtotal * Pct(rules.VatPct));
         var total = subtotal + vat;
         var margin = subtotal - material - painter;

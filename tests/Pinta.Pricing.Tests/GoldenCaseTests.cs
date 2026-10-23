@@ -1,7 +1,7 @@
 namespace Pinta.Pricing.Tests;
 
 /// <summary>
-/// Golden cases TC01–TC13 of docs/pricing-engine.md, to the cent. Expected values come from
+/// Golden cases TC01–TC15 of docs/pricing-engine.md, to the cent. Expected values come from
 /// <c>python3 docs/reference/pricing_reference.py</c>; change that script first, never these numbers.
 /// </summary>
 public class GoldenCaseTests
@@ -46,6 +46,7 @@ public class GoldenCaseTests
             "empty"),
         ["TC12"] = new([Surface("facade", "exterior", 40m, 20m)], "empty"),
         ["TC14"] = new(Flat, "furnished", [new ExtraLine(ClientPrice: 121.95m, PainterPay: 75.00m)]) { ManualSubtotal = 2500.00m },
+        ["TC15"] = new(Flat, "furnished", [new ExtraLine(ClientPrice: 121.95m, PainterPay: 75.00m)]) { SiteVisitCredit = 50.00m },
     };
 
     public sealed record Expected(
@@ -68,6 +69,7 @@ public class GoldenCaseTests
         { "TC10", new(266.44m, 60.20m, 573.41m, 1893.81m, false, 2589.17m, 595.51m, 3184.68m, 1347.67m, 668.09m, 25.8m, 2865m, 4300m, false, true, 955.40m, 2229.28m, true, false) },
         { "TC11", new(584.80m, 128.62m, 1028.96m, 3865.50m, false, 4894.46m, 1125.73m, 6020.19m, 2603.68m, 1261.82m, 25.8m, 5415m, 7530m, false, true, 1806.06m, 4214.13m, true, false) },
         { "TC14", new(266.44m, 60.20m, 573.41m, 1893.81m, false, 2500.00m, 575.00m, 3075.00m, 1347.67m, 578.92m, 23.2m, 2765m, 4155m, false, true, 922.50m, 2152.50m, true, false) },
+        { "TC15", new(266.44m, 60.20m, 573.41m, 1893.81m, false, 2548.52m, 586.16m, 3134.68m, 1347.67m, 627.44m, 24.6m, 2820m, 4235m, false, true, 940.40m, 2194.28m, true, false) },
         { "TC12", new(800.00m, 195.56m, 2737.84m, 13440.00m, false, 16177.84m, 3720.90m, 19898.74m, 9520.00m, 3920.00m, 24.2m, null, null, true, true, 5969.62m, 13929.12m, false, false) },
     };
 

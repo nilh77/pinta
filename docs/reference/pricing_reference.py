@@ -93,6 +93,7 @@ class Job:
     occupancy: str = "empty"
     extras: list = field(default_factory=list)
     manual_subtotal: D | None = None  # admin adjustment (rule "Ajuste manual"): replaces the subtotal
+    site_visit_credit: D = D(0)  # paid deductible site visit, VAT included (rule "Visita técnica")
 
 
 def line(area: D, paint: str, surface: str, occ: D):
@@ -143,6 +144,8 @@ def quote(job: Job):
     else:
         minimum_applied = base < min_net
         subtotal = max(base, min_net)
+    # A paid deductible visit comes off the subtotal without its VAT; the minimum is not applied again.
+    subtotal -= r2(job.site_visit_credit / (1 + VAT))
     vat = r2(subtotal * VAT)
     total = subtotal + vat
     margin = subtotal - material - painter - extras_painter
@@ -210,6 +213,8 @@ if __name__ == "__main__":
             Job([E("surface", "Fachada", "exterior", length="40", width="20", surface_type="facade")]),
         "TC14 = TC10 con subtotal ajustado a mano a 2.500,00":
             Job(flat, "furnished", [humidity_extra], manual_subtotal=D("2500.00")),
+        "TC15 = TC10 tras una visita técnica de 50,00 € descontable":
+            Job(flat, "furnished", [humidity_extra], site_visit_credit=D("50.00")),
         # TC13: input validation (walls + ceiling all off) rejects this with 422 before the engine runs;
         # this script does not validate, so its printed numbers for TC13 are meaningless.
         "TC13 Habitación sin paredes ni techo (área 0)":
