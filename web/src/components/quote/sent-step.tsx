@@ -113,11 +113,16 @@ export function SentStep({ code }: { code: string }) {
         )}
 
         <div className="fixed inset-x-0 bottom-0 bg-background px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:static lg:mt-6 lg:p-0">
-          <div className="mx-auto max-w-2xl">
-            {/* "Ver mi trabajo" (screen 10) arrives with the client area. */}
-            <Button asChild size="lg" className="w-full">
-              <Link href="/">{t("home")}</Link>
-            </Button>
+          <div className="mx-auto flex max-w-2xl flex-col gap-2">
+            {request ? (
+              <Button asChild size="lg" className="w-full">
+                <Link href={`/mis-trabajos/${request.id}`}>{t("seeJob")}</Link>
+              </Button>
+            ) : (
+              <Button asChild size="lg" className="w-full">
+                <Link href="/">{t("home")}</Link>
+              </Button>
+            )}
           </div>
         </div>
       </main>

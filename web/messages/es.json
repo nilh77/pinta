@@ -18,7 +18,9 @@
   "nav": {
     "signIn": "Entrar",
     "signOut": "Salir",
-    "greeting": "Hola, {name}"
+    "greeting": "Hola, {name}",
+    "myJobs": "Mis trabajos",
+    "admin": "Panel"
   },
   "home": {
     "badge": "Distrito de Lisboa",
@@ -172,7 +174,8 @@
     "validation_failed": "Hay datos por corregir.",
     "rate_limited": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
     "internal_error": "Algo ha fallado. Inténtalo de nuevo.",
-    "concurrency_conflict": "Otra persona cambió estos datos. Recarga y vuelve a intentarlo."
+    "concurrency_conflict": "Otra persona cambió estos datos. Recarga y vuelve a intentarlo.",
+    "invalid_transition": "Esta acción ya no es posible en el estado actual. Recarga la página."
   },
   "admin": {
     "loading": "Cargando el panel…",
@@ -181,7 +184,10 @@
     "signOut": "Salir",
     "nav": {
       "label": "Secciones del panel",
-      "pricing": "Precios"
+      "pricing": "Precios",
+      "jobs": "Trabajos",
+      "review": "Revisión",
+      "coverage": "Cobertura"
     },
     "forbidden": {
       "title": "Área reservada",
@@ -366,6 +372,287 @@
       "margin": "Margen bruto",
       "marginPct": "{pct}% sobre el precio sin IVA",
       "lowMargin": "Por debajo del margen mínimo."
+    },
+    "review": {
+      "title": "Revisión",
+      "subtitle": "Solicitudes esperando el precio final, de la más antigua a la más reciente.",
+      "loading": "Cargando la cola…",
+      "loadError": "No hemos podido cargar la cola.",
+      "retry": "Reintentar",
+      "queue": "En revisión ({count})",
+      "empty": "Todo revisado",
+      "pendingEmail": "Email por confirmar ({count})",
+      "pendingEmailHint": "Entran en la cola cuando el cliente confirme el email.",
+      "custom": "Cotización personalizada",
+      "light": {
+        "green": "En plazo",
+        "amber": "Menos de 24 h",
+        "red": "Vencido"
+      }
+    },
+    "job": {
+      "title": "Trabajo",
+      "loading": "Cargando el trabajo…",
+      "loadError": "No hemos podido cargar el trabajo.",
+      "notFound": "Este trabajo no existe.",
+      "retry": "Reintentar",
+      "backToJobs": "Todos los trabajos",
+      "asap": "Lo antes posible",
+      "dates": "Fechas: {dates}",
+      "access": "Acceso: {notes}",
+      "validUntil": "Precio válido hasta el {date}",
+      "siteVisit": "Visita: {date} · {who} · {price}",
+      "emailNotConfirmed": "Email aún sin confirmar",
+      "description": "Nota del cliente",
+      "draftTitle": "Borrador del precio",
+      "quoteTitle": "Cotización vigente (v{number})",
+      "tabs": {
+        "label": "Secciones del trabajo",
+        "quote": "Cotización",
+        "versions": "Versiones",
+        "files": "Archivos",
+        "history": "Historial",
+        "payments": "Pagos",
+        "assignment": "Asignación"
+      },
+      "later": {
+        "payments": "Los pagos llegan en la próxima fase (H5).",
+        "assignment": "La asignación a pintores llega en la fase H6."
+      },
+      "files": {
+        "empty": "El cliente no envió fotos.",
+        "open": "Abrir archivo {index}",
+        "viewer": "Archivo {index} de {total}",
+        "close": "Cerrar",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "breakdown": {
+        "title": "Desglose interno",
+        "area": "Área",
+        "litres": "{litres} L",
+        "material": "Material",
+        "labour": "Mano de obra",
+        "extras": "Partidas extra",
+        "subtotal": "Subtotal",
+        "vat": "IVA",
+        "total": "Total al cliente",
+        "painter": "Pago al pintor",
+        "margin": "Margen",
+        "deposit": "Señal",
+        "balance": "Resto",
+        "range": "Rango",
+        "premium": "Premium",
+        "minimumApplied": "Trabajo mínimo",
+        "overMax": "Por encima del máximo",
+        "lowMargin": "El margen está por debajo del mínimo. Puedes confirmar, pero tendrás que indicarlo."
+      },
+      "draft": {
+        "legend": "Borrador de la cotización",
+        "occupancy": "Ocupación",
+        "saving": "Recalculando…",
+        "saved": "Borrador guardado",
+        "readOnly": "Solo lectura: el precio se edita en revisión.",
+        "saveError": "No se pudo guardar el borrador.",
+        "clientSees": "El cliente verá {total} con IVA, sin márgenes ni costes internos.",
+        "room": "Estancia",
+        "surface": "Superficie",
+        "remove": "Quitar elemento {index}",
+        "mode": "Medidas",
+        "bySize": "Talla S/M/L",
+        "byMeasures": "Exactas",
+        "size": "Talla",
+        "length": "Largo (m)",
+        "width": "Ancho (m)",
+        "heightOrWidth": "Alto/ancho (m)",
+        "height": "Alto (m)",
+        "defaultHeight": "Por defecto",
+        "paint": "Pintura",
+        "walls": "Paredes",
+        "ceiling": "Techo",
+        "damage": "Daños",
+        "addRoom": "Añadir estancia",
+        "chooseRoomType": "Tipo de estancia…",
+        "add": "Añadir",
+        "extras": "Partidas extra",
+        "noExtras": "Sin partidas extra.",
+        "extraPrices": "Cliente {client} · pintor {painter}",
+        "removeExtra": "Quitar partida extra",
+        "catalogExtra": "Del catálogo",
+        "chooseExtra": "Elegir…",
+        "freeExtra": "Partida libre",
+        "freeExtraPlaceholder": "Ej.: pintar rodapiés",
+        "clientPrice": "Precio cliente (€)",
+        "painterPay": "Pintor (€)",
+        "beforeVat": "Precios sin IVA.",
+        "adjustments": "Ajustes",
+        "premium": "Premium",
+        "premiumAuto": "Automático",
+        "premiumYes": "Sí",
+        "premiumNo": "No",
+        "manualSubtotal": "Fijar el subtotal a mano",
+        "subtotal": "Subtotal sin IVA (€)",
+        "adjustmentReason": "Motivo (obligatorio)",
+        "addCatalogExtra": "Añadir partida del catálogo",
+        "addFreeExtra": "Añadir partida libre"
+      },
+      "versions": {
+        "number": "Versión",
+        "origin": "Origen",
+        "area": "Área",
+        "total": "Total",
+        "state": "Estado",
+        "date": "Creada",
+        "manual": "ajuste manual",
+        "draft": "Borrador",
+        "estimate": "Estimación del cliente",
+        "confirmed": "Confirmada · válida hasta el {date}",
+        "origins": {
+          "estimate": "Estimación",
+          "admin_review": "Revisión",
+          "site_visit": "Visita técnica",
+          "revision": "Recotización"
+        }
+      },
+      "history": {
+        "states": "Estados",
+        "emails": "Emails enviados",
+        "noEmails": "Aún no hay emails.",
+        "attempts": "{count} intentos",
+        "actors": {
+          "client": "Cliente",
+          "admin": "Admin",
+          "painter": "Pintor",
+          "system": "Sistema"
+        },
+        "emailStatus": {
+          "queued": "en cola",
+          "sent": "enviado",
+          "failed": "falló"
+        }
+      },
+      "actions": {
+        "confirm": {
+          "open": "Confirmar precio",
+          "title": "Confirmar el precio de {code}",
+          "body": "El cliente recibe el precio por email y tiene 15 días para aceptarlo.",
+          "note": "Nota para el cliente",
+          "noteHint": "Opcional, visible para el cliente",
+          "acknowledge": "Confirmo con el margen por debajo del mínimo.",
+          "submit": "Confirmar y enviar",
+          "cancel": "Volver",
+          "done": "Precio confirmado y enviado al cliente."
+        },
+        "reject": {
+          "open": "Rechazar",
+          "title": "Rechazar {code}",
+          "body": "El cliente recibe el motivo por email.",
+          "reason": "Motivo",
+          "required": "Escribe el motivo.",
+          "submit": "Rechazar solicitud",
+          "cancel": "Volver",
+          "done": "Solicitud rechazada."
+        },
+        "visit": {
+          "open": "Pedir visita",
+          "title": "Visita técnica para {code}",
+          "body": "El cliente y el socio reciben la fecha por email.",
+          "who": "Quién va",
+          "choose": "Elegir socio…",
+          "when": "Fecha y hora",
+          "price": "Precio de la visita con IVA (€)",
+          "submit": "Programar visita",
+          "cancel": "Volver",
+          "done": "Visita programada."
+        },
+        "completeVisit": {
+          "open": "Visita hecha: volver a revisión",
+          "done": "De vuelta a revisión."
+        },
+        "transition": {
+          "open": "Cambiar estado",
+          "title": "Cambiar el estado de {code}",
+          "body": "Solo aparecen los estados permitidos. Queda en el historial con el motivo.",
+          "to": "Nuevo estado",
+          "reason": "Motivo",
+          "submit": "Cambiar estado",
+          "cancel": "Volver",
+          "done": "Estado cambiado."
+        },
+        "cancelJob": {
+          "open": "Cancelar",
+          "title": "Cancelar {code}",
+          "calculating": "Calculando el reembolso…",
+          "refund": "Reembolso: {amount}.",
+          "noPayment": "El cliente aún no ha pagado: no hay reembolso.",
+          "reason": "Motivo",
+          "fullRefund": "Reembolso total (excepción)",
+          "submit": "Cancelar trabajo",
+          "keep": "Volver",
+          "done": "Trabajo cancelado."
+        }
+      }
+    },
+    "jobs": {
+      "title": "Trabajos",
+      "count": "{count, plural, one {# trabajo} other {# trabajos}}",
+      "view": "Vista",
+      "list": "Lista",
+      "board": "Tablero",
+      "export": "Exportar CSV",
+      "filters": "Filtros",
+      "search": "Código, nombre o email",
+      "status": "Estado",
+      "allStatuses": "Todos los estados",
+      "municipality": "Concelho",
+      "allMunicipalities": "Todos los concelhos",
+      "premiumAny": "Premium: todos",
+      "premiumYes": "Solo Premium",
+      "premiumNo": "Sin Premium",
+      "from": "Solicitud desde",
+      "to": "Solicitud hasta",
+      "clear": "Quitar filtros",
+      "loading": "Cargando los trabajos…",
+      "loadError": "No hemos podido cargar los trabajos.",
+      "retry": "Reintentar",
+      "empty": "Aún no hay trabajos.",
+      "noResults": "Ningún trabajo con estos filtros.",
+      "pagination": "Páginas",
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {page} de {pages}",
+      "boardTruncated": "Se muestran los {count} más recientes. Usa los filtros para ver otros.",
+      "columns": {
+        "code": "Código",
+        "client": "Cliente",
+        "locality": "Localidad",
+        "status": "Estado",
+        "total": "Total",
+        "margin": "Margen",
+        "painter": "Pintor",
+        "scheduled": "Fecha programada",
+        "activity": "Última actividad"
+      }
+    },
+    "coverage": {
+      "title": "Cobertura",
+      "subtitle": "Códigos postales donde trabajamos y quién espera que lleguemos a su zona.",
+      "areas": "Concelhos y prefijos",
+      "toggle": "Prefijo {prefix} activo",
+      "addTitle": "Añadir prefijo",
+      "prefix": "Prefijo (4 dígitos)",
+      "municipality": "Concelho",
+      "add": "Añadir",
+      "added": "Prefijo añadido.",
+      "waitlist": "Lista de espera ({count})",
+      "waitlistEmpty": "Nadie en la lista de espera.",
+      "export": "Exportar CSV",
+      "email": "Email",
+      "postalCode": "Código postal",
+      "date": "Fecha",
+      "loading": "Cargando…",
+      "loadError": "No hemos podido cargar los datos.",
+      "retry": "Reintentar"
     }
   },
   "quote": {
@@ -707,7 +994,156 @@
         "resent": "Te hemos enviado otro email.",
         "wait": "Espera un minuto para pedir otro."
       },
-      "home": "Volver al inicio"
+      "home": "Volver al inicio",
+      "seeJob": "Ver mi trabajo"
+    }
+  },
+  "jobs": {
+    "status": {
+      "pending_email": "Email por confirmar",
+      "in_review": "En revisión",
+      "site_visit": "Visita técnica",
+      "quoted": "Precio confirmado",
+      "expired": "Expirado",
+      "rejected": "Rechazado",
+      "deposit_paid": "Señal pagada",
+      "scheduled": "Programado",
+      "in_progress": "En curso",
+      "finished": "Finalizado",
+      "closed": "Cerrado",
+      "cancelled": "Cancelado"
+    },
+    "progress": {
+      "label": "Progreso del trabajo",
+      "review": "Revisión",
+      "price": "Precio",
+      "deposit": "Señal",
+      "schedule": "Agenda",
+      "work": "Ejecución",
+      "done": "Terminado"
+    }
+  },
+  "myJobs": {
+    "title": "Mis trabajos",
+    "new": "Nueva cotización",
+    "loading": "Cargando…",
+    "error": "No hemos podido cargar tus trabajos.",
+    "retry": "Reintentar",
+    "notClient": "Esta área es para clientes.",
+    "goHome": "Ir a mi área",
+    "tabs": {
+      "label": "Filtrar trabajos",
+      "active": "Activos",
+      "history": "Historial"
+    },
+    "empty": {
+      "title": "Aún no tienes trabajos",
+      "historyTitle": "Nada en el historial",
+      "body": "Haz el esquema de tu casa y ve el precio estimado en pocos minutos.",
+      "cta": "Pedir cotización"
+    },
+    "card": {
+      "decideBy": "Decide antes del {date}",
+      "visitOn": "Visita el {date}",
+      "confirmEmail": "Confirma tu email",
+      "inReview": "Lo estamos revisando",
+      "review": "Revisar y aceptar",
+      "customQuote": "Cotización personalizada"
+    },
+    "detail": {
+      "title": "Mi trabajo",
+      "loading": "Cargando el trabajo…",
+      "error": "No hemos podido cargar el trabajo.",
+      "notFound": "No hemos encontrado este trabajo.",
+      "retry": "Reintentar",
+      "back": "Mis trabajos",
+      "createdAt": "Solicitud hecha el {date}.",
+      "estimate": "Estimación",
+      "customQuote": "cotización personalizada",
+      "timeline": "Historial",
+      "pendingEmail": {
+        "title": "Confirma tu email",
+        "body": "Empezamos a revisar la solicitud en cuanto confirmes el email. Busca nuestro mensaje en tu bandeja de entrada."
+      },
+      "inReview": {
+        "title": "Estamos revisando tu solicitud",
+        "body": "Recibirás el precio final antes del {date}.",
+        "bodyNoDate": "Recibirás el precio final pronto."
+      },
+      "siteVisit": {
+        "title": "Vamos a medir en tu casa",
+        "body": "Para darte un precio exacto, alguien del equipo visitará la casa.",
+        "when": "Cuándo",
+        "who": "Quién va",
+        "price": "Precio",
+        "free": "Gratis"
+      },
+      "expired": {
+        "title": "El precio caducó",
+        "body": "El plazo para aceptar terminó. Puedes pedir un precio nuevo con las tarifas actuales."
+      },
+      "rejected": {
+        "title": "No podemos hacer este trabajo",
+        "body": "La solicitud fue rechazada."
+      },
+      "cancelled": {
+        "title": "Trabajo cancelado",
+        "body": "Este trabajo fue cancelado."
+      },
+      "quoted": {
+        "title": "Tu precio está listo",
+        "validUntil": "Válido hasta el {date}",
+        "daysLeft": "{days, plural, =0 {último día} one {queda # día} other {quedan # días}}",
+        "acceptAndPay": "Aceptar y pagar la señal",
+        "paymentSoon": "Pago disponible en breve.",
+        "policy": "Puedes cancelar hasta que empiece el trabajo: devolvemos toda la señal si faltan 7 días o más para la fecha programada y la mitad si faltan menos."
+      },
+      "quote": {
+        "work": "Pintura de {count, plural, one {# elemento} other {# elementos}} · {area}",
+        "total": "Total",
+        "vatIncluded": "IVA incluido",
+        "estimate": "Tu estimación",
+        "deposit": "Señal (30%)",
+        "balance": "Resto, al terminar",
+        "note": "Nota del equipo"
+      },
+      "question": {
+        "open": "Tengo dudas",
+        "title": "¿Tienes dudas sobre el precio?",
+        "body": "Escríbenos y te respondemos por email. El precio sigue siendo válido.",
+        "label": "Tu mensaje",
+        "required": "Escribe tu duda.",
+        "send": "Enviar",
+        "cancel": "Volver",
+        "sent": "Mensaje enviado. Te respondemos pronto."
+      },
+      "reject": {
+        "open": "Rechazar el precio",
+        "title": "¿Rechazar el precio?",
+        "body": "La solicitud queda cancelada. Puedes contarnos por qué para mejorar.",
+        "reason": "Motivo",
+        "optional": "Opcional",
+        "confirm": "Rechazar",
+        "cancel": "Volver",
+        "done": "Precio rechazado."
+      },
+      "cancelJob": {
+        "open": "Cancelar trabajo",
+        "title": "¿Cancelar {code}?",
+        "calculating": "Calculando el reembolso…",
+        "refund": "Te devolvemos {amount}.",
+        "noPayment": "Aún no has pagado nada: no hay reembolso.",
+        "reason": "Motivo",
+        "optional": "Opcional",
+        "sure": "Sí, quiero cancelar este trabajo",
+        "confirm": "Cancelar trabajo",
+        "keep": "Mantener",
+        "done": "Trabajo cancelado."
+      },
+      "requote": {
+        "open": "Pedir nuevo precio",
+        "done": "Solicitud enviada. La revisaremos con los precios actuales."
+      }
     }
   }
 }

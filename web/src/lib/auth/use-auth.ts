@@ -33,9 +33,18 @@ export function useMe() {
   });
 }
 
+let signedOutOnPurpose = false;
+
+/**
+ * True after the user pressed "Sair": protected areas then go home instead of asking to sign in again. Cleared by the
+ * next sign-in or registration.
+ */
+export const signedOut = () => signedOutOnPurpose;
+
 function useSessionChange() {
   const queryClient = useQueryClient();
   return (me: Me | null) => {
+    signedOutOnPurpose = me === null;
     resetAntiforgeryToken();
     queryClient.setQueryData(meQueryKey, me);
   };

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatEuros, formatMetres } from "./format";
+import { formatArea, formatEuros, formatMetres, daysUntil, formatCents, formatDate } from "./format";
 
 // Intl uses narrow no-break spaces; compare with plain spaces.
 const plain = (text: string) => text.replace(/[  ]/g, " ");
@@ -24,5 +24,16 @@ describe("formatArea and formatMetres", () => {
     expect(formatArea("es", 158480)).toBe("1.584,80 m²");
     expect(formatArea("en", 4840)).toBe("48.40 m²");
     expect(formatMetres("pt", 3.5)).toBe("3,50 m");
+  });
+});
+
+describe("job formats", () => {
+  it("formats cents, dates and days left", () => {
+    expect(plain(formatCents("pt", 318468))).toBe("3.184,68 €");
+    expect(plain(formatCents("en", 95540))).toBe("€955.40");
+    expect(formatDate("pt", "2026-11-06")).toBe("6 de novembro de 2026");
+    expect(formatDate("en", "2026-11-06", true)).toBe("6 November");
+    expect(daysUntil("2026-11-06", new Date("2026-10-23T10:00:00Z"))).toBe(14);
+    expect(daysUntil("2026-10-22", new Date("2026-10-23T10:00:00Z"))).toBe(-1);
   });
 });

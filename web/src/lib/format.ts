@@ -34,3 +34,36 @@ export function formatMetres(locale: string, metres: number): string {
     maximumFractionDigits: 2,
   }).format(metres)} m`;
 }
+
+const DATE_LOCALES = { pt: "pt-PT", es: "es-ES", en: "en-GB" } as const;
+const dateLocale = (locale: string) => DATE_LOCALES[locale as keyof typeof DATE_LOCALES] ?? DATE_LOCALES.pt;
+
+/** API amounts are integer cents. */
+export function formatCents(locale: string, cents: number): string {
+  return formatEuros(locale, cents / 100);
+}
+
+/** A date without time from the API ("2026-11-06") as "6 de novembro de 2026"; `short` drops the year. */
+export function formatDate(locale: string, isoDate: string, short = false): string {
+  return new Intl.DateTimeFormat(dateLocale(locale), { day: "numeric", month: "long", ...(short ? {} : { year: "numeric" }), timeZone: "UTC" }).format(
+    new Date(`${isoDate.slice(0, 10)}T00:00:00Z`),
+  );
+}
+
+/** An instant from the API shown in Lisbon time (docs: display in Europe/Lisbon). */
+export function formatDateTime(locale: string, isoInstant: string): string {
+  return new Intl.DateTimeFormat(dateLocale(locale), {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Lisbon",
+  }).format(new Date(isoInstant));
+}
+
+/** Whole days from today (Lisbon) to a date; negative once it has passed. */
+export function daysUntil(isoDate: string, now: Date = new Date()): number {
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Lisbon" }).format(now);
+  return Math.round((Date.parse(`${isoDate.slice(0, 10)}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000);
+}

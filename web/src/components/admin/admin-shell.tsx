@@ -1,15 +1,20 @@
 "use client";
 
-import { Loader2, Tags } from "lucide-react";
+import { ClipboardCheck, LayoutList, Loader2, MapPinned, Tags } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { useMe, useSignOut } from "@/lib/auth/use-auth";
+import { signedOut, useMe, useSignOut } from "@/lib/auth/use-auth";
 
-const SECTIONS = [{ href: "/admin/precios", key: "pricing", icon: Tags }] as const;
+const SECTIONS = [
+  { href: "/admin/trabajos", key: "jobs", icon: LayoutList },
+  { href: "/admin/revision", key: "review", icon: ClipboardCheck },
+  { href: "/admin/precios", key: "pricing", icon: Tags },
+  { href: "/admin/cobertura", key: "coverage", icon: MapPinned },
+] as const;
 
 /** Admin area: only for the admin role. Without a session it goes to sign-in and back; other roles see a 403 page. */
 export function AdminShell({ children }: { children: ReactNode }) {
@@ -20,7 +25,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const signOut = useSignOut();
 
   useEffect(() => {
-    if (me.data === null) router.replace(`/entrar?next=${encodeURIComponent(pathname)}`);
+    if (me.data === null) router.replace(signedOut() ? "/" : `/entrar?next=${encodeURIComponent(pathname)}`);
   }, [me.data, pathname, router]);
 
   if (me.isPending || me.data === null) {
@@ -67,7 +72,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </div>
         <nav aria-label={t("nav.label")} className="flex gap-1 overflow-x-auto lg:flex-col">
           {SECTIONS.map(({ href, key, icon: Icon }) => {
-            const current = pathname === href;
+            const current = pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}
