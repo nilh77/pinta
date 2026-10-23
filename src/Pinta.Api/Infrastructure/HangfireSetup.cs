@@ -5,6 +5,7 @@ using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Media.Features.Uploads;
+using Pinta.Modules.Painters.Features;
 using Pinta.SharedKernel.Time;
 
 namespace Pinta.Api.Infrastructure;
@@ -44,6 +45,9 @@ public static class HangfireSetup
         jobs.AddOrUpdate<MediaCleanup>(MediaCleanup.JobId, cleanup => cleanup.RunAsync(), Cron.Daily(3), lisbon);
         jobs.AddOrUpdate<ExpireQuotes>(ExpireQuotes.JobId, expiry => expiry.RunAsync(), Cron.Daily(3), lisbon);
         jobs.AddOrUpdate<OfferReminders>(OfferReminders.JobId, reminders => reminders.RunAsync(), Cron.Hourly(), lisbon);
+        jobs.AddOrUpdate<QuoteExpiryReminders>(QuoteExpiryReminders.JobId, reminders => reminders.RunAsync(), Cron.Daily(9), lisbon);
+        jobs.AddOrUpdate<OverdueReviewAlerts>(OverdueReviewAlerts.JobId, alerts => alerts.RunAsync(), Cron.Daily(9), lisbon);
+        jobs.AddOrUpdate<PainterDocumentAlerts>(PainterDocumentAlerts.JobId, alerts => alerts.RunAsync(), Cron.Weekly(DayOfWeek.Monday, 9), lisbon);
     }
 
     public static IEndpointRouteBuilder MapHangfireAdminDashboard(this IEndpointRouteBuilder app)

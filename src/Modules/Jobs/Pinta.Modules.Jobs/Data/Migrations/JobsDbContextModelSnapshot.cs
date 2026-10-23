@@ -150,6 +150,10 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .HasColumnType("character varying(2000)")
                         .HasColumnName("description");
 
+                    b.Property<DateOnly?>("ExpiryReminderFor")
+                        .HasColumnType("date")
+                        .HasColumnName("expiry_reminder_for");
+
                     b.Property<string>("Floor")
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")

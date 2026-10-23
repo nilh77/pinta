@@ -53,6 +53,9 @@ public sealed class Job
     /// <summary>Last day the confirmed price can be accepted (Lisbon); the next day at 03:00 it expires (S3).</summary>
     public DateOnly? QuoteValidUntil { get; set; }
 
+    /// <summary>When the client was reminded that the price expires in 3 days (S3), so it happens once per price.</summary>
+    public DateOnly? ExpiryReminderFor { get; set; }
+
     /// <summary>Site visit (A2.6): when, who goes (a partner or a painter, by user id) and its price with VAT.</summary>
     public DateTimeOffset? SiteVisitAt { get; set; }
 

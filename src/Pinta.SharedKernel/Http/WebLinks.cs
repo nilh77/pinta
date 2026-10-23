@@ -15,6 +15,10 @@ public sealed class WebLinks(IConfiguration configuration)
 
     public string PainterHome(Locale locale) => $"{Web}/{Lang(locale)}/pintor";
 
+    public string AdminReviews(Locale locale) => $"{Web}/{Lang(locale)}/admin/revision";
+
+    public string AdminPainters(Locale locale) => $"{Web}/{Lang(locale)}/admin/pintores";
+
     public string AdminSettings(Locale locale) => $"{Web}/{Lang(locale)}/admin/ajustes";
 
     public string PainterVisit(Guid jobId, Locale locale) => $"{Web}/{Lang(locale)}/pintor/visitas/{jobId}";

@@ -105,3 +105,13 @@ public sealed record SiteVisitReportedEmail(string To, Locale Locale, string Cod
 
 /// <summary>To the admins: a client asked to delete their account; they execute it from Ajustes (C5.8).</summary>
 public sealed record AccountDeletionRequestedEmail(string To, Locale Locale, string ClientName, string ClientEmail, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the client, 3 days before the confirmed price expires (S3).</summary>
+public sealed record PriceExpiringEmail(string To, Locale Locale, string Name, string Code, DateOnly ValidUntil, long DepositCents, string JobUrl)
+    : Email(To, Locale);
+
+/// <summary>To the admins, daily: requests past their review deadline (S3).</summary>
+public sealed record OverdueReviewsEmail(string To, Locale Locale, IReadOnlyList<string> Codes, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the admins, on Mondays: painter documents that expire within 30 days, as "name · kind · date" lines (S3).</summary>
+public sealed record PainterDocumentsExpiringEmail(string To, Locale Locale, IReadOnlyList<string> Lines, string AdminUrl) : Email(To, Locale);
