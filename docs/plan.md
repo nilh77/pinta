@@ -67,6 +67,7 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 
 - **Alcance**: máquina de estados de `Job` con la tabla de transiciones del documento 5.3 como única fuente; versiones de cotización con `snapshot_precios`; pantallas A2 y tablero de trabajos; borrador, confirmación con validez de 15 días, rechazo y visita técnica; historial; pantalla 10 del cliente con precio cerrado; caducidad automática con Hangfire.
 - **Historias**: A2.1–A2.9, A3.1–A3.5, C5.1–C5.3, S1–S2.
+- **Reparto acordado en H4**: lo que necesita módulos posteriores va a su hito. El pago de C5.3 llega en H5 (el botón «Aceptar y pagar» muestra «Pago disponible en breve»); asignar pintor (A3.2) y la visita técnica hecha por un pintor llegan en H6; el reembolso de A3.4 llega en H5 (en H4 se cancela y el reembolso calculado es 0 € porque aún no hay pagos). En H4 la visita técnica se asigna a un socio admin.
 - **Criterio de salida**: el admin revisa TC10 (con partida extra), confirma y el cliente ve el precio cerrado con su desglose sin margen; cualquier transición no listada devuelve `invalid_transition`; un precio sin pagar caduca al día 16.
 - **Prompt**: «Lee CLAUDE.md, docs/states.md, docs/data-model.md y docs/screens.md (A2, tablero, pantalla 10). Implementa el hito H4, con tests de cada transición válida e inválida.»
 

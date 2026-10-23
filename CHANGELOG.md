@@ -8,6 +8,37 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 Nada todavía.
 
+## H4 · Revisión y máquina de estados — 2026-10-23, [PR #5](https://github.com/nilh77/pinta/pull/5)
+
+### Añadido
+
+- Admin · Revisión: cola «En revisión» de la más antigua a la más reciente con semáforo del plazo (verde, ámbar con menos de 24 h laborables, rojo vencido) y los «Pendiente de email» aparte; detalle con cliente, dirección, fechas, descripción y fotos a pantalla completa (A2.1, A2.2).
+- Borrador de revisión que se recalcula en el servidor al editar: estancias y medidas, pintura, ocupación, añadir estancias, partidas extra del catálogo o libres, Premium a mano y subtotal fijado a mano con motivo obligatorio. Desglose interno con material, mano de obra, pago al pintor y margen con aviso por debajo del 20% (A2.3–A2.5, A2.7).
+- Confirmar precio con nota para el cliente; con margen bajo pide confirmarlo expresamente. Válido 15 días; el cliente recibe el email (A2.8). Rechazar con motivo (A2.9). Visita técnica con un socio, fecha, hora y precio, y vuelta a revisión al terminarla (A2.6).
+- Admin · Trabajos: lista paginada o tablero por estado, filtros por estado, fechas, concelho y Premium, búsqueda por código, nombre o email, exportación CSV; ficha con pestañas Cotización, Versiones, Archivos e Historial (estados con quién, cuándo y motivo, y emails enviados). Cambio de estado manual solo entre transiciones permitidas y cancelación con motivo (A3.1, A3.3–A3.5).
+- Admin · Cobertura: prefijos postales por concelho con interruptor, alta de prefijos y lista de espera con exportación CSV (A1.7).
+- Cliente · Mis trabajos (pantalla 9): activos e historial con estado, progreso y «Revisar y aceptar» destacado (C5.1).
+- Cliente · Detalle del trabajo (pantalla 10): contenido por estado; con precio confirmado, una línea «Pintura de N elementos · m²» y una por partida extra con IVA, total, señal, resto, nota del revisor y validez con cuenta atrás. «Tengo dudas» (mensaje a los socios por email), rechazar el precio, cancelar con el reembolso calculado y pedir nuevo precio si expiró (C5.2, C5.6, C5.7).
+- Caducidad diaria a las 03:00 de Lisboa: un precio confirmado el día D vale hasta D+15 y el día D+16 pasa a «Expirado» con email al cliente (S3).
+- Recuperar contraseña: `/recuperar` y `/restablecer`, enlace válido 2 horas, misma respuesta exista o no el email (S1).
+- Emails con registro y reintentos (hasta 5) en `notifications.outbox`; nuevos emails de precio confirmado, rechazo, caducidad, visita técnica, dudas y rechazo del cliente a los socios, y recuperación de contraseña (S2).
+- URLs firmadas de lectura para fotos y vídeos, solo para admins y el cliente del trabajo (C5.5).
+- Caso dorado TC14 (TC10 con subtotal fijado a mano) en el motor de precios.
+- Enlace «Mis trabajos» o «Panel» en la cabecera y «Ver mi trabajo» en la confirmación.
+
+### Cambiado
+
+- Documentos: pagos (C5.3) y reembolsos pasan a H5, asignación de pintores a H6; en H4 la visita técnica la hace un socio. La pantalla 10 ofrece «Tengo dudas» en lugar de «Pedir cambios». Nuevos endpoints en `docs/api.md`: socios, exportación CSV y fin de visita.
+- Toda transición pasa por la máquina de estados: las no permitidas devuelven `409 invalid_transition`; editar con una versión antigua del trabajo, `409 concurrency_conflict`.
+
+### Corregido
+
+- Cerrar sesión en el panel o en el área del cliente lleva al inicio en lugar de a «Entrar».
+
+### Pendiente
+
+- «Aceptar y pagar» muestra «Pago disponible en breve» hasta H5; la cancelación aún no envía email ni reembolsa porque no hay pagos.
+
 ## H3 · Envío de la solicitud — 2026-10-22, [PR #4](https://github.com/nilh77/pinta/pull/4)
 
 ### Añadido

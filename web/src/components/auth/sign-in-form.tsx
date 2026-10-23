@@ -42,6 +42,9 @@ export function SignInForm({ next }: { next?: string }) {
         error={errors.password}
         {...form.register("password")}
       />
+      <Link href="/recuperar" className="-mt-2 self-end text-sm font-semibold text-primary underline-offset-4 hover:underline">
+        {t("forgot")}
+      </Link>
       <Button type="submit" size="lg" disabled={signIn.isPending} className="mt-2 w-full">
         {signIn.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
         {t("submit")}

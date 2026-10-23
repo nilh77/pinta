@@ -24,4 +24,16 @@ public class BusinessDaysTests
     {
         public override DateTimeOffset GetUtcNow() => now;
     }
+
+    [Theory]
+    // Thursday 22 Oct 2026, 10:00 Lisbon (WEST, UTC+1); due Monday 26: Thu 14 h + Fri 24 h + Mon 24 h, weekend skipped.
+    [InlineData("2026-10-22T09:00:00Z", "2026-10-26", 62)]
+    // Friday 23 at 18:00, due that day: 6 h left (amber).
+    [InlineData("2026-10-23T17:00:00Z", "2026-10-23", 6)]
+    // Saturday, due Monday: only Monday counts.
+    [InlineData("2026-10-24T09:00:00Z", "2026-10-26", 24)]
+    // The day after the due date: overdue (red).
+    [InlineData("2026-10-27T09:00:00Z", "2026-10-26", -1)]
+    public void A2_1_working_hours_left_until_the_end_of_the_due_date(string now, string dueOn, double expected) =>
+        Assert.Equal(expected, BusinessDays.WorkingHoursLeft(DateTimeOffset.Parse(now), DateOnly.Parse(dueOn)), precision: 6);
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { registerSchema, safeNextPath, signInSchema } from "./schemas";
+import { forgotPasswordSchema, registerSchema, resetPasswordSchema, safeNextPath, signInSchema } from "./schemas";
 
 const valid = {
   name: "Ana Costa",
@@ -44,5 +44,17 @@ describe("S1 sign-in", () => {
     ["https://evil.example", "/"],
   ])("follows only same-site next paths (%s)", (next, expected) => {
     expect(safeNextPath(next)).toBe(expected);
+  });
+});
+
+describe("password recovery schemas (S1)", () => {
+  it("asks for a valid email", () => {
+    expect(forgotPasswordSchema.safeParse({ email: "ana@pinta.pt" }).success).toBe(true);
+    expect(forgotPasswordSchema.safeParse({ email: "ana" }).error?.issues[0]?.message).toBe("validation.email");
+  });
+
+  it("asks for a new password of at least 10 characters", () => {
+    expect(resetPasswordSchema.safeParse({ password: "0123456789" }).success).toBe(true);
+    expect(resetPasswordSchema.safeParse({ password: "short" }).error?.issues[0]?.message).toBe("validation.passwordLength");
   });
 });

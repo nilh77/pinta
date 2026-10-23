@@ -35,8 +35,8 @@ public static class PricingEngine
 
         var net = material + labour + extrasPrice;
         var minNet = R2(rules.MinJobGross / (1 + Pct(rules.VatPct)));
-        var minimumApplied = net < minNet;
-        var subtotal = minimumApplied ? minNet : net;
+        var minimumApplied = input.ManualSubtotal is null && net < minNet;
+        var subtotal = input.ManualSubtotal ?? (minimumApplied ? minNet : net);
         var vat = R2(subtotal * Pct(rules.VatPct));
         var total = subtotal + vat;
         var margin = subtotal - material - painter;

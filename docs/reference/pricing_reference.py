@@ -92,6 +92,7 @@ class Job:
     elements: list
     occupancy: str = "empty"
     extras: list = field(default_factory=list)
+    manual_subtotal: D | None = None  # admin adjustment (rule "Ajuste manual"): replaces the subtotal
 
 
 def line(area: D, paint: str, surface: str, occ: D):
@@ -135,8 +136,13 @@ def quote(job: Job):
     extras_painter = sum((x.painter for x in job.extras), D(0))
     base = material + labour + extras_client
     min_net = r2(MIN_JOB_GROSS / (1 + VAT))
-    minimum_applied = base < min_net
-    subtotal = max(base, min_net)
+    if job.manual_subtotal is not None:
+        # The admin fixed the subtotal: VAT, total, margin and deposit follow it; the minimum does not apply.
+        minimum_applied = False
+        subtotal = job.manual_subtotal
+    else:
+        minimum_applied = base < min_net
+        subtotal = max(base, min_net)
     vat = r2(subtotal * VAT)
     total = subtotal + vat
     margin = subtotal - material - painter - extras_painter
@@ -202,6 +208,8 @@ if __name__ == "__main__":
                 + [E("room", "Sala", "matte", "living", size="L")]),
         "TC12 Fachada 40x20, exterior (supera el máximo)":
             Job([E("surface", "Fachada", "exterior", length="40", width="20", surface_type="facade")]),
+        "TC14 = TC10 con subtotal ajustado a mano a 2.500,00":
+            Job(flat, "furnished", [humidity_extra], manual_subtotal=D("2500.00")),
         # TC13: input validation (walls + ceiling all off) rejects this with 422 before the engine runs;
         # this script does not validate, so its printed numbers for TC13 are meaningless.
         "TC13 Habitación sin paredes ni techo (área 0)":

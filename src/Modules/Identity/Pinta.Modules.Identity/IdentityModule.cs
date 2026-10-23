@@ -14,6 +14,7 @@ using Pinta.Modules.Identity.Features.Google;
 using Pinta.Modules.Identity.Features.Login;
 using Pinta.Modules.Identity.Features.Logout;
 using Pinta.Modules.Identity.Features.Me;
+using Pinta.Modules.Identity.Features.PasswordReset;
 using Pinta.Modules.Identity.Features.Register;
 using Pinta.Modules.Identity.Features.ResendConfirmation;
 using Pinta.SharedKernel.Data;
@@ -43,11 +44,13 @@ public static class IdentityModule
                 options.Lockout.AllowedForNewUsers = true;
                 // Clients can sign in and submit a request before confirming (C4.4).
                 options.SignIn.RequireConfirmedEmail = false;
+                options.Tokens.PasswordResetTokenProvider = PasswordResetTokenProvider.ProviderName;
             })
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<IdentityModuleDbContext>()
             .AddSignInManager()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
+            .AddTokenProvider<PasswordResetTokenProvider>(PasswordResetTokenProvider.ProviderName);
         services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(48));
 
         var authentication = services.AddAuthentication(IdentityConstants.ApplicationScheme);
@@ -99,6 +102,7 @@ public static class IdentityModule
         MeEndpoint.Map(auth);
         ConfirmEmailEndpoint.Map(auth);
         ResendConfirmationEndpoint.Map(auth);
+        PasswordResetEndpoints.Map(auth);
         GoogleLoginEndpoints.Map(auth);
         return app;
     }

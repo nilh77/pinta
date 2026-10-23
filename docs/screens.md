@@ -137,12 +137,12 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
 - **Datos**: `GET /api/jobs/{id}`. Cabecera con estado y línea de progreso (Revisión → Precio → Señal → Agenda → Ejecución → Terminado). Según el estado:
   - `in_review`: rango estimado y plazo de revisión.
   - `site_visit`: fecha propuesta, precio de la visita (0 € por defecto) y nombre del pintor.
-  - `quoted`: precio cerrado frente a estimación, desglose para el cliente (material, mano de obra, extras e IVA, nunca margen ni pago al pintor), validez con cuenta atrás y notas del revisor.
+  - `quoted`: precio cerrado frente a estimación; desglose para el cliente como en el board Trabajo y el documento 6.3: una línea «Pintura de N elementos · m²» y una por partida extra, con IVA incluido, más total, señal y resto (nunca material desglosado, tarifas, pago al pintor ni margen); validez con cuenta atrás y notas del revisor.
   - `deposit_paid` y `scheduled`: fecha, pintor asignado (nombre, foto y teléfono si el ajuste lo permite) y saldo pendiente.
   - `in_progress`: fotos de avance.
   - `finished`: fotos del resultado, pago del saldo y valoración.
   - `expired`, `rejected` y `cancelled`: motivo y reembolso si lo hay.
-- **Acciones**: «Pagar señal» → pantalla 11; «Pedir cambios» (texto libre, vuelve a revisión); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); «Valorar» (1 a 5 estrellas y comentario) una vez terminado; descargar factura.
+- **Acciones**: «Pagar señal» → pantalla 11 (llega en H5); «Tengo dudas» (mensaje al admin por email, sin cambiar el estado, como C5.2; no hay «Pedir cambios» porque `docs/states.md` no permite volver de «Precio confirmado» a «En revisión»); «Rechazar precio» con motivo opcional (pasa a «Cancelado»); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); «Valorar» (1 a 5 estrellas y comentario) una vez terminado; descargar factura.
 - **Validaciones**: la cancelación exige confirmación escribiendo el código o marcando una casilla; valoración con estrellas obligatorias y comentario opcional de hasta 500 caracteres.
 - **Estados**: `quote_expired` → «El precio caducó» con «Pedir revisión de nuevo». Se refresca cada 30 s mientras esté en primer plano en estados que esperan al admin.
 

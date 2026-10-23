@@ -11,6 +11,7 @@ export const KNOWN_ERROR_CODES = [
   "not_found",
   "email_taken",
   "concurrency_conflict",
+  "invalid_transition",
   "validation_failed",
   "rate_limited",
   "internal_error",

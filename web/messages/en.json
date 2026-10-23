@@ -18,7 +18,9 @@
   "nav": {
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "greeting": "Hi, {name}"
+    "greeting": "Hi, {name}",
+    "myJobs": "My jobs",
+    "admin": "Dashboard"
   },
   "home": {
     "badge": "Lisbon district",
@@ -103,7 +105,8 @@
     "password": "Password",
     "submit": "Sign in",
     "noAccount": "Don't have an account yet?",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "forgot": "Forgot your password?"
   },
   "register": {
     "title": "Create account",
@@ -133,6 +136,26 @@
     "resend": "Send a new link",
     "signInToResend": "Sign in to ask for a new link."
   },
+  "forgotPassword": {
+    "title": "Reset password",
+    "subtitle": "Enter your email and we'll send you a link to choose a new one.",
+    "email": "Email",
+    "submit": "Send link",
+    "sent": "If there's an account for {email}, you'll get an email with a link valid for 2 hours.",
+    "backToSignIn": "Back to sign in"
+  },
+  "resetPassword": {
+    "title": "New password",
+    "password": "New password",
+    "passwordHint": "At least {min} characters.",
+    "submit": "Save password",
+    "success": "Password changed",
+    "successBody": "You can now sign in with your new password.",
+    "signIn": "Sign in",
+    "invalid": "The link is invalid or has expired",
+    "invalidBody": "Reset links last 2 hours and work once.",
+    "requestAgain": "Request a new link"
+  },
   "validation": {
     "required": "Required.",
     "email": "Enter a valid email.",
@@ -151,7 +174,8 @@
     "validation_failed": "Some details need fixing.",
     "rate_limited": "Too many attempts. Wait a minute and try again.",
     "internal_error": "Something went wrong. Please try again.",
-    "concurrency_conflict": "Someone else changed this data. Reload and try again."
+    "concurrency_conflict": "Someone else changed this data. Reload and try again.",
+    "invalid_transition": "This action is no longer possible in the current state. Reload the page."
   },
   "admin": {
     "loading": "Loading the dashboard…",
@@ -160,7 +184,10 @@
     "signOut": "Sign out",
     "nav": {
       "label": "Dashboard sections",
-      "pricing": "Pricing"
+      "pricing": "Pricing",
+      "jobs": "Jobs",
+      "review": "Review",
+      "coverage": "Coverage"
     },
     "forbidden": {
       "title": "Restricted area",
@@ -345,6 +372,287 @@
       "margin": "Gross margin",
       "marginPct": "{pct}% of the price before VAT",
       "lowMargin": "Below the minimum margin."
+    },
+    "review": {
+      "title": "Review",
+      "subtitle": "Requests waiting for their final price, oldest first.",
+      "loading": "Loading the queue…",
+      "loadError": "We couldn't load the queue.",
+      "retry": "Try again",
+      "queue": "In review ({count})",
+      "empty": "All reviewed",
+      "pendingEmail": "Email to confirm ({count})",
+      "pendingEmailHint": "They join the queue once the client confirms their email.",
+      "custom": "Custom quote",
+      "light": {
+        "green": "On time",
+        "amber": "Under 24 h",
+        "red": "Overdue"
+      }
+    },
+    "job": {
+      "title": "Job",
+      "loading": "Loading the job…",
+      "loadError": "We couldn't load the job.",
+      "notFound": "This job doesn't exist.",
+      "retry": "Try again",
+      "backToJobs": "All jobs",
+      "asap": "As soon as possible",
+      "dates": "Dates: {dates}",
+      "access": "Access: {notes}",
+      "validUntil": "Price valid until {date}",
+      "siteVisit": "Visit: {date} · {who} · {price}",
+      "emailNotConfirmed": "Email not confirmed yet",
+      "description": "Client's note",
+      "draftTitle": "Price draft",
+      "quoteTitle": "Current quote (v{number})",
+      "tabs": {
+        "label": "Job sections",
+        "quote": "Quote",
+        "versions": "Versions",
+        "files": "Files",
+        "history": "History",
+        "payments": "Payments",
+        "assignment": "Assignment"
+      },
+      "later": {
+        "payments": "Payments arrive in the next phase (H5).",
+        "assignment": "Painter assignment arrives in phase H6."
+      },
+      "files": {
+        "empty": "The client sent no photos.",
+        "open": "Open file {index}",
+        "viewer": "File {index} of {total}",
+        "close": "Close",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "breakdown": {
+        "title": "Internal breakdown",
+        "area": "Area",
+        "litres": "{litres} L",
+        "material": "Material",
+        "labour": "Labour",
+        "extras": "Extra items",
+        "subtotal": "Subtotal",
+        "vat": "VAT",
+        "total": "Client total",
+        "painter": "Painter pay",
+        "margin": "Margin",
+        "deposit": "Deposit",
+        "balance": "Balance",
+        "range": "Range",
+        "premium": "Premium",
+        "minimumApplied": "Minimum job",
+        "overMax": "Over the maximum",
+        "lowMargin": "The margin is below the minimum. You can confirm, but you'll need to acknowledge it."
+      },
+      "draft": {
+        "legend": "Quote draft",
+        "occupancy": "Occupancy",
+        "saving": "Recalculating…",
+        "saved": "Draft saved",
+        "readOnly": "Read only: the price is edited during review.",
+        "saveError": "The draft couldn't be saved.",
+        "clientSees": "The client will see {total} with VAT, without margins or internal costs.",
+        "room": "Room",
+        "surface": "Surface",
+        "remove": "Remove element {index}",
+        "mode": "Measures",
+        "bySize": "Size S/M/L",
+        "byMeasures": "Exact",
+        "size": "Size",
+        "length": "Length (m)",
+        "width": "Width (m)",
+        "heightOrWidth": "Height/width (m)",
+        "height": "Height (m)",
+        "defaultHeight": "Default",
+        "paint": "Paint",
+        "walls": "Walls",
+        "ceiling": "Ceiling",
+        "damage": "Damage",
+        "addRoom": "Add a room",
+        "chooseRoomType": "Room type…",
+        "add": "Add",
+        "extras": "Extra items",
+        "noExtras": "No extra items.",
+        "extraPrices": "Client {client} · painter {painter}",
+        "removeExtra": "Remove extra item",
+        "catalogExtra": "From the catalog",
+        "chooseExtra": "Choose…",
+        "freeExtra": "Free item",
+        "freeExtraPlaceholder": "E.g. paint skirting boards",
+        "clientPrice": "Client price (€)",
+        "painterPay": "Painter (€)",
+        "beforeVat": "Prices before VAT.",
+        "adjustments": "Adjustments",
+        "premium": "Premium",
+        "premiumAuto": "Automatic",
+        "premiumYes": "Yes",
+        "premiumNo": "No",
+        "manualSubtotal": "Set the subtotal by hand",
+        "subtotal": "Subtotal before VAT (€)",
+        "adjustmentReason": "Reason (required)",
+        "addCatalogExtra": "Add catalog item",
+        "addFreeExtra": "Add free item"
+      },
+      "versions": {
+        "number": "Version",
+        "origin": "Origin",
+        "area": "Area",
+        "total": "Total",
+        "state": "State",
+        "date": "Created",
+        "manual": "manual adjustment",
+        "draft": "Draft",
+        "estimate": "Client estimate",
+        "confirmed": "Confirmed · valid until {date}",
+        "origins": {
+          "estimate": "Estimate",
+          "admin_review": "Review",
+          "site_visit": "Site visit",
+          "revision": "Requote"
+        }
+      },
+      "history": {
+        "states": "States",
+        "emails": "Emails sent",
+        "noEmails": "No emails yet.",
+        "attempts": "{count} attempts",
+        "actors": {
+          "client": "Client",
+          "admin": "Admin",
+          "painter": "Painter",
+          "system": "System"
+        },
+        "emailStatus": {
+          "queued": "queued",
+          "sent": "sent",
+          "failed": "failed"
+        }
+      },
+      "actions": {
+        "confirm": {
+          "open": "Confirm price",
+          "title": "Confirm the price of {code}",
+          "body": "The client gets the price by email and has 15 days to accept it.",
+          "note": "Note for the client",
+          "noteHint": "Optional, the client sees it",
+          "acknowledge": "I confirm with the margin below the minimum.",
+          "submit": "Confirm and send",
+          "cancel": "Back",
+          "done": "Price confirmed and sent to the client."
+        },
+        "reject": {
+          "open": "Reject",
+          "title": "Reject {code}",
+          "body": "The client gets the reason by email.",
+          "reason": "Reason",
+          "required": "Write the reason.",
+          "submit": "Reject request",
+          "cancel": "Back",
+          "done": "Request rejected."
+        },
+        "visit": {
+          "open": "Request a visit",
+          "title": "Site visit for {code}",
+          "body": "The client and the partner get the date by email.",
+          "who": "Who goes",
+          "choose": "Choose a partner…",
+          "when": "Date and time",
+          "price": "Visit price with VAT (€)",
+          "submit": "Schedule visit",
+          "cancel": "Back",
+          "done": "Visit scheduled."
+        },
+        "completeVisit": {
+          "open": "Visit done: back to review",
+          "done": "Back in review."
+        },
+        "transition": {
+          "open": "Change state",
+          "title": "Change the state of {code}",
+          "body": "Only allowed states appear. It stays in the history with the reason.",
+          "to": "New state",
+          "reason": "Reason",
+          "submit": "Change state",
+          "cancel": "Back",
+          "done": "State changed."
+        },
+        "cancelJob": {
+          "open": "Cancel",
+          "title": "Cancel {code}",
+          "calculating": "Working out the refund…",
+          "refund": "Refund: {amount}.",
+          "noPayment": "The client hasn't paid yet: there's no refund.",
+          "reason": "Reason",
+          "fullRefund": "Full refund (exception)",
+          "submit": "Cancel job",
+          "keep": "Back",
+          "done": "Job cancelled."
+        }
+      }
+    },
+    "jobs": {
+      "title": "Jobs",
+      "count": "{count, plural, one {# job} other {# jobs}}",
+      "view": "View",
+      "list": "List",
+      "board": "Board",
+      "export": "Export CSV",
+      "filters": "Filters",
+      "search": "Code, name or email",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "municipality": "Municipality",
+      "allMunicipalities": "All municipalities",
+      "premiumAny": "Premium: all",
+      "premiumYes": "Premium only",
+      "premiumNo": "Not Premium",
+      "from": "Requested from",
+      "to": "Requested to",
+      "clear": "Clear filters",
+      "loading": "Loading jobs…",
+      "loadError": "We couldn't load the jobs.",
+      "retry": "Try again",
+      "empty": "No jobs yet.",
+      "noResults": "No jobs match these filters.",
+      "pagination": "Pages",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {pages}",
+      "boardTruncated": "Showing the {count} most recent. Use the filters to see others.",
+      "columns": {
+        "code": "Code",
+        "client": "Client",
+        "locality": "Locality",
+        "status": "Status",
+        "total": "Total",
+        "margin": "Margin",
+        "painter": "Painter",
+        "scheduled": "Scheduled",
+        "activity": "Last activity"
+      }
+    },
+    "coverage": {
+      "title": "Coverage",
+      "subtitle": "Postal codes we serve and who's waiting for us to reach their area.",
+      "areas": "Municipalities and prefixes",
+      "toggle": "Prefix {prefix} active",
+      "addTitle": "Add a prefix",
+      "prefix": "Prefix (4 digits)",
+      "municipality": "Municipality",
+      "add": "Add",
+      "added": "Prefix added.",
+      "waitlist": "Waitlist ({count})",
+      "waitlistEmpty": "Nobody on the waitlist.",
+      "export": "Export CSV",
+      "email": "Email",
+      "postalCode": "Postal code",
+      "date": "Date",
+      "loading": "Loading…",
+      "loadError": "We couldn't load the data.",
+      "retry": "Try again"
     }
   },
   "quote": {
@@ -686,7 +994,156 @@
         "resent": "We've sent a new email.",
         "wait": "Wait a minute to ask for another."
       },
-      "home": "Back to home"
+      "home": "Back to home",
+      "seeJob": "See my job"
+    }
+  },
+  "jobs": {
+    "status": {
+      "pending_email": "Email to confirm",
+      "in_review": "In review",
+      "site_visit": "Site visit",
+      "quoted": "Price confirmed",
+      "expired": "Expired",
+      "rejected": "Rejected",
+      "deposit_paid": "Deposit paid",
+      "scheduled": "Scheduled",
+      "in_progress": "In progress",
+      "finished": "Finished",
+      "closed": "Closed",
+      "cancelled": "Cancelled"
+    },
+    "progress": {
+      "label": "Job progress",
+      "review": "Review",
+      "price": "Price",
+      "deposit": "Deposit",
+      "schedule": "Schedule",
+      "work": "Work",
+      "done": "Done"
+    }
+  },
+  "myJobs": {
+    "title": "My jobs",
+    "new": "New quote",
+    "loading": "Loading…",
+    "error": "We couldn't load your jobs.",
+    "retry": "Try again",
+    "notClient": "This area is for clients.",
+    "goHome": "Go to my area",
+    "tabs": {
+      "label": "Filter jobs",
+      "active": "Active",
+      "history": "History"
+    },
+    "empty": {
+      "title": "You have no jobs yet",
+      "historyTitle": "Nothing in your history",
+      "body": "Sketch your home and see an estimated price in a few minutes.",
+      "cta": "Get a quote"
+    },
+    "card": {
+      "decideBy": "Decide by {date}",
+      "visitOn": "Visit on {date}",
+      "confirmEmail": "Confirm your email",
+      "inReview": "We're reviewing it",
+      "review": "Review and accept",
+      "customQuote": "Custom quote"
+    },
+    "detail": {
+      "title": "My job",
+      "loading": "Loading the job…",
+      "error": "We couldn't load the job.",
+      "notFound": "We couldn't find this job.",
+      "retry": "Try again",
+      "back": "My jobs",
+      "createdAt": "Requested on {date}.",
+      "estimate": "Estimate",
+      "customQuote": "custom quote",
+      "timeline": "History",
+      "pendingEmail": {
+        "title": "Confirm your email",
+        "body": "We start reviewing as soon as you confirm your email. Look for our message in your inbox."
+      },
+      "inReview": {
+        "title": "We're reviewing your request",
+        "body": "You'll get the final price by {date}.",
+        "bodyNoDate": "You'll get the final price soon."
+      },
+      "siteVisit": {
+        "title": "We'll measure at your home",
+        "body": "To give you an exact price, someone from the team will visit.",
+        "when": "When",
+        "who": "Who's coming",
+        "price": "Price",
+        "free": "Free"
+      },
+      "expired": {
+        "title": "The price expired",
+        "body": "The time to accept is over. You can ask for a new price at current rates."
+      },
+      "rejected": {
+        "title": "We can't take this job",
+        "body": "The request was rejected."
+      },
+      "cancelled": {
+        "title": "Job cancelled",
+        "body": "This job was cancelled."
+      },
+      "quoted": {
+        "title": "Your price is ready",
+        "validUntil": "Valid until {date}",
+        "daysLeft": "{days, plural, =0 {last day} one {# day left} other {# days left}}",
+        "acceptAndPay": "Accept and pay the deposit",
+        "paymentSoon": "Payment available soon.",
+        "policy": "You can cancel until work starts: we refund the whole deposit 7 or more days before the scheduled date, and half after that."
+      },
+      "quote": {
+        "work": "Painting {count, plural, one {# element} other {# elements}} · {area}",
+        "total": "Total",
+        "vatIncluded": "VAT included",
+        "estimate": "Your estimate",
+        "deposit": "Deposit (30%)",
+        "balance": "Balance, at the end",
+        "note": "Note from the team"
+      },
+      "question": {
+        "open": "I have questions",
+        "title": "Questions about the price?",
+        "body": "Write to us and we'll reply by email. The price stays valid.",
+        "label": "Your message",
+        "required": "Write your question.",
+        "send": "Send",
+        "cancel": "Back",
+        "sent": "Message sent. We'll reply soon."
+      },
+      "reject": {
+        "open": "Decline the price",
+        "title": "Decline the price?",
+        "body": "The request will be cancelled. Tell us why, if you like, so we can improve.",
+        "reason": "Reason",
+        "optional": "Optional",
+        "confirm": "Decline",
+        "cancel": "Back",
+        "done": "Price declined."
+      },
+      "cancelJob": {
+        "open": "Cancel job",
+        "title": "Cancel {code}?",
+        "calculating": "Working out the refund…",
+        "refund": "We'll refund {amount}.",
+        "noPayment": "You haven't paid anything yet: there's nothing to refund.",
+        "reason": "Reason",
+        "optional": "Optional",
+        "sure": "Yes, I want to cancel this job",
+        "confirm": "Cancel job",
+        "keep": "Keep it",
+        "done": "Job cancelled."
+      },
+      "requote": {
+        "open": "Ask for a new price",
+        "done": "Request sent. We'll review it at current prices."
+      }
     }
   }
 }

@@ -55,3 +55,22 @@ public class CoverageTests(PintaApiFactory factory)
         Assert.Equal(3, catalog.GetProperty("minLeadBusinessDays").GetInt32());
     }
 }
+
+public class WaitlistAdminTests(PintaApiFactory factory)
+{
+    [Fact]
+    public async Task A1_7_admins_list_and_export_the_waitlist()
+    {
+        var email = $"=wait-{Guid.NewGuid():N}@test.pt";
+        var visitor = await ApiClient.CreateAsync(factory);
+        await visitor.PostAsJsonAsync("/api/coverage/waitlist", new { email, postalCode = "4000-123", locale = "es" }, ApiClient.Json);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+
+        var list = await (await admin.GetAsync("/api/admin/coverage/waitlist")).ReadJsonAsync();
+        var csv = await (await admin.GetAsync("/api/admin/coverage/waitlist/export")).Content.ReadAsStringAsync();
+
+        Assert.Contains(list.EnumerateArray(), w => w.GetProperty("email").GetString() == email && w.GetProperty("locale").GetString() == "es");
+        Assert.Contains($"'{email},4000-123,es,", csv);
+        await ProblemAssert.HasCodeAsync(await visitor.GetAsync("/api/admin/coverage/waitlist"), System.Net.HttpStatusCode.Unauthorized, "unauthenticated");
+    }
+}

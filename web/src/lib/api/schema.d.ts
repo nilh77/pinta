@@ -148,6 +148,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/forgot-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ForgotPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/providers": {
         parameters: {
             query?: never;
@@ -436,6 +468,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/coverage/waitlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListWaitlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/coverage/waitlist/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExportWaitlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/quotes/simulate": {
         parameters: {
             query?: never;
@@ -459,7 +523,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["ListMyJobs"];
         put?: never;
         post: operations["SubmitJob"];
         delete?: never;
@@ -478,6 +542,294 @@ export interface paths {
         get: operations["GetJob"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/reject-quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RejectQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AskAboutQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/cancellation-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CancellationPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CancelJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/requote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RequestNewQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetReviewQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListAdminJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExportAdminJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetAdminJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/partners": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListPartners"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/draft-quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["SaveDraftQuote"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/confirm-quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConfirmQuote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RejectJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/site-visit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ScheduleSiteVisit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/site-visit/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CompleteSiteVisit"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/transition": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["TransitionJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/cancellation-preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminCancellationPreview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminCancelJob"];
         delete?: never;
         options?: never;
         head?: never;
@@ -532,16 +884,123 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/media/{fileId}/url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetMediaUrl"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AddressDto: {
+            line1: string;
+            floor: null | string;
+            postalCode: string;
+            locality: string;
+            municipality: string;
+            accessNotes: null | string;
+        };
         AddressRequest: {
             line1: string;
             floor: null | string;
             postalCode: string;
             locality: string;
             accessNotes: null | string;
+        };
+        AdminCancelRequest: {
+            reason: string;
+            fullRefund: boolean;
+            /** Format: uint32 */
+            version: null | number;
+        };
+        AdminJobDetail: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: uint32 */
+            version: number;
+            client: components["schemas"]["ClientInfo"];
+            address: components["schemas"]["AddressDto"];
+            preferredDates: components["schemas"]["PreferredDatesDto"];
+            description: null | string;
+            taxId: null | string;
+            companyName: null | string;
+            premium: boolean;
+            /** Format: date */
+            reviewDueOn: null | string;
+            light: null | components["schemas"]["ReviewLight"];
+            /** Format: date */
+            quoteValidUntil: null | string;
+            siteVisit: null | components["schemas"]["SiteVisitDto"];
+            currentQuote: components["schemas"]["AdminQuote"];
+            draft: null | components["schemas"]["AdminQuote"];
+            versions: components["schemas"]["QuoteVersionListItem"][];
+            files: components["schemas"]["JobFile"][];
+            history: components["schemas"]["JobHistoryEntry"][];
+            emails: components["schemas"]["SentEmail"][];
+            allowedTransitions: components["schemas"]["JobStatus"][];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminJobListItem: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            clientName: string;
+            clientEmail: string;
+            locality: string;
+            municipality: string;
+            /** Format: int64 */
+            totalCents: number;
+            /** Format: int64 */
+            marginCents: number;
+            premium: boolean;
+            painterName: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminQuote: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int32 */
+            number: number;
+            origin: components["schemas"]["QuoteOrigin"];
+            isDraft: boolean;
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementView"][];
+            extras: components["schemas"]["QuoteExtraView"][];
+            premiumOverride: null | boolean;
+            /** Format: int64 */
+            manualSubtotalCents: null | number;
+            adjustmentReason: null | string;
+            note: null | string;
+            /** Format: date */
+            validUntil: null | string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            confirmedAt: null | string;
+            breakdown: components["schemas"]["QuoteBreakdownDto"];
         };
         AntiforgeryTokenResponse: {
             token: string;
@@ -552,6 +1011,13 @@ export interface components {
         BillingRequest: {
             taxId: null | string;
             companyName: null | string;
+        };
+        CancellationPreview: {
+            cancellable: boolean;
+            /** Format: int64 */
+            depositPaidCents: number;
+            /** Format: int64 */
+            refundCents: number;
         };
         CatalogOption: {
             id: string;
@@ -584,10 +1050,129 @@ export interface components {
             suggestedPaintId: string;
             sizes: components["schemas"]["CatalogRoomSize"][];
         };
+        ClientCancelRequest: {
+            reason: null | string;
+        };
+        ClientInfo: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            email: string;
+            phone: null | string;
+            locale: components["schemas"]["Locale"];
+            emailConfirmed: boolean;
+        };
+        ClientJobDetail: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            overMax: boolean;
+            addressLine1: string;
+            postalCode: string;
+            locality: string;
+            preferredDates: components["schemas"]["PreferredDatesDto"];
+            /** Format: date */
+            reviewDueOn: null | string;
+            /** Format: date */
+            quoteValidUntil: null | string;
+            quote: null | components["schemas"]["ClientQuote"];
+            siteVisit: null | components["schemas"]["ClientSiteVisit"];
+            timeline: components["schemas"]["ClientTimelineEntry"][];
+            canCancel: boolean;
+            canRequote: boolean;
+        };
+        ClientJobListItem: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            locality: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            totalCents: null | number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            overMax: boolean;
+            /** Format: date */
+            quoteValidUntil: null | string;
+            /** Format: date-time */
+            siteVisitAt: null | string;
+            needsAction: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ClientQuote: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int32 */
+            number: number;
+            lines: components["schemas"]["ClientQuoteLine"][];
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            totalCents: number;
+            /** Format: int64 */
+            vatCents: number;
+            /** Format: int64 */
+            depositCents: number;
+            /** Format: int64 */
+            balanceCents: number;
+            premium: boolean;
+            /** Format: date */
+            validUntil: null | string;
+            note: null | string;
+            /** Format: date-time */
+            confirmedAt: null | string;
+        };
+        ClientQuoteLine: {
+            kind: components["schemas"]["ClientQuoteLineKind"];
+            description: null | string;
+            /** Format: int32 */
+            elementCount: null | number;
+            /** Format: double */
+            areaM2: null | number;
+            /** Format: int64 */
+            amountCents: number;
+        };
+        /** @enum {unknown} */
+        ClientQuoteLineKind: "work" | "extra";
+        ClientSiteVisit: {
+            /** Format: date-time */
+            at: string;
+            visitorName: string;
+            /** Format: int64 */
+            priceCents: number;
+        };
+        ClientTimelineEntry: {
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            at: string;
+            reason: null | string;
+        };
         ConfirmEmailRequest: {
             /** Format: uuid */
             userId: string;
             token: string;
+        };
+        ConfirmQuoteRequest: {
+            note: null | string;
+            acknowledgeLowMargin: boolean;
+            /** Format: uint32 */
+            version: null | number;
         };
         CoverageAreaDto: {
             /** Format: uuid */
@@ -611,9 +1196,26 @@ export interface components {
             covered: boolean;
             municipality: null | string;
         };
+        DraftExtraRequest: {
+            catalogKey: null | string;
+            description: null | string;
+            /** Format: int64 */
+            clientPriceCents: null | number;
+            /** Format: int64 */
+            painterPayCents: null | number;
+        };
         DraftFileRequest: {
             /** Format: uuid */
             draftId: string;
+        };
+        DraftQuoteRequest: {
+            occupancy: components["schemas"]["Occupancy"];
+            elements: components["schemas"]["QuoteElementRequest"][];
+            extras: null | components["schemas"]["DraftExtraRequest"][];
+            premium: null | boolean;
+            /** Format: int64 */
+            manualSubtotalCents: null | number;
+            adjustmentReason: null | string;
         };
         ElementAreaDto: {
             /** Format: int32 */
@@ -677,6 +1279,9 @@ export interface components {
             /** Format: int64 */
             painterPayCents: number;
         };
+        ForgotPasswordRequest: {
+            email: string;
+        };
         HttpValidationProblemDetails: {
             type?: null | string;
             title?: null | string;
@@ -691,28 +1296,33 @@ export interface components {
             traceId?: string;
         };
         /** @enum {unknown} */
-        JobStatus: "pending_email" | "in_review" | "site_visit" | "quoted" | "expired" | "rejected" | "deposit_paid" | "scheduled" | "in_progress" | "finished" | "closed" | "cancelled";
-        JobSummaryResponse: {
+        JobActor: "client" | "admin" | "painter" | "system";
+        JobFile: {
             /** Format: uuid */
             id: string;
-            code: string;
-            status: components["schemas"]["JobStatus"];
+            /** Format: uuid */
+            quoteElementId: null | string;
+            elementKey: null | string;
+            context: components["schemas"]["MediaContext"];
+            kind: components["schemas"]["MediaKind"];
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
+            url: string;
             /** Format: date-time */
-            createdAt: string;
-            /** Format: double */
-            areaM2: number;
-            /** Format: int64 */
-            rangeMinCents: null | number;
-            /** Format: int64 */
-            rangeMaxCents: null | number;
-            overMax: boolean;
-            addressLine1: string;
-            postalCode: string;
-            locality: string;
-            preferredDates: components["schemas"]["PreferredDatesDto"];
-            /** Format: date */
-            reviewDueOn: null | string;
+            urlExpiresAt: string;
         };
+        JobHistoryEntry: {
+            from: null | components["schemas"]["JobStatus"];
+            to: components["schemas"]["JobStatus"];
+            actor: components["schemas"]["JobActor"];
+            userName: null | string;
+            reason: null | string;
+            /** Format: date-time */
+            changedAt: string;
+        };
+        /** @enum {unknown} */
+        JobStatus: "pending_email" | "in_review" | "site_visit" | "quoted" | "expired" | "rejected" | "deposit_paid" | "scheduled" | "in_progress" | "finished" | "closed" | "cancelled";
         /** @enum {unknown} */
         Locale: "pt" | "es" | "en";
         LocalizedTextDto: {
@@ -724,6 +1334,8 @@ export interface components {
             email: string;
             password: string;
         };
+        /** @enum {unknown} */
+        MediaContext: "element" | "job_general" | "site_visit" | "result" | "painter_document";
         MediaFileDto: {
             /** Format: uuid */
             id: string;
@@ -770,6 +1382,24 @@ export interface components {
         };
         /** @enum {unknown} */
         Occupancy: "empty" | "furnished" | "inhabited";
+        PagedOfAdminJobListItem: {
+            items: components["schemas"]["AdminJobListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+            /** Format: int32 */
+            total: number;
+        };
+        PagedOfClientJobListItem: {
+            items: components["schemas"]["ClientJobListItem"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            pageSize: number;
+            /** Format: int32 */
+            total: number;
+        };
         PaintDto: {
             /** Format: uuid */
             id: string;
@@ -799,6 +1429,12 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        PartnerDto: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            email: string;
         };
         PreferredDatesDto: {
             asap: boolean;
@@ -838,6 +1474,9 @@ export interface components {
             instance?: null | string;
             code: string;
             traceId?: string;
+        };
+        QuestionRequest: {
+            message: string;
         };
         QuoteBreakdownDto: {
             lines: components["schemas"]["PricedLineDto"][];
@@ -897,6 +1536,67 @@ export interface components {
             damage: boolean;
             clientKey?: null | string;
         };
+        QuoteElementView: {
+            /** Format: uuid */
+            id: string;
+            kind: components["schemas"]["ElementKind"];
+            name: null | string;
+            roomTypeId: null | string;
+            size: null | components["schemas"]["RoomSize"];
+            /** Format: double */
+            length: null | number;
+            /** Format: double */
+            width: null | number;
+            /** Format: double */
+            height: null | number;
+            walls: null | boolean[];
+            ceiling: boolean;
+            surfaceTypeId: null | string;
+            paintId: string;
+            damage: boolean;
+            clientKey: null | string;
+            /** Format: double */
+            areaM2: number;
+        };
+        QuoteExtraView: {
+            catalogKey: null | string;
+            description: string;
+            /** Format: int64 */
+            clientPriceCents: number;
+            /** Format: int64 */
+            painterPayCents: number;
+        };
+        /** @enum {unknown} */
+        QuoteOrigin: "estimate" | "admin_review" | "site_visit" | "revision";
+        QuoteVersionListItem: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int32 */
+            number: number;
+            origin: components["schemas"]["QuoteOrigin"];
+            isDraft: boolean;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            totalCents: number;
+            manualAdjustment: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            confirmedAt: null | string;
+            /** Format: date */
+            validUntil: null | string;
+        };
+        ReadUrlResponse: {
+            url: string;
+            /** Format: date-time */
+            expiresAt: string;
+        };
+        ReasonRequest: {
+            reason: string;
+            /** Format: uint32 */
+            version: null | number;
+        };
         RegisterRequest: {
             name: string;
             email: string;
@@ -907,6 +1607,42 @@ export interface components {
             locale: components["schemas"]["Locale"];
             /** @default true */
             sendConfirmationEmail: boolean;
+        };
+        RejectQuoteRequest: {
+            reason: null | string;
+        };
+        ResetPasswordRequest: {
+            /** Format: uuid */
+            userId: string;
+            token: string;
+            password: string;
+        };
+        ReviewItem: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            clientName: string;
+            municipality: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            rangeMinCents: null | number;
+            /** Format: int64 */
+            rangeMaxCents: null | number;
+            overMax: boolean;
+            premium: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date */
+            reviewDueOn: null | string;
+            light: null | components["schemas"]["ReviewLight"];
+        };
+        /** @enum {unknown} */
+        ReviewLight: "green" | "amber" | "red" | null;
+        ReviewQueue: {
+            inReview: components["schemas"]["ReviewItem"][];
+            pendingEmail: components["schemas"]["ReviewItem"][];
         };
         /** @enum {unknown} */
         Role: "client" | "painter" | "admin";
@@ -946,6 +1682,18 @@ export interface components {
             isActive: boolean;
             /** Format: uint32 */
             version: null | number;
+        };
+        SentEmail: {
+            type: string;
+            to: string;
+            subject: string;
+            status: string;
+            /** Format: int32 */
+            attempts: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            sentAt: null | string;
         };
         SettingsDto: {
             /** Format: double */
@@ -1012,6 +1760,25 @@ export interface components {
             elements: components["schemas"]["QuoteElementRequest"][];
             extras: null | components["schemas"]["SimulateExtraRequest"][];
         };
+        SiteVisitDto: {
+            /** Format: date-time */
+            at: string;
+            /** Format: uuid */
+            assigneeId: string;
+            assigneeName: string;
+            /** Format: int64 */
+            priceCents: number;
+        };
+        SiteVisitRequest: {
+            /** Format: uuid */
+            assigneeId: string;
+            /** Format: date-time */
+            at: string;
+            /** Format: int64 */
+            priceCents: null | number;
+            /** Format: uint32 */
+            version: null | number;
+        };
         SubmitJobRequest: {
             /** Format: uuid */
             draftId: string;
@@ -1058,6 +1825,12 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        TransitionRequest: {
+            to: components["schemas"]["JobStatus"];
+            reason: string;
+            /** Format: uint32 */
+            version: null | number;
+        };
         UploadUrlRequest: {
             /** Format: uuid */
             draftId: string;
@@ -1076,6 +1849,19 @@ export interface components {
             };
             /** Format: date-time */
             expiresAt: string;
+        };
+        VersionRequest: {
+            /** Format: uint32 */
+            version: null | number;
+        };
+        WaitlistEntryDto: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            postalCode: string;
+            locale: components["schemas"]["Locale"];
+            /** Format: date-time */
+            createdAt: string;
         };
         WaitlistRequest: {
             email: string;
@@ -1367,6 +2153,86 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ForgotPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ForgotPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ResetPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResetPasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
             /** @description Too Many Requests */
@@ -2193,6 +3059,46 @@ export interface operations {
             };
         };
     };
+    ListWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitlistEntryDto"][];
+                };
+            };
+        };
+    };
+    ExportWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                };
+            };
+        };
+    };
     SimulateQuote: {
         parameters: {
             query?: never;
@@ -2222,6 +3128,48 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListMyJobs: {
+        parameters: {
+            query?: {
+                filter?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedOfClientJobListItem"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };
@@ -2312,7 +3260,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["JobSummaryResponse"];
+                    "application/json": components["schemas"]["ClientJobDetail"];
                 };
             };
             /** @description Not Found */
@@ -2322,6 +3270,765 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    RejectQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectQuoteRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    AskAboutQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["QuestionRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    CancellationPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancellationPreview"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CancelJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClientCancelRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    RequestNewQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetReviewQueue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewQueue"];
+                };
+            };
+        };
+    };
+    ListAdminJobs: {
+        parameters: {
+            query?: {
+                status?: string[];
+                from?: string;
+                to?: string;
+                municipality?: string;
+                premium?: boolean;
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagedOfAdminJobListItem"];
+                };
+            };
+        };
+    };
+    ExportAdminJobs: {
+        parameters: {
+            query?: {
+                status?: string[];
+                from?: string;
+                to?: string;
+                municipality?: string;
+                premium?: boolean;
+                q?: string;
+                page?: number;
+                pageSize?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                };
+            };
+        };
+    };
+    GetAdminJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminJobDetail"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListPartners: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PartnerDto"][];
+                };
+            };
+        };
+    };
+    SaveDraftQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftQuoteRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminQuote"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ConfirmQuote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmQuoteRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    RejectJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ScheduleSiteVisit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SiteVisitRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    CompleteSiteVisit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": null | components["schemas"]["VersionRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    TransitionJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TransitionRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    AdminCancellationPreview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CancellationPreview"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    AdminCancelJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdminCancelRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
         };
@@ -2431,6 +4138,37 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetMediaUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                fileId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReadUrlResponse"];
+                };
             };
             /** @description Not Found */
             404: {

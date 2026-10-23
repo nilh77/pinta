@@ -115,5 +115,13 @@ public class QuoteValidatorTests
             QuoteValidator.Validate(SeedSnapshot.Value, input));
     }
 
+    [Fact]
+    public void Manual_subtotal_must_be_a_non_negative_amount()
+    {
+        var input = new QuoteInput([Exact(4m, 3m)], "empty") { ManualSubtotal = -10m };
+
+        Assert.Equal([new QuoteError("manualSubtotal", QuoteErrorCodes.OutOfRange)], QuoteValidator.Validate(SeedSnapshot.Value, input));
+    }
+
     private static decimal D(string value) => decimal.Parse(value, System.Globalization.CultureInfo.InvariantCulture);
 }

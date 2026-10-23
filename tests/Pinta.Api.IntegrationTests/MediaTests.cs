@@ -137,3 +137,33 @@ public class MediaTests(PintaApiFactory factory)
             HttpStatusCode.UnprocessableEntity, "media_limit_reached");
     }
 }
+
+/// <summary>Signed read URLs (C5.5): the job's client and admins only.</summary>
+public class MediaReadTests(PintaApiFactory factory)
+{
+    [Fact]
+    public async Task C5_5_the_owner_and_admins_get_a_signed_url_others_get_404()
+    {
+        var uploader = await ApiClient.CreateAsync(factory);
+        var draftId = Guid.NewGuid();
+        var fileId = await MediaTests.UploadConfirmedAsync(uploader, draftId, "room-1");
+        var job = await TestJobs.SendAsync(factory, draftId: draftId);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var stranger = (await TestJobs.SendAsync(factory)).Client;
+        var anonymous = await ApiClient.CreateAsync(factory);
+
+        var owner = await job.Client.GetAsync($"/api/media/{fileId}/url");
+        var asAdmin = await admin.GetAsync($"/api/media/{fileId}/url");
+
+        Assert.Equal(HttpStatusCode.OK, owner.StatusCode);
+        Assert.Equal(HttpStatusCode.OK, asAdmin.StatusCode);
+        var url = (await owner.ReadJsonAsync()).GetProperty("url").GetString()!;
+        using var http = new HttpClient();
+        var download = await http.GetAsync(url);
+        Assert.Equal(HttpStatusCode.OK, download.StatusCode);
+        Assert.Equal(2048, (await download.Content.ReadAsByteArrayAsync()).Length);
+        Assert.Equal(HttpStatusCode.Forbidden, (await http.GetAsync(url.Replace("X-Amz-Signature=", "X-Amz-Signature=0"))).StatusCode);
+        await ProblemAssert.HasCodeAsync(await stranger.GetAsync($"/api/media/{fileId}/url"), HttpStatusCode.NotFound, "not_found");
+        await ProblemAssert.HasCodeAsync(await anonymous.GetAsync($"/api/media/{fileId}/url"), HttpStatusCode.Unauthorized, "unauthenticated");
+    }
+}

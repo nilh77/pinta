@@ -135,6 +135,11 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("CatalogKey")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("catalog_key");
+
                     b.Property<decimal>("ClientPrice")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
@@ -181,6 +186,14 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("area_m2");
 
+                    b.Property<DateTimeOffset?>("ConfirmedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("confirmed_at");
+
+                    b.Property<Guid?>("ConfirmedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("confirmed_by");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -217,6 +230,11 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("minimum_applied");
 
+                    b.Property<string>("Note")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("note");
+
                     b.Property<int>("Number")
                         .HasColumnType("integer")
                         .HasColumnName("number");
@@ -245,6 +263,10 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                     b.Property<bool>("Premium")
                         .HasColumnType("boolean")
                         .HasColumnName("premium");
+
+                    b.Property<bool?>("PremiumOverride")
+                        .HasColumnType("boolean")
+                        .HasColumnName("premium_override");
 
                     b.Property<string>("PriceSnapshot")
                         .IsRequired()
@@ -308,6 +330,35 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_quote_extras_quote_versions_quote_version_id");
+
+                    b.OwnsOne("Pinta.SharedKernel.Text.LocalizedText", "Name", b1 =>
+                        {
+                            b1.Property<Guid>("QuoteExtraId");
+
+                            b1.Property<string>("En")
+                                .HasJsonPropertyName("en");
+
+                            b1.Property<string>("Es")
+                                .HasJsonPropertyName("es");
+
+                            b1.Property<string>("Pt")
+                                .IsRequired()
+                                .HasJsonPropertyName("pt");
+
+                            b1.HasKey("QuoteExtraId");
+
+                            b1.ToTable("quote_extras", "quoting");
+
+                            b1
+                                .ToJson("name")
+                                .HasColumnType("jsonb");
+
+                            b1.WithOwner()
+                                .HasForeignKey("QuoteExtraId")
+                                .HasConstraintName("fk_quote_extras_quote_extras_id");
+                        });
+
+                    b.Navigation("Name");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Quoting.Domain.QuoteVersion", b =>

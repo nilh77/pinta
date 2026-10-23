@@ -124,6 +124,10 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .HasColumnType("date")
                         .HasColumnName("preferred_to");
 
+                    b.Property<DateOnly?>("QuoteValidUntil")
+                        .HasColumnType("date")
+                        .HasColumnName("quote_valid_until");
+
                     b.Property<bool>("RequiresSiteVisit")
                         .HasColumnType("boolean")
                         .HasColumnName("requires_site_visit");
@@ -131,6 +135,19 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                     b.Property<DateOnly?>("ReviewDueOn")
                         .HasColumnType("date")
                         .HasColumnName("review_due_on");
+
+                    b.Property<Guid?>("SiteVisitAssigneeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("site_visit_assignee_id");
+
+                    b.Property<DateTimeOffset?>("SiteVisitAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("site_visit_at");
+
+                    b.Property<decimal?>("SiteVisitPrice")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("site_visit_price");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -163,13 +180,15 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                     b.HasIndex("ClientId", "Status")
                         .HasDatabaseName("ix_jobs_client_id_status");
 
+                    b.HasIndex("Status", "QuoteValidUntil")
+                        .HasDatabaseName("ix_jobs_status_quote_valid_until");
+
                     b.ToTable("jobs", "jobs");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobStatusChange", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 

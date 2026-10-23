@@ -9,6 +9,8 @@ export type Me = components["schemas"]["MeResponse"];
 type LoginRequest = components["schemas"]["LoginRequest"];
 type RegisterRequest = components["schemas"]["RegisterRequest"];
 type ConfirmEmailRequest = components["schemas"]["ConfirmEmailRequest"];
+type ForgotPasswordRequest = components["schemas"]["ForgotPasswordRequest"];
+type ResetPasswordRequest = components["schemas"]["ResetPasswordRequest"];
 
 export const meQueryKey = ["me"] as const;
 
@@ -31,9 +33,18 @@ export function useMe() {
   });
 }
 
+let signedOutOnPurpose = false;
+
+/**
+ * True after the user pressed "Sair": protected areas then go home instead of asking to sign in again. Cleared by the
+ * next sign-in or registration.
+ */
+export const signedOut = () => signedOutOnPurpose;
+
 function useSessionChange() {
   const queryClient = useQueryClient();
   return (me: Me | null) => {
+    signedOutOnPurpose = me === null;
     resetAntiforgeryToken();
     queryClient.setQueryData(meQueryKey, me);
   };
@@ -79,6 +90,23 @@ export function useResendConfirmation() {
   return useMutation({
     mutationFn: async () => {
       orThrow(await api.POST("/api/auth/resend-confirmation"));
+    },
+  });
+}
+
+/** Always succeeds for a valid email, whether or not it has an account (S1). */
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: async (body: ForgotPasswordRequest) => {
+      orThrow(await api.POST("/api/auth/forgot-password", { body }));
+    },
+  });
+}
+
+export function useResetPassword() {
+  return useMutation({
+    mutationFn: async (body: ResetPasswordRequest) => {
+      orThrow(await api.POST("/api/auth/reset-password", { body }));
     },
   });
 }

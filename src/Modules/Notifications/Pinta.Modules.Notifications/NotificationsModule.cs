@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Notifications.Data;
+using Pinta.Modules.Notifications.Features.Outbox;
 using Pinta.Modules.Notifications.Features.SendEmail;
 using Pinta.SharedKernel.Data;
 
@@ -18,7 +19,9 @@ public static class NotificationsModule
             .ValidateOnStart();
         builder.Services.AddScoped<EmailRenderer>();
         builder.Services.AddScoped<IEmailQueue, HangfireEmailQueue>();
-        builder.Services.AddTransient<SmtpEmailSender>();
+        builder.Services.AddTransient<IMailTransport, SmtpEmailSender>();
+        builder.Services.AddScoped<OutboxSender>();
+        builder.Services.AddScoped<IEmailLog, EmailLog>();
         return builder;
     }
 

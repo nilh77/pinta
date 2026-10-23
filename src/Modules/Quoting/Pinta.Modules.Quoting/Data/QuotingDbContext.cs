@@ -31,6 +31,8 @@ public sealed class QuotingDbContext(DbContextOptions<QuotingDbContext> options)
                     snapshot => JsonSerializer.Serialize(snapshot, SnapshotJson),
                     json => JsonSerializer.Deserialize<PriceSnapshot>(json, SnapshotJson)!);
             version.Property(v => v.AdjustmentReason).HasMaxLength(500);
+            version.Property(v => v.Note).HasMaxLength(1000);
+            version.Ignore(v => v.IsDraft);
             foreach (var property in version.Metadata.GetProperties().Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?)))
             {
                 property.SetPrecision(12);
@@ -43,6 +45,8 @@ public sealed class QuotingDbContext(DbContextOptions<QuotingDbContext> options)
         modelBuilder.Entity<QuoteElement>(element =>
         {
             element.ToTable("quote_elements");
+            // Ids are set in code: a new element added to a tracked draft is an insert, not an update.
+            element.Property(e => e.Id).ValueGeneratedNever();
             element.Property(e => e.ClientKey).HasMaxLength(64);
             element.Property(e => e.Name).HasMaxLength(80);
             element.Property(e => e.Kind).HasMaxLength(10);
@@ -58,7 +62,16 @@ public sealed class QuotingDbContext(DbContextOptions<QuotingDbContext> options)
         modelBuilder.Entity<QuoteExtra>(extra =>
         {
             extra.ToTable("quote_extras");
+            extra.Property(x => x.Id).ValueGeneratedNever();
+            extra.Property(x => x.CatalogKey).HasMaxLength(40);
             extra.Property(x => x.Description).HasMaxLength(200);
+            extra.OwnsOne(x => x.Name, name =>
+            {
+                name.ToJson();
+                name.Property(n => n.Pt).HasJsonPropertyName("pt");
+                name.Property(n => n.Es).HasJsonPropertyName("es");
+                name.Property(n => n.En).HasJsonPropertyName("en");
+            });
             extra.Property(x => x.ClientPrice).HasPrecision(12, 2);
             extra.Property(x => x.PainterPay).HasPrecision(12, 2);
         });

@@ -1,0 +1,51 @@
+@using Pinta.Modules.Notifications.Features.SendEmail
+
+<!DOCTYPE html>
+<html lang="@Language">
+<head><meta charset="utf-8" /><title>@Subject</title></head>
+<body style="margin:0;padding:24px;background:#F6F7F5;font-family:Inter,Arial,sans-serif;color:#1C2321;">
+  <table role="presentation" width="100%" style="max-width:520px;margin:0 auto;background:#FFFFFF;border-radius:12px;padding:32px;">
+    <tr><td>
+      <p style="margin:0 0 24px;font-size:20px;font-weight:700;color:#0F766E;">Pinta</p>
+      @if (Greeting is not null)
+      {
+        <p style="margin:0 0 16px;font-size:16px;">@Greeting</p>
+      }
+      @foreach (var paragraph in Paragraphs)
+      {
+        <p style="margin:0 0 16px;font-size:16px;line-height:1.5;">@paragraph</p>
+      }
+      @if (Rows.Count > 0)
+      {
+        <table role="presentation" style="width:100%;margin:0 0 24px;background:#F5FAF8;border-radius:8px;padding:16px;">
+          @foreach (var (label, value) in Rows)
+          {
+            <tr><td style="font-size:14px;color:#55605C;">@label</td><td style="font-size:14px;font-weight:600;text-align:right;">@value</td></tr>
+          }
+        </table>
+      }
+      @if (Quote is not null)
+      {
+        <p style="margin:0 0 24px;padding:12px 16px;border-left:3px solid #F2B705;background:#FFFBEB;font-size:15px;line-height:1.5;">@Quote</p>
+      }
+      @if (ButtonUrl is not null)
+      {
+        <p style="margin:0 0 8px;">
+          <a href="@ButtonUrl" style="display:inline-block;background:#0F766E;color:#FFFFFF;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:8px;">@ButtonText</a>
+        </p>
+      }
+    </td></tr>
+  </table>
+</body>
+</html>
+
+@code {
+    [Parameter, EditorRequired] public string Language { get; set; } = "pt";
+    [Parameter, EditorRequired] public string Subject { get; set; } = "";
+    [Parameter] public string? Greeting { get; set; }
+    [Parameter] public IReadOnlyList<string> Paragraphs { get; set; } = [];
+    [Parameter] public IReadOnlyList<(string Label, string Value)> Rows { get; set; } = [];
+    [Parameter] public string? Quote { get; set; }
+    [Parameter] public string? ButtonText { get; set; }
+    [Parameter] public string? ButtonUrl { get; set; }
+}
