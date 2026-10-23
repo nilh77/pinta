@@ -168,15 +168,15 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 ### Alta por invitación
 
 - **Ruta**: `/{locale}/pintor/alta?token=…` (sin board; formulario simple con el estilo de la pantalla 7). \[P1.1\]
-- **Datos**: nombre y email precargados desde la invitación del admin.
-- **Acciones**: definir contraseña, teléfono, foto, zonas en las que trabaja (concelhos) e IBAN; subir documentos informativos (seguro, NIF). `POST /api/painter/onboarding`.
-- **Validaciones**: token vigente durante 7 días; IBAN portugués con dígito de control; documentos PDF o imagen de hasta 10 MB.
+- **Datos**: nombre y email, y lo que el admin haya rellenado (NIF, teléfono, zonas, IBAN), precargados desde la invitación para completarlos o corregirlos.
+- **Acciones**: definir contraseña (`POST /api/auth/accept-invite`), teléfono, zonas en las que trabaja (concelhos) e IBAN (`PUT /api/painter/me`). Foto y documentos los sube el admin en H6a.
+- **Validaciones**: token vigente durante 72 h (A4.2); IBAN portugués con dígito de control; documentos PDF o imagen de hasta 10 MB.
 - **Estados**: token caducado → «Pide al equipo de Pinta una nueva invitación».
 
 ### P1 · Mis trabajos
 
 - **Ruta y board**: `/{locale}/pintor` · PintorTrabajos.dc.html. \[P1.2, P1.3\]
-- **Datos**: pestañas «Ofertas» (asignaciones `offered`), «Próximos», «En curso» y «Hechos» desde `GET /api/painter/assignments`. Tarjeta con localidad, fechas, m², tipo de trabajo y pago al pintor.
+- **Datos**: pestañas «Ofertas» (asignaciones `offered`), «Próximos», «En curso» y «Hechos» desde `GET /api/painter/jobs`. Tarjeta con localidad, fechas, m², tipo de trabajo y pago al pintor.
 - **Acciones**: aceptar o rechazar una oferta (motivo opcional); abrir → P2 o P3 si es una visita.
 - **Estados**: `assignment_taken` → «Este trabajo ya no está disponible» y la tarjeta desaparece. Vacío: «No tienes trabajos asignados ahora».
 
@@ -184,7 +184,7 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 
 - **Ruta y board**: `/{locale}/pintor/trabajos/{id}` · PintorDetalle.dc.html. \[P2.1, P2.2\]
 - **Datos**: dirección con enlace a mapas, notas de acceso, nombre y teléfono del cliente (botón de llamar), fecha, lista de elementos con medidas, paredes, pintura y litros previstos, fotos del cliente y notas del revisor. Material: lo entrega Pinta, con la cantidad por pintura.
-- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos de avance y de resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`); reportar incidencia (texto y fotos, avisa al admin).
+- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos del resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`). Las fotos de avance y «reportar incidencia» (texto y fotos, avisa al admin) llegan en H8.
 - **Validaciones**: terminar exige las fotos de resultado; no se puede empezar antes de la fecha.
 - **Estados**: tras terminar queda en solo lectura con «Pendiente de cierre por Pinta».
 
@@ -192,7 +192,7 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 
 - **Ruta y board**: `/{locale}/pintor/visitas/{id}` · PintorVisita.dc.html. \[P3.1\]
 - **Datos**: lo mismo que P2 más la estimación original del cliente elemento por elemento.
-- **Acciones**: corregir medidas, paredes, pintura y daños por elemento; añadir partidas extra propuestas (descripción y horas o importe al pintor); fotos; nota para el revisor. `POST /api/painter/site-visits/{id}/report`, que deja el trabajo listo para que el admin cierre el precio.
+- **Acciones**: corregir medidas, paredes, pintura y daños por elemento; añadir partidas extra propuestas (descripción y horas o importe al pintor); fotos; nota para el revisor. `POST /api/painter/visits/{id}/report`, que deja el trabajo listo para que el admin cierre el precio.
 - **Validaciones**: las del editor de estancia (pantalla 3).
 - **Estados**: borrador guardado localmente si se pierde la cobertura en la obra.
 

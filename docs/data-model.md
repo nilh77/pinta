@@ -149,6 +149,10 @@ erDiagram
     uuid trabajo_id FK
     uuid pintor_id FK
     text estado
+    date fecha_programada
+    numeric pago_pintor
+    timestamptz ofrecida_en
+    timestamptz respondida_en
     text motivo_rechazo
   }
   VISITA_TECNICA {
@@ -290,7 +294,7 @@ Esta tabla es la especificación de la máquina de estados: cualquier transició
 | Precio confirmado | Señal pagada | Sistema | Webhook de Stripe con pago correcto |
 | Precio confirmado | Expirado | Sistema | Pasa la validez sin pago (tarea diaria) |
 | Expirado | En revisión | Cliente | Pide recotización; se crea una nueva versión |
-| Señal pagada | Programado | Admin | Pintor asignado y aceptado, fecha fijada |
+| Señal pagada | Programado | Admin / Pintor | Pintor asignado y aceptado, fecha fijada: el pintor al aceptar la oferta, o el admin a mano con fecha |
 | Programado | En curso | Pintor | Marca el inicio del trabajo |
 | En curso | Finalizado | Pintor | Al menos una foto del resultado; se pide el resto al cliente |
 | Finalizado | Cerrado | Sistema | Webhook de Stripe con el resto pagado; se genera el pago al pintor |

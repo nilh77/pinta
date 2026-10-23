@@ -37,7 +37,7 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | POST | `/api/auth/resend-confirmation` | Sesión | Reenvía el email de confirmación | C4.5 |
 | POST | `/api/auth/forgot-password` | Público | Pide enlace de recuperación | S1 |
 | POST | `/api/auth/reset-password` | Público | Fija nueva contraseña con token | S1 |
-| POST | `/api/auth/accept-invite` | Público | Pintor fija contraseña con la invitación | A4.2 |
+| POST | `/api/auth/accept-invite` | Público | Pintor fija contraseña con la invitación (válida 72 h) y entra | A4.2 |
 | GET | `/api/catalog` | Público | Tipos de estancia con tallas, pinturas, tipos de superficie y ocupaciones (sin tarifas) | C2.x |
 | GET | `/api/coverage/check?postalCode=` | Público | Comprueba si el código postal está cubierto | C4.1 |
 | POST | `/api/coverage/waitlist` | Público | Deja email para zonas sin cobertura | C4.1 |
@@ -79,6 +79,8 @@ Todas las rutas exigen rol Pintor y devuelven solo recursos asignados a él. Las
 | GET | `/api/painter/visits/{id}` | Datos de la visita y lo declarado por el cliente | P3.1 |
 | POST | `/api/painter/visits/{id}/report` | Medidas reales, extras detectados, fotos y observaciones | P3.1 |
 | GET | `/api/painter/payouts` | Pagos pendientes y pagados | P4.1 |
+| GET / PUT | `/api/painter/me` | Ficha propia para completar el alta: teléfono, zonas, NIF e IBAN (cambiar el IBAN pide la contraseña) | A4.2 |
+| POST | `/api/painter/jobs/{id}/media/upload-url` | URL firmada para subir una foto del resultado (`result`) | P2.2 |
 
 ## Admin
 
@@ -105,7 +107,7 @@ Todas las rutas exigen rol Admin.
 | POST | `/api/admin/jobs/{id}/reject` | Rechaza con motivo | A2.9 |
 | POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado y fecha | A2.6 |
 | POST | `/api/admin/jobs/{id}/site-visit/complete` | Visita hecha: vuelve a revisión; el siguiente borrador tiene origen `site_visit` | A2.6 |
-| POST | `/api/admin/jobs/{id}/assignments` | Asigna pintor y fecha | A3.2 |
+| POST | `/api/admin/jobs/{id}/assignments` | Ofrece el trabajo a un pintor activo que cubre el concelho, con fecha `scheduledOn`; retira la oferta abierta anterior | A3.2 |
 | POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422); `scheduled` exige `scheduledOn` (hoy o después) | A3.3 |
 | GET | `/api/admin/jobs/{id}/payments` | Pagos, reembolsos y referencias Multibanco del trabajo | A3.5 |
 | GET | `/api/admin/jobs/{id}/cancellation-preview` | Reembolso calculado | A3.4 |

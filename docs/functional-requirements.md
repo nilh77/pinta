@@ -218,7 +218,7 @@ La numeración de C3–C4 se ha revisado respecto a la Fase 3, porque la estimac
 
 **P2.1 · Empezar.** Dado un trabajo "Programado" asignado a él, cuando pulsa "Empezar trabajo", entonces pasa a "En curso". Solo es posible desde el día programado.
 
-**P2.2 · Finalizar.** Dado un trabajo "En curso", cuando sube al menos una foto del resultado y pulsa "Marcar como finalizado", entonces pasa a "Finalizado" y el cliente recibe el email para pagar el resto. Sin foto, ve el error.
+**P2.2 · Finalizar.** Dado un trabajo "En curso", cuando sube al menos 3 fotos del resultado y pulsa "Marcar como finalizado", entonces pasa a "Finalizado" y el cliente recibe el email para pagar el resto. Con menos de 3, ve el error.
 
 **P3.1 · Visita técnica.** Dada una visita asignada, cuando registra medidas reales por estancia, marca trabajos extra detectados, sube fotos y escribe observaciones y pulsa Enviar, entonces el trabajo vuelve a "En revisión" con la información visible para el admin, que la usa para la nueva versión de cotización.
 
