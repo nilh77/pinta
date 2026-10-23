@@ -15,6 +15,7 @@ using Pinta.Modules.Identity.Features.ConfirmEmail;
 using Pinta.Modules.Identity.Features.Me;
 using Pinta.Modules.Identity.Features.Register;
 using Pinta.SharedKernel;
+using Pinta.SharedKernel.Events;
 using Pinta.SharedKernel.Http;
 
 namespace Pinta.Modules.Identity.Features.Painters;
@@ -91,6 +92,9 @@ internal sealed class PainterAccounts(UserManager<User> users, IConfiguration co
         await users.UpdateAsync(user);
     }
 
+    public async Task<bool> CheckPasswordAsync(Guid userId, string password, CancellationToken cancellationToken = default) =>
+        await users.CheckPasswordAsync(await Find(userId), password);
+
     private async Task<User> Find(Guid userId) =>
         await users.FindByIdAsync(userId.ToString()) ?? throw new InvalidOperationException($"User {userId} not found.");
 }
@@ -121,7 +125,7 @@ internal static class AcceptInviteEndpoint
             .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
     private static async Task<Results<Ok<MeResponse>, ProblemHttpResult>> HandleAsync(
-        AcceptInviteRequest request, UserManager<User> users, SignInManager<User> signIn)
+        AcceptInviteRequest request, UserManager<User> users, SignInManager<User> signIn, IEventPublisher events, CancellationToken cancellationToken)
     {
         var user = await users.FindByIdAsync(request.UserId.ToString());
         var token = ConfirmationEmailSender.DecodeToken(request.Token);
@@ -140,6 +144,7 @@ internal static class AcceptInviteEndpoint
 
         user.EmailConfirmed = true;
         await users.UpdateAsync(user);
+        await events.PublishAsync(new PainterSignedUp(user.Id), cancellationToken);
         await signIn.SignInAsync(user, isPersistent: true);
         return TypedResults.Ok(await MeResponse.ForAsync(user, users));
     }

@@ -1,6 +1,10 @@
 using Pinta.SharedKernel;
+using Pinta.SharedKernel.Events;
 
 namespace Pinta.Modules.Identity.Contracts;
+
+/// <summary>A painter set the password with the invitation: the painter becomes active (A4.2).</summary>
+public sealed record PainterSignedUp(Guid UserId) : IIntegrationEvent;
 
 /// <summary>Painter accounts (A4.1, A4.2): created by the admin without password, activated by the invitation.</summary>
 public interface IPainterAccounts
@@ -18,4 +22,7 @@ public interface IPainterAccounts
     Task SetActiveAsync(Guid userId, bool active, CancellationToken cancellationToken = default);
 
     Task UpdateContactAsync(Guid userId, string name, string? phone, CancellationToken cancellationToken = default);
+
+    /// <summary>Asked again before sensitive changes such as the IBAN (screen P4).</summary>
+    Task<bool> CheckPasswordAsync(Guid userId, string password, CancellationToken cancellationToken = default);
 }

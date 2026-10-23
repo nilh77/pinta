@@ -65,4 +65,8 @@
   <data name="Dispute.Subject" xml:space="preserve"><value>Disputa de pagamento no pedido {0}</value></data>
   <data name="Dispute.Body" xml:space="preserve"><value>O cliente abriu uma disputa no Stripe. Responda no painel do Stripe dentro do prazo.</value></data>
   <data name="Common.OpenStripe" xml:space="preserve"><value>Abrir no painel</value></data>
+  <data name="PainterInvitation.Subject" xml:space="preserve"><value>Convite para pintar com a Pinta</value></data>
+  <data name="PainterInvitation.Body" xml:space="preserve"><value>A equipa da Pinta convidou-o para fazer parte da rede de pintores. Escolha a sua palavra-passe e confirme os seus dados.</value></data>
+  <data name="PainterInvitation.Validity" xml:space="preserve"><value>O link é válido durante 72 horas.</value></data>
+  <data name="PainterInvitation.Button" xml:space="preserve"><value>Criar a minha conta</value></data>
 </root>

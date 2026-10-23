@@ -1,6 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\Catalog\Pinta.Modules.Catalog.Contracts\Pinta.Modules.Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\Media\Pinta.Modules.Media.Contracts\Pinta.Modules.Media.Contracts.csproj" />
+    <ProjectReference Include="..\..\Notifications\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\Pinta.Modules.Painters.Contracts\Pinta.Modules.Painters.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
   </ItemGroup>

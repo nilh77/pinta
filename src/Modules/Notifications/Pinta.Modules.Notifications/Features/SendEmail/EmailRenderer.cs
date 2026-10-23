@@ -79,6 +79,8 @@ public sealed class EmailRenderer(IServiceProvider services)
             PaymentDisputeEmail e => Notice(text, e, text.Format("Dispute.Subject", e.Code),
                 paragraphs: [text["Dispute.Body"]], rows: [(text["Payment.Amount"], Euros(text, e.AmountCents))],
                 button: e.AdminUrl is null ? null : (text["Common.OpenAdmin"], e.AdminUrl)),
+            PainterInvitationEmail e => Notice(text, e, text["PainterInvitation.Subject"], greeting: e.Name,
+                paragraphs: [text["PainterInvitation.Body"], text["PainterInvitation.Validity"]], button: (text["PainterInvitation.Button"], e.SignUpUrl)),
             _ => throw new NotSupportedException($"No template for {email.GetType().Name}."),
         };
     }

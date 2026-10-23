@@ -16,6 +16,9 @@ namespace Pinta.Modules.Catalog.Features.Coverage;
 
 internal sealed class CoverageService(CatalogDbContext db) : ICoverageService
 {
+    public async Task<IReadOnlyList<string>> ListMunicipalitiesAsync(CancellationToken cancellationToken = default) =>
+        await db.CoverageAreas.AsNoTracking().Where(a => a.IsActive).Select(a => a.Municipality).Distinct().OrderBy(m => m).ToListAsync(cancellationToken);
+
     public async Task<string?> FindMunicipalityAsync(string postalCode, CancellationToken cancellationToken = default)
     {
         if (!Regex.IsMatch(postalCode, PostalCode.Pattern))

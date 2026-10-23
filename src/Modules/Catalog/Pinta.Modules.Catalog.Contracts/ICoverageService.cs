@@ -5,6 +5,9 @@ public interface ICoverageService
 {
     /// <summary>The concelho of a covered <c>NNNN-NNN</c> postal code, or null when Pinta does not work there.</summary>
     Task<string?> FindMunicipalityAsync(string postalCode, CancellationToken cancellationToken = default);
+
+    /// <summary>Concelhos with at least one active postal prefix, sorted (painter zones).</summary>
+    Task<IReadOnlyList<string>> ListMunicipalitiesAsync(CancellationToken cancellationToken = default);
 }
 
 public static class PostalCode

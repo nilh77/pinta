@@ -65,4 +65,8 @@
   <data name="Dispute.Subject" xml:space="preserve"><value>Payment dispute on request {0}</value></data>
   <data name="Dispute.Body" xml:space="preserve"><value>The client opened a dispute in Stripe. Respond from the Stripe dashboard within the deadline.</value></data>
   <data name="Common.OpenStripe" xml:space="preserve"><value>Open in the dashboard</value></data>
+  <data name="PainterInvitation.Subject" xml:space="preserve"><value>Invitation to paint with Pinta</value></data>
+  <data name="PainterInvitation.Body" xml:space="preserve"><value>The Pinta team has invited you to join its painters. Choose your password and confirm your details.</value></data>
+  <data name="PainterInvitation.Validity" xml:space="preserve"><value>The link is valid for 72 hours.</value></data>
+  <data name="PainterInvitation.Button" xml:space="preserve"><value>Create my account</value></data>
 </root>

@@ -26,10 +26,10 @@ internal static class ReadUrlEndpoint
     private static async Task<Results<Ok<ReadUrlResponse>, ProblemHttpResult>> HandleAsync(
         Guid fileId, ClaimsPrincipal user, MediaDbContext db, ObjectStorage storage, IJobAccess jobs, CancellationToken cancellationToken)
     {
-        var file = await db.Files.AsNoTracking().SingleOrDefaultAsync(f => f.Id == fileId && f.Confirmed && f.JobId != null, cancellationToken);
+        var file = await db.Files.AsNoTracking().SingleOrDefaultAsync(f => f.Id == fileId && f.Confirmed, cancellationToken);
         var userId = user.GetUserId();
         if (file is null || userId is null
-            || !(user.IsInRole(RoleNames.Admin) || await jobs.IsClientOfAsync(file.JobId!.Value, userId.Value, cancellationToken)))
+            || !(user.IsInRole(RoleNames.Admin) || (file.JobId is { } jobId && await jobs.IsClientOfAsync(jobId, userId.Value, cancellationToken))))
         {
             return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);
         }

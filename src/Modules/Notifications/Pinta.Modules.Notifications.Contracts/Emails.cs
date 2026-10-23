@@ -75,3 +75,6 @@ public sealed record AutoRefundEmail(string To, Locale Locale, string Code, stri
 
 /// <summary>To the admins: a client opened a dispute in Stripe (S4).</summary>
 public sealed record PaymentDisputeEmail(string To, Locale Locale, string Code, long AmountCents, string? AdminUrl) : Email(To, Locale);
+
+/// <summary>The admin invited a painter: link to sign up, valid 72 h (A4.2).</summary>
+public sealed record PainterInvitationEmail(string To, Locale Locale, string Name, string SignUpUrl) : Email(To, Locale);
