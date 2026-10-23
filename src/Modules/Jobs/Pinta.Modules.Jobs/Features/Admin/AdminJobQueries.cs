@@ -79,7 +79,9 @@ public sealed record ClientInfo(Guid Id, string Name, string Email, string? Phon
 
 public sealed record AddressDto(string Line1, string? Floor, string PostalCode, string Locality, string Municipality, string? AccessNotes);
 
-public sealed record SiteVisitDto(DateTimeOffset At, Guid AssigneeId, string AssigneeName, long PriceCents);
+/// <summary>The site visit; <see cref="ReportedAt"/> and <see cref="ReportNotes"/> once the painter sent the report (P3.1).</summary>
+public sealed record SiteVisitDto(
+    DateTimeOffset At, Guid AssigneeId, string AssigneeName, long PriceCents, DateTimeOffset? ReportedAt, string? ReportNotes);
 
 public sealed record JobHistoryEntry(JobStatus? From, JobStatus To, JobActor Actor, string? UserName, string? Reason, DateTimeOffset ChangedAt);
 
@@ -306,7 +308,8 @@ internal static class AdminJobQueries
             job.QuoteValidUntil,
             job.ScheduledOn,
             job.SiteVisitAt is { } at
-                ? new SiteVisitDto(at, job.SiteVisitAssigneeId!.Value, people.GetValueOrDefault(job.SiteVisitAssigneeId.Value)?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0))
+                ? new SiteVisitDto(at, job.SiteVisitAssigneeId!.Value, people.GetValueOrDefault(job.SiteVisitAssigneeId.Value)?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0),
+                    job.SiteVisitReportedAt, job.SiteVisitNotes)
                 : null,
             current,
             await quotes.GetDraftAsync(job.Id, cancellationToken),

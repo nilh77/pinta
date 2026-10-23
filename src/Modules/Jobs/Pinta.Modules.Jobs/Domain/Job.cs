@@ -53,12 +53,17 @@ public sealed class Job
     /// <summary>Last day the confirmed price can be accepted (Lisbon); the next day at 03:00 it expires (S3).</summary>
     public DateOnly? QuoteValidUntil { get; set; }
 
-    /// <summary>Site visit (A2.6): when, who goes (an admin partner in H4) and its price with VAT.</summary>
+    /// <summary>Site visit (A2.6): when, who goes (a partner or a painter, by user id) and its price with VAT.</summary>
     public DateTimeOffset? SiteVisitAt { get; set; }
 
     public Guid? SiteVisitAssigneeId { get; set; }
 
     public decimal? SiteVisitPrice { get; set; }
+
+    /// <summary>The painter's report (P3.1): notes for the reviewer and when it was sent. Measures go to the draft.</summary>
+    public string? SiteVisitNotes { get; set; }
+
+    public DateTimeOffset? SiteVisitReportedAt { get; set; }
 
     /// <summary>The day the work starts (H5: set by the admin; H6: from the painter assignment). Refunds count down to it.</summary>
     public DateOnly? ScheduledOn { get; set; }

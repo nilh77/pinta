@@ -13,10 +13,11 @@
   <data name="tax_id" xml:space="preserve"><value>Enter a valid Portuguese tax number (9 digits).</value></data>
   <data name="company_required" xml:space="preserve"><value>Enter the company name for the invoice.</value></data>
   <data name="low_margin" xml:space="preserve"><value>The margin is below the minimum ({0}%). Confirm to go ahead.</value></data>
-  <data name="site_visit_assignee" xml:space="preserve"><value>Choose a partner.</value></data>
+  <data name="site_visit_assignee" xml:space="preserve"><value>Choose a partner or an active painter who works in this municipality.</value></data>
   <data name="site_visit_future" xml:space="preserve"><value>Choose a future date.</value></data>
   <data name="transition_use_action" xml:space="preserve"><value>Use this state's own action.</value></data>
   <data name="scheduled_on" xml:space="preserve"><value>Enter the start date (today or later).</value></data>
   <data name="painter_not_available" xml:space="preserve"><value>Choose an active painter who works in this municipality.</value></data>
   <data name="result_photos" xml:space="preserve"><value>Upload at least 3 result photos.</value></data>
+  <data name="extras_to_price" xml:space="preserve"><value>Set the client price of the items proposed at the site visit.</value></data>
 </root>

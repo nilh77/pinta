@@ -50,7 +50,7 @@ public class QuoteReviewTests(PintaApiFactory factory)
         Assert.Null(errors);
         Assert.Equal((2, true, 318468L, 134767L, 66809L, 25.8m), (draft!.Number, draft.IsDraft, draft.Breakdown.TotalCents,
             draft.Breakdown.PainterTotalCents, draft.Breakdown.MarginCents, draft.Breakdown.MarginPct));
-        Assert.Equal(new QuoteExtraView("anti_damp_treatment", "Tratamento anti-humidade", 12195, 7500), Assert.Single(draft.Extras));
+        Assert.Equal(new QuoteExtraView("anti_damp_treatment", "Tratamento anti-humidade", 12195, 7500, false), Assert.Single(draft.Extras));
         Assert.Equal("el-1", draft.Elements[0].ClientKey);
 
         var confirmed = await quotes.ConfirmDraftAsync(jobId, QuoteOrigin.AdminReview, Guid.CreateVersion7(), "  Inclui o tratamento.  ", false);
@@ -123,7 +123,7 @@ public class QuoteReviewTests(PintaApiFactory factory)
         Assert.True(unknown!.Errors.ContainsKey("extras[0].catalogKey"));
         Assert.True(noPrice!.Errors.ContainsKey("extras[0].description"));
         Assert.Null(ok);
-        Assert.Equal(new QuoteExtraView(null, "Rodapés", 8000, 5000), Assert.Single(free!.Extras));
+        Assert.Equal(new QuoteExtraView(null, "Rodapés", 8000, 5000, false), Assert.Single(free!.Extras));
         Assert.Equal((true, true), (free.PremiumOverride!.Value, free.Breakdown.Premium));
     }
 

@@ -804,6 +804,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/jobs/{id}/site-visit-assignees": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListSiteVisitAssignees"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/jobs/{id}/site-visit": {
         parameters: {
             query?: never;
@@ -1022,6 +1038,54 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["FinishJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/visits/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetPainterVisit"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/visits/{id}/media/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CreateVisitUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/visits/{id}/report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ReportSiteVisit"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2002,6 +2066,7 @@ export interface components {
             upcoming: components["schemas"]["PainterJobItem"][];
             inProgress: components["schemas"]["PainterJobItem"][];
             done: components["schemas"]["PainterJobItem"][];
+            visits: components["schemas"]["PainterVisitItem"][];
         };
         PainterListItem: {
             /** Format: uuid */
@@ -2032,6 +2097,43 @@ export interface components {
         };
         /** @enum {unknown} */
         PainterStatus: "invited" | "active" | "inactive";
+        PainterVisitDetail: {
+            /** Format: uuid */
+            id: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date-time */
+            at: string;
+            addressLine1: string;
+            postalCode: string;
+            locality: string;
+            municipality: string;
+            accessNotes: null | string;
+            description: null | string;
+            clientName: string;
+            clientPhone: null | string;
+            occupancy: components["schemas"]["Occupancy"];
+            /** Format: double */
+            areaM2: number;
+            elements: components["schemas"]["PainterElement"][];
+            clientFiles: components["schemas"]["JobFile"][];
+            visitFiles: components["schemas"]["JobFile"][];
+            /** Format: date-time */
+            reportedAt: null | string;
+            notes: null | string;
+        };
+        PainterVisitItem: {
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            jobStatus: components["schemas"]["JobStatus"];
+            municipality: string;
+            locality: string;
+            /** Format: date-time */
+            at: string;
+            /** Format: double */
+            areaM2: number;
+        };
         PaintQuantity: {
             paintId: string;
             /** Format: double */
@@ -2210,6 +2312,7 @@ export interface components {
             clientPriceCents: number;
             /** Format: int64 */
             painterPayCents: number;
+            clientPriceToSet: boolean;
         };
         /** @enum {unknown} */
         QuoteOrigin: "estimate" | "admin_review" | "site_visit" | "revision";
@@ -2437,6 +2540,12 @@ export interface components {
             elements: components["schemas"]["QuoteElementRequest"][];
             extras: null | components["schemas"]["SimulateExtraRequest"][];
         };
+        SiteVisitAssignee: {
+            /** Format: uuid */
+            userId: string;
+            name: string;
+            isPainter: boolean;
+        };
         SiteVisitDto: {
             /** Format: date-time */
             at: string;
@@ -2445,6 +2554,15 @@ export interface components {
             assigneeName: string;
             /** Format: int64 */
             priceCents: number;
+            /** Format: date-time */
+            reportedAt: null | string;
+            reportNotes: null | string;
+        };
+        SiteVisitReportRequest: {
+            elements: components["schemas"]["QuoteElementRequest"][];
+            extras: null | components["schemas"]["VisitExtraRequest"][];
+            fileIds: null | string[];
+            notes: null | string;
         };
         SiteVisitRequest: {
             /** Format: uuid */
@@ -2564,6 +2682,12 @@ export interface components {
         VersionRequest: {
             /** Format: uint32 */
             version: null | number;
+        };
+        VisitExtraRequest: {
+            catalogKey: null | string;
+            description: null | string;
+            /** Format: int64 */
+            painterPayCents: null | number;
         };
         WaitlistEntryDto: {
             /** Format: uuid */
@@ -4605,6 +4729,46 @@ export interface operations {
             };
         };
     };
+    ListSiteVisitAssignees: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SiteVisitAssignee"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
     ScheduleSiteVisit: {
         parameters: {
             query?: never;
@@ -5178,6 +5342,159 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["FinishJobRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    GetPainterVisit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PainterVisitDetail"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CreateVisitUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUpload"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ReportSiteVisit: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SiteVisitReportRequest"];
             };
         };
         responses: {

@@ -143,6 +143,10 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("client_price");
 
+                    b.Property<bool>("ClientPriceToSet")
+                        .HasColumnType("boolean")
+                        .HasColumnName("client_price_to_set");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(200)

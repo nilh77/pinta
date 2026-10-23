@@ -15,6 +15,6 @@
   <data name="unknown_occupancy" xml:space="preserve"><value>This occupancy is not available.</value></data>
   <data name="walls_four" xml:space="preserve"><value>Send the four walls A, B, C and D.</value></data>
   <data name="unknown_extra" xml:space="preserve"><value>Unknown or inactive extra item.</value></data>
-  <data name="extra_needs_price" xml:space="preserve"><value>Enter the item's description and prices.</value></data>
+  <data name="extra_needs_price" xml:space="preserve"><value>Enter the item's description and painter pay.</value></data>
   <data name="adjustment_reason_required" xml:space="preserve"><value>Enter the reason for the adjustment.</value></data>
 </root>

@@ -15,6 +15,6 @@
   <data name="unknown_occupancy" xml:space="preserve"><value>Esta ocupación no está disponible.</value></data>
   <data name="walls_four" xml:space="preserve"><value>Indica las cuatro paredes A, B, C y D.</value></data>
   <data name="unknown_extra" xml:space="preserve"><value>Partida extra desconocida o inactiva.</value></data>
-  <data name="extra_needs_price" xml:space="preserve"><value>Indica la descripción y los precios de la partida.</value></data>
+  <data name="extra_needs_price" xml:space="preserve"><value>Indica la descripción y el pago al pintor de la partida.</value></data>
   <data name="adjustment_reason_required" xml:space="preserve"><value>Indica el motivo del ajuste.</value></data>
 </root>

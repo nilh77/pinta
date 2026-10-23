@@ -34,8 +34,10 @@ public sealed record PainterJobItem(
     Guid AssignmentId, Guid JobId, string Code, JobStatus JobStatus, AssignmentStatus Status, string Municipality, string Locality,
     DateOnly ScheduledOn, decimal AreaM2, long PainterPayCents, DateTimeOffset OfferedAt);
 
+/// <summary>P1.1: offers to answer, then upcoming jobs and site visits, in progress and done.</summary>
 public sealed record PainterJobs(
-    IReadOnlyList<PainterJobItem> Offers, IReadOnlyList<PainterJobItem> Upcoming, IReadOnlyList<PainterJobItem> InProgress, IReadOnlyList<PainterJobItem> Done);
+    IReadOnlyList<PainterJobItem> Offers, IReadOnlyList<PainterJobItem> Upcoming, IReadOnlyList<PainterJobItem> InProgress, IReadOnlyList<PainterJobItem> Done,
+    IReadOnlyList<PainterVisitItem> Visits);
 
 internal sealed class OfferJobRequestValidator : AbstractValidator<OfferJobRequest>
 {
@@ -166,7 +168,8 @@ internal static class AssignmentEndpoints
             [.. items.Where(i => i.Status == AssignmentStatus.Offered)],
             [.. items.Where(i => i.Status == AssignmentStatus.Accepted && i.JobStatus == JobStatus.Scheduled)],
             [.. items.Where(i => i.Status == AssignmentStatus.Accepted && i.JobStatus == JobStatus.InProgress)],
-            [.. items.Where(i => i.Status == AssignmentStatus.Completed || i.JobStatus is JobStatus.Finished or JobStatus.Closed).OrderByDescending(i => i.ScheduledOn)]));
+            [.. items.Where(i => i.Status == AssignmentStatus.Completed || i.JobStatus is JobStatus.Finished or JobStatus.Closed).OrderByDescending(i => i.ScheduledOn)],
+            await PainterVisitEndpoints.ListAsync(painter.UserId, db, quotes, cancellationToken)));
     }
 
     /// <summary>P1.2: accepting schedules the job with the offer's date; an offer no longer open is <c>assignment_taken</c>.</summary>

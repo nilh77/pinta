@@ -53,6 +53,7 @@ public static class JobsModule
         AdminJobCommands.Map(admin);
         AssignmentEndpoints.Map(app);
         PainterJobEndpoints.Map(app);
+        PainterVisitEndpoints.Map(app);
         return app;
     }
 }

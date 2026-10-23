@@ -213,10 +213,19 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("site_visit_at");
 
+                    b.Property<string>("SiteVisitNotes")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("site_visit_notes");
+
                     b.Property<decimal?>("SiteVisitPrice")
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("site_visit_price");
+
+                    b.Property<DateTimeOffset?>("SiteVisitReportedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("site_visit_reported_at");
 
                     b.Property<string>("Status")
                         .IsRequired()

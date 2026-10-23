@@ -87,4 +87,11 @@
   <data name="JobFinished.Body" xml:space="preserve"><value>El pintor ha terminado el trabajo. Mira las fotos del resultado y paga el resto para que lo cerremos.</value></data>
   <data name="JobFinished.Balance" xml:space="preserve"><value>Resto a pagar</value></data>
   <data name="JobFinished.Button" xml:space="preserve"><value>Ver fotos y pagar</value></data>
+  <data name="SiteVisitAssigned.Subject" xml:space="preserve"><value>Visita técnica {0}</value></data>
+  <data name="SiteVisitAssigned.Body" xml:space="preserve"><value>Te hemos asignado una visita técnica. Comprueba las medidas reales, haz fotos y envía el informe en la app.</value></data>
+  <data name="SiteVisitAssigned.When" xml:space="preserve"><value>Cuándo</value></data>
+  <data name="SiteVisitAssigned.Where" xml:space="preserve"><value>Concelho</value></data>
+  <data name="SiteVisitAssigned.Button" xml:space="preserve"><value>Abrir la visita</value></data>
+  <data name="SiteVisitReported.Subject" xml:space="preserve"><value>Informe de la visita {0}</value></data>
+  <data name="SiteVisitReported.Body" xml:space="preserve"><value>{0} ha enviado el informe de la visita. El borrador ya tiene las medidas reales; revisa las partidas extra y confirma el precio.</value></data>
 </root>
