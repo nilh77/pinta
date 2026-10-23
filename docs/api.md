@@ -126,7 +126,7 @@ Todas las rutas exigen rol Admin.
 | GET | `/api/admin/deletion-requests` | Clientes que pidieron la supresión de su cuenta | C5.8 |
 | POST | `/api/admin/deletion-requests/{userId}/execute` | Anonimiza al cliente, cancela sus trabajos activos con la política y conserva la contabilidad | C5.8 |
 | GET | `/api/admin/payouts?painterId=&status=` | Pagos a pintores (solo lectura desde H6b) | A5.4 |
-| POST | `/api/admin/payouts/{id}/mark-paid` | `{ paidOn, reference }`: marca pagado con fecha (hoy o antes) y referencia de transferencia; ya pagado → 409 | A5.4 |
+| POST | `/api/admin/payouts/{id}/mark-paid` | `{ paidOn, reference }`: marca pagado con fecha (hoy o antes) y referencia de transferencia; ya pagado → 409 `invalid_transition`. Se permite aunque el mes esté cerrado (es caja) | A5.4 |
 | GET | `/hangfire` | Panel de tareas (no es API) | — |
 
 ## Ejemplos

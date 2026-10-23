@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Text;
+using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +16,7 @@ using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
+using Pinta.SharedKernel.Text;
 using Pinta.SharedKernel.Time;
 
 namespace Pinta.Modules.Finance.Features.Summary;
@@ -137,11 +141,19 @@ internal static class FinanceEndpoints
         finance.MapPost("/costs", AddCostAsync).WithValidation<CostRequest>().WithName("AddOperatingCost");
         finance.MapPut("/costs/{id:guid}", UpdateCostAsync).WithValidation<CostRequest>().WithName("UpdateOperatingCost");
         finance.MapDelete("/costs/{id:guid}", DeleteCostAsync).WithName("DeleteOperatingCost");
+        finance.MapGet("/export", ExportAsync).WithName("ExportFinance").Produces<string>(StatusCodes.Status200OK, "text/csv");
         finance.MapPost("/closings", CloseAsync).WithValidation<CloseMonthRequest>().WithName("CloseMonth");
         finance.ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
     }
 
     private static async Task<Results<Ok<MonthSummary>, ProblemHttpResult>> SummaryAsync(
+        string? month, FinanceDbContext db, MonthFigures figures, TimeProvider clock, CancellationToken cancellationToken) =>
+        Months.TryParse(month, clock, out var first)
+            ? TypedResults.Ok(await BuildAsync(first, db, figures, clock, cancellationToken))
+            : MonthProblem();
+
+    /// <summary>GET /api/admin/finance/export: the month's jobs, its costs and the totals (frozen ones when closed), as CSV.</summary>
+    private static async Task<Results<FileContentHttpResult, ProblemHttpResult>> ExportAsync(
         string? month, FinanceDbContext db, MonthFigures figures, TimeProvider clock, CancellationToken cancellationToken)
     {
         if (!Months.TryParse(month, clock, out var first))
@@ -149,6 +161,35 @@ internal static class FinanceEndpoints
             return MonthProblem();
         }
 
+        var m = await BuildAsync(first, db, figures, clock, cancellationToken);
+        static string Eur(long cents) => (cents / 100m).ToString("0.00", CultureInfo.InvariantCulture);
+        static string Snake(Enum value) => JsonNamingPolicy.SnakeCaseLower.ConvertName(value.ToString());
+        var csv = new StringBuilder("kind,date,code,category,description,income_eur,vat_eur,material_eur,painter_eur,margin_eur,cost_eur,profit_eur,per_partner_eur\n");
+        foreach (var j in m.Jobs)
+        {
+            csv.AppendJoin(',', j.Status == JobStatus.Closed ? "closed_job" : "cancelled_job", Lisbon(j.At).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                Csv.Field(j.Code), "", "", Eur(j.IncomeCents), Eur(j.VatCents), Eur(j.MaterialCents), Eur(j.PainterPayCents), Eur(j.MarginCents), "", "", "");
+            csv.Append('\n');
+        }
+
+        foreach (var c in m.Costs)
+        {
+            csv.AppendJoin(',', "cost", c.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), "", Snake(c.Category), Csv.Field(c.Description),
+                "", "", "", "", "", Eur(c.AmountCents), "", "");
+            csv.Append('\n');
+        }
+
+        csv.AppendJoin(',', m.Closed ? "total_closed" : "total", m.Month, "", "", "", Eur(m.IncomeCents), Eur(m.VatCents), Eur(m.MaterialCents),
+            Eur(m.PainterPayCents), Eur(m.GrossMarginCents), Eur(m.CostsCents), Eur(m.ProfitCents), Eur(m.PerPartnerCents));
+        csv.Append('\n');
+        return TypedResults.File([.. Encoding.UTF8.GetPreamble(), .. Encoding.UTF8.GetBytes(csv.ToString())], "text/csv", $"finanzas-{m.Month}.csv");
+    }
+
+    private static DateTime Lisbon(DateTimeOffset at) => TimeZoneInfo.ConvertTime(at, BusinessDays.Lisbon).DateTime;
+
+    private static async Task<MonthSummary> BuildAsync(
+        DateOnly first, FinanceDbContext db, MonthFigures figures, TimeProvider clock, CancellationToken cancellationToken)
+    {
         var f = await figures.ForAsync(first, cancellationToken);
         var closing = await db.MonthlyClosings.AsNoTracking().SingleOrDefaultAsync(c => c.Period == first, cancellationToken);
         var pending = await db.PainterPayouts.AsNoTracking().Where(p => p.Status == PayoutStatus.Pending).OrderBy(p => p.CreatedAt)
@@ -156,7 +197,7 @@ internal static class FinanceEndpoints
         var (income, vat, material, painter, margin, costs, profit, perPartner) = closing is null
             ? (f.Income, f.Vat, f.Material, f.PainterPay, f.GrossMargin, f.CostsTotal, f.Profit, f.PerPartner)
             : (closing.Income, closing.Vat, closing.Material, closing.PainterPay, closing.GrossMargin, closing.Costs, closing.Profit, closing.PerPartner);
-        return TypedResults.Ok(new MonthSummary(
+        return new MonthSummary(
             Months.Format(first),
             closing is not null,
             closing?.ClosedAt,
@@ -173,7 +214,7 @@ internal static class FinanceEndpoints
             [.. f.Costs.GroupBy(c => c.Category).OrderBy(g => g.Key).Select(g => new CategoryTotal(g.Key, Money.ToCents(g.Sum(c => c.Amount))))],
             f.Jobs,
             [.. f.Costs.Select(ToDto)],
-            [.. pending.Select(PayoutEndpoints.ToDto)]));
+            [.. pending.Select(PayoutEndpoints.ToDto)]);
     }
 
     private static async Task<Results<Ok<IReadOnlyList<CostDto>>, ProblemHttpResult>> CostsAsync(

@@ -91,6 +91,12 @@ public class FinanceTests(PintaApiFactory factory)
         Assert.Equal((6003L, 1381L, 0L), (cancelledLine.GetProperty("incomeCents").GetInt64(), cancelledLine.GetProperty("vatCents").GetInt64(),
             cancelledLine.GetProperty("painterPayCents").GetInt64()));
 
+        var csv = await (await admin.GetAsync($"/api/admin/finance/export?month={month}")).Content.ReadAsStringAsync();
+        var rows = csv.TrimStart('\uFEFF').TrimEnd('\n').Split('\n');
+        Assert.Equal(1 + 2 + 2 + 1, rows.Length);
+        Assert.Equal(2, rows.Count(r => r.StartsWith("cost,", StringComparison.Ordinal)));
+        Assert.Equal($"total,{month},,,,460.23,105.86,85.20,200.00,175.03,31.00,144.03,72.02", rows[^1]);
+
         var close = await admin.PostAsJsonAsync("/api/admin/finance/closings", new { month }, ApiClient.Json);
         Assert.Equal(HttpStatusCode.OK, close.StatusCode);
         var frozen = await close.ReadJsonAsync();
