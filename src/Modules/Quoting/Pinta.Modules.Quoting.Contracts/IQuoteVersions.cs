@@ -41,18 +41,22 @@ public interface IQuoteVersions
     /// <summary>
     /// The open draft, or a new one copied from the latest version and priced with the current configuration.
     /// </summary>
-    Task<AdminQuote> OpenDraftAsync(Guid jobId, QuoteOrigin origin, Guid createdBy, CancellationToken cancellationToken = default);
+    /// <param name="siteVisitCreditCents">A paid deductible site visit, VAT included, taken off the subtotal (TC15).</param>
+    Task<AdminQuote> OpenDraftAsync(
+        Guid jobId, QuoteOrigin origin, Guid createdBy, long siteVisitCreditCents = 0, CancellationToken cancellationToken = default);
 
     /// <summary>Replaces the draft's contents (opening it first if needed) and reprices it with its own snapshot.</summary>
     Task<(AdminQuote? Quote, QuoteErrors? Errors)> SaveDraftAsync(
-        Guid jobId, QuoteOrigin origin, Guid userId, DraftQuoteRequest request, CancellationToken cancellationToken = default);
+        Guid jobId, QuoteOrigin origin, Guid userId, DraftQuoteRequest request, long siteVisitCreditCents = 0,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Confirms the draft (opening one if there is none): valid until today + the validity days (Lisbon). A margin under
     /// the minimum needs <paramref name="acknowledgeLowMargin"/>; otherwise nothing changes and the result is null.
     /// </summary>
     Task<ConfirmedQuote?> ConfirmDraftAsync(
-        Guid jobId, QuoteOrigin origin, Guid userId, string? note, bool acknowledgeLowMargin, CancellationToken cancellationToken = default);
+        Guid jobId, QuoteOrigin origin, Guid userId, string? note, bool acknowledgeLowMargin, long siteVisitCreditCents = 0,
+        CancellationToken cancellationToken = default);
 
     Task<ClientQuote?> GetClientAsync(Guid versionId, string language, CancellationToken cancellationToken = default);
 

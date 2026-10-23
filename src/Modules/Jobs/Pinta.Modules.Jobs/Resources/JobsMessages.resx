@@ -16,4 +16,5 @@
   <data name="site_visit_assignee" xml:space="preserve"><value>Escolha um sócio.</value></data>
   <data name="site_visit_future" xml:space="preserve"><value>Escolha uma data futura.</value></data>
   <data name="transition_use_action" xml:space="preserve"><value>Use a ação própria deste estado.</value></data>
+  <data name="scheduled_on" xml:space="preserve"><value>Indique a data de início (hoje ou depois).</value></data>
 </root>

@@ -11,6 +11,7 @@ using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Jobs.Domain;
 using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Payments.Contracts;
 using Pinta.Modules.Quoting.Contracts;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
@@ -57,6 +58,7 @@ public sealed record ClientJobDetail(
     PreferredDatesDto PreferredDates,
     DateOnly? ReviewDueOn,
     DateOnly? QuoteValidUntil,
+    DateOnly? ScheduledOn,
     ClientQuote? Quote,
     ClientSiteVisit? SiteVisit,
     IReadOnlyList<ClientTimelineEntry> Timeline,
@@ -161,6 +163,7 @@ internal static class ClientJobEndpoints
             new PreferredDatesDto(job.PreferredAsap, job.PreferredFrom, job.PreferredTo),
             job.ReviewDueOn,
             job.QuoteValidUntil,
+            job.ScheduledOn,
             confirmed,
             job.SiteVisitAt is { } at ? new ClientSiteVisit(at, visitor?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0)) : null,
             [.. job.History.OrderBy(h => h.ChangedAt).Select(h => new ClientTimelineEntry(
@@ -254,7 +257,7 @@ internal static class ClientJobEndpoints
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> RequoteAsync(
-        Guid id, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IRequestSettings settings, TimeProvider clock,
+        Guid id, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IRequestSettings settings, IJobPayments payments, TimeProvider clock,
         CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: true, cancellationToken);
@@ -271,7 +274,9 @@ internal static class ClientJobEndpoints
         }
 
         // A new version with today's prices (C5.7); the admin reviews it as a draft.
-        await quotes.OpenDraftAsync(job.Id, QuoteOrigin.Revision, job.ClientId, cancellationToken);
+        await quotes.OpenDraftAsync(
+            job.Id, QuoteOrigin.Revision, job.ClientId, await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken),
+            cancellationToken);
         return TypedResults.NoContent();
     }
 

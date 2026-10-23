@@ -136,6 +136,10 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .HasColumnType("date")
                         .HasColumnName("review_due_on");
 
+                    b.Property<DateOnly?>("ScheduledOn")
+                        .HasColumnType("date")
+                        .HasColumnName("scheduled_on");
+
                     b.Property<Guid?>("SiteVisitAssigneeId")
                         .HasColumnType("uuid")
                         .HasColumnName("site_visit_assignee_id");

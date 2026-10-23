@@ -52,9 +52,13 @@ internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
     /// <summary>Prices with a given snapshot: a draft keeps the one taken when it started.</summary>
     public static PricedQuote PriceWith(
         PriceSnapshot snapshot, Occupancy occupancy, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ExtraLine> extras,
-        decimal? manualSubtotal = null)
+        decimal? manualSubtotal = null, decimal siteVisitCredit = 0)
     {
-        var input = new QuoteInput([.. elements.Select(ToElement)], OccupancyKey(occupancy), extras) { ManualSubtotal = manualSubtotal };
+        var input = new QuoteInput([.. elements.Select(ToElement)], OccupancyKey(occupancy), extras)
+        {
+            ManualSubtotal = manualSubtotal,
+            SiteVisitCredit = siteVisitCredit,
+        };
         var errors = QuoteValidator.Validate(snapshot, input);
         if (errors.Count > 0)
         {
@@ -63,7 +67,15 @@ internal sealed class QuotePricing(IPriceSnapshotProvider snapshots)
                 .ToDictionary(g => g.Key, g => g.Select(e => QuotingMessages.Get(e.Code)).ToArray()));
         }
 
-        return new PricedQuote(snapshot, input, PricingEngine.Calculate(snapshot, input), null);
+        try
+        {
+            return new PricedQuote(snapshot, input, PricingEngine.Calculate(snapshot, input), null);
+        }
+        catch (ArgumentException) when (siteVisitCredit > 0)
+        {
+            // The visit is worth more than the whole job: nothing left to charge.
+            return new PricedQuote(snapshot, input, null, new() { ["siteVisitCredit"] = [QuotingMessages.Get("out_of_range")] });
+        }
     }
 
     public static string OccupancyKey(Occupancy occupancy) => occupancy.ToString().ToLowerInvariant();

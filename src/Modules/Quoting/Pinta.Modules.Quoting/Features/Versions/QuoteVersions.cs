@@ -68,11 +68,13 @@ internal sealed class QuoteVersions(
         return draft is null ? null : ToAdmin(draft);
     }
 
-    public async Task<AdminQuote> OpenDraftAsync(Guid jobId, QuoteOrigin origin, Guid createdBy, CancellationToken cancellationToken = default) =>
-        ToAdmin(await OpenAsync(jobId, origin, createdBy, cancellationToken));
+    public async Task<AdminQuote> OpenDraftAsync(
+        Guid jobId, QuoteOrigin origin, Guid createdBy, long siteVisitCreditCents = 0, CancellationToken cancellationToken = default) =>
+        ToAdmin(await OpenAsync(jobId, origin, createdBy, Money.FromCents(siteVisitCreditCents), cancellationToken));
 
     public async Task<(AdminQuote? Quote, QuoteErrors? Errors)> SaveDraftAsync(
-        Guid jobId, QuoteOrigin origin, Guid userId, DraftQuoteRequest request, CancellationToken cancellationToken = default)
+        Guid jobId, QuoteOrigin origin, Guid userId, DraftQuoteRequest request, long siteVisitCreditCents = 0,
+        CancellationToken cancellationToken = default)
     {
         var shape = await new DraftQuoteRequestValidator().ValidateAsync(request, cancellationToken);
         if (!shape.IsValid)
@@ -86,10 +88,12 @@ internal sealed class QuoteVersions(
             return (null, new QuoteErrors(extraErrors));
         }
 
-        var draft = await OpenAsync(jobId, origin, userId, cancellationToken);
+        var credit = Money.FromCents(siteVisitCreditCents);
+        var draft = await OpenAsync(jobId, origin, userId, credit, cancellationToken);
         var manualSubtotal = request.ManualSubtotalCents is { } cents ? Money.FromCents(cents) : (decimal?)null;
         var priced = QuotePricing.PriceWith(
-            draft.PriceSnapshot, request.Occupancy, request.Elements, [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], manualSubtotal);
+            draft.PriceSnapshot, request.Occupancy, request.Elements, [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], manualSubtotal,
+            credit);
         if (priced.Errors is not null)
         {
             return (null, new QuoteErrors(priced.Errors));
@@ -110,9 +114,10 @@ internal sealed class QuoteVersions(
     }
 
     public async Task<ConfirmedQuote?> ConfirmDraftAsync(
-        Guid jobId, QuoteOrigin origin, Guid userId, string? note, bool acknowledgeLowMargin, CancellationToken cancellationToken = default)
+        Guid jobId, QuoteOrigin origin, Guid userId, string? note, bool acknowledgeLowMargin, long siteVisitCreditCents = 0,
+        CancellationToken cancellationToken = default)
     {
-        var draft = await OpenAsync(jobId, origin, userId, cancellationToken);
+        var draft = await OpenAsync(jobId, origin, userId, Money.FromCents(siteVisitCreditCents), cancellationToken);
         var breakdown = Calculate(draft);
         if (breakdown.BelowMinMargin && !acknowledgeLowMargin)
         {
@@ -144,9 +149,12 @@ internal sealed class QuoteVersions(
                 Money.ToCents(Math.Round(x.ClientPrice * vatFactor, 2, MidpointRounding.AwayFromZero))))
             .ToList();
         var total = Money.ToCents(b.Total);
-        var work = new ClientQuoteLine(ClientQuoteLineKind.Work, null, version.Elements.Count, b.AreaM2, total - extras.Sum(x => x.AmountCents));
+        var credit = Money.ToCents(version.SiteVisitCredit);
+        List<ClientQuoteLine> visit = credit > 0 ? [new ClientQuoteLine(ClientQuoteLineKind.SiteVisit, null, null, null, -credit)] : [];
+        var work = new ClientQuoteLine(
+            ClientQuoteLineKind.Work, null, version.Elements.Count, b.AreaM2, total - extras.Sum(x => x.AmountCents) + credit);
         return new ClientQuote(
-            version.Id, version.Number, [work, .. extras], b.AreaM2, total, Money.ToCents(b.Vat), Money.ToCents(b.Deposit),
+            version.Id, version.Number, [work, .. extras, .. visit], b.AreaM2, total, Money.ToCents(b.Vat), Money.ToCents(b.Deposit),
             Money.ToCents(b.Balance), version.Premium, version.ValidUntil, version.Note, version.ConfirmedAt);
     }
 
@@ -172,11 +180,19 @@ internal sealed class QuoteVersions(
     }
 
     /// <summary>The open draft, or a copy of the latest version priced with the current configuration.</summary>
-    private async Task<QuoteVersion> OpenAsync(Guid jobId, QuoteOrigin origin, Guid createdBy, CancellationToken cancellationToken)
+    private async Task<QuoteVersion> OpenAsync(Guid jobId, QuoteOrigin origin, Guid createdBy, decimal siteVisitCredit, CancellationToken cancellationToken)
     {
         var draft = await FindDraftAsync(jobId, tracked: true, cancellationToken);
         if (draft is not null)
         {
+            if (draft.SiteVisitCredit != siteVisitCredit)
+            {
+                // The visit was paid after the draft started: reprice it with the credit.
+                draft.SiteVisitCredit = siteVisitCredit;
+                Totals(draft, Calculate(draft));
+                await db.SaveChangesAsync(cancellationToken);
+            }
+
             return draft;
         }
 
@@ -186,12 +202,12 @@ internal sealed class QuoteVersions(
         var extras = latest.Extras.Select(x => new ResolvedExtra(x.CatalogKey, x.Name, x.Description, x.ClientPrice, x.PainterPay)).ToList();
         var priced = QuotePricing.PriceWith(
             await snapshots.GetCurrentAsync(cancellationToken), QuotePricing.ParseOccupancy(latest.Occupancy), elements,
-            [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], latest.ManualAdjustment);
+            [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], latest.ManualAdjustment, siteVisitCredit);
         if (priced.Errors is not null)
         {
             // An item deactivated since: the admin fixes it in the editor, so the copy keeps the old configuration.
             priced = QuotePricing.PriceWith(latest.PriceSnapshot, QuotePricing.ParseOccupancy(latest.Occupancy), elements,
-                [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], latest.ManualAdjustment);
+                [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], latest.ManualAdjustment, siteVisitCredit);
         }
 
         draft = new QuoteVersion
@@ -204,6 +220,7 @@ internal sealed class QuoteVersions(
             PremiumOverride = latest.PremiumOverride,
             ManualAdjustment = latest.ManualAdjustment,
             AdjustmentReason = latest.AdjustmentReason,
+            SiteVisitCredit = siteVisitCredit,
             CreatedBy = createdBy,
             CreatedAt = clock.GetUtcNow(),
         };
@@ -250,19 +267,7 @@ internal sealed class QuoteVersions(
     /// <summary>Stores the priced totals, elements and extras on the version.</summary>
     private static void Apply(QuoteVersion version, QuoteBreakdown b, IReadOnlyList<QuoteElementRequest> elements, IReadOnlyList<ResolvedExtra> extras)
     {
-        version.AreaM2 = b.AreaM2;
-        version.MaterialCost = b.MaterialCost;
-        version.LabourPrice = b.LabourPrice;
-        version.Subtotal = b.Subtotal;
-        version.Vat = b.Vat;
-        version.Total = b.Total;
-        version.PainterPay = b.PainterPay;
-        version.Margin = b.Margin;
-        version.RangeMin = b.Range?.Min;
-        version.RangeMax = b.Range?.Max;
-        version.MinimumApplied = b.MinimumApplied;
-        version.OverMax = b.OverMax;
-        version.Premium = version.PremiumOverride ?? b.Premium;
+        Totals(version, b);
         for (var i = 0; i < elements.Count; i++)
         {
             var e = elements[i];
@@ -304,12 +309,34 @@ internal sealed class QuoteVersions(
         }
     }
 
+    /// <summary>Stores the priced totals on the version.</summary>
+    private static void Totals(QuoteVersion version, QuoteBreakdown b)
+    {
+        version.AreaM2 = b.AreaM2;
+        version.MaterialCost = b.MaterialCost;
+        version.LabourPrice = b.LabourPrice;
+        version.Subtotal = b.Subtotal;
+        version.Vat = b.Vat;
+        version.Total = b.Total;
+        version.PainterPay = b.PainterPay;
+        version.Margin = b.Margin;
+        version.RangeMin = b.Range?.Min;
+        version.RangeMax = b.Range?.Max;
+        version.MinimumApplied = b.MinimumApplied;
+        version.OverMax = b.OverMax;
+        version.Premium = version.PremiumOverride ?? b.Premium;
+    }
+
     /// <summary>The engine is pure: the stored snapshot and contents give back the same breakdown every time.</summary>
     private static QuoteBreakdown Calculate(QuoteVersion v) =>
         PricingEngine.Calculate(v.PriceSnapshot, new QuoteInput(
             [.. v.Elements.OrderBy(e => e.Position).Select(ToRequest).Select(QuotePricing.ToElement)],
             v.Occupancy,
-            [.. v.Extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))]) { ManualSubtotal = v.ManualAdjustment });
+            [.. v.Extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))])
+        {
+            ManualSubtotal = v.ManualAdjustment,
+            SiteVisitCredit = v.SiteVisitCredit,
+        });
 
     private static QuoteElementRequest ToRequest(StoredElement e) => new(
         e.Kind == "room" ? ElementKind.Room : ElementKind.Surface,
@@ -351,6 +378,7 @@ internal sealed class QuoteVersions(
             v.PremiumOverride,
             v.ManualAdjustment is { } manual ? Money.ToCents(manual) : null,
             v.AdjustmentReason,
+            Money.ToCents(v.SiteVisitCredit),
             v.Note,
             v.ValidUntil,
             v.CreatedAt,

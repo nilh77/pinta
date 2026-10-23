@@ -3188,6 +3188,7 @@
           "reviewDueOn",
           "light",
           "quoteValidUntil",
+          "scheduledOn",
           "siteVisit",
           "currentQuote",
           "draft",
@@ -3263,6 +3264,13 @@
             ]
           },
           "quoteValidUntil": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "scheduledOn": {
             "type": [
               "null",
               "string"
@@ -3419,6 +3427,7 @@
           "premiumOverride",
           "manualSubtotalCents",
           "adjustmentReason",
+          "siteVisitCreditCents",
           "note",
           "validUntil",
           "createdAt",
@@ -3474,6 +3483,10 @@
               "null",
               "string"
             ]
+          },
+          "siteVisitCreditCents": {
+            "type": "integer",
+            "format": "int64"
           },
           "note": {
             "type": [
@@ -3750,6 +3763,7 @@
           "preferredDates",
           "reviewDueOn",
           "quoteValidUntil",
+          "scheduledOn",
           "quote",
           "siteVisit",
           "timeline",
@@ -3813,6 +3827,13 @@
             "format": "date"
           },
           "quoteValidUntil": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "scheduledOn": {
             "type": [
               "null",
               "string"
@@ -4058,7 +4079,8 @@
       "ClientQuoteLineKind": {
         "enum": [
           "work",
-          "extra"
+          "extra",
+          "site_visit"
         ]
       },
       "ClientSiteVisit": {
@@ -6748,6 +6770,13 @@
               "integer"
             ],
             "format": "uint32"
+          },
+          "scheduledOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           }
         }
       },

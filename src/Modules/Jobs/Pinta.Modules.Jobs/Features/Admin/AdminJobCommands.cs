@@ -12,6 +12,8 @@ using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Jobs.Resources;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Quoting.Contracts;
+using Pinta.Modules.Payments.Contracts;
+using Pinta.SharedKernel.Time;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
 
@@ -26,7 +28,8 @@ public sealed record SiteVisitRequest(Guid AssigneeId, DateTimeOffset At, long? 
 
 public sealed record VersionRequest(uint? Version);
 
-public sealed record TransitionRequest(JobStatus To, string Reason, uint? Version);
+/// <summary><see cref="ScheduledOn"/> is required to move to <c>scheduled</c> (H5: the admin sets the date).</summary>
+public sealed record TransitionRequest(JobStatus To, string Reason, uint? Version, DateOnly? ScheduledOn = null);
 
 public sealed record AdminCancelRequest(string Reason, bool FullRefund, uint? Version);
 
@@ -84,7 +87,8 @@ internal static class AdminJobCommands
     }
 
     private static async Task<Results<Ok<AdminQuote>, ProblemHttpResult>> SaveDraftAsync(
-        Guid id, DraftQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, CancellationToken cancellationToken)
+        Guid id, DraftQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IJobPayments payments,
+        IRequestSettings settings, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -98,13 +102,16 @@ internal static class AdminJobCommands
             return JobProblems.InvalidTransition();
         }
 
-        var (draft, errors) = await quotes.SaveDraftAsync(job.Id, JobRules.DraftOrigin(job), http.User.GetUserId()!.Value, request, cancellationToken);
+        var credit = await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken);
+        var (draft, errors) = await quotes.SaveDraftAsync(
+            job.Id, JobRules.DraftOrigin(job), http.User.GetUserId()!.Value, request, credit, cancellationToken);
         return errors is not null ? ApiProblem.Validation(errors.Errors) : TypedResults.Ok(draft!);
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> ConfirmAsync(
         Guid id, ConfirmQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IPriceSnapshotProvider snapshots,
-        IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock, CancellationToken cancellationToken)
+        IUserDirectory users, IEmailQueue emails, WebLinks links, IJobPayments payments, IRequestSettings settings, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -123,7 +130,9 @@ internal static class AdminJobCommands
         }
 
         var adminId = http.User.GetUserId()!.Value;
-        var confirmed = await quotes.ConfirmDraftAsync(job.Id, JobRules.DraftOrigin(job), adminId, request.Note, request.AcknowledgeLowMargin, cancellationToken);
+        var credit = await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken);
+        var confirmed = await quotes.ConfirmDraftAsync(
+            job.Id, JobRules.DraftOrigin(job), adminId, request.Note, request.AcknowledgeLowMargin, credit, cancellationToken);
         if (confirmed is null)
         {
             var minimum = (await snapshots.GetCurrentAsync(cancellationToken)).Rules.MinMarginPct;
@@ -249,6 +258,16 @@ internal static class AdminJobCommands
         if (request.To is JobStatus.Quoted or JobStatus.SiteVisit && JobStateMachine.IsAllowed(job.Status, request.To, JobActor.Admin))
         {
             return ApiProblem.Validation(new Dictionary<string, string[]> { ["to"] = [JobsMessages.Get("transition_use_action")] });
+        }
+
+        if (request.To == JobStatus.Scheduled && JobStateMachine.IsAllowed(job.Status, JobStatus.Scheduled, JobActor.Admin))
+        {
+            if (request.ScheduledOn is not { } scheduledOn || scheduledOn < BusinessDays.Today(clock))
+            {
+                return ApiProblem.Validation(new Dictionary<string, string[]> { ["scheduledOn"] = [JobsMessages.Get("scheduled_on")] });
+            }
+
+            job.ScheduledOn = scheduledOn;
         }
 
         var reason = request.Reason.Trim();

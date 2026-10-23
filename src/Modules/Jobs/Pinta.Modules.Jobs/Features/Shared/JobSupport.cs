@@ -68,6 +68,13 @@ internal static class JobRules
         return new CancellationPreview(cancellable, Money.ToCents(depositPaid), cancellable ? Money.ToCents(refund) : 0);
     }
 
+    /// <summary>A paid site visit comes off the next price when the settings say it is deductible (TC15).</summary>
+    public static async Task<long> SiteVisitCreditCentsAsync(
+        Job job, Pinta.Modules.Payments.Contracts.IJobPayments payments, IRequestSettings settings, CancellationToken cancellationToken) =>
+        job.SiteVisitAt is null || !(await settings.GetAsync(cancellationToken)).SiteVisitDeductible
+            ? 0
+            : await payments.SiteVisitPaidCentsAsync(job.Id, cancellationToken);
+
     /// <summary>The draft started after a site visit comes from it; otherwise from the admin's review.</summary>
     public static QuoteOrigin DraftOrigin(Job job) => job.SiteVisitAt is null ? QuoteOrigin.AdminReview : QuoteOrigin.SiteVisit;
 

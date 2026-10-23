@@ -224,3 +224,79 @@ public class PaymentTests(PintaApiFactory factory)
         Assert.Fail("The refund was never sent to Stripe.");
     }
 }
+
+/// <summary>Balance, site visit and the scheduled date (C5.5, A2.6, A3.3).</summary>
+public class PaymentFlowTests(PintaApiFactory factory)
+{
+    private async Task SetStatusAsync(Guid jobId, Pinta.Modules.Jobs.Contracts.JobStatus status)
+    {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<JobsDbContext>();
+        // Painters finish jobs in H6: the test puts it there directly.
+        await db.Database.ExecuteSqlInterpolatedAsync(
+            $"UPDATE jobs.jobs SET status = {System.Text.Json.JsonNamingPolicy.SnakeCaseLower.ConvertName(status.ToString())} WHERE id = {jobId}");
+    }
+
+    [Fact]
+    public async Task A3_3_moving_to_scheduled_needs_a_date_from_today()
+    {
+        var (job, _) = await TestPayments.PaidDepositAsync(factory);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var noDate = await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/transition", new { to = "scheduled", reason = "Pintor confirmado" }, ApiClient.Json);
+        var past = await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/transition", new { to = "scheduled", reason = "Pintor confirmado", scheduledOn = today.AddDays(-2) }, ApiClient.Json);
+        var ok = await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/transition", new { to = "scheduled", reason = "Pintor confirmado", scheduledOn = today.AddDays(10) }, ApiClient.Json);
+
+        Assert.True((await ProblemAssert.HasCodeAsync(noDate, HttpStatusCode.UnprocessableEntity, "validation_failed")).GetProperty("errors").TryGetProperty("scheduledOn", out _));
+        await ProblemAssert.HasCodeAsync(past, HttpStatusCode.UnprocessableEntity, "validation_failed");
+        Assert.Equal(HttpStatusCode.NoContent, ok.StatusCode);
+        var detail = await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync();
+        Assert.Equal(("scheduled", today.AddDays(10).ToString("yyyy-MM-dd")), (detail.GetProperty("status").GetString(), detail.GetProperty("scheduledOn").GetString()));
+    }
+
+    [Fact]
+    public async Task C5_5_the_balance_of_a_finished_job_closes_it()
+    {
+        var (job, _) = await TestPayments.PaidDepositAsync(factory);
+        await SetStatusAsync(job.JobId, Pinta.Modules.Jobs.Contracts.JobStatus.Finished);
+
+        var created = await (await TestPayments.CreateAsync(job.Client, job.JobId, "balance")).ReadJsonAsync();
+        Assert.Equal(34457, created.GetProperty("amountCents").GetInt64());
+        await FakeStripe.SendAsync(factory.CreateClient(), "payment_intent.succeeded", FakeStripe.Succeeded(TestPayments.IntentId(created), 34457));
+
+        Assert.Equal("closed", (await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync()).GetProperty("status").GetString());
+        Assert.Contains(factory.Emails.To<PaymentReceivedEmail>(job.Email), e => e.Kind == "balance" && e.AmountCents == 34457);
+    }
+
+    [Fact]
+    public async Task A2_6_TC15_a_paid_deductible_visit_comes_off_the_next_price()
+    {
+        var job = await TestJobs.SendAsync(factory, TestJobs.Flat, "furnished");
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var partner = (await (await admin.GetAsync("/api/admin/partners")).ReadJsonAsync()).EnumerateArray().First().GetProperty("id").GetGuid();
+        await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/site-visit", new { assigneeId = partner, at = DateTimeOffset.UtcNow.AddDays(2), priceCents = 5000 }, ApiClient.Json);
+
+        var visit = await (await TestPayments.CreateAsync(job.Client, job.JobId, "site_visit")).ReadJsonAsync();
+        Assert.Equal(5000, visit.GetProperty("amountCents").GetInt64());
+        await FakeStripe.SendAsync(factory.CreateClient(), "payment_intent.succeeded", FakeStripe.Succeeded(TestPayments.IntentId(visit), 5000));
+        Assert.Equal("site_visit", (await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync()).GetProperty("status").GetString());
+
+        await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/site-visit/complete", new { }, ApiClient.Json);
+        var quote = (await (await admin.GetAsync($"/api/admin/jobs/{job.JobId}")).ReadJsonAsync()).GetProperty("currentQuote");
+        var body = new System.Text.Json.Nodes.JsonObject
+        {
+            ["occupancy"] = "furnished",
+            ["elements"] = System.Text.Json.Nodes.JsonNode.Parse(quote.GetProperty("elements").GetRawText()),
+            ["extras"] = System.Text.Json.Nodes.JsonNode.Parse("""[{ "catalogKey": "anti_damp_treatment" }]"""),
+        };
+        var draft = await (await admin.PutAsJsonAsync($"/api/admin/jobs/{job.JobId}/draft-quote", body, ApiClient.Json)).ReadJsonAsync();
+        Assert.Equal((313468, 5000), (draft.GetProperty("breakdown").GetProperty("totalCents").GetInt64(), draft.GetProperty("siteVisitCreditCents").GetInt64()));
+
+        await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/confirm-quote", new { acknowledgeLowMargin = true }, ApiClient.Json);
+        var client = (await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync()).GetProperty("quote");
+        Assert.Equal((313468, 94040), (client.GetProperty("totalCents").GetInt64(), client.GetProperty("depositCents").GetInt64()));
+        Assert.Equal([("work", 303468L), ("extra", 15000L), ("site_visit", -5000L)],
+            client.GetProperty("lines").EnumerateArray().Select(l => (l.GetProperty("kind").GetString(), l.GetProperty("amountCents").GetInt64())));
+    }
+}

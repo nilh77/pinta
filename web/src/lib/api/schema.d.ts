@@ -976,6 +976,8 @@ export interface components {
             light: null | components["schemas"]["ReviewLight"];
             /** Format: date */
             quoteValidUntil: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
             siteVisit: null | components["schemas"]["SiteVisitDto"];
             currentQuote: components["schemas"]["AdminQuote"];
             draft: null | components["schemas"]["AdminQuote"];
@@ -1025,6 +1027,8 @@ export interface components {
             /** Format: int64 */
             manualSubtotalCents: null | number;
             adjustmentReason: null | string;
+            /** Format: int64 */
+            siteVisitCreditCents: number;
             note: null | string;
             /** Format: date */
             validUntil: null | string;
@@ -1116,6 +1120,8 @@ export interface components {
             reviewDueOn: null | string;
             /** Format: date */
             quoteValidUntil: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
             quote: null | components["schemas"]["ClientQuote"];
             siteVisit: null | components["schemas"]["ClientSiteVisit"];
             timeline: components["schemas"]["ClientTimelineEntry"][];
@@ -1181,7 +1187,7 @@ export interface components {
             amountCents: number;
         };
         /** @enum {unknown} */
-        ClientQuoteLineKind: "work" | "extra";
+        ClientQuoteLineKind: "work" | "extra" | "site_visit";
         ClientSiteVisit: {
             /** Format: date-time */
             at: string;
@@ -1921,6 +1927,8 @@ export interface components {
             reason: string;
             /** Format: uint32 */
             version: null | number;
+            /** Format: date */
+            scheduledOn?: null | string;
         };
         UploadUrlRequest: {
             /** Format: uuid */
