@@ -12,7 +12,7 @@ import type { AdminJobListItem } from "@/lib/jobs/api";
 import { orThrow } from "@/lib/jobs/api";
 import { ALL_STATUSES, type JobStatus } from "@/lib/jobs/status";
 import { EMPTY_FILTERS, exportUrl, useAdminJobs, type AdminJobsFilters } from "@/lib/jobs/use-admin-jobs";
-import { formatCents, formatDateTime } from "@/lib/format";
+import { formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 25;
@@ -218,7 +218,7 @@ function JobsTable({ items }: { items: AdminJobListItem[] }) {
                 <td className="px-3 py-2.5 whitespace-nowrap">{formatCents(locale, job.totalCents)}</td>
                 <td className="px-3 py-2.5 whitespace-nowrap">{formatCents(locale, job.marginCents)}</td>
                 <td className="px-3 py-2.5 text-muted-foreground">{job.painterName ?? "—"}</td>
-                <td className="px-3 py-2.5 text-muted-foreground">{job.scheduledOn ?? "—"}</td>
+                <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{job.scheduledOn ? formatDate(locale, job.scheduledOn, true) : "—"}</td>
                 <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{formatDateTime(locale, job.updatedAt)}</td>
               </tr>
             ))}

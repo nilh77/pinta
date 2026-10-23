@@ -175,7 +175,10 @@
     "rate_limited": "Demasiados intentos. Espera un minuto y vuelve a intentarlo.",
     "internal_error": "Algo ha fallado. Inténtalo de nuevo.",
     "concurrency_conflict": "Otra persona cambió estos datos. Recarga y vuelve a intentarlo.",
-    "invalid_transition": "Esta acción ya no es posible en el estado actual. Recarga la página."
+    "invalid_transition": "Esta acción ya no es posible en el estado actual. Recarga la página.",
+    "quote_expired": "El plazo de este precio terminó. Pide un precio nuevo.",
+    "payment_already_made": "Este pago ya está hecho.",
+    "payment_provider_error": "Los pagos no están disponibles en este momento. Inténtalo más tarde."
   },
   "admin": {
     "loading": "Cargando el panel…",
@@ -421,7 +424,6 @@
         "assignment": "Asignación"
       },
       "later": {
-        "payments": "Los pagos llegan en la próxima fase (H5).",
         "assignment": "La asignación a pintores llega en la fase H6."
       },
       "files": {
@@ -582,13 +584,14 @@
           "reason": "Motivo",
           "submit": "Cambiar estado",
           "cancel": "Volver",
-          "done": "Estado cambiado."
+          "done": "Estado cambiado.",
+          "scheduledOn": "Fecha de inicio"
         },
         "cancelJob": {
           "open": "Cancelar",
           "title": "Cancelar {code}",
           "calculating": "Calculando el reembolso…",
-          "refund": "Reembolso: {amount}.",
+          "refund": "Reembolso: {amount} (de los {paid} pagados de señal).",
           "noPayment": "El cliente aún no ha pagado: no hay reembolso.",
           "reason": "Motivo",
           "fullRefund": "Reembolso total (excepción)",
@@ -596,7 +599,9 @@
           "keep": "Volver",
           "done": "Trabajo cancelado."
         }
-      }
+      },
+      "noPayments": "Aún no hay pagos.",
+      "scheduledOn": "Inicio: {date}"
     },
     "jobs": {
       "title": "Trabajos",
@@ -1081,7 +1086,8 @@
         "when": "Cuándo",
         "who": "Quién va",
         "price": "Precio",
-        "free": "Gratis"
+        "free": "Gratis",
+        "pay": "Pagar la visita"
       },
       "expired": {
         "title": "El precio caducó",
@@ -1100,8 +1106,8 @@
         "validUntil": "Válido hasta el {date}",
         "daysLeft": "{days, plural, =0 {último día} one {queda # día} other {quedan # días}}",
         "acceptAndPay": "Aceptar y pagar la señal",
-        "paymentSoon": "Pago disponible en breve.",
-        "policy": "Puedes cancelar hasta que empiece el trabajo: devolvemos toda la señal si faltan 7 días o más para la fecha programada y la mitad si faltan menos."
+        "policy": "Puedes cancelar hasta que empiece el trabajo: devolvemos toda la señal si faltan 7 días o más para la fecha programada y la mitad si faltan menos.",
+        "seeMultibanco": "Ver la referencia Multibanco"
       },
       "quote": {
         "work": "Pintura de {count, plural, one {# elemento} other {# elementos}} · {area}",
@@ -1148,7 +1154,99 @@
       "requote": {
         "open": "Pedir nuevo precio",
         "done": "Solicitud enviada. La revisaremos con los precios actuales."
+      },
+      "payments": "Pagos",
+      "depositPaid": {
+        "title": "Señal pagada",
+        "body": "La fecha está reservada. Confirmaremos el día de inicio."
+      },
+      "scheduled": {
+        "title": "Trabajo programado",
+        "body": "Empezamos el {date}."
+      },
+      "inProgress": {
+        "title": "Trabajo en curso"
+      },
+      "balanceDue": "Resto a pagar al terminar: {amount}",
+      "finished": {
+        "title": "Trabajo terminado",
+        "body": "Solo falta pagar el resto.",
+        "pay": "Pagar el resto ({amount})"
+      },
+      "closed": {
+        "title": "Trabajo cerrado",
+        "body": "Está todo pagado. ¡Gracias!"
       }
     }
+  },
+  "payment": {
+    "pageTitle": "Pago",
+    "invalid": "Este pago no existe.",
+    "back": "Volver al trabajo",
+    "title": {
+      "deposit": "Pagar la señal",
+      "balance": "Pagar el resto",
+      "site_visit": "Pagar la visita técnica"
+    },
+    "preparing": "Preparando el pago…",
+    "amount": "Importe",
+    "mbWayLimit": "MB WAY suele tener un límite diario de 1.000 €. Si no te llega, usa tarjeta o Multibanco.",
+    "pay": "Pagar {amount}",
+    "secure": "Pago seguro con Stripe. Pinta no guarda los datos de tu tarjeta.",
+    "failed": "El pago no se ha completado.",
+    "retry": "Reintentar",
+    "mbWay": {
+      "title": "Acepta el pago en la app MB WAY",
+      "body": "Tienes {time} para confirmarlo."
+    },
+    "confirming": "Confirmando el pago…",
+    "multibanco": {
+      "title": "Referencia Multibanco",
+      "body": "Paga en un cajero Multibanco o en tu banco online. También te la hemos enviado por email.",
+      "entity": "Entidad",
+      "reference": "Referencia",
+      "copy": "Copiar {what}",
+      "copied": "Copiado",
+      "deadline": "Pagar antes del {date}",
+      "waiting": "En cuanto llegue el pago lo confirmamos y te avisamos por email."
+    },
+    "paid": "Pago recibido",
+    "paidBody": {
+      "deposit": "La fecha queda reservada. Asignaremos el pintor y confirmaremos el día.",
+      "balance": "Trabajo pagado por completo. Gracias por confiar en Pinta.",
+      "site_visit": "La visita está pagada. ¡Hasta pronto!"
+    },
+    "seeJob": "Ver mi trabajo",
+    "receipt": "Descargar recibo"
+  },
+  "payments": {
+    "type": {
+      "deposit": "Señal",
+      "balance": "Resto",
+      "site_visit": "Visita técnica"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "requires_action": "Esperando el pago",
+      "succeeded": "Pagado",
+      "failed": "Fallido",
+      "cancelled": "Anulado",
+      "refunded": "Reembolsado",
+      "partially_refunded": "Reembolsado en parte"
+    },
+    "method": {
+      "card": "Tarjeta",
+      "mb_way": "MB WAY",
+      "multibanco": "Multibanco"
+    },
+    "paidAt": "pagado el {date}",
+    "createdAt": "iniciado el {date}",
+    "multibanco": "Entidad {entity} · Referencia {reference}",
+    "refund": {
+      "pending": "Reembolso de {amount} en curso",
+      "succeeded": "Reembolso de {amount} hecho",
+      "failed": "El reembolso de {amount} falló"
+    },
+    "receipt": "Recibo (PDF)"
   }
 }

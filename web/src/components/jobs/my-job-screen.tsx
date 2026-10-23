@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CalendarClock, CircleAlert, Clock, Loader2, MessageCircleQuestion } from "lucide-react";
+import { ArrowLeft, CalendarClock, CircleAlert, CircleCheck, Clock, Loader2, MessageCircleQuestion } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "sonner";
@@ -12,6 +12,8 @@ import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import type { ClientJobDetail } from "@/lib/jobs/api";
 import { useAskQuestion, useCancelJob, useCancellationPreview, useMyJob, useRejectQuote, useRequote } from "@/lib/jobs/use-client-jobs";
+import { useJobPayments, type Payment } from "@/lib/payments/use-payments";
+import { PaymentsList } from "@/components/payments/payments-list";
 import { daysUntil, formatArea, formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { JobProgress } from "./job-progress";
 import { JobStatusBadge } from "./job-status-badge";
@@ -21,6 +23,7 @@ export function MyJobScreen({ id }: { id: string }) {
   const t = useTranslations("myJobs.detail");
   const locale = useLocale();
   const job = useMyJob(id);
+  const payments = useJobPayments(id);
 
   if (job.isPending) {
     return (
@@ -65,9 +68,18 @@ export function MyJobScreen({ id }: { id: string }) {
         <JobProgress status={data.status} />
       </header>
 
-      <StatusSection job={data} />
+      <StatusSection job={data} payments={payments.data ?? []} />
 
       {data.quote && data.status !== "quoted" && <QuoteCard job={data} />}
+
+      {(payments.data?.length ?? 0) > 0 && (
+        <section aria-labelledby="payments-title">
+          <h2 id="payments-title" className="mb-3 text-[13px] font-semibold">
+            {t("payments")}
+          </h2>
+          <PaymentsList jobId={data.id} payments={payments.data!} emptyText="" />
+        </section>
+      )}
 
       <Timeline job={data} />
 
@@ -81,7 +93,7 @@ export function MyJobScreen({ id }: { id: string }) {
 }
 
 /** What the client sees in each state (screens.md, screen 10). */
-function StatusSection({ job }: { job: ClientJobDetail }) {
+function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Payment[] }) {
   const t = useTranslations("myJobs.detail");
   const locale = useLocale();
   const estimate =
@@ -116,10 +128,39 @@ function StatusSection({ job }: { job: ClientJobDetail }) {
               <dd className="font-semibold">{job.siteVisit.priceCents === 0 ? t("siteVisit.free") : formatCents(locale, job.siteVisit.priceCents)}</dd>
             </dl>
           )}
+          {job.siteVisit && job.siteVisit.priceCents > 0 && !payments.some((p) => p.type === "site_visit" && p.paidAt) && (
+            <Button asChild className="mt-4">
+              <Link href={`/mis-trabajos/${job.id}/pagar?tipo=site_visit`}>{t("siteVisit.pay")}</Link>
+            </Button>
+          )}
         </Notice>
       );
     case "quoted":
-      return <QuotedSection job={job} />;
+      return <QuotedSection job={job} payments={payments} />;
+    case "deposit_paid":
+    case "scheduled":
+    case "in_progress":
+      return (
+        <Notice
+          icon={<CircleCheck aria-hidden="true" />}
+          title={t(`${job.status === "in_progress" ? "inProgress" : job.status === "scheduled" ? "scheduled" : "depositPaid"}.title`)}
+          body={job.scheduledOn ? t("scheduled.body", { date: formatDate(locale, job.scheduledOn) }) : t("depositPaid.body")}
+        >
+          {job.quote && <p className="mt-3 text-sm">{t("balanceDue", { amount: formatCents(locale, job.quote.balanceCents) })}</p>}
+        </Notice>
+      );
+    case "finished":
+      return (
+        <Notice icon={<CircleCheck aria-hidden="true" />} title={t("finished.title")} body={t("finished.body")}>
+          {job.quote && (
+            <Button asChild className="mt-4">
+              <Link href={`/mis-trabajos/${job.id}/pagar?tipo=balance`}>{t("finished.pay", { amount: formatCents(locale, job.quote.balanceCents) })}</Link>
+            </Button>
+          )}
+        </Notice>
+      );
+    case "closed":
+      return <Notice icon={<CircleCheck aria-hidden="true" />} title={t("closed.title")} body={t("closed.body")} />;
     case "expired":
       return <Notice icon={<Clock aria-hidden="true" />} title={t("expired.title")} body={t("expired.body")} />;
     case "rejected":
@@ -147,7 +188,7 @@ function Notice({ icon, title, body, children }: { icon: React.ReactNode; title:
 }
 
 /** quoted: the closed price against the estimate, validity, deposit and the client's decisions (C5.2). */
-function QuotedSection({ job }: { job: ClientJobDetail }) {
+function QuotedSection({ job, payments }: { job: ClientJobDetail; payments: Payment[] }) {
   const t = useTranslations("myJobs.detail.quoted");
   const locale = useLocale();
   const days = job.quoteValidUntil ? daysUntil(job.quoteValidUntil) : null;
@@ -167,10 +208,11 @@ function QuotedSection({ job }: { job: ClientJobDetail }) {
       </div>
       <QuoteCard job={job} />
       <div className="flex flex-col gap-2">
-        <Button size="lg" disabled className="w-full">
-          {t("acceptAndPay")}
+        <Button asChild size="lg" className="w-full">
+          <Link href={`/mis-trabajos/${job.id}/pagar?tipo=deposit`}>
+            {payments.some((p) => p.type === "deposit" && p.status === "requires_action") ? t("seeMultibanco") : t("acceptAndPay")}
+          </Link>
         </Button>
-        <p className="text-center text-xs text-muted-foreground">{t("paymentSoon")}</p>
         <div className="grid gap-2 sm:grid-cols-2">
           <QuestionButton id={job.id} />
           <RejectButton id={job.id} />
