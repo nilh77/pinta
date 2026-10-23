@@ -8,7 +8,7 @@ namespace Pinta.Api.IntegrationTests;
 /// <summary>P1.3, P2.1, P2.2, C5.4, C5.5: the painter's job from detail to finished, as the client sees it.</summary>
 public class PainterJobTests(PintaApiFactory factory)
 {
-    private static async Task<List<Guid>> UploadResultsAsync(HttpClient painter, Guid jobId, int count)
+    internal static async Task<List<Guid>> UploadResultsAsync(HttpClient painter, Guid jobId, int count)
     {
         var ids = new List<Guid>();
         var content = new byte[2048];
@@ -103,7 +103,7 @@ public class PainterJobTests(PintaApiFactory factory)
         await s.Painter.PostAsJsonAsync($"/api/painter/jobs/{s.Job.JobId}/finish",
             new { fileIds = await UploadResultsAsync(s.Painter, s.Job.JobId, 3) }, ApiClient.Json);
 
-        foreach (var path in new[] { "/api/painter/jobs", $"/api/painter/jobs/{s.Job.JobId}", "/api/painter/me" })
+        foreach (var path in new[] { "/api/painter/jobs", $"/api/painter/jobs/{s.Job.JobId}", "/api/painter/me", "/api/painter/payouts" })
         {
             var json = await (await s.Painter.GetAsync(path)).ReadJsonAsync();
             var names = PropertyNames(json).ToList();

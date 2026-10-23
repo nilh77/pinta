@@ -1316,6 +1316,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/painter/payouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListMyPayouts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/payouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListPayouts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2084,6 +2116,14 @@ export interface components {
             /** Format: date-time */
             createdAt: string;
         };
+        PainterPayouts: {
+            month: string;
+            /** Format: int64 */
+            pendingCents: number;
+            /** Format: int64 */
+            paidCents: number;
+            items: components["schemas"]["PayoutDto"][];
+        };
         PainterProfile: {
             name: string;
             email: string;
@@ -2183,6 +2223,25 @@ export interface components {
         PaymentStatus: "pending" | "requires_action" | "succeeded" | "failed" | "cancelled" | "refunded" | "partially_refunded";
         /** @enum {unknown} */
         PaymentType: "deposit" | "balance" | "site_visit";
+        PayoutDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            painterId: string;
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            /** Format: int64 */
+            amountCents: number;
+            status: components["schemas"]["PayoutStatus"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            paidAt: null | string;
+            reference: null | string;
+        };
+        /** @enum {unknown} */
+        PayoutStatus: "pending" | "paid";
         PreferredDatesDto: {
             asap: boolean;
             /** Format: date */
@@ -6157,6 +6216,60 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListMyPayouts: {
+        parameters: {
+            query?: {
+                month?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PainterPayouts"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListPayouts: {
+        parameters: {
+            query?: {
+                painterId?: string;
+                status?: components["schemas"]["PayoutStatus"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PayoutDto"][];
                 };
             };
         };

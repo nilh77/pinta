@@ -4372,6 +4372,85 @@
           }
         }
       }
+    },
+    "/api/painter/payouts": {
+      "get": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "ListMyPayouts",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PainterPayouts"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/payouts": {
+      "get": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "ListPayouts",
+        "parameters": [
+          {
+            "name": "painterId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/PayoutStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PayoutDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7370,6 +7449,34 @@
           }
         }
       },
+      "PainterPayouts": {
+        "required": [
+          "month",
+          "pendingCents",
+          "paidCents",
+          "items"
+        ],
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "pendingCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "paidCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PayoutDto"
+            }
+          }
+        }
+      },
       "PainterProfile": {
         "required": [
           "name",
@@ -7778,6 +7885,67 @@
           "deposit",
           "balance",
           "site_visit"
+        ]
+      },
+      "PayoutDto": {
+        "required": [
+          "id",
+          "painterId",
+          "jobId",
+          "code",
+          "amountCents",
+          "status",
+          "createdAt",
+          "paidAt",
+          "reference"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "painterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PayoutStatus"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paidAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "reference": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "PayoutStatus": {
+        "enum": [
+          "pending",
+          "paid"
         ]
       },
       "PreferredDatesDto": {
@@ -9712,6 +9880,9 @@
     },
     {
       "name": "Media"
+    },
+    {
+      "name": "Admin finance"
     }
   ]
 }

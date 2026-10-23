@@ -79,7 +79,7 @@ Todas las rutas exigen rol Pintor y devuelven solo recursos asignados a él. Las
 | GET | `/api/painter/visits/{id}` | Datos de la visita (el id es el del trabajo) y lo declarado por el cliente, sin importes | P3.1 |
 | POST | `/api/painter/visits/{id}/media/upload-url` | URL firmada para una foto de la visita (`site_visit`) | P3.1 |
 | POST | `/api/painter/visits/{id}/report` | `{ elements, extras: [{ catalogKey?, description, painterPayCents }], fileIds, notes }`: vuelve a «En revisión» y crea el borrador `site_visit` | P3.1 |
-| GET | `/api/painter/payouts?month=AAAA-MM` | Totales del mes (pendiente y pagado), pagos por trabajo e IBAN enmascarado | P4.1 |
+| GET | `/api/painter/payouts?month=AAAA-MM` | Todo lo pendiente y lo pagado en el mes, con los pagos por trabajo (el IBAN enmascarado viene de `/api/painter/me`) | P4.1 |
 | GET / PUT | `/api/painter/me` | Ficha propia para completar el alta: teléfono, zonas, NIF e IBAN (cambiar el IBAN pide la contraseña) | A4.2 |
 | POST | `/api/painter/jobs/{id}/media/upload-url` | URL firmada para subir una foto del resultado (`result`) | P2.2 |
 

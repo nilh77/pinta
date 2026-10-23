@@ -30,9 +30,10 @@ internal sealed class PayableJobs(JobsDbContext db, IQuoteVersions quotes) : IPa
 
 /// <summary>
 /// A payment confirmed by Stripe moves the job (docs/states.md, actor "Sistema"): the deposit takes the confirmed price to
-/// "Señal pagada", the balance takes a finished job to "Cerrado". A site visit payment changes no state.
+/// "Señal pagada", the balance takes a finished job to "Cerrado" (and the painter's payout is due). A site visit payment
+/// changes no state.
 /// </summary>
-internal sealed class MoveJobWhenPaid(JobsDbContext db, TimeProvider clock, ILogger<MoveJobWhenPaid> logger)
+internal sealed class MoveJobWhenPaid(JobsDbContext db, IEventPublisher events, TimeProvider clock, ILogger<MoveJobWhenPaid> logger)
     : IIntegrationEventHandler<PaymentSucceeded>
 {
     public async Task HandleAsync(PaymentSucceeded paid, CancellationToken cancellationToken)
@@ -57,5 +58,13 @@ internal sealed class MoveJobWhenPaid(JobsDbContext db, TimeProvider clock, ILog
 
         job.TransitionTo(to.Value, JobActor.System, null, null, clock.GetUtcNow());
         await db.SaveChangesAsync(cancellationToken);
+        if (to == JobStatus.Closed)
+        {
+            var assignment = await db.Assignments.AsNoTracking()
+                .Where(a => a.JobId == job.Id && (a.Status == AssignmentStatus.Completed || a.Status == AssignmentStatus.Accepted))
+                .OrderByDescending(a => a.OfferedAt).FirstOrDefaultAsync(cancellationToken);
+            await events.PublishAsync(
+                new JobClosed(job.Id, job.Code, assignment?.PainterId, assignment is null ? 0 : Money.ToCents(assignment.PainterPay)), cancellationToken);
+        }
     }
 }
