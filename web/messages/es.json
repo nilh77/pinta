@@ -20,7 +20,8 @@
     "signOut": "Salir",
     "greeting": "Hola, {name}",
     "myJobs": "Mis trabajos",
-    "admin": "Panel"
+    "admin": "Panel",
+    "painterJobs": "Trabajos"
   },
   "home": {
     "badge": "Distrito de Lisboa",
@@ -178,7 +179,8 @@
     "invalid_transition": "Esta acción ya no es posible en el estado actual. Recarga la página.",
     "quote_expired": "El plazo de este precio terminó. Pide un precio nuevo.",
     "payment_already_made": "Este pago ya está hecho.",
-    "payment_provider_error": "Los pagos no están disponibles en este momento. Inténtalo más tarde."
+    "payment_provider_error": "Los pagos no están disponibles en este momento. Inténtalo más tarde.",
+    "assignment_taken": "Esta oferta ya no está disponible."
   },
   "admin": {
     "loading": "Cargando el panel…",
@@ -1248,5 +1250,134 @@
       "failed": "El reembolso de {amount} falló"
     },
     "receipt": "Recibo (PDF)"
+  },
+  "painter": {
+    "loading": "Cargando…",
+    "notPainter": "Esta zona es para los pintores de Pinta.",
+    "goHome": "Ir a mi zona",
+    "onboarding": {
+      "title": "Bienvenido a Pinta",
+      "passwordIntro": "Elige la contraseña para entrar en tu zona de pintor.",
+      "password": "Contraseña",
+      "passwordHint": "Al menos {min} caracteres.",
+      "continue": "Continuar",
+      "invalid": "La invitación no es válida o ha caducado",
+      "invalidBody": "Pide al equipo de Pinta una nueva invitación.",
+      "loading": "Cargando tu ficha…",
+      "error": "No hemos podido cargar tu ficha.",
+      "retry": "Reintentar",
+      "profileIntro": "{name}, confirma o completa tus datos. Los usamos para ofrecerte trabajos y pagarte.",
+      "phone": "Teléfono",
+      "phoneHint": "Con prefijo, por ejemplo +351 912 345 678.",
+      "taxId": "NIF (opcional)",
+      "zones": "Concelhos donde trabajas",
+      "iban": "IBAN para los pagos",
+      "ibanHint": "IBAN portugués (PT50…). Puedes indicarlo más tarde.",
+      "ibanKeep": "Tenemos el {iban}. Déjalo en blanco para mantenerlo.",
+      "finish": "Guardar y ver trabajos",
+      "errors": {
+        "taxId": "El NIF tiene 9 dígitos.",
+        "zones": "Elige al menos un concelho.",
+        "iban": "Introduce un IBAN portugués válido (PT50 y 21 dígitos)."
+      }
+    },
+    "jobs": {
+      "title": "Mis trabajos",
+      "loading": "Cargando…",
+      "error": "No hemos podido cargar tus trabajos.",
+      "retry": "Reintentar",
+      "tabs": {
+        "label": "Filtrar trabajos",
+        "offers": "Ofertas",
+        "upcoming": "Próximos",
+        "inProgress": "En curso",
+        "done": "Hechos"
+      },
+      "empty": {
+        "offers": "Sin ofertas por ahora",
+        "offersBody": "Te avisamos por email cuando haya un trabajo en tu zona.",
+        "upcoming": "Ningún trabajo programado",
+        "inProgress": "Ningún trabajo en curso",
+        "done": "Aún no has terminado trabajos"
+      },
+      "date": "Fecha",
+      "area": "Superficie",
+      "pay": "Cobras",
+      "open": "Ver trabajo",
+      "offer": {
+        "accept": "Aceptar",
+        "decline": "Rechazar",
+        "accepted": "Trabajo aceptado para el {date}.",
+        "declined": "Oferta rechazada. Gracias por avisar.",
+        "taken": "Esta oferta ya no está disponible.",
+        "declineTitle": "Rechazar {code}",
+        "declineBody": "Dinos por qué, para ofrecer el trabajo a otro pintor.",
+        "declineSubmit": "Rechazar oferta",
+        "reason": "Motivo",
+        "cancel": "Volver"
+      }
+    },
+    "job": {
+      "title": "Trabajo",
+      "loading": "Cargando el trabajo…",
+      "error": "No hemos podido cargar el trabajo.",
+      "notFound": "No encontramos este trabajo.",
+      "retry": "Reintentar",
+      "back": "Mis trabajos",
+      "scheduledOn": "Programado para el {date}",
+      "address": {
+        "title": "Dirección",
+        "access": "Acceso",
+        "map": "Abrir en el mapa"
+      },
+      "client": {
+        "title": "Cliente",
+        "call": "Llamar al {phone}",
+        "noPhone": "Para hablar con el cliente, contacta con Pinta."
+      },
+      "pay": {
+        "title": "Cobras",
+        "body": "Incluye las partidas extra. Pinta paga por transferencia al cerrar el trabajo."
+      },
+      "work": {
+        "title": "Qué pintar",
+        "element": "Elemento",
+        "walls": "Paredes {walls}",
+        "ceiling": "techo",
+        "damage": "con reparaciones",
+        "litres": "{litres} L",
+        "material": "Material",
+        "materialNote": "Pinta entrega la pintura en la obra.",
+        "extras": "Partidas extra"
+      },
+      "notes": {
+        "title": "Notas",
+        "client": "Del cliente",
+        "reviewer": "De Pinta"
+      },
+      "clientPhotos": "Fotos del cliente",
+      "photo": "Foto {n}",
+      "start": "Empezar trabajo",
+      "started": "Trabajo en curso. ¡Buen trabajo!",
+      "startFrom": "Puedes empezar a partir del {date}.",
+      "pendingClose": "Terminado. Pendiente de cierre por Pinta.",
+      "closed": "Trabajo cerrado.",
+      "result": {
+        "title": "Fotos del resultado",
+        "body": "Haz al menos {min} fotos del trabajo terminado: el cliente las verá.",
+        "add": "Añadir",
+        "photo": "Foto {n}",
+        "remove": "Quitar foto {n}",
+        "error": "Error",
+        "format": "{name}: usa JPG, PNG o WebP.",
+        "failed": "No hemos podido subir {name}.",
+        "count": "{count} de {min} fotos",
+        "finish": "Marcar como terminado",
+        "confirmTitle": "¿Terminar el trabajo?",
+        "confirmBody": "Enviamos las fotos al cliente y le pedimos el pago del resto.",
+        "cancel": "Volver",
+        "finished": "Trabajo terminado. ¡Gracias!"
+      }
+    }
   }
 }

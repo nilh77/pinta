@@ -19,7 +19,8 @@ export function SignInForm({ next }: { next?: string }) {
   const { errors } = form.formState;
 
   const onSubmit = form.handleSubmit((values) =>
-    signIn.mutate(values, { onSuccess: () => router.push(safeNextPath(next)) }),
+    // A painter without a target lands on their jobs (P1).
+    signIn.mutate(values, { onSuccess: (me) => router.push(!next && me.role === "painter" ? "/pintor" : safeNextPath(next)) }),
   );
 
   return (
