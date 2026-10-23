@@ -23,4 +23,5 @@
   <data name="Vat" xml:space="preserve"><value>IVA ({0}%)</value></data>
   <data name="Total" xml:space="preserve"><value>Total pagado</value></data>
   <data name="Refunded" xml:space="preserve"><value>Reembolsado</value></data>
+  <data name="Amount" xml:space="preserve"><value>Importe</value></data>
 </root>

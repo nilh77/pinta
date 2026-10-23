@@ -138,8 +138,8 @@ public static class ReceiptDocument
                         columns.RelativeColumn(1);
                     });
                     table.Cell().BorderBottom(1).BorderColor("#D7E3DF").PaddingBottom(4).Text(T("Description")).Bold();
-                    table.Cell().BorderBottom(1).BorderColor("#D7E3DF").PaddingBottom(4).AlignRight().Text(T("Base")).Bold();
-                    table.Cell().PaddingTop(6).Text($"{T($"Kind.{kind}")} · {data.JobCode}");
+                    table.Cell().BorderBottom(1).BorderColor("#D7E3DF").PaddingBottom(4).AlignRight().Text(T("Amount")).Bold();
+                    table.Cell().PaddingTop(6).Text($"{T($"Kind.{kind}")} · {data.JobCode} ({T("Base").ToLower(culture)})");
                     table.Cell().PaddingTop(6).AlignRight().Text(Euros(baseCents));
                     table.Cell().PaddingTop(4).Text(string.Format(culture, T("Vat"), data.VatPct.ToString("0.##", culture)));
                     table.Cell().PaddingTop(4).AlignRight().Text(Euros(data.AmountCents - baseCents));
