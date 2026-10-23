@@ -174,7 +174,7 @@ internal static class ClientJobEndpoints
 
     private static async Task<Results<NoContent, ProblemHttpResult>> RejectQuoteAsync(
         Guid id, RejectQuoteRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links,
-        TimeProvider clock, CancellationToken cancellationToken)
+        JobCancellation cancellation, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: true, cancellationToken);
         if (job is null)
@@ -189,11 +189,13 @@ internal static class ClientJobEndpoints
         }
 
         var reason = string.IsNullOrWhiteSpace(request.Reason) ? null : request.Reason.Trim();
+        var preview = await cancellation.PreviewAsync(job, false, cancellationToken);
         if (await MoveAsync(db, job, JobStatus.Cancelled, http, reason, clock, cancellationToken) is { } problem)
         {
             return problem;
         }
 
+        await cancellation.CancelledAsync(job, preview, reason, cancellationToken);
         var client = (await users.FindAsync(job.ClientId, cancellationToken))!;
         foreach (var admin in await users.ListAdminsAsync(cancellationToken))
         {
@@ -232,16 +234,17 @@ internal static class ClientJobEndpoints
     }
 
     private static async Task<Results<Ok<CancellationPreview>, ProblemHttpResult>> PreviewAsync(
-        Guid id, HttpContext http, JobsDbContext db, IPriceSnapshotProvider snapshots, CancellationToken cancellationToken)
+        Guid id, HttpContext http, JobsDbContext db, JobCancellation cancellation, CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: false, cancellationToken);
         return job is null
             ? JobProblems.NotFound()
-            : TypedResults.Ok(JobRules.Preview(job, (await snapshots.GetCurrentAsync(cancellationToken)).Rules));
+            : TypedResults.Ok(await cancellation.PreviewAsync(job, false, cancellationToken));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> CancelAsync(
-        Guid id, ClientCancelRequest request, HttpContext http, JobsDbContext db, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, ClientCancelRequest request, HttpContext http, JobsDbContext db, JobCancellation cancellation, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: true, cancellationToken);
         if (job is null)
@@ -249,11 +252,15 @@ internal static class ClientJobEndpoints
             return JobProblems.NotFound();
         }
 
-        // The refund and its email come with payments in H5; until then there is nothing to refund.
         var reason = string.IsNullOrWhiteSpace(request.Reason) ? null : request.Reason.Trim();
-        return await MoveAsync(db, job, JobStatus.Cancelled, http, reason, clock, cancellationToken) is { } problem
-            ? problem
-            : TypedResults.NoContent();
+        var preview = await cancellation.PreviewAsync(job, false, cancellationToken);
+        if (await MoveAsync(db, job, JobStatus.Cancelled, http, reason, clock, cancellationToken) is { } problem)
+        {
+            return problem;
+        }
+
+        await cancellation.CancelledAsync(job, preview, reason, cancellationToken);
+        return TypedResults.NoContent();
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> RequoteAsync(

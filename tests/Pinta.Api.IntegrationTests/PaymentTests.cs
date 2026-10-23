@@ -300,3 +300,90 @@ public class PaymentFlowTests(PintaApiFactory factory)
             client.GetProperty("lines").EnumerateArray().Select(l => (l.GetProperty("kind").GetString(), l.GetProperty("amountCents").GetInt64())));
     }
 }
+
+/// <summary>C5.6, A3.4: cancelling refunds the deposit under the policy through Stripe.</summary>
+public class RefundTests(PintaApiFactory factory)
+{
+    private async Task<TestJobs.SentJob> ScheduledInAsync(int days)
+    {
+        var (job, _) = await TestPayments.PaidDepositAsync(factory);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var response = await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/transition",
+            new { to = "scheduled", reason = "Pintor confirmado", scheduledOn = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(days) }, ApiClient.Json);
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        return job;
+    }
+
+    private async Task<(string IntentId, long AmountCents)> SentRefundAsync(Guid jobId)
+    {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<PaymentsDbContext>();
+        var intent = (await db.Payments.SingleAsync(p => p.JobId == jobId && p.Type == PaymentType.Deposit)).StripePaymentIntentId;
+        for (var i = 0; i < 100 && !factory.Stripe.Refunds.Any(r => r.PaymentIntentId == intent); i++)
+        {
+            await Task.Delay(100);
+        }
+
+        return Assert.Single(factory.Stripe.Refunds.Where(r => r.PaymentIntentId == intent).Select(r => (r.PaymentIntentId, r.AmountCents)));
+    }
+
+    [Fact]
+    public async Task C5_6_TC01_cancelling_3_days_before_refunds_half_the_deposit()
+    {
+        var job = await ScheduledInAsync(3);
+
+        var preview = await (await job.Client.GetAsync($"/api/jobs/{job.JobId}/cancellation-preview")).ReadJsonAsync();
+        var cancelled = await job.Client.PostAsJsonAsync($"/api/jobs/{job.JobId}/cancel", new { reason = "Mudança de planos." }, ApiClient.Json);
+
+        Assert.Equal((true, 14768L, 7384L, 3), (preview.GetProperty("cancellable").GetBoolean(), preview.GetProperty("depositPaidCents").GetInt64(),
+            preview.GetProperty("refundCents").GetInt64(), preview.GetProperty("daysBeforeStart").GetInt32()));
+        Assert.Equal(HttpStatusCode.NoContent, cancelled.StatusCode);
+        var (intent, amount) = await SentRefundAsync(job.JobId);
+        Assert.Equal(7384, amount);
+        Assert.Equal(7384, Assert.Single(factory.Emails.To<RefundEmail>(job.Email)).AmountCents);
+
+        await FakeStripe.SendAsync(factory.CreateClient(), "charge.refunded",
+            new { id = $"ch_{Guid.NewGuid():N}", @object = "charge", payment_intent = intent, amount = 14768, amount_refunded = 7384 });
+        var payment = Assert.Single((await (await job.Client.GetAsync($"/api/jobs/{job.JobId}/payments")).ReadJsonAsync()).EnumerateArray());
+        Assert.Equal(("partially_refunded", 7384), (payment.GetProperty("status").GetString(), payment.GetProperty("refundedCents").GetInt64()));
+    }
+
+    [Fact]
+    public async Task C5_6_cancelling_8_days_before_refunds_the_whole_deposit()
+    {
+        var job = await ScheduledInAsync(8);
+
+        await job.Client.PostAsJsonAsync($"/api/jobs/{job.JobId}/cancel", new { }, ApiClient.Json);
+
+        Assert.Equal(14768, (await SentRefundAsync(job.JobId)).AmountCents);
+    }
+
+    [Fact]
+    public async Task A3_4_the_admin_can_refund_everything_as_an_exception()
+    {
+        var job = await ScheduledInAsync(2);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+
+        var policy = await (await admin.GetAsync($"/api/admin/jobs/{job.JobId}/cancellation-preview")).ReadJsonAsync();
+        var full = await (await admin.GetAsync($"/api/admin/jobs/{job.JobId}/cancellation-preview?fullRefund=true")).ReadJsonAsync();
+        await admin.PostAsJsonAsync($"/api/admin/jobs/{job.JobId}/cancel", new { reason = "Erro nosso", fullRefund = true }, ApiClient.Json);
+
+        Assert.Equal((7384, 14768), (policy.GetProperty("refundCents").GetInt64(), full.GetProperty("refundCents").GetInt64()));
+        Assert.Equal(14768, (await SentRefundAsync(job.JobId)).AmountCents);
+    }
+
+    [Fact]
+    public async Task C5_6_cancelling_closes_payments_still_open()
+    {
+        var job = await TestJobs.SendAsync(factory);
+        await TestReview.ConfirmAsync(factory, job.JobId);
+        var intent = TestPayments.IntentId(await (await TestPayments.CreateAsync(job.Client, job.JobId)).ReadJsonAsync());
+
+        await job.Client.PostAsJsonAsync($"/api/jobs/{job.JobId}/reject-quote", new { }, ApiClient.Json);
+
+        Assert.Contains(intent, factory.Stripe.Cancelled);
+        var payment = Assert.Single((await (await job.Client.GetAsync($"/api/jobs/{job.JobId}/payments")).ReadJsonAsync()).EnumerateArray());
+        Assert.Equal("cancelled", payment.GetProperty("status").GetString());
+        Assert.Empty(factory.Emails.To<RefundEmail>(job.Email));
+    }
+}

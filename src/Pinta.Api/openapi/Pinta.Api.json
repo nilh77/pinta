@@ -2638,6 +2638,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "fullRefund",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -3564,7 +3571,8 @@
         "required": [
           "cancellable",
           "depositPaidCents",
-          "refundCents"
+          "refundCents",
+          "daysBeforeStart"
         ],
         "type": "object",
         "properties": {
@@ -3578,6 +3586,13 @@
           "refundCents": {
             "type": "integer",
             "format": "int64"
+          },
+          "daysBeforeStart": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
           }
         }
       },

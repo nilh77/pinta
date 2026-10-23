@@ -10,7 +10,9 @@ using Pinta.Modules.Payments.Features.Pay;
 using Pinta.Modules.Payments.Features.Refunds;
 using Pinta.Modules.Payments.Features.Webhooks;
 using Pinta.Modules.Payments.Stripe;
+using Pinta.Modules.Jobs.Contracts;
 using Pinta.SharedKernel.Data;
+using Pinta.SharedKernel.Events;
 using Pinta.SharedKernel.Http;
 
 namespace Pinta.Modules.Payments;
@@ -26,6 +28,7 @@ public static class PaymentsModule
         builder.Services.AddScoped<WebhookProcessor>();
         builder.Services.AddScoped<RefundSender>();
         builder.Services.AddScoped<IJobPayments, JobPayments>();
+        builder.Services.AddEventHandler<JobCancelled, RefundOnCancellation>();
         builder.Services.AddValidatorsFromAssemblyContaining<CreatePaymentRequest>(includeInternalTypes: true);
         return builder;
     }

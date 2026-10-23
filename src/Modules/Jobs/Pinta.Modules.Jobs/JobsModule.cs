@@ -31,6 +31,7 @@ public static class JobsModule
         builder.Services.AddEventHandler<EmailConfirmed, MoveToReviewWhenEmailConfirmed>();
         builder.Services.AddScoped<IJobAccess, JobAccess>();
         builder.Services.AddScoped<IPayableJobs, PayableJobs>();
+        builder.Services.AddScoped<JobCancellation>();
         builder.Services.AddEventHandler<PaymentSucceeded, MoveJobWhenPaid>();
         builder.Services.TryAddSingleton<WebLinks>();
         builder.Services.AddScoped<ExpireQuotes>();

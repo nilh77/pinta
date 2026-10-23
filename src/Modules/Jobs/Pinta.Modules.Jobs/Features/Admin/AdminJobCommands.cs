@@ -246,7 +246,7 @@ internal static class AdminJobCommands
 
     private static async Task<Results<NoContent, ProblemHttpResult>> TransitionAsync(
         Guid id, TransitionRequest request, HttpContext http, JobsDbContext db, IRequestSettings settings, IUserDirectory users,
-        IEmailQueue emails, TimeProvider clock, CancellationToken cancellationToken)
+        IEmailQueue emails, JobCancellation cancellation, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -272,10 +272,16 @@ internal static class AdminJobCommands
 
         var reason = request.Reason.Trim();
         var reviewDueOn = request.To == JobStatus.InReview ? await JobRules.ReviewDueOnAsync(settings, clock, cancellationToken) : null;
+        var preview = request.To == JobStatus.Cancelled ? await cancellation.PreviewAsync(job, false, cancellationToken) : null;
         var problem = await MoveAsync(db, job, request.To, http, reason, request.Version, clock, cancellationToken, reviewDueOn);
         if (problem is not null)
         {
             return problem;
+        }
+
+        if (preview is not null)
+        {
+            await cancellation.CancelledAsync(job, preview, reason, cancellationToken);
         }
 
         if (request.To == JobStatus.Rejected)
@@ -286,17 +292,19 @@ internal static class AdminJobCommands
         return TypedResults.NoContent();
     }
 
+    /// <param name="fullRefund">The admin's exception: the whole deposit back, whatever the date (A3.4).</param>
     private static async Task<Results<Ok<CancellationPreview>, ProblemHttpResult>> PreviewAsync(
-        Guid id, JobsDbContext db, IPriceSnapshotProvider snapshots, CancellationToken cancellationToken)
+        Guid id, bool? fullRefund, JobsDbContext db, JobCancellation cancellation, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         return job is null
             ? JobProblems.NotFound()
-            : TypedResults.Ok(JobRules.Preview(job, (await snapshots.GetCurrentAsync(cancellationToken)).Rules));
+            : TypedResults.Ok(await cancellation.PreviewAsync(job, fullRefund ?? false, cancellationToken));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> CancelAsync(
-        Guid id, AdminCancelRequest request, HttpContext http, JobsDbContext db, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, AdminCancelRequest request, HttpContext http, JobsDbContext db, JobCancellation cancellation, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -304,10 +312,14 @@ internal static class AdminJobCommands
             return JobProblems.NotFound();
         }
 
-        // The refund itself (with the full-refund exception) runs with payments in H5.
-        return await MoveAsync(db, job, JobStatus.Cancelled, http, request.Reason.Trim(), request.Version, clock, cancellationToken) is { } problem
-            ? problem
-            : TypedResults.NoContent();
+        var preview = await cancellation.PreviewAsync(job, request.FullRefund, cancellationToken);
+        if (await MoveAsync(db, job, JobStatus.Cancelled, http, request.Reason.Trim(), request.Version, clock, cancellationToken) is { } problem)
+        {
+            return problem;
+        }
+
+        await cancellation.CancelledAsync(job, preview, request.Reason.Trim(), cancellationToken);
+        return TypedResults.NoContent();
     }
 
     /// <summary>Applies an admin transition and saves it; the problem to answer when it is not allowed or stale.</summary>

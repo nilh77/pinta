@@ -1054,6 +1054,8 @@ export interface components {
             depositPaidCents: number;
             /** Format: int64 */
             refundCents: number;
+            /** Format: int32 */
+            daysBeforeStart: null | number;
         };
         CatalogOption: {
             id: string;
@@ -4065,7 +4067,9 @@ export interface operations {
     };
     AdminCancellationPreview: {
         parameters: {
-            query?: never;
+            query?: {
+                fullRefund?: boolean;
+            };
             header?: never;
             path: {
                 id: string;
