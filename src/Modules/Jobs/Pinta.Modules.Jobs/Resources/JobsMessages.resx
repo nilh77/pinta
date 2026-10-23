@@ -12,4 +12,8 @@
   <data name="dates_too_long" xml:space="preserve"><value>O intervalo não pode passar de 60 dias.</value></data>
   <data name="tax_id" xml:space="preserve"><value>Indique um NIF português válido (9 dígitos).</value></data>
   <data name="company_required" xml:space="preserve"><value>Indique o nome da empresa para a fatura.</value></data>
+  <data name="low_margin" xml:space="preserve"><value>A margem fica abaixo do mínimo ({0}%). Confirme para continuar.</value></data>
+  <data name="site_visit_assignee" xml:space="preserve"><value>Escolha um sócio.</value></data>
+  <data name="site_visit_future" xml:space="preserve"><value>Escolha uma data futura.</value></data>
+  <data name="transition_use_action" xml:space="preserve"><value>Use a ação própria deste estado.</value></data>
 </root>

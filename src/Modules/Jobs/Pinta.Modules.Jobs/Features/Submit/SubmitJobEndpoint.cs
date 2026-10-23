@@ -171,7 +171,7 @@ internal static class SubmitJobEndpoint
         var confirmationUrl = client.EmailConfirmed ? null : await confirmationLinks.CreateAsync(client.Id, cancellationToken);
         await emails.EnqueueAsync(new RequestReceivedEmail(
             client.Email, client.Locale, client.Name, job.Code, quote.AreaM2, quote.RangeMinCents, quote.RangeMaxCents,
-            settings.ReviewDeadlineBusinessDays, confirmationUrl), cancellationToken);
+            settings.ReviewDeadlineBusinessDays, confirmationUrl) { JobId = job.Id }, cancellationToken);
 
         return TypedResults.Created($"/api/jobs/{job.Id}", new SubmitJobResponse(job.Id, job.Code, job.Status));
     }

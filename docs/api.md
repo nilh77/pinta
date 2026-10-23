@@ -95,14 +95,17 @@ Todas las rutas exigen rol Admin.
 | GET / POST / PUT | `/api/admin/coverage[/{id}]` | Zonas de cobertura | A1.7 |
 | POST | `/api/admin/quotes/simulate` | Simulador con desglose completo | A1.8 |
 | GET | `/api/admin/reviews` | Bandeja de revisión con semáforo | A2.1 |
-| GET | `/api/admin/jobs` | Lista o tablero con filtros y búsqueda | A3.1 |
+| GET | `/api/admin/jobs` | Lista o tablero con filtros (`status` repetible en `snake_case`, `from`, `to`, `municipality`, `premium`) y búsqueda `q` por código, nombre o email | A3.1 |
+| GET | `/api/admin/jobs/export` | Los mismos filtros en CSV (UTF-8) | A3.1 |
+| GET | `/api/admin/partners` | Socios (admins) a los que asignar una visita técnica en H4 | A2.6 |
 | GET | `/api/admin/jobs/{id}` | Detalle completo con desglose interno e historial | A2.2, A3.5 |
 | PUT | `/api/admin/jobs/{id}/draft-quote` | Edita estancias, ocupación, extras, Premium y ajuste manual del borrador de revisión; devuelve el desglose | A2.3–A2.5, A2.7 |
 | POST | `/api/admin/jobs/{id}/confirm-quote` | Confirma el precio con nota opcional | A2.8 |
 | POST | `/api/admin/jobs/{id}/reject` | Rechaza con motivo | A2.9 |
 | POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado y fecha | A2.6 |
+| POST | `/api/admin/jobs/{id}/site-visit/complete` | Visita hecha: vuelve a revisión; el siguiente borrador tiene origen `site_visit` | A2.6 |
 | POST | `/api/admin/jobs/{id}/assignments` | Asigna pintor y fecha | A3.2 |
-| POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo | A3.3 |
+| POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422) | A3.3 |
 | GET | `/api/admin/jobs/{id}/cancellation-preview` | Reembolso calculado | A3.4 |
 | POST | `/api/admin/jobs/{id}/cancel` | Cancela, con opción de reembolso total y motivo | A3.4 |
 | GET / POST | `/api/admin/painters` | Listar y dar de alta | A4.1 |

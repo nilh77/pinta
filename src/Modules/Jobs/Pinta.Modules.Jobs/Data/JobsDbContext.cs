@@ -18,6 +18,7 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             job.ToTable("jobs");
             job.HasIndex(j => j.Code).IsUnique();
             job.HasIndex(j => new { j.ClientId, j.Status });
+            job.HasIndex(j => new { j.Status, j.QuoteValidUntil });
             job.Property(j => j.Code).HasMaxLength(12);
             job.Property(j => j.Status).HasSnakeCaseConversion(20);
             job.Property(j => j.AddressLine1).HasMaxLength(200);
@@ -29,6 +30,7 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             job.Property(j => j.Description).HasMaxLength(2000);
             job.Property(j => j.TaxId).HasMaxLength(9);
             job.Property(j => j.CompanyName).HasMaxLength(200);
+            job.Property(j => j.SiteVisitPrice).HasPrecision(12, 2);
             job.Property(j => j.Version).IsRowVersion();
             job.HasMany(j => j.History).WithOne().HasForeignKey(c => c.JobId);
             job.Navigation(j => j.History).UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_history");

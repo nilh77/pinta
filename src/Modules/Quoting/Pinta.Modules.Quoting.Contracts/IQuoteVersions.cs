@@ -14,6 +14,9 @@ public sealed record QuoteVersionSummary(
     // Quote element id by the builder's QuoteElementRequest.ClientKey.
     IReadOnlyDictionary<string, Guid> ElementIdsByClientKey);
 
+/// <summary>Total and margin of a version for the admin jobs list (A3.1).</summary>
+public sealed record QuoteTotals(Guid VersionId, long TotalCents, long MarginCents);
+
 /// <summary>Validation errors by JSON path (<c>elements[0].walls</c>), already translated.</summary>
 public sealed record QuoteErrors(IDictionary<string, string[]> Errors);
 
@@ -54,4 +57,6 @@ public interface IQuoteVersions
     Task<ClientQuote?> GetClientAsync(Guid versionId, string language, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<QuoteVersionListItem>> ListAsync(Guid jobId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<QuoteTotals>> GetTotalsAsync(IReadOnlyCollection<Guid> versionIds, CancellationToken cancellationToken = default);
 }

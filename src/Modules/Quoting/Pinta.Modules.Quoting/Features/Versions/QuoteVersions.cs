@@ -157,6 +157,11 @@ internal sealed class QuoteVersions(
             v.ConfirmedAt, v.ValidUntil))
         .ToList();
 
+    public async Task<IReadOnlyList<QuoteTotals>> GetTotalsAsync(IReadOnlyCollection<Guid> versionIds, CancellationToken cancellationToken = default) =>
+        (await db.Versions.AsNoTracking().Where(v => versionIds.Contains(v.Id)).Select(v => new { v.Id, v.Total, v.Margin }).ToListAsync(cancellationToken))
+        .Select(v => new QuoteTotals(v.Id, Money.ToCents(v.Total), Money.ToCents(v.Margin)))
+        .ToList();
+
     private IQueryable<QuoteVersion> Load() =>
         db.Versions.Include(v => v.Elements.OrderBy(e => e.Position)).Include(v => v.Extras).AsSplitQuery();
 

@@ -47,7 +47,18 @@ public sealed class Job
 
     public string? CompanyName { get; init; }
 
+    /// <summary>The estimate until the admin confirms a price; then the confirmed version the client decides on.</summary>
     public Guid CurrentQuoteVersionId { get; set; }
+
+    /// <summary>Last day the confirmed price can be accepted (Lisbon); the next day at 03:00 it expires (S3).</summary>
+    public DateOnly? QuoteValidUntil { get; set; }
+
+    /// <summary>Site visit (A2.6): when, who goes (an admin partner in H4) and its price with VAT.</summary>
+    public DateTimeOffset? SiteVisitAt { get; set; }
+
+    public Guid? SiteVisitAssigneeId { get; set; }
+
+    public decimal? SiteVisitPrice { get; set; }
 
     /// <summary>End of the review deadline (2 working days by default) once the job is in review.</summary>
     public DateOnly? ReviewDueOn { get; private set; }
