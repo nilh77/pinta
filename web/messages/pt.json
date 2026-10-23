@@ -166,6 +166,7 @@
     "tooLong": "Texto demasiado longo."
   },
   "errors": {
+    "bad_request": "Não conseguimos ler o pedido. Recarregue a página e tente outra vez.",
     "unauthenticated": "A sua sessão terminou. Entre novamente.",
     "invalid_credentials": "Email ou palavra-passe incorretos.",
     "forbidden": "Não tem permissão para fazer isto.",

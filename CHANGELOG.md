@@ -6,7 +6,9 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-Nada todavía.
+### Corregido
+
+- Un cuerpo JSON que no se puede leer (mal formado o con un valor de enumeración desconocido, p. ej. `"occupancy": "abandoned"`) responde 400 `bad_request` como ProblemDetails en lugar de 500, y ya no se registra como error del servidor. El frontend tiene texto para `bad_request` en los tres idiomas.
 
 ## H6b · Visita técnica del pintor y pagos al pintor — 2026-10-23, [PR #8](https://github.com/nilh77/pinta/pull/8)
 

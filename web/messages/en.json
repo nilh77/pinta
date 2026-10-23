@@ -166,6 +166,7 @@
     "tooLong": "Too long."
   },
   "errors": {
+    "bad_request": "We couldn't read the request. Reload the page and try again.",
     "unauthenticated": "Your session has ended. Please sign in again.",
     "invalid_credentials": "Incorrect email or password.",
     "forbidden": "You're not allowed to do this.",
