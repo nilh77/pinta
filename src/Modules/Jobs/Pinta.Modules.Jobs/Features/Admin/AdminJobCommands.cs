@@ -104,7 +104,7 @@ internal static class AdminJobCommands
 
     private static async Task<Results<NoContent, ProblemHttpResult>> ConfirmAsync(
         Guid id, ConfirmQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IPriceSnapshotProvider snapshots,
-        IUserDirectory users, IEmailQueue emails, JobLinks links, TimeProvider clock, CancellationToken cancellationToken)
+        IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -146,7 +146,7 @@ internal static class AdminJobCommands
         var client = (await users.FindAsync(job.ClientId, cancellationToken))!;
         await emails.EnqueueAsync(new PriceConfirmedEmail(
             client.Email, client.Locale, client.Name, job.Code, confirmed.TotalCents, confirmed.DepositCents, confirmed.ValidUntil, quote.Note,
-            links.Client(job, client.Locale)) { JobId = job.Id }, cancellationToken);
+            links.ClientJob(job.Id, client.Locale)) { JobId = job.Id }, cancellationToken);
         return TypedResults.NoContent();
     }
 

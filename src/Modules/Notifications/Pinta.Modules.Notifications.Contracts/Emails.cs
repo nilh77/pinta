@@ -54,3 +54,24 @@ public sealed record ClientRejectedPriceEmail(
 
 /// <summary>Password recovery link, valid 2 hours (S1).</summary>
 public sealed record ResetPasswordEmail(string To, Locale Locale, string Name, string ResetUrl) : Email(To, Locale);
+
+/// <summary>
+/// A payment arrived (webhook): <see cref="Kind"/> is <c>deposit</c>, <c>balance</c> or <c>site_visit</c>. MB WAY payments
+/// show "Stripe" on the statement (docs/integrations.md).
+/// </summary>
+public sealed record PaymentReceivedEmail(
+    string To, Locale Locale, string Name, string Code, string Kind, long AmountCents, bool MbWay, string JobUrl) : Email(To, Locale);
+
+/// <summary>The Multibanco reference to pay at a bank or ATM (C5.3).</summary>
+public sealed record MultibancoReferenceEmail(
+    string To, Locale Locale, string Name, string Code, string Entity, string Reference, long AmountCents, DateTimeOffset? ExpiresAt, string JobUrl)
+    : Email(To, Locale);
+
+/// <summary>A refund was requested to Stripe after a cancellation (C5.6).</summary>
+public sealed record RefundEmail(string To, Locale Locale, string Name, string Code, long AmountCents, string JobUrl) : Email(To, Locale);
+
+/// <summary>To the admins: a payment arrived for a job that could no longer take it and was refunded in full (S4).</summary>
+public sealed record AutoRefundEmail(string To, Locale Locale, string Code, string Kind, long AmountCents, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the admins: a client opened a dispute in Stripe (S4).</summary>
+public sealed record PaymentDisputeEmail(string To, Locale Locale, string Code, long AmountCents, string? AdminUrl) : Email(To, Locale);

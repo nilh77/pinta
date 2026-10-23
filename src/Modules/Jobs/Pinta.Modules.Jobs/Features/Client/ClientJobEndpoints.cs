@@ -170,7 +170,7 @@ internal static class ClientJobEndpoints
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> RejectQuoteAsync(
-        Guid id, RejectQuoteRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, JobLinks links,
+        Guid id, RejectQuoteRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links,
         TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: true, cancellationToken);
@@ -195,14 +195,14 @@ internal static class ClientJobEndpoints
         foreach (var admin in await users.ListAdminsAsync(cancellationToken))
         {
             await emails.EnqueueAsync(new ClientRejectedPriceEmail(
-                admin.Email, admin.Locale, job.Code, client.Name, reason, links.Admin(job, admin.Locale)) { JobId = job.Id }, cancellationToken);
+                admin.Email, admin.Locale, job.Code, client.Name, reason, links.AdminJob(job.Id, admin.Locale)) { JobId = job.Id }, cancellationToken);
         }
 
         return TypedResults.NoContent();
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> QuestionAsync(
-        Guid id, QuestionRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, JobLinks links,
+        Guid id, QuestionRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links,
         CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: false, cancellationToken);
@@ -221,7 +221,7 @@ internal static class ClientJobEndpoints
         foreach (var admin in await users.ListAdminsAsync(cancellationToken))
         {
             await emails.EnqueueAsync(new ClientQuestionEmail(
-                admin.Email, admin.Locale, job.Code, client.Name, client.Email, request.Message.Trim(), links.Admin(job, admin.Locale))
+                admin.Email, admin.Locale, job.Code, client.Name, client.Email, request.Message.Trim(), links.AdminJob(job.Id, admin.Locale))
             { JobId = job.Id }, cancellationToken);
         }
 

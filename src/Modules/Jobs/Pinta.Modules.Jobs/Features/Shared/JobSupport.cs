@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Pinta.Modules.Catalog.Contracts;
 using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Data;
@@ -53,18 +52,6 @@ internal static class JobSaving
             return false;
         }
     }
-}
-
-/// <summary>Links to the web app for emails.</summary>
-public sealed class JobLinks(IConfiguration configuration)
-{
-    private string Web => (configuration["Web:BaseUrl"] ?? "http://localhost:3000").TrimEnd('/');
-
-    public string Client(Job job, Locale locale) => $"{Web}/{Lang(locale)}/mis-trabajos/{job.Id}";
-
-    public string Admin(Job job, Locale locale) => $"{Web}/{Lang(locale)}/admin/trabajos/{job.Id}";
-
-    private static string Lang(Locale locale) => locale.ToString().ToLowerInvariant();
 }
 
 internal static class JobRules
