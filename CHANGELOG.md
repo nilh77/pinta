@@ -24,9 +24,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 - Documentos: decisiones de H5 en `docs/plan.md` (historias C5.3, C5.5, C5.6, A3.4 y S4), fórmula del descuento de la visita en `docs/pricing-engine.md`, nuevos endpoints y campos en `docs/api.md` y `docs/data-model.md`.
 
+#### Corregido
+
+- El AppHost arranca el Stripe CLI con `--events`: las versiones recientes del CLI no reenvían nada sin esa lista.
+
+#### Verificado
+
+- Con Stripe en modo test y el CLI: la señal de TC01 (147,68 €) pagada con la tarjeta 4242… pasa el trabajo a «Señal pagada» solo al llegar el webhook; reenviar el evento con `stripe events resend` no duplica ni la transición ni el email; cancelar 3 días antes del inicio reembolsa 73,84 € (50%) en Stripe y el pago queda «reembolsado en parte».
+
 #### Pendiente
 
-- La prueba con Stripe real (tarjeta 4242…, `stripe events resend` y el reembolso del 50%) espera a las claves de prueba y al Stripe CLI en este equipo; todo lo demás está probado con un Stripe simulado.
 - El pago del resto solo se puede probar con tests hasta que los pintores marquen «Finalizado» en H6.
 
 ## H4 · Revisión y máquina de estados — 2026-10-23, [PR #5](https://github.com/nilh77/pinta/pull/5)
