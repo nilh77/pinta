@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H7 · Finanzas y área del cliente
+Nada todavía.
 
-#### Añadido
+## H7 · Finanzas y área del cliente — 2026-10-23, [PR #9](https://github.com/nilh77/pinta/pull/9)
+
+### Añadido
 
 - Admin › Finanzas (`/admin/finanzas`): por mes, ingresos sin IVA (trabajos cerrados y señales retenidas de cancelaciones), IVA, material, pintores (el importe real del pago al pintor), margen bruto y %, costes por categoría, beneficio y la mitad de cada socio; los trabajos del mes; costes de operación con las 5 categorías del acuerdo de socios; pagos a pintores pendientes con «Marcar como pagado» (fecha y referencia; el pintor lo ve en «Mis pagos»); «Cerrar mes» para un mes ya terminado, que congela sus cifras; exportación CSV (A5.1–A5.4).
 - Un mes cerrado no admite cambios de costes (`period_closed`); cerrar dos veces o el mes en curso se rechaza. Marcar pagos sigue permitido porque es caja.
@@ -18,21 +20,21 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Recordatorios (S3): a las 09:00, al cliente 3 días antes de que caduque su precio (una vez) y a los admins las solicitudes con el plazo de revisión vencido; los lunes, a los admins los documentos de pintores que caducan en 30 días.
 - Datos de demo: Ana, Miguel y Lisboa Rent, y el mes anterior con PT-…-0091 (TC08) y PT-…-0092 (TC05) cerrados por Rui y pagados, PT-…-0093 (TC03) cancelado 3 días antes, costes (alojamiento, dominio y comisiones de Stripe estimadas) y el mes cerrado. Las solicitudes nuevas se numeran desde la 0121.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: decisiones de H7 en `docs/plan.md` con la tabla del cálculo a mano del mes de demo; categorías de coste y cifras del mes en `docs/data-model.md`; endpoints de finanzas, cuenta y supresión en `docs/api.md`; pantallas 10, 12, Finanzas y Ajustes en `docs/screens.md`; C5.8 en `docs/functional-requirements.md`. Las valoraciones del cliente quedan fuera del MVP, como dice `docs/prd-overview.md`.
 - `GET /api/jobs` incluye `scheduledOn`, y un trabajo terminado cuenta como pendiente de acción del cliente.
 
-#### Corregido
+### Corregido
 
 - En la cabecera del cliente, «Sair» se salía de la pantalla a 390 px: en el móvil el cliente cierra sesión desde «Conta».
 
-#### Verificado
+### Verificado
 
 - Criterio de salida: el mes anterior sembrado cierra con 1.647,43 € de ingresos, 499,27 € de margen, 63,93 € de costes, 435,34 € de beneficio y 217,67 € por socio, igual que el cálculo a mano de `docs/plan.md` (también en un test); un mes cerrado rechaza costes.
 - En el navegador a 390 y 1440 px (pt; Ajustes y la cuenta también en es), con un trabajo de este mes cerrado con webhooks reales de Stripe en modo test: Finanzas de septiembre igual a la tabla; en octubre, un coste nuevo cambia el beneficio al momento, «Cerrar mes» no aparece y el pago de Carla se marca como pagado y ella lo ve pagado; los dos CSV con los totales correctos; Ana cambia el idioma de su cuenta (la página pasa a `/es` y vuelve), pide la supresión, los dos socios reciben el email y al anonimizarla ya no puede entrar y su trabajo cancelado conserva código e importes sin datos personales.
 
-#### Pendiente
+### Pendiente
 
 - Un JSON mal formado (por ejemplo, una categoría que no existe) responde 500 en vez de 400 en toda la API.
 - El registro de emails enviados conserva la dirección de un cliente anonimizado.
