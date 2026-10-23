@@ -351,10 +351,23 @@ function Extras({ request, onChange, readOnly }: { request: DraftQuoteRequest; o
       ) : (
         <ul className="flex flex-col gap-1.5">
           {extras.map((extra, i) => (
-            <li key={i} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2 text-sm">
+            <li
+              key={i}
+              className={cn(
+                "flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-card px-3 py-2 text-sm",
+                !extra.catalogKey && extra.clientPriceCents == null ? "border-accent" : "border-border",
+              )}
+            >
               <span className="font-medium">{extra.catalogKey ? extraName(extra.catalogKey) : extra.description}</span>
               <span className="flex items-center gap-3 text-muted-foreground">
                 {extra.clientPriceCents != null && t("extraPrices", { client: formatCents(locale, extra.clientPriceCents), painter: formatCents(locale, extra.painterPayCents ?? 0) })}
+                {!extra.catalogKey && extra.clientPriceCents == null && (
+                  <PriceToSet
+                    painterPayCents={extra.painterPayCents ?? 0}
+                    readOnly={readOnly}
+                    onSet={(cents) => onChange({ ...request, extras: extras.map((x, j) => (j === i ? { ...x, clientPriceCents: cents } : x)) })}
+                  />
+                )}
                 {!readOnly && (
                   <Button type="button" variant="ghost" size="icon" aria-label={t("removeExtra")} onClick={() => onChange({ ...request, extras: extras.filter((_, j) => j !== i) })}>
                     <Trash2 aria-hidden="true" />
@@ -438,6 +451,39 @@ function Extras({ request, onChange, readOnly }: { request: DraftQuoteRequest; o
         </div>
       )}
     </section>
+  );
+}
+
+/** P3.1: a free item the painter proposed at the visit, with their pay; the admin sets what the client pays. */
+function PriceToSet({ painterPayCents, readOnly, onSet }: { painterPayCents: number; readOnly: boolean; onSet: (cents: number) => void }) {
+  const t = useTranslations("admin.job.draft");
+  const locale = useLocale();
+  const id = useId();
+  const [value, setValue] = useState("");
+  const cents = parseEurosToCents(value);
+  return (
+    <span className="flex flex-wrap items-center gap-2">
+      <span className="text-xs font-semibold text-accent-ink">{t("priceToSet", { painter: formatCents(locale, painterPayCents) })}</span>
+      {!readOnly && (
+        <>
+          <label htmlFor={id} className="sr-only">
+            {t("clientPrice")}
+          </label>
+          <input
+            id={id}
+            className={cn(selectClass, "h-9 w-24")}
+            inputMode="decimal"
+            placeholder={t("clientPrice")}
+            value={value}
+            aria-invalid={value !== "" && cents === null ? true : undefined}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          <Button type="button" variant="outline" size="sm" disabled={cents === null || value === ""} onClick={() => onSet(cents!)}>
+            {t("setPrice")}
+          </Button>
+        </>
+      )}
+    </span>
   );
 }
 

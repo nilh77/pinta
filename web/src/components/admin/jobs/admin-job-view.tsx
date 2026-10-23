@@ -187,6 +187,7 @@ function Overview({ job }: { job: AdminJobDetail }) {
           )}
         </div>
       </div>
+      {job.siteVisit?.reportedAt && <VisitReport job={job} />}
       {job.description && (
         <blockquote className="rounded-xl bg-background px-3 py-2 text-sm">
           <p className="text-xs font-semibold text-muted-foreground">{t("description")}</p>
@@ -194,6 +195,23 @@ function Overview({ job }: { job: AdminJobDetail }) {
         </blockquote>
       )}
       <JobActions job={job} />
+    </section>
+  );
+}
+
+/** P3.1: the painter's visit report; its measures are already the draft, its photos are the visit files. */
+function VisitReport({ job }: { job: AdminJobDetail }) {
+  const t = useTranslations("admin.job.visitReport");
+  const locale = useLocale();
+  const photos = job.files.filter((f) => f.context === "site_visit");
+  return (
+    <section aria-labelledby="visit-report-title" className="flex flex-col gap-2 rounded-xl border border-accent bg-background px-3 py-3 text-sm">
+      <h3 id="visit-report-title" className="font-bold">
+        {t("title", { who: job.siteVisit!.assigneeName, date: formatDateTime(locale, job.siteVisit!.reportedAt!) })}
+      </h3>
+      <p className="text-muted-foreground">{t("draft")}</p>
+      {job.siteVisit!.reportNotes && <p className="whitespace-pre-line">{job.siteVisit!.reportNotes}</p>}
+      <JobFiles files={photos} emptyText={t("noPhotos")} />
     </section>
   );
 }

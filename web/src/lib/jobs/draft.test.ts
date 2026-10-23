@@ -38,6 +38,11 @@ describe("review draft (A2.3–A2.7)", () => {
     expect(request.extras?.[0]).toEqual({ catalogKey: "anti_damp_treatment", description: "Tratamento anti-humidade", clientPriceCents: 12195, painterPayCents: 7500 });
   });
 
+  it("keeps a visit extra without client price unset until the admin prices it (P3.1)", () => {
+    const fromVisit = { ...quote, extras: [{ catalogKey: null, description: "Fissura", clientPriceCents: 0, painterPayCents: 4000, clientPriceToSet: true }] } as AdminQuote;
+    expect(toDraftRequest(fromVisit).extras?.[0]).toEqual({ catalogKey: null, description: "Fissura", clientPriceCents: null, painterPayCents: 4000 });
+  });
+
   it("switches a room between size and measures", () => {
     const sized = withMeasures(toDraftRequest(quote).elements[0]!, undefined, 2.6);
     expect(sized).toMatchObject({ size: "M", length: null, width: null, height: null });

@@ -501,7 +501,9 @@
         "subtotal": "Subtotal before VAT (€)",
         "adjustmentReason": "Reason (required)",
         "addCatalogExtra": "Add catalog item",
-        "addFreeExtra": "Add free item"
+        "addFreeExtra": "Add free item",
+        "priceToSet": "Proposed at the visit · painter {painter} · client price to set",
+        "setPrice": "Set"
       },
       "versions": {
         "number": "Version",
@@ -548,7 +550,8 @@
           "acknowledge": "I confirm with the margin below the minimum.",
           "submit": "Confirm and send",
           "cancel": "Back",
-          "done": "Price confirmed and sent to the client."
+          "done": "Price confirmed and sent to the client.",
+          "unpriced": "Some extra work from the visit has no client price. Set it in the quote before confirming."
         },
         "reject": {
           "open": "Reject",
@@ -563,14 +566,16 @@
         "visit": {
           "open": "Request a visit",
           "title": "Site visit for {code}",
-          "body": "The client and the partner get the date by email.",
+          "body": "The client gets the date by email, and so does the partner or painter.",
           "who": "Who goes",
-          "choose": "Choose a partner…",
+          "choose": "Choose a partner or painter…",
           "when": "Date and time",
           "price": "Visit price with VAT (€)",
           "submit": "Schedule visit",
           "cancel": "Back",
-          "done": "Visit scheduled."
+          "done": "Visit scheduled.",
+          "partners": "Partners",
+          "painters": "Painters covering the municipality"
         },
         "completeVisit": {
           "open": "Visit done: back to review",
@@ -625,6 +630,11 @@
         "replaces": "An offer is waiting: the new one withdraws it.",
         "submit": "Send offer",
         "sent": "Offer sent to {name}."
+      },
+      "visitReport": {
+        "title": "Visit report by {who} · {date}",
+        "draft": "The real measures are already in the draft quote; proposed extra work waits for its client price.",
+        "noPhotos": "No visit photos."
       }
     },
     "jobs": {
@@ -778,6 +788,18 @@
       "jobs": {
         "title": "Jobs",
         "empty": "No jobs yet."
+      },
+      "payouts": {
+        "title": "Payouts",
+        "loading": "Loading…",
+        "error": "We could not load the payouts.",
+        "empty": "No closed jobs yet.",
+        "pending": "Pending: {amount}",
+        "status": {
+          "pending": "Pending",
+          "paid": "Paid"
+        },
+        "markLater": "Marking as paid arrives with Finance."
       }
     }
   },

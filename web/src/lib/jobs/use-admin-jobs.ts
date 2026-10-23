@@ -77,6 +77,15 @@ export function usePartners() {
   });
 }
 
+/** A2.6: partners and active painters covering the job's concelho. */
+export function useSiteVisitAssignees(id: string, enabled: boolean) {
+  return useQuery({
+    queryKey: [...adminJobKey(id), "site-visit-assignees"],
+    queryFn: async () => orThrow(await api.GET("/api/admin/jobs/{id}/site-visit-assignees", { params: { path: { id } } })),
+    enabled,
+  });
+}
+
 export function useCatalogExtras() {
   return useQuery({
     queryKey: ["admin", "catalog", "extras"],

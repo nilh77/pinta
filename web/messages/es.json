@@ -501,7 +501,9 @@
         "subtotal": "Subtotal sin IVA (€)",
         "adjustmentReason": "Motivo (obligatorio)",
         "addCatalogExtra": "Añadir partida del catálogo",
-        "addFreeExtra": "Añadir partida libre"
+        "addFreeExtra": "Añadir partida libre",
+        "priceToSet": "Propuesto en la visita · pintor {painter} · precio al cliente por fijar",
+        "setPrice": "Fijar"
       },
       "versions": {
         "number": "Versión",
@@ -548,7 +550,8 @@
           "acknowledge": "Confirmo con el margen por debajo del mínimo.",
           "submit": "Confirmar y enviar",
           "cancel": "Volver",
-          "done": "Precio confirmado y enviado al cliente."
+          "done": "Precio confirmado y enviado al cliente.",
+          "unpriced": "Hay trabajos extra de la visita sin precio al cliente. Indícalo en la cotización antes de confirmar."
         },
         "reject": {
           "open": "Rechazar",
@@ -563,14 +566,16 @@
         "visit": {
           "open": "Pedir visita",
           "title": "Visita técnica para {code}",
-          "body": "El cliente y el socio reciben la fecha por email.",
+          "body": "El cliente recibe la fecha por email; el socio o el pintor también.",
           "who": "Quién va",
-          "choose": "Elegir socio…",
+          "choose": "Elegir socio o pintor…",
           "when": "Fecha y hora",
           "price": "Precio de la visita con IVA (€)",
           "submit": "Programar visita",
           "cancel": "Volver",
-          "done": "Visita programada."
+          "done": "Visita programada.",
+          "partners": "Socios",
+          "painters": "Pintores que cubren el concelho"
         },
         "completeVisit": {
           "open": "Visita hecha: volver a revisión",
@@ -625,6 +630,11 @@
         "replaces": "Hay una oferta pendiente: la nueva la retira.",
         "submit": "Enviar oferta",
         "sent": "Oferta enviada a {name}."
+      },
+      "visitReport": {
+        "title": "Informe de la visita de {who} · {date}",
+        "draft": "Las medidas reales ya están en el borrador de la cotización; los trabajos extra propuestos esperan el precio al cliente.",
+        "noPhotos": "Sin fotos de la visita."
       }
     },
     "jobs": {
@@ -778,6 +788,18 @@
       "jobs": {
         "title": "Trabajos",
         "empty": "Aún sin trabajos."
+      },
+      "payouts": {
+        "title": "Pagos al pintor",
+        "loading": "Cargando…",
+        "error": "No hemos podido cargar los pagos.",
+        "empty": "Aún sin trabajos cerrados.",
+        "pending": "Pendiente: {amount}",
+        "status": {
+          "pending": "Pendiente",
+          "paid": "Pagado"
+        },
+        "markLater": "Marcar como pagado llega con Finanzas."
       }
     }
   },

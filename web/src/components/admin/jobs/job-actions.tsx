@@ -16,9 +16,9 @@ import {
   useAdminCancellationPreview,
   useCompleteSiteVisit,
   useConfirmQuote,
-  usePartners,
   useRejectJob,
   useScheduleSiteVisit,
+  useSiteVisitAssignees,
   useTransitionJob,
 } from "@/lib/jobs/use-admin-jobs";
 import { formatCents } from "@/lib/format";
@@ -66,6 +66,8 @@ function ConfirmButton({ job }: { job: AdminJobDetail }) {
   const confirm = useConfirmQuote(job.id);
   const { onError, fieldErrors } = useDone();
   const lowMargin = (job.draft ?? job.currentQuote).breakdown.belowMinMargin || "acknowledgeLowMargin" in fieldErrors(confirm.error);
+  // Free items from the painter's visit need their client price first (P3.1).
+  const unpriced = (job.draft?.extras ?? []).some((x) => x.clientPriceToSet);
 
   return (
     <>
@@ -81,7 +83,7 @@ function ConfirmButton({ job }: { job: AdminJobDetail }) {
         submitLabel={t("submit")}
         cancelLabel={t("cancel")}
         pending={confirm.isPending}
-        submitDisabled={lowMargin && !acknowledge}
+        submitDisabled={unpriced || (lowMargin && !acknowledge)}
         onSubmit={() =>
           confirm.mutate(
             { note: note.trim() || null, acknowledgeLowMargin: acknowledge, version: job.version },
@@ -95,6 +97,11 @@ function ConfirmButton({ job }: { job: AdminJobDetail }) {
           )
         }
       >
+        {unpriced && (
+          <p role="alert" className="rounded-xl bg-accent-soft p-3 text-sm font-medium text-accent-ink">
+            {t("unpriced")}
+          </p>
+        )}
         <TextAreaField id={fieldId} label={t("note")} hint={t("noteHint")} value={note} onChange={setNote} max={1000} />
         {lowMargin && (
           <label className="flex items-start gap-3 rounded-xl bg-destructive/10 p-3 text-sm font-medium text-destructive">
@@ -143,7 +150,7 @@ function RejectButton({ job }: { job: AdminJobDetail }) {
   );
 }
 
-/** A2.6: a partner, a date and time and the visit price (0 € by default, from the settings). */
+/** A2.6: a partner or an active painter covering the concelho, a date and time and the visit price (0 € by default). */
 function SiteVisitButton({ job }: { job: AdminJobDetail }) {
   const t = useTranslations("admin.job.actions.visit");
   const id = useId();
@@ -151,7 +158,7 @@ function SiteVisitButton({ job }: { job: AdminJobDetail }) {
   const [assigneeId, setAssigneeId] = useState("");
   const [at, setAt] = useState("");
   const [price, setPrice] = useState("0");
-  const partners = usePartners();
+  const assignees = useSiteVisitAssignees(job.id, open);
   const visit = useScheduleSiteVisit(job.id);
   const { onError, fieldErrors } = useDone();
   const errors = fieldErrors(visit.error);
@@ -185,10 +192,16 @@ function SiteVisitButton({ job }: { job: AdminJobDetail }) {
         </label>
         <select id={`${id}-who`} className={inputClass} value={assigneeId} aria-invalid={errors.assigneeId ? true : undefined} onChange={(e) => setAssigneeId(e.target.value)}>
           <option value="">{t("choose")}</option>
-          {(partners.data ?? []).map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
+          {([false, true] as const).map((painters) => (
+            <optgroup key={String(painters)} label={t(painters ? "painters" : "partners")}>
+              {(assignees.data ?? [])
+                .filter((a) => a.isPainter === painters)
+                .map((a) => (
+                  <option key={a.userId} value={a.userId}>
+                    {a.name}
+                  </option>
+                ))}
+            </optgroup>
           ))}
         </select>
         <label htmlFor={`${id}-at`} className="text-[13px] font-semibold">
