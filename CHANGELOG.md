@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H5 · Pagos
+Nada todavía.
 
-#### Añadido
+## H5 · Pagos — 2026-10-23, [PR #6](https://github.com/nilh77/pinta/pull/6)
+
+### Añadido
 
 - Pantalla 11 · Pago (`/mis-trabajos/{id}/pagar?tipo=deposit|balance|site_visit`): Payment Element de Stripe con tarjeta, MB WAY y Multibanco según el importe (aviso del límite diario de MB WAY por encima de 1.000 €, sin MB WAY por encima de 5.000 €), cuenta atrás de 5 minutos para aceptar en la app MB WAY, referencia Multibanco con botones de copiar, «Confirmando el pago…» hasta el webhook y reintento tras un fallo. Volver atrás reutiliza el mismo pago (C5.3).
 - `POST /api/jobs/{id}/payments` con el importe calculado en el servidor e `Idempotency-Key`; `GET` de pagos para el cliente y el admin; códigos `quote_expired`, `payment_already_made` y `payment_provider_error` (C5.3).
@@ -20,19 +22,19 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Pantalla 10: pagar señal, visita y resto, estado de cada pago, reembolsos y recibos. Admin: pestaña Pagos.
 - Emails de pago recibido (con la nota de «Stripe» en el extracto de MB WAY), referencia Multibanco, reembolso, devolución automática y disputa.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: decisiones de H5 en `docs/plan.md` (historias C5.3, C5.5, C5.6, A3.4 y S4), fórmula del descuento de la visita en `docs/pricing-engine.md`, nuevos endpoints y campos en `docs/api.md` y `docs/data-model.md`.
 
-#### Corregido
+### Corregido
 
 - El AppHost arranca el Stripe CLI con `--events`: las versiones recientes del CLI no reenvían nada sin esa lista.
 
-#### Verificado
+### Verificado
 
 - Con Stripe en modo test y el CLI: la señal de TC01 (147,68 €) pagada con la tarjeta 4242… pasa el trabajo a «Señal pagada» solo al llegar el webhook; reenviar el evento con `stripe events resend` no duplica ni la transición ni el email; cancelar 3 días antes del inicio reembolsa 73,84 € (50%) en Stripe y el pago queda «reembolsado en parte».
 
-#### Pendiente
+### Pendiente
 
 - El pago del resto solo se puede probar con tests hasta que los pintores marquen «Finalizado» en H6.
 
