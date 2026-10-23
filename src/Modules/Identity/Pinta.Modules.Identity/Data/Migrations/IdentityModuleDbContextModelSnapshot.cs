@@ -260,6 +260,10 @@ namespace Pinta.Modules.Identity.Data.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("email_confirmed");
 
+                    b.Property<bool>("IsDisabled")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_disabled");
+
                     b.Property<string>("Locale")
                         .IsRequired()
                         .HasMaxLength(2)

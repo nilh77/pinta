@@ -35,7 +35,7 @@ internal static class LoginEndpoint
         LoginRequest request, UserManager<User> users, SignInManager<User> signIn)
     {
         var user = await users.FindByEmailAsync(request.Email.Trim());
-        if (user is null)
+        if (user is null || user.IsDisabled)
         {
             return InvalidCredentials();
         }

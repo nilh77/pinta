@@ -79,6 +79,11 @@ internal static class GoogleLoginEndpoints
             await users.AddToRoleAsync(user, RoleNames.Client);
         }
 
+        if (user.IsDisabled)
+        {
+            return TypedResults.Redirect($"{webUrl}{target}{(target.Contains('?') ? '&' : '?')}login=failed");
+        }
+
         if (await users.FindByLoginAsync(info.LoginProvider, info.ProviderKey) is null)
         {
             await users.AddLoginAsync(user, info);

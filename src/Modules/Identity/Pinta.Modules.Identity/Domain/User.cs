@@ -17,4 +17,7 @@ public sealed class User : IdentityUser<Guid>
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset? TermsAcceptedAt { get; set; }
     public bool MarketingConsent { get; set; }
+
+    /// <summary>Deactivated by the admin (painters, A4.2): cannot sign in by any means until reactivated.</summary>
+    public bool IsDisabled { get; set; }
 }

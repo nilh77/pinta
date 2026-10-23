@@ -14,6 +14,7 @@ using Pinta.Modules.Identity.Features.Google;
 using Pinta.Modules.Identity.Features.Login;
 using Pinta.Modules.Identity.Features.Logout;
 using Pinta.Modules.Identity.Features.Me;
+using Pinta.Modules.Identity.Features.Painters;
 using Pinta.Modules.Identity.Features.PasswordReset;
 using Pinta.Modules.Identity.Features.Register;
 using Pinta.Modules.Identity.Features.ResendConfirmation;
@@ -50,7 +51,10 @@ public static class IdentityModule
             .AddEntityFrameworkStores<IdentityModuleDbContext>()
             .AddSignInManager()
             .AddDefaultTokenProviders()
-            .AddTokenProvider<PasswordResetTokenProvider>(PasswordResetTokenProvider.ProviderName);
+            .AddTokenProvider<PasswordResetTokenProvider>(PasswordResetTokenProvider.ProviderName)
+            .AddTokenProvider<PainterInvitationTokenProvider>(PainterInvitationTokenProvider.ProviderName);
+        // A deactivated painter's session ends within a minute (A4.2).
+        services.Configure<SecurityStampValidatorOptions>(options => options.ValidationInterval = TimeSpan.FromMinutes(1));
         services.Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(48));
 
         var authentication = services.AddAuthentication(IdentityConstants.ApplicationScheme);
@@ -89,6 +93,7 @@ public static class IdentityModule
         services.AddScoped<ConfirmationEmailSender>();
         services.AddScoped<IEmailConfirmationLinks>(sp => sp.GetRequiredService<ConfirmationEmailSender>());
         services.AddScoped<IUserDirectory, UserDirectory>();
+        services.AddScoped<IPainterAccounts, PainterAccounts>();
         return builder;
     }
 
@@ -103,6 +108,7 @@ public static class IdentityModule
         ConfirmEmailEndpoint.Map(auth);
         ResendConfirmationEndpoint.Map(auth);
         PasswordResetEndpoints.Map(auth);
+        AcceptInviteEndpoint.Map(auth);
         GoogleLoginEndpoints.Map(auth);
         return app;
     }
