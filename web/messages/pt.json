@@ -288,7 +288,8 @@
           "job": "Trabalho",
           "price": "Preço",
           "range": "Intervalo mostrado ao cliente",
-          "operations": "Visita, revisão e cancelamento"
+          "operations": "Visita, revisão e cancelamento",
+          "company": "Dados da empresa"
         },
         "fields": {
           "minJobAmount": "Trabalho mínimo (com IVA)",
@@ -309,8 +310,12 @@
           "reviewDeadlineBusinessDays": "Prazo de revisão (dias úteis)",
           "fullRefundMinDays": "Reembolso total até (dias antes)",
           "lateRefundPct": "Reembolso depois desse prazo",
-          "minLeadBusinessDays": "Antecedência mínima das datas (dias úteis)"
-        }
+          "minLeadBusinessDays": "Antecedência mínima das datas (dias úteis)",
+          "companyName": "Nome",
+          "companyTaxId": "NIF",
+          "companyAddress": "Morada"
+        },
+        "companyHint": "Aparecem nos recibos simulados que o cliente descarrega."
       }
     },
     "simulator": {

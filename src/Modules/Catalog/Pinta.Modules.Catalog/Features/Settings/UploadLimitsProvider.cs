@@ -28,3 +28,9 @@ internal sealed class ExtraItemsProvider(CatalogDbContext db) : IExtraItems
             .Select(x => new CatalogExtra(x.Key, x.Name, x.ClientPrice, x.PainterPay))
             .SingleOrDefaultAsync(cancellationToken);
 }
+
+internal sealed class CompanyDetailsProvider(CatalogDbContext db) : ICompanyDetails
+{
+    public Task<CompanyDetails> GetAsync(CancellationToken cancellationToken = default) =>
+        db.Settings.AsNoTracking().Select(s => new CompanyDetails(s.CompanyName, s.CompanyTaxId, s.CompanyAddress)).SingleAsync(cancellationToken);
+}

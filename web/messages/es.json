@@ -288,7 +288,8 @@
           "job": "Trabajo",
           "price": "Precio",
           "range": "Rango mostrado al cliente",
-          "operations": "Visita, revisión y cancelación"
+          "operations": "Visita, revisión y cancelación",
+          "company": "Datos de la empresa"
         },
         "fields": {
           "minJobAmount": "Trabajo mínimo (IVA incl.)",
@@ -309,8 +310,12 @@
           "reviewDeadlineBusinessDays": "Plazo de revisión (días laborables)",
           "fullRefundMinDays": "Reembolso total hasta (días antes)",
           "lateRefundPct": "Reembolso después de ese plazo",
-          "minLeadBusinessDays": "Antelación mínima de las fechas (días laborables)"
-        }
+          "minLeadBusinessDays": "Antelación mínima de las fechas (días laborables)",
+          "companyName": "Nombre",
+          "companyTaxId": "NIF",
+          "companyAddress": "Dirección"
+        },
+        "companyHint": "Aparecen en los recibos simulados que descarga el cliente."
       }
     },
     "simulator": {

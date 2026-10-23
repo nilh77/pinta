@@ -52,6 +52,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs/{id}/payments/{paymentId}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetPaymentReceipt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/antiforgery": {
         parameters: {
             query?: never;
@@ -1842,6 +1858,9 @@ export interface components {
             maxVideoSizeMb: number;
             clientPhoneVisibleToPainter: boolean;
             painterPhoneVisibleToClient: boolean;
+            companyName: string;
+            companyTaxId: string;
+            companyAddress: string;
             /** Format: uint32 */
             version: number;
             /** Format: date-time */
@@ -2058,6 +2077,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaymentDto"][];
+                };
+            };
+        };
+    };
+    GetPaymentReceipt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                paymentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

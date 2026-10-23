@@ -17,7 +17,8 @@ const settings = {
   minMarginPct: 20, defaultHeight: 2.6, quoteValidityDays: 15, minLeadBusinessDays: 3, siteVisitPriceCents: 0, siteVisitDeductible: true,
   reviewDeadlineBusinessDays: 2, fullRefundMinDays: 7, lateRefundPct: 50, maxPhotosPerElement: 10,
   maxVideosPerElement: 2, maxImageSizeMb: 10, maxVideoSizeMb: 100, clientPhoneVisibleToPainter: true,
-  painterPhoneVisibleToClient: true, version: 7, updatedAt: "2026-10-22T10:00:00Z",
+  painterPhoneVisibleToClient: true,
+  companyName: "Pinta · NHIT-DEV", companyTaxId: "999999990", companyAddress: "Lisboa", version: 7, updatedAt: "2026-10-22T10:00:00Z",
 };
 const catalog: PricingCatalog = {
   paints: [{ id: "p1", key: "matte", name, pricePerLitreCents: 800, coverageM2PerLitre: 10, coats: 2, isActive: true, version: 3, updatedAt: "" }],

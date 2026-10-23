@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isValidTaxId } from "@/lib/quote/request";
 import type { components } from "@/lib/api/schema";
 import { centsFromInput, centsToInput, decimalPlaces, formatDecimalInput, parseDecimal } from "@/lib/numbers";
 
@@ -100,6 +101,9 @@ export const pricingFormSchema = z.object({
       reviewDeadlineBusinessDays: integer(1, 30),
       fullRefundMinDays: integer(0, 365),
       lateRefundPct: percent,
+      companyName: z.string().trim().min(1, "validation.required").max(200, "validation.tooLong"),
+      companyTaxId: z.string().trim().refine(isValidTaxId, "quote.errors.taxId"),
+      companyAddress: z.string().trim().min(1, "validation.required").max(300, "validation.tooLong"),
     })
     .refine((s) => (centsFromInput(s.minJobAmount) ?? 0) < (centsFromInput(s.maxJobAmount) ?? 0), {
       message: "admin.validation.minBelowMax",
@@ -175,6 +179,9 @@ export function toFormValues(catalog: PricingCatalog, locale: string): PricingFo
       reviewDeadlineBusinessDays: String(s.reviewDeadlineBusinessDays),
       fullRefundMinDays: String(s.fullRefundMinDays),
       lateRefundPct: dec(locale, s.lateRefundPct),
+      companyName: s.companyName,
+      companyTaxId: s.companyTaxId,
+      companyAddress: s.companyAddress,
     },
   };
 }
@@ -247,6 +254,9 @@ export const toSettingsRequest = (s: SettingsFormValues, loaded: SettingsDto): S
   reviewDeadlineBusinessDays: Number(s.reviewDeadlineBusinessDays),
   fullRefundMinDays: Number(s.fullRefundMinDays),
   lateRefundPct: num(s.lateRefundPct),
+  companyName: s.companyName.trim(),
+  companyTaxId: s.companyTaxId.trim(),
+  companyAddress: s.companyAddress.trim(),
 });
 
 /** Labour margin of a surface type: share of the client rate that is not painter pay (board "Margen MO"). */

@@ -36,6 +36,13 @@ public sealed class PricingSettings : AuditedEntity
     public bool ClientPhoneVisibleToPainter { get; set; }
     public bool PainterPhoneVisibleToClient { get; set; }
 
+    /// <summary>Company data printed on the simulated receipts (A1.6).</summary>
+    public string CompanyName { get; set; } = "";
+
+    public string CompanyTaxId { get; set; } = "";
+
+    public string CompanyAddress { get; set; } = "";
+
     public PricingRules ToRules() => new(
         WastePct,
         VatPct,

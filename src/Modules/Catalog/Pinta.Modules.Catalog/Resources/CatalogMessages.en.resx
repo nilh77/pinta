@@ -16,4 +16,5 @@
   <data name="prefix_format" xml:space="preserve"><value>Enter the first 4 digits of the postal code.</value></data>
   <data name="prefix_taken" xml:space="preserve"><value>This prefix already exists.</value></data>
   <data name="postal_code_format" xml:space="preserve"><value>Enter the postal code as 1234-567.</value></data>
+  <data name="tax_id" xml:space="preserve"><value>Invalid Portuguese NIF (9 digits with a check digit).</value></data>
 </root>

@@ -7,6 +7,7 @@ using Pinta.Modules.Payments.Contracts;
 using Pinta.Modules.Payments.Data;
 using Pinta.Modules.Payments.Features;
 using Pinta.Modules.Payments.Features.Pay;
+using Pinta.Modules.Payments.Features.Receipts;
 using Pinta.Modules.Payments.Features.Refunds;
 using Pinta.Modules.Payments.Features.Webhooks;
 using Pinta.Modules.Payments.Stripe;
@@ -22,6 +23,8 @@ public static class PaymentsModule
     public static IHostApplicationBuilder AddPaymentsModule(this IHostApplicationBuilder builder)
     {
         builder.Services.AddModuleDbContext<PaymentsDbContext>(PaymentsDbContext.Schema);
+        // Free for companies under 1M USD of annual revenue (https://www.questpdf.com/license/).
+        QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
         builder.Services.AddSingleton(StripeOptions.FromConfiguration(builder.Configuration));
         builder.Services.AddSingleton<IStripeGateway, StripeGateway>();
         builder.Services.TryAddSingleton<WebLinks>();
@@ -37,6 +40,7 @@ public static class PaymentsModule
     {
         PaymentEndpoints.Map(app);
         StripeWebhookEndpoint.Map(app);
+        ReceiptEndpoint.Map(app);
         return app;
     }
 }

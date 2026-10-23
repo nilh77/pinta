@@ -387,3 +387,54 @@ public class RefundTests(PintaApiFactory factory)
         Assert.Empty(factory.Emails.To<RefundEmail>(job.Email));
     }
 }
+
+/// <summary>Simulated receipts (C5.3): one PDF per paid payment, for the client and admins.</summary>
+public class ReceiptTests(PintaApiFactory factory)
+{
+    [Fact]
+    public async Task C5_3_the_client_and_admins_download_the_receipt_others_get_404()
+    {
+        var (job, _) = await TestPayments.PaidDepositAsync(factory);
+        var other = await TestJobs.SendAsync(factory);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var payment = Assert.Single((await (await job.Client.GetAsync($"/api/jobs/{job.JobId}/payments")).ReadJsonAsync()).EnumerateArray());
+        var url = $"/api/jobs/{job.JobId}/payments/{payment.GetProperty("id").GetGuid()}/receipt";
+
+        var asClient = await job.Client.GetAsync(url);
+        var asAdmin = await admin.GetAsync(url);
+
+        Assert.Equal((HttpStatusCode.OK, HttpStatusCode.OK), (asClient.StatusCode, asAdmin.StatusCode));
+        Assert.Equal("application/pdf", asClient.Content.Headers.ContentType?.MediaType);
+        var pdf = await asClient.Content.ReadAsByteArrayAsync();
+        Assert.Equal("%PDF", System.Text.Encoding.ASCII.GetString(pdf, 0, 4));
+        Assert.Equal($"{payment.GetProperty("receiptNumber").GetString()}.pdf", asClient.Content.Headers.ContentDisposition?.FileName);
+        await ProblemAssert.HasCodeAsync(await other.Client.GetAsync(url), HttpStatusCode.NotFound, "not_found");
+        var anonymous = await ApiClient.CreateAsync(factory);
+        await ProblemAssert.HasCodeAsync(await anonymous.GetAsync(url), HttpStatusCode.Unauthorized, "unauthenticated");
+    }
+
+    [Fact]
+    public async Task C5_3_an_unpaid_payment_has_no_receipt()
+    {
+        var job = await TestJobs.SendAsync(factory);
+        await TestReview.ConfirmAsync(factory, job.JobId);
+        var created = await (await TestPayments.CreateAsync(job.Client, job.JobId)).ReadJsonAsync();
+
+        var response = await job.Client.GetAsync($"/api/jobs/{job.JobId}/payments/{created.GetProperty("paymentId").GetGuid()}/receipt");
+
+        await ProblemAssert.HasCodeAsync(response, HttpStatusCode.NotFound, "not_found");
+    }
+
+    [Fact]
+    public void C5_3_receipts_render_in_every_language_with_and_without_company_data()
+    {
+        foreach (var locale in new[] { Pinta.SharedKernel.Locale.Pt, Pinta.SharedKernel.Locale.Es, Pinta.SharedKernel.Locale.En })
+        {
+            var pdf = Pinta.Modules.Payments.Features.Receipts.ReceiptDocument.Render(new(
+                new Pinta.Modules.Catalog.Contracts.CompanyDetails("Pinta · NHIT-DEV", "999999990", "Lisboa"), "SIM-2026-0001", DateTimeOffset.UtcNow,
+                PaymentType.Balance, PaymentMethod.MbWay, 34457, 1000, 23m, "PT-2026-0001", "Ana Costa", locale == Pinta.SharedKernel.Locale.Pt ? "123456789" : null,
+                locale == Pinta.SharedKernel.Locale.Pt ? "Ana Lda." : null, "Rua das Flores, 24, 2710-123 Sintra", locale));
+            Assert.True(pdf.Length > 1000);
+        }
+    }
+}

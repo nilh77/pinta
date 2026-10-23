@@ -40,6 +40,9 @@ public sealed record SettingsDto(
     int MaxVideoSizeMb,
     bool ClientPhoneVisibleToPainter,
     bool PainterPhoneVisibleToClient,
+    string CompanyName,
+    string CompanyTaxId,
+    string CompanyAddress,
     uint Version,
     DateTimeOffset UpdatedAt);
 
@@ -70,6 +73,9 @@ internal sealed class SettingsDtoValidator : AbstractValidator<SettingsDto>
         RuleFor(s => s.MaxVideosPerElement).InclusiveBetween(0, 10);
         RuleFor(s => s.MaxImageSizeMb).InclusiveBetween(1, 50);
         RuleFor(s => s.MaxVideoSizeMb).InclusiveBetween(1, 500);
+        RuleFor(s => s.CompanyName).NotEmpty().MaximumLength(200);
+        RuleFor(s => s.CompanyTaxId).Must(TaxId.IsValid).WithMessage(_ => CatalogMessages.Get("tax_id"));
+        RuleFor(s => s.CompanyAddress).NotEmpty().MaximumLength(300);
     }
 }
 
@@ -115,6 +121,9 @@ internal static class SettingsEndpoints
         settings.MaxVideoSizeMb = request.MaxVideoSizeMb;
         settings.ClientPhoneVisibleToPainter = request.ClientPhoneVisibleToPainter;
         settings.PainterPhoneVisibleToClient = request.PainterPhoneVisibleToClient;
+        settings.CompanyName = request.CompanyName.Trim();
+        settings.CompanyTaxId = request.CompanyTaxId;
+        settings.CompanyAddress = request.CompanyAddress.Trim();
         settings.Stamp(clock.GetUtcNow(), http.User.GetUserId());
 
         if (!await db.TrySaveVersionAsync(settings, request.Version, cancellationToken))
@@ -151,6 +160,9 @@ internal static class SettingsEndpoints
         s.MaxVideoSizeMb,
         s.ClientPhoneVisibleToPainter,
         s.PainterPhoneVisibleToClient,
+        s.CompanyName,
+        s.CompanyTaxId,
+        s.CompanyAddress,
         s.Version,
         s.UpdatedAt);
 }

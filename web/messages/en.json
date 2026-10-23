@@ -288,7 +288,8 @@
           "job": "Job",
           "price": "Price",
           "range": "Range shown to the client",
-          "operations": "Site visit, review and cancellation"
+          "operations": "Site visit, review and cancellation",
+          "company": "Company details"
         },
         "fields": {
           "minJobAmount": "Minimum job (incl. VAT)",
@@ -309,8 +310,12 @@
           "reviewDeadlineBusinessDays": "Review deadline (business days)",
           "fullRefundMinDays": "Full refund up to (days before)",
           "lateRefundPct": "Refund after that",
-          "minLeadBusinessDays": "Minimum notice for dates (working days)"
-        }
+          "minLeadBusinessDays": "Minimum notice for dates (working days)",
+          "companyName": "Name",
+          "companyTaxId": "Tax ID (NIF)",
+          "companyAddress": "Address"
+        },
+        "companyHint": "Shown on the simulated receipts the client downloads."
       }
     },
     "simulator": {

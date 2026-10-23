@@ -256,6 +256,30 @@ namespace Pinta.Modules.Catalog.Data.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("client_phone_visible_to_painter");
 
+                    b.Property<string>("CompanyAddress")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasDefaultValue("Avenida da Liberdade, 100, 1250-146 Lisboa")
+                        .HasColumnName("company_address");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasDefaultValue("Pinta · NHIT-DEV")
+                        .HasColumnName("company_name");
+
+                    b.Property<string>("CompanyTaxId")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(9)
+                        .HasColumnType("character varying(9)")
+                        .HasDefaultValue("999999990")
+                        .HasColumnName("company_tax_id");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
