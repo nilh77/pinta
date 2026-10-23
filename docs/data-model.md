@@ -278,7 +278,8 @@ erDiagram
 - **Visita técnica:** en H6b el informe del pintor guarda observaciones y fecha de envío; las medidas van al borrador de cotización de origen `site_visit` y las fotos son archivos con contexto `site_visit`. Las partidas extra libres que propone llevan `precio_por_fijar` hasta que el admin les pone precio.
 - **Pago al pintor:** uno por trabajo cerrado (único por `trabajo_id`), por el importe de la asignación aceptada, `pendiente` hasta que el admin lo marca `pagado` con referencia (H7).
 - **Trabajo.fecha_programada:** en H5 la fija el admin al pasar a «Programado»; la política de reembolso cuenta los días hasta ella.
-- **Coste de operación.categoría** usa la lista cerrada del acuerdo de socios: infraestructura, comisiones de pago, facturación y contabilista, seguro, marketing.
+- **Coste de operación.categoría** usa la lista cerrada del acuerdo de socios: infraestructura, comisiones de pago (incluidas las de Stripe), facturación y contabilista, seguro, marketing.
+- **Cifras del mes (H7):** un trabajo cuenta en el mes en que se cerró (Lisboa): ingreso = subtotal sin IVA de su versión confirmada; material de esa versión; pago al pintor = el importe del pago al pintor si existe. Una cancelación con señal retenida cuenta en su mes como ingreso sin IVA, sin material ni pintor. Margen bruto = ingresos − material − pintores; beneficio = margen − costes; cada socio = beneficio ÷ 2 (redondeo a céntimos alejándose de cero).
 - **Cierre mensual:** el reparto 50/50 se calcula en vivo, pero al cerrar un mes queda congelado. Un coste registrado tarde no cambia lo ya repartido.
 - **Notificaciones** solo tiene una tabla de registro de emails enviados: destinatario, plantilla, idioma, estado y fecha.
 

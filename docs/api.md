@@ -58,8 +58,9 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | GET | `/api/jobs/{id}/payments` | Cliente dueño | Pagos del trabajo y su estado | C5.3 |
 | GET | `/api/jobs/{id}/payments/{paymentId}/receipt` | Cliente dueño o admin | Justificante PDF simulado de un pago hecho | C5.3 |
 | GET | `/api/media/{fileId}/url` | Con acceso al trabajo | URL firmada de lectura | C5.5 |
-| GET / PUT | `/api/me` | Sesión | Ver y editar perfil, idioma, facturación y avisos | C5.8 |
-| POST | `/api/me/delete-request` | Cliente | Pide la supresión de la cuenta | C5.8 |
+| GET / PUT | `/api/me` | Cliente | Ver y editar nombre, email (cambiarlo pide confirmarlo de nuevo), teléfono, idioma, NIF y razón social por defecto y avisos | C5.8 |
+| POST | `/api/me/password` | Cliente | Cambia la contraseña con la actual | C5.8 |
+| POST | `/api/me/delete-request` | Cliente | Pide la supresión de la cuenta; avisa a los admins por email | C5.8 |
 | POST | `/api/webhooks/stripe` | Stripe (firma) | Eventos de pago | S4 |
 
 La estimación y la subida de archivos funcionan sin sesión para que el cliente pueda cotizar antes de registrarse; las subidas anónimas se asocian al trabajo al enviarlo.
@@ -118,11 +119,14 @@ Todas las rutas exigen rol Admin.
 | GET / PUT | `/api/admin/painters/{id}` | Ficha y edición; activar o desactivar | A4.1–A4.4 |
 | POST | `/api/admin/painters/{id}/invite` | Enviar o reenviar invitación | A4.2 |
 | POST / DELETE | `/api/admin/painters/{id}/documents[/{docId}]` | Documentos con caducidad | A4.3 |
-| GET | `/api/admin/finance/summary?from=&to=` | Panel de finanzas del periodo | A5.1 |
-| GET / POST / PUT / DELETE | `/api/admin/finance/costs[/{id}]` | Costes de operación | A5.2 |
-| POST | `/api/admin/finance/closings` | Cierra un mes | A5.3 |
+| GET | `/api/admin/finance/summary?month=AAAA-MM` | Panel del mes: trabajos cerrados y señales retenidas, material, pintores, margen, costes, beneficio y reparto 50/50; si el mes está cerrado, las cifras congeladas | A5.1 |
+| GET / POST / PUT / DELETE | `/api/admin/finance/costs[/{id}]` | Costes de operación; en un mes cerrado, 422 `period_closed` | A5.2 |
+| POST | `/api/admin/finance/closings` | `{ month }`: cierra un mes ya terminado y congela sus cifras (una vez) | A5.3 |
+| GET | `/api/admin/finance/export?month=AAAA-MM` | CSV (UTF-8) del mes: trabajos, costes y totales | A5.1 |
+| GET | `/api/admin/deletion-requests` | Clientes que pidieron la supresión de su cuenta | C5.8 |
+| POST | `/api/admin/deletion-requests/{userId}/execute` | Anonimiza al cliente, cancela sus trabajos activos con la política y conserva la contabilidad | C5.8 |
 | GET | `/api/admin/payouts?painterId=&status=` | Pagos a pintores (solo lectura desde H6b) | A5.4 |
-| POST | `/api/admin/payouts/{id}/mark-paid` | Marca pagado con referencia | A5.4 |
+| POST | `/api/admin/payouts/{id}/mark-paid` | `{ paidOn, reference }`: marca pagado con fecha (hoy o antes) y referencia de transferencia; ya pagado → 409 | A5.4 |
 | GET | `/hangfire` | Panel de tareas (no es API) | — |
 
 ## Ejemplos
@@ -241,7 +245,7 @@ Las enumeraciones viajan en JSON como cadenas en `snake_case`; en C# son `enum` 
 | `MediaContext` | `element`, `job_general`, `site_visit`, `result`, `painter_document` |
 | `MediaKind` | `image`, `video`, `document` |
 | `Role` | `client`, `painter`, `admin` |
-| `OperatingCostCategory` | `hosting`, `domain_email`, `payment_fees`, `insurance`, `accounting`, `marketing`, `software`, `other` |
+| `OperatingCostCategory` | `infrastructure`, `payment_fees`, `accounting`, `insurance`, `marketing` (la lista cerrada del acuerdo de socios) |
 | `PayoutStatus` | `pending`, `paid` |
 | `Locale` | `pt`, `es`, `en` |
 

@@ -91,7 +91,8 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 
 ### H7 · Finanzas y área del cliente
 
-- **Alcance**: módulo Finance con costes operativos por categoría, pagos a pintores y cierre mensual con reparto 50/50; pantalla de finanzas; pantallas 9 y 12 del cliente; valoraciones; recordatorios con Hangfire; exportaciones CSV.
+- **Alcance**: módulo Finance con costes operativos por categoría, pagos a pintores y cierre mensual con reparto 50/50; pantalla de finanzas; pantallas 9 y 12 del cliente; recordatorios con Hangfire; exportaciones CSV.
+- **Decisiones de H7**: categorías de coste = las 5 del acuerdo de socios (las comisiones de Stripe son costes de «comisiones de pago»); las valoraciones del cliente quedan fuera del MVP, como dice `docs/prd-overview.md`; la supresión de cuenta la pide el cliente y la ejecutan los admins desde Ajustes; la señal retenida de una cancelación cuenta como ingreso sin IVA en el mes de la cancelación. Un trabajo cuenta en el mes en que se cerró; el mes en curso no se cierra; un mes cerrado no admite cambios de costes, pero marcar pagos a pintores sigue permitido. H7 siembra la parte de finanzas de los datos de demo (mes anterior y pagos); el resto de trabajos de demo, en H8.
 - **Historias**: A5.1–A5.4, C5.8, S3–S4.
 - **Criterio de salida**: con los trabajos del seed, el cierre de octubre cuadra con un cálculo a mano en una hoja de cálculo; un mes cerrado no admite cambios.
 - **Prompt**: «Lee CLAUDE.md, docs/functional-requirements.md (A5, S3–S4) y docs/screens.md (Finanzas, 9 y 12). Implementa el hito H7.»
@@ -162,8 +163,8 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 | PT-2026-0105 | Miguel | TC07 | `deposit_paid` | Señal con MB WAY; pendiente de asignar |
 | PT-2026-0106 | Lisboa Rent | TC10 | `scheduled` | Asignado a Carla; empieza en D (para «Empezar trabajo» en vivo) |
 | PT-2026-0107 | Miguel | TC06 | `in_progress` | Rui, empezó en D−1, fotos de avance |
-| PT-2026-0108 | Ana | TC02 | `finished` | Rui, con fotos del resultado; saldo pendiente y valoración por hacer |
-| PT-2026-0091 | Lisboa Rent | TC08 | `closed` | Mes anterior; pagado y valorado con 5 estrellas |
+| PT-2026-0108 | Ana | TC02 | `finished` | Rui, con fotos del resultado; saldo pendiente |
+| PT-2026-0091 | Lisboa Rent | TC08 | `closed` | Mes anterior; pagado |
 | PT-2026-0092 | Miguel | TC05 | `closed` | Mes anterior; mínimo aplicado |
 | PT-2026-0093 | Ana | TC03 | `cancelled` | Cancelado 3 días antes: reembolso del 50% |
 | PT-2026-0094 | Miguel | TC01 | `expired` | Precio sin pagar en 15 días |
