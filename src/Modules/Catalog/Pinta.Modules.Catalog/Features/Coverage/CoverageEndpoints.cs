@@ -12,6 +12,8 @@ using Pinta.SharedKernel.Http;
 
 namespace Pinta.Modules.Catalog.Features.Coverage;
 
+public sealed record WaitlistEntryDto(Guid Id, string Email, string PostalCode, Locale Locale, DateTimeOffset CreatedAt);
+
 public sealed record CoverageAreaDto(Guid Id, string PostalPrefix, string Municipality, bool IsActive, uint Version, DateTimeOffset UpdatedAt);
 
 /// <summary>The prefix is set on create and ignored on edit; edits carry the version they started from.</summary>
@@ -32,6 +34,28 @@ internal static class CoverageEndpoints
         admin.MapPut("/coverage/{id:guid}", UpdateAsync).WithValidation<CoverageAreaRequest>().WithName("UpdateCoverageArea")
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict);
+        admin.MapGet("/coverage/waitlist", WaitlistAsync).WithName("ListWaitlist");
+        admin.MapGet("/coverage/waitlist/export", ExportWaitlistAsync).WithName("ExportWaitlist").Produces<string>(StatusCodes.Status200OK, "text/csv");
+    }
+
+    /// <summary>Who asked to hear when Pinta reaches their postal code, newest first (screen Cobertura).</summary>
+    private static async Task<Ok<WaitlistEntryDto[]>> WaitlistAsync(CatalogDbContext db, CancellationToken cancellationToken) =>
+        TypedResults.Ok(await db.WaitlistEntries.AsNoTracking()
+            .OrderByDescending(w => w.CreatedAt)
+            .Select(w => new WaitlistEntryDto(w.Id, w.Email, w.PostalCode, w.Locale, w.CreatedAt))
+            .ToArrayAsync(cancellationToken));
+
+    private static async Task<FileContentHttpResult> ExportWaitlistAsync(CatalogDbContext db, CancellationToken cancellationToken)
+    {
+        var rows = await db.WaitlistEntries.AsNoTracking().OrderByDescending(w => w.CreatedAt).ToListAsync(cancellationToken);
+        var csv = new System.Text.StringBuilder("email,postal_code,locale,created_at\n");
+        foreach (var w in rows)
+        {
+            csv.Append($"{Pinta.SharedKernel.Text.Csv.Field(w.Email)},{w.PostalCode},{w.Locale.ToString().ToLowerInvariant()},{w.CreatedAt.UtcDateTime:O}\n");
+        }
+
+        return TypedResults.File(
+            [.. System.Text.Encoding.UTF8.GetPreamble(), .. System.Text.Encoding.UTF8.GetBytes(csv.ToString())], "text/csv", "lista-de-espera.csv");
     }
 
     private static async Task<Ok<CoverageAreaDto[]>> ListAsync(CatalogDbContext db, CancellationToken cancellationToken)

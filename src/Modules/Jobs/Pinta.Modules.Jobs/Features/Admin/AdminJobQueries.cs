@@ -16,6 +16,7 @@ using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Quoting.Contracts;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
+using Pinta.SharedKernel.Text;
 using Pinta.SharedKernel.Time;
 
 namespace Pinta.Modules.Jobs.Features.Admin;
@@ -64,13 +65,13 @@ public sealed record AdminJobListItem(
 /// <summary>Filters of A3.1. <see cref="Status"/> takes the snake_case values and may repeat.</summary>
 public sealed record AdminJobsQuery(
     [property: FromQuery(Name = "status")] string[]? Status,
-    DateOnly? From,
-    DateOnly? To,
-    string? Municipality,
-    bool? Premium,
-    string? Q,
-    int? Page,
-    int? PageSize);
+    [property: FromQuery(Name = "from")] DateOnly? From,
+    [property: FromQuery(Name = "to")] DateOnly? To,
+    [property: FromQuery(Name = "municipality")] string? Municipality,
+    [property: FromQuery(Name = "premium")] bool? Premium,
+    [property: FromQuery(Name = "q")] string? Q,
+    [property: FromQuery(Name = "page")] int? Page,
+    [property: FromQuery(Name = "pageSize")] int? PageSize);
 
 public sealed record ClientInfo(Guid Id, string Name, string Email, string? Phone, Locale Locale, bool EmailConfirmed);
 
@@ -183,8 +184,8 @@ internal static class AdminJobQueries
         foreach (var j in await ToListItemsAsync(jobs, quotes, users, cancellationToken))
         {
             csv.AppendJoin(',',
-                j.Code, JsonNamingPolicy.SnakeCaseLower.ConvertName(j.Status.ToString()), Csv(j.ClientName), Csv(j.ClientEmail), Csv(j.Locality),
-                Csv(j.Municipality), (j.TotalCents / 100m).ToString("0.00", CultureInfo.InvariantCulture),
+                j.Code, JsonNamingPolicy.SnakeCaseLower.ConvertName(j.Status.ToString()), Csv.Field(j.ClientName), Csv.Field(j.ClientEmail), Csv.Field(j.Locality),
+                Csv.Field(j.Municipality), (j.TotalCents / 100m).ToString("0.00", CultureInfo.InvariantCulture),
                 (j.MarginCents / 100m).ToString("0.00", CultureInfo.InvariantCulture), j.Premium ? "yes" : "no",
                 j.CreatedAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture), j.UpdatedAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture));
             csv.Append('\n');
@@ -260,17 +261,6 @@ internal static class AdminJobQueries
             return new AdminJobListItem(j.Id, j.Code, j.Status, client?.Name ?? "", client?.Email ?? "", j.Locality, j.Municipality,
                 total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, null, null, j.CreatedAt, j.UpdatedAt);
         }).ToList();
-    }
-
-    private static string Csv(string value)
-    {
-        // A leading = + - @ would run as a formula in a spreadsheet.
-        if (value.Length > 0 && "=+-@".Contains(value[0]))
-        {
-            value = "'" + value;
-        }
-
-        return value.IndexOfAny([',', '"', '\n', '\r']) >= 0 ? $"\"{value.Replace("\"", "\"\"")}\"" : value;
     }
 
     private static async Task<Results<Ok<AdminJobDetail>, ProblemHttpResult>> DetailAsync(

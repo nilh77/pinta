@@ -1384,6 +1384,49 @@
         }
       }
     },
+    "/api/admin/coverage/waitlist": {
+      "get": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ListWaitlist",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WaitlistEntryDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/coverage/waitlist/export": {
+      "get": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ExportWaitlist",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/quotes/simulate": {
       "post": {
         "tags": [
@@ -1943,7 +1986,7 @@
             }
           },
           {
-            "name": "From",
+            "name": "from",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1951,7 +1994,7 @@
             }
           },
           {
-            "name": "To",
+            "name": "to",
             "in": "query",
             "schema": {
               "type": "string",
@@ -1959,28 +2002,28 @@
             }
           },
           {
-            "name": "Municipality",
+            "name": "municipality",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Premium",
+            "name": "premium",
             "in": "query",
             "schema": {
               "type": "boolean"
             }
           },
           {
-            "name": "Q",
+            "name": "q",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Page",
+            "name": "page",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1988,7 +2031,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -2028,7 +2071,7 @@
             }
           },
           {
-            "name": "From",
+            "name": "from",
             "in": "query",
             "schema": {
               "type": "string",
@@ -2036,7 +2079,7 @@
             }
           },
           {
-            "name": "To",
+            "name": "to",
             "in": "query",
             "schema": {
               "type": "string",
@@ -2044,28 +2087,28 @@
             }
           },
           {
-            "name": "Municipality",
+            "name": "municipality",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Premium",
+            "name": "premium",
             "in": "query",
             "schema": {
               "type": "boolean"
             }
           },
           {
-            "name": "Q",
+            "name": "q",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "Page",
+            "name": "page",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -2073,7 +2116,7 @@
             }
           },
           {
-            "name": "PageSize",
+            "name": "pageSize",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -6369,6 +6412,35 @@
               "integer"
             ],
             "format": "uint32"
+          }
+        }
+      },
+      "WaitlistEntryDto": {
+        "required": [
+          "id",
+          "email",
+          "postalCode",
+          "locale",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

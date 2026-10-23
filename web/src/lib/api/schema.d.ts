@@ -468,6 +468,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/coverage/waitlist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListWaitlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/coverage/waitlist/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ExportWaitlist"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/quotes/simulate": {
         parameters: {
             query?: never;
@@ -1822,6 +1854,15 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        WaitlistEntryDto: {
+            /** Format: uuid */
+            id: string;
+            email: string;
+            postalCode: string;
+            locale: components["schemas"]["Locale"];
+            /** Format: date-time */
+            createdAt: string;
+        };
         WaitlistRequest: {
             email: string;
             postalCode: string;
@@ -3018,6 +3059,46 @@ export interface operations {
             };
         };
     };
+    ListWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WaitlistEntryDto"][];
+                };
+            };
+        };
+    };
+    ExportWaitlist: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                };
+            };
+        };
+    };
     SimulateQuote: {
         parameters: {
             query?: never;
@@ -3457,13 +3538,13 @@ export interface operations {
         parameters: {
             query?: {
                 status?: string[];
-                From?: string;
-                To?: string;
-                Municipality?: string;
-                Premium?: boolean;
-                Q?: string;
-                Page?: number;
-                PageSize?: number;
+                from?: string;
+                to?: string;
+                municipality?: string;
+                premium?: boolean;
+                q?: string;
+                page?: number;
+                pageSize?: number;
             };
             header?: never;
             path?: never;
@@ -3486,13 +3567,13 @@ export interface operations {
         parameters: {
             query?: {
                 status?: string[];
-                From?: string;
-                To?: string;
-                Municipality?: string;
-                Premium?: boolean;
-                Q?: string;
-                Page?: number;
-                PageSize?: number;
+                from?: string;
+                to?: string;
+                municipality?: string;
+                premium?: boolean;
+                q?: string;
+                page?: number;
+                pageSize?: number;
             };
             header?: never;
             path?: never;
