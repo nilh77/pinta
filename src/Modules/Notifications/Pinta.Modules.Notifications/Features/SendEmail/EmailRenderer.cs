@@ -104,6 +104,8 @@ public sealed class EmailRenderer(IServiceProvider services)
                 button: (text["SiteVisitAssigned.Button"], e.Url)),
             SiteVisitReportedEmail e => Notice(text, e, text.Format("SiteVisitReported.Subject", e.Code),
                 paragraphs: [text.Format("SiteVisitReported.Body", e.PainterName)], button: (text["Common.OpenAdmin"], e.AdminUrl)),
+            AccountDeletionRequestedEmail e => Notice(text, e, text["AccountDeletion.Subject"],
+                paragraphs: [text.Format("AccountDeletion.Body", e.ClientName, e.ClientEmail)], button: (text["Common.OpenAdmin"], e.AdminUrl)),
             _ => throw new NotSupportedException($"No template for {email.GetType().Name}."),
         };
     }

@@ -20,4 +20,15 @@ public sealed class User : IdentityUser<Guid>
 
     /// <summary>Deactivated by the admin (painters, A4.2): cannot sign in by any means until reactivated.</summary>
     public bool IsDisabled { get; set; }
+
+    /// <summary>Default invoice details (screen 12), proposed when the client asks for an invoice.</summary>
+    public string? TaxId { get; set; }
+
+    public string? CompanyName { get; set; }
+
+    /// <summary>C5.8: the client asked to delete the account; the admin executes it.</summary>
+    public DateTimeOffset? DeletionRequestedAt { get; set; }
+
+    /// <summary>When the admin executed the deletion: the personal data is gone and the account cannot sign in.</summary>
+    public DateTimeOffset? AnonymizedAt { get; set; }
 }

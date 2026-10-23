@@ -606,6 +606,187 @@
         }
       }
     },
+    "/api/me": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "GetAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "UpdateAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/password": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "ChangePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/delete-request": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "RequestAccountDeletion",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/admin/deletion-requests": {
+      "get": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ListDeletionRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeletionRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/deletion-requests/{userId}/execute": {
+      "post": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ExecuteAccountDeletion",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/coverage/check": {
       "get": {
         "tags": [
@@ -4927,6 +5108,62 @@
           }
         }
       },
+      "AccountProfile": {
+        "required": [
+          "name",
+          "email",
+          "emailConfirmed",
+          "phone",
+          "locale",
+          "taxId",
+          "companyName",
+          "marketingConsent",
+          "deletionRequestedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "phone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "marketingConsent": {
+            "type": "boolean"
+          },
+          "deletionRequestedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
       "AddDocumentRequest": {
         "required": [
           "fileId",
@@ -5696,6 +5933,21 @@
           }
         }
       },
+      "ChangePasswordRequest": {
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        }
+      },
       "ClientCancelRequest": {
         "required": [
           "reason"
@@ -5887,6 +6139,35 @@
           },
           "canRequote": {
             "type": "boolean"
+          }
+        }
+      },
+      "ClientJobForDeletion": {
+        "required": [
+          "jobId",
+          "code",
+          "status",
+          "action",
+          "refundCents"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "action": {
+            "$ref": "#/components/schemas/DeletionAction"
+          },
+          "refundCents": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -6490,6 +6771,45 @@
         "properties": {
           "reason": {
             "type": "string"
+          }
+        }
+      },
+      "DeletionAction": {
+        "enum": [
+          "cancel",
+          "blocked",
+          "keep"
+        ]
+      },
+      "DeletionRequest": {
+        "required": [
+          "userId",
+          "name",
+          "email",
+          "requestedAt",
+          "jobs"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientJobForDeletion"
+            }
           }
         }
       },
@@ -10301,6 +10621,47 @@
           }
         }
       },
+      "UpdateAccountRequest": {
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "locale",
+          "taxId",
+          "companyName",
+          "marketingConsent"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "marketingConsent": {
+            "type": "boolean"
+          }
+        }
+      },
       "UpdatePainterRequest": {
         "required": [
           "name",
@@ -10580,13 +10941,16 @@
       "name": "Auth"
     },
     {
+      "name": "Account"
+    },
+    {
+      "name": "Admin settings"
+    },
+    {
       "name": "Coverage"
     },
     {
       "name": "Admin catalog"
-    },
-    {
-      "name": "Admin settings"
     },
     {
       "name": "Admin quotes"

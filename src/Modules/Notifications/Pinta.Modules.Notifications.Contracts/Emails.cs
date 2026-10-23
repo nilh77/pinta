@@ -102,3 +102,6 @@ public sealed record SiteVisitAssignedEmail(string To, Locale Locale, string Nam
 
 /// <summary>To the admins: the painter sent the site visit report; the draft has the real measures (P3.1).</summary>
 public sealed record SiteVisitReportedEmail(string To, Locale Locale, string Code, string PainterName, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the admins: a client asked to delete their account; they execute it from Ajustes (C5.8).</summary>
+public sealed record AccountDeletionRequestedEmail(string To, Locale Locale, string ClientName, string ClientEmail, string AdminUrl) : Email(To, Locale);

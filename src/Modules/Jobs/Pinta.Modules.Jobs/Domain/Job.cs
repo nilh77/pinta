@@ -19,9 +19,9 @@ public sealed class Job
 
     public JobStatus Status { get; private set; }
 
-    public required string AddressLine1 { get; init; }
+    public required string AddressLine1 { get; set; }
 
-    public string? Floor { get; init; }
+    public string? Floor { get; set; }
 
     public required string PostalCode { get; init; }
 
@@ -29,9 +29,9 @@ public sealed class Job
 
     public required string Municipality { get; init; }
 
-    public string? AccessNotes { get; init; }
+    public string? AccessNotes { get; set; }
 
-    public string? Description { get; init; }
+    public string? Description { get; set; }
 
     public bool PreferredAsap { get; init; }
 
@@ -43,9 +43,9 @@ public sealed class Job
 
     public bool RequiresSiteVisit { get; set; }
 
-    public string? TaxId { get; init; }
+    public string? TaxId { get; set; }
 
-    public string? CompanyName { get; init; }
+    public string? CompanyName { get; set; }
 
     /// <summary>The estimate until the admin confirms a price; then the confirmed version the client decides on.</summary>
     public Guid CurrentQuoteVersionId { get; set; }

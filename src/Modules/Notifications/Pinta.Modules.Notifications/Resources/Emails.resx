@@ -94,4 +94,6 @@
   <data name="SiteVisitAssigned.Button" xml:space="preserve"><value>Abrir a visita</value></data>
   <data name="SiteVisitReported.Subject" xml:space="preserve"><value>Relatório da visita {0}</value></data>
   <data name="SiteVisitReported.Body" xml:space="preserve"><value>{0} enviou o relatório da visita. O rascunho já tem as medidas reais; reveja as partidas extra e confirme o preço.</value></data>
+  <data name="AccountDeletion.Subject" xml:space="preserve"><value>Pedido de supressão de conta</value></data>
+  <data name="AccountDeletion.Body" xml:space="preserve"><value>{0} ({1}) pediu a supressão da conta. Execute-a em Ajustes: os trabalhos ativos são cancelados com a política habitual e a contabilidade conserva-se.</value></data>
 </root>

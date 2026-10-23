@@ -23,6 +23,8 @@ public sealed class IdentityModuleDbContext(DbContextOptions<IdentityModuleDbCon
         {
             user.ToTable("users");
             user.Property(u => u.Name).HasMaxLength(200);
+            user.Property(u => u.TaxId).HasMaxLength(20);
+            user.Property(u => u.CompanyName).HasMaxLength(200);
             user.Property(u => u.Locale)
                 .HasConversion(l => l.ToString().ToLowerInvariant(), s => Enum.Parse<Locale>(s, true))
                 .HasMaxLength(2);

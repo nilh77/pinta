@@ -5,6 +5,7 @@
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
     <ProjectReference Include="..\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\Jobs\Pinta.Modules.Jobs.Contracts\Pinta.Modules.Jobs.Contracts.csproj" />
     <ProjectReference Include="..\..\Notifications\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
   </ItemGroup>

@@ -276,6 +276,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetAccount"];
+        put: operations["UpdateAccount"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ChangePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/delete-request": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RequestAccountDeletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/deletion-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListDeletionRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/deletion-requests/{userId}/execute": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ExecuteAccountDeletion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/coverage/check": {
         parameters: {
             query?: never;
@@ -1454,6 +1534,18 @@ export interface components {
             token: string;
             password: string;
         };
+        AccountProfile: {
+            name: string;
+            email: string;
+            emailConfirmed: boolean;
+            phone: null | string;
+            locale: components["schemas"]["Locale"];
+            taxId: null | string;
+            companyName: null | string;
+            marketingConsent: boolean;
+            /** Format: date-time */
+            deletionRequestedAt: null | string;
+        };
         AddDocumentRequest: {
             /** Format: uuid */
             fileId: string;
@@ -1646,6 +1738,10 @@ export interface components {
             /** Format: int64 */
             amountCents: number;
         };
+        ChangePasswordRequest: {
+            currentPassword: string;
+            newPassword: string;
+        };
         ClientCancelRequest: {
             reason: null | string;
         };
@@ -1689,6 +1785,15 @@ export interface components {
             timeline: components["schemas"]["ClientTimelineEntry"][];
             canCancel: boolean;
             canRequote: boolean;
+        };
+        ClientJobForDeletion: {
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            action: components["schemas"]["DeletionAction"];
+            /** Format: int64 */
+            refundCents: number;
         };
         ClientJobListItem: {
             /** Format: uuid */
@@ -1851,6 +1956,17 @@ export interface components {
         };
         DeclineRequest: {
             reason: string;
+        };
+        /** @enum {unknown} */
+        DeletionAction: "cancel" | "blocked" | "keep";
+        DeletionRequest: {
+            /** Format: uuid */
+            userId: string;
+            name: string;
+            email: string;
+            /** Format: date-time */
+            requestedAt: string;
+            jobs: components["schemas"]["ClientJobForDeletion"][];
         };
         DocumentUploadRequest: {
             contentType: string;
@@ -2879,6 +2995,15 @@ export interface components {
             /** Format: date */
             scheduledOn?: null | string;
         };
+        UpdateAccountRequest: {
+            name: string;
+            email: string;
+            phone: string;
+            locale: components["schemas"]["Locale"];
+            taxId: null | string;
+            companyName: null | string;
+            marketingConsent: boolean;
+        };
         UpdatePainterRequest: {
             name: string;
             phone: null | string;
@@ -3475,6 +3600,175 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    GetAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountProfile"];
+                };
+            };
+        };
+    };
+    UpdateAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAccountRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountProfile"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ChangePassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangePasswordRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    RequestAccountDeletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ListDeletionRequests: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DeletionRequest"][];
+                };
+            };
+        };
+    };
+    ExecuteAccountDeletion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
             };
         };
     };
