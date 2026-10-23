@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H6b · Visita técnica del pintor y pagos al pintor
+Nada todavía.
 
-#### Añadido
+## H6b · Visita técnica del pintor y pagos al pintor — 2026-10-23, [PR #8](https://github.com/nilh77/pinta/pull/8)
+
+### Añadido
 
 - Visita técnica hecha por un pintor: «Pedir visita» ofrece los socios y los pintores activos que cubren el concelho; el pintor recibe un email sin el precio de la visita y la ve en «Próximos» con la etiqueta «Visita» (A2.6).
 - P3 · `/pintor/visitas/{id}`: lo que indicó el cliente, las medidas reales corregidas con el editor de estancia del constructor (añadir o quitar estancias), trabajos extra con el pago al pintor, fotos directas a almacenamiento y una nota. El informe sin enviar se guarda en el móvil. Al enviarlo, el trabajo vuelve a «En revisión» con nuevo plazo, sus medidas pasan a ser el borrador `site_visit` y los admins reciben un email (P3.1).
@@ -18,20 +20,20 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Ficha del pintor en el admin: sección «Pagos al pintor» de solo lectura.
 - Test de contrato ampliado: `/api/painter/visits/{id}` no lleva ningún importe y `/api/painter/payouts` no lleva precio al cliente ni margen.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: decisiones de H6b en `docs/plan.md`, P3, P4 y A2 en `docs/screens.md`, rutas y cuerpos en `docs/api.md`, informe de visita y pago al pintor en `docs/data-model.md`, y la transición del pintor en `docs/states.md`.
 - Las fotos de resultado (P2) y de visita (P3) usan el mismo selector de fotos.
 
-#### Corregido
+### Corregido
 
 - La caducidad diaria de precios ya no se detiene entera si un trabajo cambia mientras corre (por ejemplo, llega la señal): ese trabajo se deja y sigue con los demás (S3). Su test ya no adelanta el reloj sobre la base de datos compartida, lo que podía caducar precios de otros tests.
 
-#### Verificado
+### Verificado
 
 - En el navegador a 390 y 1440 px (todo en pt; «Mis pagos» también en en y la ficha del admin en es), con Stripe en modo test: el admin pide la visita de TC01 a Carla; Carla corrige el largo a 5 m, propone «Reparar fissura» por 40 € con 2 fotos y una nota (el borrador sobrevive a recargar la página) y envía; el admin ve el informe, no puede confirmar hasta poner 90 € al extra y confirma la versión 2. Tras la señal, la oferta, el trabajo y el resto pagados con webhooks reales, Carla ve 289,20 € pendientes en «Mis pagos» y el admin los ve en su ficha.
 
-#### Pendiente
+### Pendiente
 
 - Marcar los pagos al pintor como pagados con referencia y la pantalla de Finanzas: H7 (A5.4).
 - P3 propone solo partidas libres: el catálogo de partidas extra no es público; la API ya acepta `catalogKey`.
