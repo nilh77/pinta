@@ -192,7 +192,8 @@
       "pricing": "Preços",
       "jobs": "Trabalhos",
       "review": "Revisão",
-      "coverage": "Cobertura"
+      "coverage": "Cobertura",
+      "painters": "Pintores"
     },
     "forbidden": {
       "title": "Área reservada",
@@ -425,9 +426,6 @@
         "payments": "Pagamentos",
         "assignment": "Atribuição"
       },
-      "later": {
-        "assignment": "A atribuição a pintores chega na fase H6."
-      },
       "files": {
         "empty": "O cliente não enviou fotos.",
         "open": "Abrir ficheiro {index}",
@@ -603,7 +601,31 @@
         }
       },
       "noPayments": "Ainda não há pagamentos.",
-      "scheduledOn": "Início: {date}"
+      "scheduledOn": "Início: {date}",
+      "assignment": {
+        "offers": "Ofertas",
+        "none": "Ainda não foi oferecido a nenhum pintor.",
+        "line": "{date} · {pay} · oferecido {offered}",
+        "answered": "respondido {date}",
+        "reason": "Motivo: {reason}",
+        "status": {
+          "offered": "À espera",
+          "accepted": "Aceite",
+          "completed": "Concluída",
+          "declined": "Recusada",
+          "withdrawn": "Retirada"
+        },
+        "onlyPaid": "Só se oferece a pintores com o sinal pago.",
+        "new": "Oferecer a um pintor",
+        "loading": "A procurar pintores…",
+        "noPainters": "Nenhum pintor ativo trabalha em {municipality}.",
+        "painter": "Pintor",
+        "choose": "Escolha um pintor",
+        "date": "Data de início",
+        "replaces": "Há uma oferta à espera: a nova retira-a.",
+        "submit": "Enviar oferta",
+        "sent": "Oferta enviada a {name}."
+      }
     },
     "jobs": {
       "title": "Trabalhos",
@@ -665,6 +687,98 @@
       "loading": "A carregar…",
       "loadError": "Não conseguimos carregar os dados.",
       "retry": "Tentar outra vez"
+    },
+    "painters": {
+      "title": "Pintores",
+      "subtitle": "Equipa de pintores, zonas, documentos e trabalhos.",
+      "invite": "Convidar pintor",
+      "loading": "A carregar…",
+      "loadError": "Não conseguimos carregar os pintores.",
+      "notFound": "Não encontrámos este pintor.",
+      "retry": "Tentar outra vez",
+      "back": "Pintores",
+      "empty": "Ainda não há pintores",
+      "noZones": "Sem zonas",
+      "jobsDone": "{count, plural, =0 {Sem trabalhos} one {# trabalho} other {# trabalhos}}",
+      "columns": {
+        "name": "Nome",
+        "status": "Estado",
+        "zones": "Zonas",
+        "jobs": "Trabalhos feitos",
+        "rating": "Avaliação"
+      },
+      "status": {
+        "invited": "Convidado",
+        "active": "Ativo",
+        "inactive": "Inativo"
+      },
+      "new": {
+        "title": "Convidar pintor",
+        "subtitle": "Enviamos um convite válido 72 horas. O pintor confirma os dados e escolhe a palavra-passe.",
+        "submit": "Criar e enviar convite",
+        "sent": "Convite enviado para {email}."
+      },
+      "form": {
+        "name": "Nome",
+        "email": "Email",
+        "locale": "Idioma dos emails",
+        "phone": "Telemóvel",
+        "phoneHint": "Com indicativo, por exemplo +351 912 345 678.",
+        "taxId": "NIF",
+        "iban": "IBAN",
+        "ibanHint": "IBAN português (PT50…). Guardado cifrado.",
+        "ibanKeep": "Atual: {iban}. Deixe em branco para o manter.",
+        "rating": "Avaliação interna",
+        "ratingHint": "De 1 a 5, com uma casa decimal. Só a Pinta a vê.",
+        "ratingError": "Use um valor de 1 a 5 com uma casa decimal no máximo.",
+        "specialties": "Especialidades",
+        "specialty": {
+          "interior": "Interior",
+          "exterior": "Exterior",
+          "wood": "Madeira",
+          "metal": "Metal"
+        },
+        "zones": "Concelhos onde trabalha",
+        "loadingZones": "A carregar concelhos…",
+        "notes": "Notas internas"
+      },
+      "detail": {
+        "title": "Ficha do pintor",
+        "data": "Dados",
+        "save": "Guardar alterações",
+        "saved": "Dados guardados.",
+        "resend": "Reenviar convite",
+        "resent": "Convite reenviado.",
+        "activate": "Ativar",
+        "activated": "Pintor ativo.",
+        "deactivate": "Desativar",
+        "deactivated": "Pintor desativado.",
+        "deactivateTitle": "Desativar {name}?",
+        "deactivateBody": "Deixa de poder entrar e de receber ofertas. Pode ativá-lo de novo.",
+        "cancel": "Voltar"
+      },
+      "documents": {
+        "title": "Documentos",
+        "empty": "Sem documentos.",
+        "kind": "Tipo",
+        "expiresOn": "Validade",
+        "upload": "Enviar documento",
+        "uploaded": "Documento guardado.",
+        "expires": "Válido até {date}",
+        "expired": "Expirou a {date}",
+        "noExpiry": "Sem validade",
+        "remove": "Remover {kind}",
+        "kinds": {
+          "insurance": "Seguro",
+          "activity": "Início de atividade",
+          "contract": "Contrato",
+          "other": "Outro"
+        }
+      },
+      "jobs": {
+        "title": "Trabalhos",
+        "empty": "Ainda sem trabalhos."
+      }
     }
   },
   "quote": {
@@ -1178,7 +1292,11 @@
       "closed": {
         "title": "Trabalho fechado",
         "body": "Está tudo pago. Obrigado!"
-      }
+      },
+      "painter": "Pintor: {name}",
+      "verified": "Verificado pela Pinta",
+      "resultPhotos": "Fotos do resultado",
+      "resultPhoto": "Foto do resultado {n}"
     }
   },
   "payment": {

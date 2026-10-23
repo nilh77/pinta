@@ -13,6 +13,7 @@ import { useAdminJobPayments } from "@/lib/payments/use-payments";
 import { PaymentsList } from "@/components/payments/payments-list";
 import { formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { AssignmentTab } from "./assignment-tab";
 import { DraftEditor } from "./draft-editor";
 import { JobActions } from "./job-actions";
 import { JobFiles } from "./job-files";
@@ -99,7 +100,7 @@ function Tabbed({ job }: { job: AdminJobDetail }) {
         {tab === "files" && <JobFiles files={job.files} />}
         {tab === "history" && <History job={job} />}
         {tab === "payments" && <PaymentsTab jobId={job.id} />}
-        {tab === "assignment" && <p className="text-sm text-muted-foreground">{t("later.assignment")}</p>}
+        {tab === "assignment" && <AssignmentTab job={job} />}
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardCheck, LayoutList, Loader2, MapPinned, Tags } from "lucide-react";
+import { ClipboardCheck, LayoutList, Loader2, MapPinned, PaintRoller, Tags } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -13,6 +13,7 @@ const SECTIONS = [
   { href: "/admin/trabajos", key: "jobs", icon: LayoutList },
   { href: "/admin/revision", key: "review", icon: ClipboardCheck },
   { href: "/admin/precios", key: "pricing", icon: Tags },
+  { href: "/admin/pintores", key: "painters", icon: PaintRoller },
   { href: "/admin/cobertura", key: "coverage", icon: MapPinned },
 ] as const;
 
