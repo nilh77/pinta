@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Data;
@@ -109,8 +110,8 @@ public sealed class FixedClock(DateTimeOffset now) : TimeProvider
 public sealed class SerialCollection;
 
 /// <summary>
-/// S3: a price confirmed on day D is valid through D+15 and expires on D+16 (03:00 Lisbon). Runs alone: the job
-/// expires every quoted job of the shared database.
+/// S3: a price confirmed on day D is valid through D+15 and expires on D+16 (03:00 Lisbon). The job runs on the shared
+/// database at today's date, so the test moves only its own job's last valid day: other tests' prices are not touched.
 /// </summary>
 [Collection(nameof(SerialCollection))]
 public class QuoteExpiryTests(PintaApiFactory factory)
@@ -127,7 +128,16 @@ public class QuoteExpiryTests(PintaApiFactory factory)
     private static DateTimeOffset At0300Lisbon(DateOnly day)
     {
         var local = day.ToDateTime(new TimeOnly(3, 0));
-        return new DateTimeOffset(local, BusinessDays.Lisbon.GetUtcOffset(local));
+        return new DateTimeOffset(local, BusinessDays.Lisbon.GetUtcOffset(local)).ToUniversalTime();
+    }
+
+    /// <summary>As if the price had been confirmed <paramref name="daysAgo"/> days before today.</summary>
+    private async Task ConfirmedDaysAgoAsync(Guid jobId, DateOnly validUntil, int daysAgo)
+    {
+        await using var scope = factory.Services.CreateAsyncScope();
+        var shifted = validUntil.AddDays(-daysAgo);
+        await scope.ServiceProvider.GetRequiredService<JobsDbContext>().Database
+            .ExecuteSqlInterpolatedAsync($"UPDATE jobs.jobs SET quote_valid_until = {shifted} WHERE id = {jobId}");
     }
 
     [Fact]
@@ -137,12 +147,18 @@ public class QuoteExpiryTests(PintaApiFactory factory)
         await TestReview.ConfirmAsync(factory, job.JobId);
         var confirmedOn = BusinessDays.Today(TimeProvider.System);
 
-        await RunExpiryAsync(At0300Lisbon(confirmedOn.AddDays(15)));
+        var confirmed = await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync();
+        var validUntil = DateOnly.Parse(confirmed.GetProperty("quoteValidUntil").GetString()!);
+        Assert.Equal(confirmedOn.AddDays(15), validUntil);
+
+        await ConfirmedDaysAgoAsync(job.JobId, validUntil, 15);
+        await RunExpiryAsync(At0300Lisbon(confirmedOn));
         var day15 = await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync();
-        await RunExpiryAsync(At0300Lisbon(confirmedOn.AddDays(16)));
+        await ConfirmedDaysAgoAsync(job.JobId, validUntil, 16);
+        await RunExpiryAsync(At0300Lisbon(confirmedOn));
         var day16 = await (await job.Client.GetAsync($"/api/jobs/{job.JobId}")).ReadJsonAsync();
 
-        Assert.Equal(("quoted", confirmedOn.AddDays(15)), (day15.GetProperty("status").GetString(), DateOnly.Parse(day15.GetProperty("quoteValidUntil").GetString()!)));
+        Assert.Equal("quoted", day15.GetProperty("status").GetString());
         Assert.Equal(("expired", true), (day16.GetProperty("status").GetString(), day16.GetProperty("canRequote").GetBoolean()));
         Assert.Equal(job.JobId, Assert.Single(factory.Emails.To<PriceExpiredEmail>(job.Email)).JobId);
 

@@ -25,10 +25,22 @@ public sealed class ExpireQuotes(JobsDbContext db, IUserDirectory users, IEmailQ
     {
         var today = BusinessDays.Today(clock);
         var jobs = await db.Jobs.Where(j => j.Status == JobStatus.Quoted && j.QuoteValidUntil < today).ToListAsync();
+        var expired = 0;
         foreach (var job in jobs)
         {
             job.TransitionTo(JobStatus.Expired, JobActor.System, null, null, clock.GetUtcNow());
-            await db.SaveChangesAsync();
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // The job changed meanwhile (the deposit arrived, the admin cancelled it): leave it to that change.
+                db.ChangeTracker.Clear();
+                continue;
+            }
+
+            expired++;
             var client = await users.FindAsync(job.ClientId);
             if (client is not null)
             {
@@ -39,6 +51,6 @@ public sealed class ExpireQuotes(JobsDbContext db, IUserDirectory users, IEmailQ
             }
         }
 
-        return jobs.Count;
+        return expired;
     }
 }
