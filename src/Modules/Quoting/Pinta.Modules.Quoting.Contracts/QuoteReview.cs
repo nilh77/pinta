@@ -91,17 +91,19 @@ public sealed record AdminQuote(
     bool? PremiumOverride,
     long? ManualSubtotalCents,
     string? AdjustmentReason,
+    long SiteVisitCreditCents,
     string? Note,
     DateOnly? ValidUntil,
     DateTimeOffset CreatedAt,
     DateTimeOffset? ConfirmedAt,
     QuoteBreakdownDto Breakdown);
 
-/// <summary>Serialized as <c>work</c>, <c>extra</c>.</summary>
+/// <summary>Serialized as <c>work</c>, <c>extra</c>, <c>site_visit</c> (the paid visit taken off, a negative amount).</summary>
 public enum ClientQuoteLineKind
 {
     Work,
     Extra,
+    SiteVisit,
 }
 
 /// <summary>A line of the client's breakdown, VAT included: the painting work or one extra item.</summary>

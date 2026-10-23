@@ -71,6 +71,11 @@ public static class QuoteValidator
             Amount(manual, "manualSubtotal", errors);
         }
 
+        if (input.SiteVisitCredit != 0)
+        {
+            Amount(input.SiteVisitCredit, "siteVisitCredit", errors);
+        }
+
         for (var i = 0; i < input.Extras.Count; i++)
         {
             Amount(input.Extras[i].ClientPrice, $"extras[{i}].clientPrice", errors);

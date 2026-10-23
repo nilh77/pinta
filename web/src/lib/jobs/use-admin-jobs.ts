@@ -85,10 +85,11 @@ export function useCatalogExtras() {
   });
 }
 
-export function useAdminCancellationPreview(id: string, enabled: boolean) {
+export function useAdminCancellationPreview(id: string, enabled: boolean, fullRefund: boolean) {
   return useQuery({
-    queryKey: [...adminJobKey(id), "cancellation-preview"],
-    queryFn: async () => orThrow(await api.GET("/api/admin/jobs/{id}/cancellation-preview", { params: { path: { id } } })),
+    queryKey: [...adminJobKey(id), "cancellation-preview", fullRefund],
+    queryFn: async () =>
+      orThrow(await api.GET("/api/admin/jobs/{id}/cancellation-preview", { params: { path: { id }, query: { fullRefund } } })),
     enabled,
   });
 }

@@ -224,6 +224,9 @@ function TransitionButton({ job, targets }: { job: AdminJobDetail; targets: JobS
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState<JobStatus>(targets[0]!);
   const [reason, setReason] = useState("");
+  const [scheduledOn, setScheduledOn] = useState("");
+  const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Lisbon" }).format(new Date());
+  const needsDate = to === "scheduled";
   const transition = useTransitionJob(job.id);
   const { onError } = useDone();
 
@@ -241,9 +244,12 @@ function TransitionButton({ job, targets }: { job: AdminJobDetail; targets: JobS
         submitLabel={t("submit")}
         cancelLabel={t("cancel")}
         pending={transition.isPending}
-        submitDisabled={!reason.trim()}
+        submitDisabled={!reason.trim() || (needsDate && !scheduledOn)}
         onSubmit={() =>
-          transition.mutate({ to, reason: reason.trim(), version: job.version }, { onSuccess: () => (setOpen(false), toast.success(t("done"))), onError })
+          transition.mutate(
+            { to, reason: reason.trim(), version: job.version, scheduledOn: needsDate ? scheduledOn : null },
+            { onSuccess: () => (setOpen(false), toast.success(t("done"))), onError },
+          )
         }
       >
         <label htmlFor={`${id}-to`} className="text-[13px] font-semibold">
@@ -256,6 +262,14 @@ function TransitionButton({ job, targets }: { job: AdminJobDetail; targets: JobS
             </option>
           ))}
         </select>
+        {needsDate && (
+          <>
+            <label htmlFor={`${id}-date`} className="text-[13px] font-semibold">
+              {t("scheduledOn")}
+            </label>
+            <input id={`${id}-date`} type="date" min={today} className={inputClass} value={scheduledOn} onChange={(e) => setScheduledOn(e.target.value)} />
+          </>
+        )}
         <TextAreaField id={`${id}-reason`} label={t("reason")} value={reason} onChange={setReason} max={500} required />
       </FormDialog>
     </>
@@ -270,7 +284,7 @@ function CancelButton({ job }: { job: AdminJobDetail }) {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [fullRefund, setFullRefund] = useState(false);
-  const preview = useAdminCancellationPreview(job.id, open);
+  const preview = useAdminCancellationPreview(job.id, open, fullRefund);
   const cancel = useAdminCancel(job.id);
   const { onError } = useDone();
 
@@ -287,7 +301,7 @@ function CancelButton({ job }: { job: AdminJobDetail }) {
         description={
           preview.data
             ? preview.data.depositPaidCents > 0
-              ? t("refund", { amount: formatCents(locale, fullRefund ? preview.data.depositPaidCents : preview.data.refundCents) })
+              ? t("refund", { amount: formatCents(locale, preview.data.refundCents), paid: formatCents(locale, preview.data.depositPaidCents) })
               : t("noPayment")
             : t("calculating")
         }

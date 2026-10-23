@@ -46,4 +46,23 @@
   <data name="ResetPassword.Body" xml:space="preserve"><value>Recebemos um pedido para mudar a sua palavra-passe. O link é válido durante 2 horas.</value></data>
   <data name="ResetPassword.Button" xml:space="preserve"><value>Escolher nova palavra-passe</value></data>
   <data name="ResetPassword.Ignore" xml:space="preserve"><value>Se não foi você, pode ignorar este email.</value></data>
+  <data name="Payment.Kind.deposit" xml:space="preserve"><value>Sinal</value></data>
+  <data name="Payment.Kind.balance" xml:space="preserve"><value>Restante</value></data>
+  <data name="Payment.Kind.site_visit" xml:space="preserve"><value>Visita técnica</value></data>
+  <data name="Payment.Amount" xml:space="preserve"><value>Valor</value></data>
+  <data name="PaymentReceived.Subject" xml:space="preserve"><value>Recebemos o seu pagamento do pedido {0}</value></data>
+  <data name="PaymentReceived.Body" xml:space="preserve"><value>Obrigado. O pagamento está confirmado.</value></data>
+  <data name="PaymentReceived.MbWay" xml:space="preserve"><value>No extrato do MB WAY o pagamento aparece como «Stripe», a plataforma de pagamentos que usamos.</value></data>
+  <data name="Multibanco.Subject" xml:space="preserve"><value>Referência Multibanco do pedido {0}</value></data>
+  <data name="Multibanco.Body" xml:space="preserve"><value>Pague num multibanco ou no seu banco online com estes dados. Confirmamos assim que o pagamento chegar.</value></data>
+  <data name="Multibanco.Entity" xml:space="preserve"><value>Entidade</value></data>
+  <data name="Multibanco.Reference" xml:space="preserve"><value>Referência</value></data>
+  <data name="Multibanco.Deadline" xml:space="preserve"><value>Pagar até</value></data>
+  <data name="Refund.Subject" xml:space="preserve"><value>Reembolso do pedido {0}</value></data>
+  <data name="Refund.Body" xml:space="preserve"><value>O trabalho foi cancelado e pedimos o reembolso. Chega pelo mesmo meio de pagamento em alguns dias úteis.</value></data>
+  <data name="AutoRefund.Subject" xml:space="preserve"><value>Pagamento devolvido no pedido {0}</value></data>
+  <data name="AutoRefund.Body" xml:space="preserve"><value>Chegou um pagamento para um trabalho que já não o aceitava (cancelado ou expirado). Foi devolvido na totalidade.</value></data>
+  <data name="Dispute.Subject" xml:space="preserve"><value>Disputa de pagamento no pedido {0}</value></data>
+  <data name="Dispute.Body" xml:space="preserve"><value>O cliente abriu uma disputa no Stripe. Responda no painel do Stripe dentro do prazo.</value></data>
+  <data name="Common.OpenStripe" xml:space="preserve"><value>Abrir no painel</value></data>
 </root>

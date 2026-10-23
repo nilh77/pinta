@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Payments.Stripe;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
 
@@ -20,6 +21,8 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
     private readonly MinioContainer _minio = new MinioBuilder("cgr.dev/chainguard/minio:latest").Build();
 
     public InMemoryEmailQueue Emails { get; } = new();
+
+    public FakeStripe Stripe { get; } = new();
 
     public async ValueTask InitializeAsync()
     {
@@ -38,7 +41,12 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("RateLimits:EstimatePerMinute", "1000");
         builder.UseSetting("RateLimits:UploadsPerMinute", "1000");
         builder.UseSetting("Web:BaseUrl", "http://web.test");
-        builder.ConfigureTestServices(services => services.AddSingleton<IEmailQueue>(Emails));
+        builder.UseSetting("Stripe:WebhookSecret", FakeStripe.WebhookSecret);
+        builder.ConfigureTestServices(services =>
+        {
+            services.AddSingleton<IEmailQueue>(Emails);
+            services.AddSingleton<IStripeGateway>(Stripe);
+        });
     }
 
     public override async ValueTask DisposeAsync()

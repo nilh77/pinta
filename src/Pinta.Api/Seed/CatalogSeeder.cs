@@ -107,6 +107,9 @@ public static class CatalogSeeder
             MaxVideoSizeMb = 100,
             ClientPhoneVisibleToPainter = true,
             PainterPhoneVisibleToClient = true,
+            CompanyName = "Pinta · NHIT-DEV",
+            CompanyTaxId = "999999990",
+            CompanyAddress = "Avenida da Liberdade, 100, 1250-146 Lisboa",
         };
 
         var coverage = Coverage.SelectMany(c => c.Prefixes.Select(prefix =>

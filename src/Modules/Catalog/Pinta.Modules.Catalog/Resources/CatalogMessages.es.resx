@@ -16,4 +16,5 @@
   <data name="prefix_format" xml:space="preserve"><value>Indica los 4 primeros dígitos del código postal.</value></data>
   <data name="prefix_taken" xml:space="preserve"><value>Este prefijo ya existe.</value></data>
   <data name="postal_code_format" xml:space="preserve"><value>Indica el código postal con el formato 1234-567.</value></data>
+  <data name="tax_id" xml:space="preserve"><value>NIF portugués no válido (9 dígitos con dígito de control).</value></data>
 </root>

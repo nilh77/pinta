@@ -9,6 +9,8 @@ import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import type { AdminJobDetail } from "@/lib/jobs/api";
 import { useAdminJob } from "@/lib/jobs/use-admin-jobs";
+import { useAdminJobPayments } from "@/lib/payments/use-payments";
+import { PaymentsList } from "@/components/payments/payments-list";
 import { formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { DraftEditor } from "./draft-editor";
@@ -96,10 +98,31 @@ function Tabbed({ job }: { job: AdminJobDetail }) {
         {tab === "versions" && <Versions job={job} />}
         {tab === "files" && <JobFiles files={job.files} />}
         {tab === "history" && <History job={job} />}
-        {tab === "payments" && <p className="text-sm text-muted-foreground">{t("later.payments")}</p>}
+        {tab === "payments" && <PaymentsTab jobId={job.id} />}
         {tab === "assignment" && <p className="text-sm text-muted-foreground">{t("later.assignment")}</p>}
       </div>
     </div>
+  );
+}
+
+function PaymentsTab({ jobId }: { jobId: string }) {
+  const t = useTranslations("admin.job");
+  const payments = useAdminJobPayments(jobId);
+  if (payments.isPending) {
+    return (
+      <p role="status" className="flex items-center gap-2 text-muted-foreground">
+        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
+        {t("loading")}
+      </p>
+    );
+  }
+
+  return payments.isError ? (
+    <p role="alert" className="text-destructive">
+      {t("loadError")}
+    </p>
+  ) : (
+    <PaymentsList jobId={jobId} payments={payments.data} emptyText={t("noPayments")} />
   );
 }
 
@@ -151,6 +174,7 @@ function Overview({ job }: { job: AdminJobDetail }) {
           {job.address.accessNotes && <p className="text-muted-foreground">{t("access", { notes: job.address.accessNotes })}</p>}
           <p>{t("dates", { dates })}</p>
           {job.quoteValidUntil && <p>{t("validUntil", { date: formatDate(locale, job.quoteValidUntil) })}</p>}
+          {job.scheduledOn && <p className="font-semibold">{t("scheduledOn", { date: formatDate(locale, job.scheduledOn) })}</p>}
           {job.siteVisit && (
             <p>
               {t("siteVisit", {

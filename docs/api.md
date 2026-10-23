@@ -54,8 +54,9 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | GET | `/api/jobs/{id}/cancellation-preview` | Cliente dueño | Importe a reembolsar si cancela | C5.6 |
 | POST | `/api/jobs/{id}/cancel` | Cliente dueño | Cancela y lanza el reembolso | C5.6 |
 | POST | `/api/jobs/{id}/requote` | Cliente dueño | Pide nuevo precio tras expirar | C5.7 |
-| POST | `/api/jobs/{id}/payments` | Cliente dueño | Crea el pago `deposit` o `balance` con su método; devuelve `clientSecret` o la referencia Multibanco | C5.3 |
+| POST | `/api/jobs/{id}/payments` | Cliente dueño | Crea (o reutiliza si sigue abierto) el pago `deposit`, `balance` o `site_visit`; el importe lo calcula el servidor. Devuelve `clientSecret`, la clave publicable y los métodos permitidos por importe | C5.3 |
 | GET | `/api/jobs/{id}/payments` | Cliente dueño | Pagos del trabajo y su estado | C5.3 |
+| GET | `/api/jobs/{id}/payments/{paymentId}/receipt` | Cliente dueño o admin | Justificante PDF simulado de un pago hecho | C5.3 |
 | GET | `/api/media/{fileId}/url` | Con acceso al trabajo | URL firmada de lectura | C5.5 |
 | GET / PUT | `/api/me` | Sesión | Ver y editar perfil, idioma, facturación y avisos | C5.8 |
 | POST | `/api/me/delete-request` | Cliente | Pide la supresión de la cuenta | C5.8 |
@@ -91,7 +92,7 @@ Todas las rutas exigen rol Admin.
 | GET / POST / PUT | `/api/admin/catalog/room-types[/{id}]` | Tipos de estancia, tallas y pintura sugerida | A1.3 |
 | GET / POST / PUT | `/api/admin/catalog/modifiers[/{id}]` | Modificadores de ocupación | A1.4 |
 | GET / POST / PUT | `/api/admin/catalog/extras[/{id}]` | Catálogo de partidas extra | A1.5 |
-| GET / PUT | `/api/admin/settings` | Configuración global | A1.6 |
+| GET / PUT | `/api/admin/settings` | Configuración global, incluidos los datos de la empresa para los justificantes (nombre, NIF y dirección) | A1.6 |
 | GET / POST / PUT | `/api/admin/coverage[/{id}]` | Zonas de cobertura | A1.7 |
 | POST | `/api/admin/quotes/simulate` | Simulador con desglose completo | A1.8 |
 | GET | `/api/admin/reviews` | Bandeja de revisión con semáforo | A2.1 |
@@ -105,7 +106,8 @@ Todas las rutas exigen rol Admin.
 | POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado y fecha | A2.6 |
 | POST | `/api/admin/jobs/{id}/site-visit/complete` | Visita hecha: vuelve a revisión; el siguiente borrador tiene origen `site_visit` | A2.6 |
 | POST | `/api/admin/jobs/{id}/assignments` | Asigna pintor y fecha | A3.2 |
-| POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422) | A3.3 |
+| POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422); `scheduled` exige `scheduledOn` (hoy o después) | A3.3 |
+| GET | `/api/admin/jobs/{id}/payments` | Pagos, reembolsos y referencias Multibanco del trabajo | A3.5 |
 | GET | `/api/admin/jobs/{id}/cancellation-preview` | Reembolso calculado | A3.4 |
 | POST | `/api/admin/jobs/{id}/cancel` | Cancela, con opción de reembolso total y motivo | A3.4 |
 | GET / POST | `/api/admin/painters` | Listar y dar de alta | A4.1 |

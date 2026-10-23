@@ -121,7 +121,7 @@ El material se vende a precio de coste: el margen sale solo de la mano de obra, 
 | Ajuste manual | El admin puede fijar el subtotal a mano con motivo obligatorio; el IVA y el margen se recalculan sobre el nuevo subtotal, y con ellos el total, la señal y el resto. No se aplica el mínimo |
 | Señal | Señal = total × 30%, a 2 decimales. Resto = total − señal |
 | Reembolso por cancelación | 100% de la señal si no hay fecha programada o faltan 7 días o más; 50% si faltan menos de 7 días. Después de "En curso" no se puede cancelar |
-| Visita técnica | Si tiene precio, se cobra como pago aparte y se descuenta del subtotal del trabajo cuando es descontable |
+| Visita técnica | Si tiene precio (IVA incluido), se cobra como pago aparte. Si es descontable y está pagada, la cotización que sigue a la visita resta del subtotal `R2(precio / (1 + IVA))`; el IVA, el total, el margen, la señal y el resto se calculan sobre el subtotal ya descontado. No se aplica el mínimo después del descuento |
 | Lo que ve el cliente | Solo rango, total con IVA, señal, resto, áreas y partidas extra con su precio. Nunca tarifas, material desglosado, pago al pintor ni margen |
 
 ## Casos de prueba
@@ -143,6 +143,7 @@ Resultados esperados con la configuración semilla, en euros. Cada caso es un te
 | TC11 | 8 dormitorios talla L + sala talla L; mate; vacía | 584,80 | 1.028,96 | 3.865,50 | 4.894,46 | 6.020,19 | 2.603,68 | 1.261,82 (25,8%) | 5.415 – 7.530 | 1.806,06 | Premium |
 | TC12 | Fachada 40 × 20; exterior | 800,00 | 2.737,84 | 13.440,00 | 16.177,84 | 19.898,74 | 9.520,00 | 3.920,00 (24,2%) | — | 5.969,62 | Supera el máximo; Premium |
 | TC14 | TC10 con el subtotal ajustado a mano a 2.500,00 € | 266,44 | 573,41 | 1.893,81 | 2.500,00 | 3.075,00 | 1.347,67 | 578,92 (23,2%) | 2.765 – 4.155 | 922,50 | Ajuste manual; Premium |
+| TC15 | TC10 tras una visita técnica pagada de 50,00 € descontable (resta 40,65 € del subtotal) | 266,44 | 573,41 | 1.893,81 | 2.548,52 | 3.134,68 | 1.347,67 | 627,44 (24,6%) | 2.820 – 4.235 | 940,40 | Visita descontada; Premium |
 | TC13 | Dormitorio sin paredes ni techo | — | — | — | — | — | — | — | — | — | Error 422 de validación |
 
 **Vivienda de TC09:** sala exacta 5 × 4 (mate); cocina exacta 3,5 × 3 (satinada); dormitorio 1 exacto 4 × 3,5 (mate); dormitorio 2 talla M con paredes A, B, C + techo (mate); baño exacto 2,5 × 2 con daños (anti-humedad); pasillo exacto 6 × 1,2 solo paredes (mate). Todas con alto 2,60 y, salvo indicación, 4 paredes + techo.

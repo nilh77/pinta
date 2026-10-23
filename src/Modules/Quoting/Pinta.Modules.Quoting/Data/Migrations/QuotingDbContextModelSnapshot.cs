@@ -26,7 +26,6 @@ namespace Pinta.Modules.Quoting.Data.Migrations
             modelBuilder.Entity("Pinta.Modules.Quoting.Domain.QuoteElement", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -131,7 +130,6 @@ namespace Pinta.Modules.Quoting.Data.Migrations
             modelBuilder.Entity("Pinta.Modules.Quoting.Domain.QuoteExtra", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
@@ -282,6 +280,11 @@ namespace Pinta.Modules.Quoting.Data.Migrations
                         .HasPrecision(12, 2)
                         .HasColumnType("numeric(12,2)")
                         .HasColumnName("range_min");
+
+                    b.Property<decimal>("SiteVisitCredit")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("site_visit_credit");
 
                     b.Property<decimal>("Subtotal")
                         .HasPrecision(12, 2)

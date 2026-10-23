@@ -46,4 +46,23 @@
   <data name="ResetPassword.Body" xml:space="preserve"><value>We received a request to change your password. The link is valid for 2 hours.</value></data>
   <data name="ResetPassword.Button" xml:space="preserve"><value>Choose a new password</value></data>
   <data name="ResetPassword.Ignore" xml:space="preserve"><value>If it wasn't you, you can ignore this email.</value></data>
+  <data name="Payment.Kind.deposit" xml:space="preserve"><value>Deposit</value></data>
+  <data name="Payment.Kind.balance" xml:space="preserve"><value>Balance</value></data>
+  <data name="Payment.Kind.site_visit" xml:space="preserve"><value>Site visit</value></data>
+  <data name="Payment.Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="PaymentReceived.Subject" xml:space="preserve"><value>We received your payment for request {0}</value></data>
+  <data name="PaymentReceived.Body" xml:space="preserve"><value>Thank you. Your payment is confirmed.</value></data>
+  <data name="PaymentReceived.MbWay" xml:space="preserve"><value>On your MB WAY statement the payment shows as "Stripe", the payment platform we use.</value></data>
+  <data name="Multibanco.Subject" xml:space="preserve"><value>Multibanco reference for request {0}</value></data>
+  <data name="Multibanco.Body" xml:space="preserve"><value>Pay at a Multibanco ATM or in your online bank with these details. We'll confirm as soon as the payment arrives.</value></data>
+  <data name="Multibanco.Entity" xml:space="preserve"><value>Entity</value></data>
+  <data name="Multibanco.Reference" xml:space="preserve"><value>Reference</value></data>
+  <data name="Multibanco.Deadline" xml:space="preserve"><value>Pay by</value></data>
+  <data name="Refund.Subject" xml:space="preserve"><value>Refund for request {0}</value></data>
+  <data name="Refund.Body" xml:space="preserve"><value>The job was cancelled and we've requested the refund. It reaches the same payment method within a few working days.</value></data>
+  <data name="AutoRefund.Subject" xml:space="preserve"><value>Payment refunded on request {0}</value></data>
+  <data name="AutoRefund.Body" xml:space="preserve"><value>A payment arrived for a job that could no longer take it (cancelled or expired). It was refunded in full.</value></data>
+  <data name="Dispute.Subject" xml:space="preserve"><value>Payment dispute on request {0}</value></data>
+  <data name="Dispute.Body" xml:space="preserve"><value>The client opened a dispute in Stripe. Respond from the Stripe dashboard within the deadline.</value></data>
+  <data name="Common.OpenStripe" xml:space="preserve"><value>Open in the dashboard</value></data>
 </root>

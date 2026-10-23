@@ -56,6 +56,9 @@ public sealed class QuoteVersion
 
     public string? AdjustmentReason { get; set; }
 
+    /// <summary>A paid deductible site visit, VAT included, taken off the subtotal (rule "Visita técnica").</summary>
+    public decimal SiteVisitCredit { get; set; }
+
     /// <summary>Last day the confirmed price can be accepted (Lisbon).</summary>
     public DateOnly? ValidUntil { get; set; }
 

@@ -175,7 +175,10 @@
     "rate_limited": "Too many attempts. Wait a minute and try again.",
     "internal_error": "Something went wrong. Please try again.",
     "concurrency_conflict": "Someone else changed this data. Reload and try again.",
-    "invalid_transition": "This action is no longer possible in the current state. Reload the page."
+    "invalid_transition": "This action is no longer possible in the current state. Reload the page.",
+    "quote_expired": "This price has expired. Ask for a new one.",
+    "payment_already_made": "This payment has already been made.",
+    "payment_provider_error": "Payments are unavailable right now. Please try later."
   },
   "admin": {
     "loading": "Loading the dashboard…",
@@ -288,7 +291,8 @@
           "job": "Job",
           "price": "Price",
           "range": "Range shown to the client",
-          "operations": "Site visit, review and cancellation"
+          "operations": "Site visit, review and cancellation",
+          "company": "Company details"
         },
         "fields": {
           "minJobAmount": "Minimum job (incl. VAT)",
@@ -309,8 +313,12 @@
           "reviewDeadlineBusinessDays": "Review deadline (business days)",
           "fullRefundMinDays": "Full refund up to (days before)",
           "lateRefundPct": "Refund after that",
-          "minLeadBusinessDays": "Minimum notice for dates (working days)"
-        }
+          "minLeadBusinessDays": "Minimum notice for dates (working days)",
+          "companyName": "Name",
+          "companyTaxId": "Tax ID (NIF)",
+          "companyAddress": "Address"
+        },
+        "companyHint": "Shown on the simulated receipts the client downloads."
       }
     },
     "simulator": {
@@ -416,7 +424,6 @@
         "assignment": "Assignment"
       },
       "later": {
-        "payments": "Payments arrive in the next phase (H5).",
         "assignment": "Painter assignment arrives in phase H6."
       },
       "files": {
@@ -577,13 +584,14 @@
           "reason": "Reason",
           "submit": "Change state",
           "cancel": "Back",
-          "done": "State changed."
+          "done": "State changed.",
+          "scheduledOn": "Start date"
         },
         "cancelJob": {
           "open": "Cancel",
           "title": "Cancel {code}",
           "calculating": "Working out the refund…",
-          "refund": "Refund: {amount}.",
+          "refund": "Refund: {amount} (of the {paid} deposit paid).",
           "noPayment": "The client hasn't paid yet: there's no refund.",
           "reason": "Reason",
           "fullRefund": "Full refund (exception)",
@@ -591,7 +599,9 @@
           "keep": "Back",
           "done": "Job cancelled."
         }
-      }
+      },
+      "noPayments": "No payments yet.",
+      "scheduledOn": "Starts: {date}"
     },
     "jobs": {
       "title": "Jobs",
@@ -1076,7 +1086,8 @@
         "when": "When",
         "who": "Who's coming",
         "price": "Price",
-        "free": "Free"
+        "free": "Free",
+        "pay": "Pay for the visit"
       },
       "expired": {
         "title": "The price expired",
@@ -1095,8 +1106,8 @@
         "validUntil": "Valid until {date}",
         "daysLeft": "{days, plural, =0 {last day} one {# day left} other {# days left}}",
         "acceptAndPay": "Accept and pay the deposit",
-        "paymentSoon": "Payment available soon.",
-        "policy": "You can cancel until work starts: we refund the whole deposit 7 or more days before the scheduled date, and half after that."
+        "policy": "You can cancel until work starts: we refund the whole deposit 7 or more days before the scheduled date, and half after that.",
+        "seeMultibanco": "See the Multibanco reference"
       },
       "quote": {
         "work": "Painting {count, plural, one {# element} other {# elements}} · {area}",
@@ -1143,7 +1154,99 @@
       "requote": {
         "open": "Ask for a new price",
         "done": "Request sent. We'll review it at current prices."
+      },
+      "payments": "Payments",
+      "depositPaid": {
+        "title": "Deposit paid",
+        "body": "Your date is booked. We'll confirm the start day."
+      },
+      "scheduled": {
+        "title": "Job scheduled",
+        "body": "We start on {date}."
+      },
+      "inProgress": {
+        "title": "Work in progress"
+      },
+      "balanceDue": "Balance due at the end: {amount}",
+      "finished": {
+        "title": "Job finished",
+        "body": "Only the balance is left to pay.",
+        "pay": "Pay the balance ({amount})"
+      },
+      "closed": {
+        "title": "Job closed",
+        "body": "Everything is paid. Thank you!"
       }
     }
+  },
+  "payment": {
+    "pageTitle": "Payment",
+    "invalid": "This payment doesn't exist.",
+    "back": "Back to the job",
+    "title": {
+      "deposit": "Pay the deposit",
+      "balance": "Pay the balance",
+      "site_visit": "Pay the site visit"
+    },
+    "preparing": "Preparing the payment…",
+    "amount": "Amount",
+    "mbWayLimit": "MB WAY usually has a 1,000 € daily limit. If yours isn't enough, use a card or Multibanco.",
+    "pay": "Pay {amount}",
+    "secure": "Secure payment with Stripe. Pinta never stores your card details.",
+    "failed": "The payment was not completed.",
+    "retry": "Try again",
+    "mbWay": {
+      "title": "Accept the payment in the MB WAY app",
+      "body": "You have {time} to confirm."
+    },
+    "confirming": "Confirming the payment…",
+    "multibanco": {
+      "title": "Multibanco reference",
+      "body": "Pay at a Multibanco ATM or in your online bank. We've also emailed it to you.",
+      "entity": "Entity",
+      "reference": "Reference",
+      "copy": "Copy {what}",
+      "copied": "Copied",
+      "deadline": "Pay by {date}",
+      "waiting": "As soon as the payment arrives we'll confirm it and email you."
+    },
+    "paid": "Payment received",
+    "paidBody": {
+      "deposit": "Your date is booked. We'll assign the painter and confirm the day.",
+      "balance": "The job is fully paid. Thank you for choosing Pinta.",
+      "site_visit": "The visit is paid. See you soon!"
+    },
+    "seeJob": "See my job",
+    "receipt": "Download receipt"
+  },
+  "payments": {
+    "type": {
+      "deposit": "Deposit",
+      "balance": "Balance",
+      "site_visit": "Site visit"
+    },
+    "status": {
+      "pending": "Pending",
+      "requires_action": "Waiting for payment",
+      "succeeded": "Paid",
+      "failed": "Failed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded",
+      "partially_refunded": "Partly refunded"
+    },
+    "method": {
+      "card": "Card",
+      "mb_way": "MB WAY",
+      "multibanco": "Multibanco"
+    },
+    "paidAt": "paid on {date}",
+    "createdAt": "started on {date}",
+    "multibanco": "Entity {entity} · Reference {reference}",
+    "refund": {
+      "pending": "Refund of {amount} in progress",
+      "succeeded": "Refund of {amount} done",
+      "failed": "Refund of {amount} failed"
+    },
+    "receipt": "Receipt (PDF)"
   }
 }

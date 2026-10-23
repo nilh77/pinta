@@ -8,6 +8,8 @@
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.MinIO" Version="13.5.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.MailPit" Version="13.6.0" />
     <PackageVersion Include="Aspire.Npgsql" Version="13.6.3" />
+    <PackageVersion Include="QuestPDF" Version="2026.9.1" />
+    <PackageVersion Include="Stripe.net" Version="53.0.0" />
   </ItemGroup>
   <ItemGroup Label="Service defaults">
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.11.0" />

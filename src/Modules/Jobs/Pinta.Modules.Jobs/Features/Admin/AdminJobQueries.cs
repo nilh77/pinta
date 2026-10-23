@@ -96,6 +96,7 @@ public sealed record AdminJobDetail(
     DateOnly? ReviewDueOn,
     ReviewLight? Light,
     DateOnly? QuoteValidUntil,
+    DateOnly? ScheduledOn,
     SiteVisitDto? SiteVisit,
     AdminQuote CurrentQuote,
     AdminQuote? Draft,
@@ -257,9 +258,9 @@ internal static class AdminJobQueries
         {
             var client = clients.GetValueOrDefault(j.ClientId);
             var total = totals.GetValueOrDefault(j.CurrentQuoteVersionId);
-            // Painter and scheduled date arrive with assignments in H6.
+            // The painter arrives with assignments in H6.
             return new AdminJobListItem(j.Id, j.Code, j.Status, client?.Name ?? "", client?.Email ?? "", j.Locality, j.Municipality,
-                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, null, null, j.CreatedAt, j.UpdatedAt);
+                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, null, j.ScheduledOn, j.CreatedAt, j.UpdatedAt);
         }).ToList();
     }
 
@@ -293,6 +294,7 @@ internal static class AdminJobQueries
             job.ReviewDueOn,
             Light(job, clock.GetUtcNow()),
             job.QuoteValidUntil,
+            job.ScheduledOn,
             job.SiteVisitAt is { } at
                 ? new SiteVisitDto(at, job.SiteVisitAssigneeId!.Value, people.GetValueOrDefault(job.SiteVisitAssigneeId.Value)?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0))
                 : null,

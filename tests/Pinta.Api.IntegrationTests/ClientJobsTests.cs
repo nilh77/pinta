@@ -121,7 +121,7 @@ public class QuoteExpiryTests(PintaApiFactory factory)
         var services = scope.ServiceProvider;
         return await new ExpireQuotes(
             services.GetRequiredService<JobsDbContext>(), services.GetRequiredService<IUserDirectory>(), services.GetRequiredService<IEmailQueue>(),
-            services.GetRequiredService<JobLinks>(), new FixedClock(now)).RunAsync();
+            services.GetRequiredService<Pinta.SharedKernel.Http.WebLinks>(), new FixedClock(now)).RunAsync();
     }
 
     private static DateTimeOffset At0300Lisbon(DateOnly day)

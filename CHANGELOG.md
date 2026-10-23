@@ -8,6 +8,36 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 Nada todavía.
 
+## H5 · Pagos — 2026-10-23, [PR #6](https://github.com/nilh77/pinta/pull/6)
+
+### Añadido
+
+- Pantalla 11 · Pago (`/mis-trabajos/{id}/pagar?tipo=deposit|balance|site_visit`): Payment Element de Stripe con tarjeta, MB WAY y Multibanco según el importe (aviso del límite diario de MB WAY por encima de 1.000 €, sin MB WAY por encima de 5.000 €), cuenta atrás de 5 minutos para aceptar en la app MB WAY, referencia Multibanco con botones de copiar, «Confirmando el pago…» hasta el webhook y reintento tras un fallo. Volver atrás reutiliza el mismo pago (C5.3).
+- `POST /api/jobs/{id}/payments` con el importe calculado en el servidor e `Idempotency-Key`; `GET` de pagos para el cliente y el admin; códigos `quote_expired`, `payment_already_made` y `payment_provider_error` (C5.3).
+- Webhook de Stripe con firma verificada y eventos guardados por su id: repetirlo no repite nada. Un pago confirmado lleva el trabajo de «Precio confirmado» a «Señal pagada» o de «Finalizado» a «Cerrado»; un pago que llega para un trabajo cancelado o expirado se devuelve entero y se avisa al admin; disputas por email (S4).
+- Reembolsos al cancelar según la política: toda la señal sin fecha o a 7 días o más del inicio, la mitad después; el admin puede devolver todo como excepción. Se envían a Stripe con Hangfire y el cliente recibe el email (C5.6, A3.4).
+- Fecha de inicio: el admin la fija al pasar a «Programado» y se ve en el detalle del cliente y en el tablero (A3.3).
+- Visita técnica de pago: el cliente la paga antes de la visita y, si es descontable, se resta del subtotal de la cotización siguiente; caso dorado TC15 (A2.6).
+- Recibos PDF simulados por cada pago («Documento simulado, sin validez fiscal») en el idioma del cliente, con los datos de la empresa, nuevos en Precios › Reglas (C5.3, A1.6).
+- Pantalla 10: pagar señal, visita y resto, estado de cada pago, reembolsos y recibos. Admin: pestaña Pagos.
+- Emails de pago recibido (con la nota de «Stripe» en el extracto de MB WAY), referencia Multibanco, reembolso, devolución automática y disputa.
+
+### Cambiado
+
+- Documentos: decisiones de H5 en `docs/plan.md` (historias C5.3, C5.5, C5.6, A3.4 y S4), fórmula del descuento de la visita en `docs/pricing-engine.md`, nuevos endpoints y campos en `docs/api.md` y `docs/data-model.md`.
+
+### Corregido
+
+- El AppHost arranca el Stripe CLI con `--events`: las versiones recientes del CLI no reenvían nada sin esa lista.
+
+### Verificado
+
+- Con Stripe en modo test y el CLI: la señal de TC01 (147,68 €) pagada con la tarjeta 4242… pasa el trabajo a «Señal pagada» solo al llegar el webhook; reenviar el evento con `stripe events resend` no duplica ni la transición ni el email; cancelar 3 días antes del inicio reembolsa 73,84 € (50%) en Stripe y el pago queda «reembolsado en parte».
+
+### Pendiente
+
+- El pago del resto solo se puede probar con tests hasta que los pintores marquen «Finalizado» en H6.
+
 ## H4 · Revisión y máquina de estados — 2026-10-23, [PR #5](https://github.com/nilh77/pinta/pull/5)
 
 ### Añadido

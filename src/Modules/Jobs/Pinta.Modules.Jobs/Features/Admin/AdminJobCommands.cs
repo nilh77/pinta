@@ -12,6 +12,8 @@ using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Jobs.Resources;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Quoting.Contracts;
+using Pinta.Modules.Payments.Contracts;
+using Pinta.SharedKernel.Time;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Http;
 
@@ -26,7 +28,8 @@ public sealed record SiteVisitRequest(Guid AssigneeId, DateTimeOffset At, long? 
 
 public sealed record VersionRequest(uint? Version);
 
-public sealed record TransitionRequest(JobStatus To, string Reason, uint? Version);
+/// <summary><see cref="ScheduledOn"/> is required to move to <c>scheduled</c> (H5: the admin sets the date).</summary>
+public sealed record TransitionRequest(JobStatus To, string Reason, uint? Version, DateOnly? ScheduledOn = null);
 
 public sealed record AdminCancelRequest(string Reason, bool FullRefund, uint? Version);
 
@@ -84,7 +87,8 @@ internal static class AdminJobCommands
     }
 
     private static async Task<Results<Ok<AdminQuote>, ProblemHttpResult>> SaveDraftAsync(
-        Guid id, DraftQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, CancellationToken cancellationToken)
+        Guid id, DraftQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IJobPayments payments,
+        IRequestSettings settings, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -98,13 +102,16 @@ internal static class AdminJobCommands
             return JobProblems.InvalidTransition();
         }
 
-        var (draft, errors) = await quotes.SaveDraftAsync(job.Id, JobRules.DraftOrigin(job), http.User.GetUserId()!.Value, request, cancellationToken);
+        var credit = await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken);
+        var (draft, errors) = await quotes.SaveDraftAsync(
+            job.Id, JobRules.DraftOrigin(job), http.User.GetUserId()!.Value, request, credit, cancellationToken);
         return errors is not null ? ApiProblem.Validation(errors.Errors) : TypedResults.Ok(draft!);
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> ConfirmAsync(
         Guid id, ConfirmQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IPriceSnapshotProvider snapshots,
-        IUserDirectory users, IEmailQueue emails, JobLinks links, TimeProvider clock, CancellationToken cancellationToken)
+        IUserDirectory users, IEmailQueue emails, WebLinks links, IJobPayments payments, IRequestSettings settings, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -123,7 +130,9 @@ internal static class AdminJobCommands
         }
 
         var adminId = http.User.GetUserId()!.Value;
-        var confirmed = await quotes.ConfirmDraftAsync(job.Id, JobRules.DraftOrigin(job), adminId, request.Note, request.AcknowledgeLowMargin, cancellationToken);
+        var credit = await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken);
+        var confirmed = await quotes.ConfirmDraftAsync(
+            job.Id, JobRules.DraftOrigin(job), adminId, request.Note, request.AcknowledgeLowMargin, credit, cancellationToken);
         if (confirmed is null)
         {
             var minimum = (await snapshots.GetCurrentAsync(cancellationToken)).Rules.MinMarginPct;
@@ -146,7 +155,7 @@ internal static class AdminJobCommands
         var client = (await users.FindAsync(job.ClientId, cancellationToken))!;
         await emails.EnqueueAsync(new PriceConfirmedEmail(
             client.Email, client.Locale, client.Name, job.Code, confirmed.TotalCents, confirmed.DepositCents, confirmed.ValidUntil, quote.Note,
-            links.Client(job, client.Locale)) { JobId = job.Id }, cancellationToken);
+            links.ClientJob(job.Id, client.Locale)) { JobId = job.Id }, cancellationToken);
         return TypedResults.NoContent();
     }
 
@@ -237,7 +246,7 @@ internal static class AdminJobCommands
 
     private static async Task<Results<NoContent, ProblemHttpResult>> TransitionAsync(
         Guid id, TransitionRequest request, HttpContext http, JobsDbContext db, IRequestSettings settings, IUserDirectory users,
-        IEmailQueue emails, TimeProvider clock, CancellationToken cancellationToken)
+        IEmailQueue emails, JobCancellation cancellation, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -251,12 +260,28 @@ internal static class AdminJobCommands
             return ApiProblem.Validation(new Dictionary<string, string[]> { ["to"] = [JobsMessages.Get("transition_use_action")] });
         }
 
+        if (request.To == JobStatus.Scheduled && JobStateMachine.IsAllowed(job.Status, JobStatus.Scheduled, JobActor.Admin))
+        {
+            if (request.ScheduledOn is not { } scheduledOn || scheduledOn < BusinessDays.Today(clock))
+            {
+                return ApiProblem.Validation(new Dictionary<string, string[]> { ["scheduledOn"] = [JobsMessages.Get("scheduled_on")] });
+            }
+
+            job.ScheduledOn = scheduledOn;
+        }
+
         var reason = request.Reason.Trim();
         var reviewDueOn = request.To == JobStatus.InReview ? await JobRules.ReviewDueOnAsync(settings, clock, cancellationToken) : null;
+        var preview = request.To == JobStatus.Cancelled ? await cancellation.PreviewAsync(job, false, cancellationToken) : null;
         var problem = await MoveAsync(db, job, request.To, http, reason, request.Version, clock, cancellationToken, reviewDueOn);
         if (problem is not null)
         {
             return problem;
+        }
+
+        if (preview is not null)
+        {
+            await cancellation.CancelledAsync(job, preview, reason, cancellationToken);
         }
 
         if (request.To == JobStatus.Rejected)
@@ -267,17 +292,19 @@ internal static class AdminJobCommands
         return TypedResults.NoContent();
     }
 
+    /// <param name="fullRefund">The admin's exception: the whole deposit back, whatever the date (A3.4).</param>
     private static async Task<Results<Ok<CancellationPreview>, ProblemHttpResult>> PreviewAsync(
-        Guid id, JobsDbContext db, IPriceSnapshotProvider snapshots, CancellationToken cancellationToken)
+        Guid id, bool? fullRefund, JobsDbContext db, JobCancellation cancellation, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         return job is null
             ? JobProblems.NotFound()
-            : TypedResults.Ok(JobRules.Preview(job, (await snapshots.GetCurrentAsync(cancellationToken)).Rules));
+            : TypedResults.Ok(await cancellation.PreviewAsync(job, fullRefund ?? false, cancellationToken));
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> CancelAsync(
-        Guid id, AdminCancelRequest request, HttpContext http, JobsDbContext db, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, AdminCancelRequest request, HttpContext http, JobsDbContext db, JobCancellation cancellation, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -285,10 +312,14 @@ internal static class AdminJobCommands
             return JobProblems.NotFound();
         }
 
-        // The refund itself (with the full-refund exception) runs with payments in H5.
-        return await MoveAsync(db, job, JobStatus.Cancelled, http, request.Reason.Trim(), request.Version, clock, cancellationToken) is { } problem
-            ? problem
-            : TypedResults.NoContent();
+        var preview = await cancellation.PreviewAsync(job, request.FullRefund, cancellationToken);
+        if (await MoveAsync(db, job, JobStatus.Cancelled, http, request.Reason.Trim(), request.Version, clock, cancellationToken) is { } problem)
+        {
+            return problem;
+        }
+
+        await cancellation.CancelledAsync(job, preview, request.Reason.Trim(), cancellationToken);
+        return TypedResults.NoContent();
     }
 
     /// <summary>Applies an admin transition and saves it; the problem to answer when it is not allowed or stale.</summary>

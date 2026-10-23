@@ -36,6 +36,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/jobs/{id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListAdminJobPayments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/jobs/{id}/payments/{paymentId}/receipt": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetPaymentReceipt"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/antiforgery": {
         parameters: {
             query?: never;
@@ -836,6 +868,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/jobs/{id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListJobPayments"];
+        put?: never;
+        post: operations["CreatePayment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/media/upload-url": {
         parameters: {
             query?: never;
@@ -944,6 +992,8 @@ export interface components {
             light: null | components["schemas"]["ReviewLight"];
             /** Format: date */
             quoteValidUntil: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
             siteVisit: null | components["schemas"]["SiteVisitDto"];
             currentQuote: components["schemas"]["AdminQuote"];
             draft: null | components["schemas"]["AdminQuote"];
@@ -993,6 +1043,8 @@ export interface components {
             /** Format: int64 */
             manualSubtotalCents: null | number;
             adjustmentReason: null | string;
+            /** Format: int64 */
+            siteVisitCreditCents: number;
             note: null | string;
             /** Format: date */
             validUntil: null | string;
@@ -1018,6 +1070,8 @@ export interface components {
             depositPaidCents: number;
             /** Format: int64 */
             refundCents: number;
+            /** Format: int32 */
+            daysBeforeStart: null | number;
         };
         CatalogOption: {
             id: string;
@@ -1084,6 +1138,8 @@ export interface components {
             reviewDueOn: null | string;
             /** Format: date */
             quoteValidUntil: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
             quote: null | components["schemas"]["ClientQuote"];
             siteVisit: null | components["schemas"]["ClientSiteVisit"];
             timeline: components["schemas"]["ClientTimelineEntry"][];
@@ -1149,7 +1205,7 @@ export interface components {
             amountCents: number;
         };
         /** @enum {unknown} */
-        ClientQuoteLineKind: "work" | "extra";
+        ClientQuoteLineKind: "work" | "extra" | "site_visit";
         ClientSiteVisit: {
             /** Format: date-time */
             at: string;
@@ -1195,6 +1251,20 @@ export interface components {
         CoverageCheckResponse: {
             covered: boolean;
             municipality: null | string;
+        };
+        CreatePaymentRequest: {
+            type: components["schemas"]["PaymentType"];
+        };
+        CreatePaymentResponse: {
+            /** Format: uuid */
+            paymentId: string;
+            type: components["schemas"]["PaymentType"];
+            /** Format: int64 */
+            amountCents: number;
+            clientSecret: string;
+            publishableKey: string;
+            methods: components["schemas"]["PaymentMethod"][];
+            mbWayLimitWarning: boolean;
         };
         DraftExtraRequest: {
             catalogKey: null | string;
@@ -1380,6 +1450,12 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        MultibancoDto: {
+            entity: string;
+            reference: string;
+            /** Format: date-time */
+            expiresAt: null | string;
+        };
         /** @enum {unknown} */
         Occupancy: "empty" | "furnished" | "inhabited";
         PagedOfAdminJobListItem: {
@@ -1436,6 +1512,31 @@ export interface components {
             name: string;
             email: string;
         };
+        PaymentDto: {
+            /** Format: uuid */
+            id: string;
+            type: components["schemas"]["PaymentType"];
+            status: components["schemas"]["PaymentStatus"];
+            method: null | components["schemas"]["PaymentMethod"];
+            /** Format: int64 */
+            amountCents: number;
+            /** Format: int64 */
+            refundedCents: number;
+            multibanco: null | components["schemas"]["MultibancoDto"];
+            error: null | string;
+            receiptNumber: null | string;
+            /** Format: date-time */
+            paidAt: null | string;
+            /** Format: date-time */
+            createdAt: string;
+            refunds: components["schemas"]["RefundDto"][];
+        };
+        /** @enum {unknown} */
+        PaymentMethod: "card" | "mb_way" | "multibanco" | null;
+        /** @enum {unknown} */
+        PaymentStatus: "pending" | "requires_action" | "succeeded" | "failed" | "cancelled" | "refunded" | "partially_refunded";
+        /** @enum {unknown} */
+        PaymentType: "deposit" | "balance" | "site_visit";
         PreferredDatesDto: {
             asap: boolean;
             /** Format: date */
@@ -1597,6 +1698,20 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        RefundDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int64 */
+            amountCents: number;
+            status: components["schemas"]["RefundStatus"];
+            reason: null | string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            completedAt: null | string;
+        };
+        /** @enum {unknown} */
+        RefundStatus: "pending" | "succeeded" | "failed";
         RegisterRequest: {
             name: string;
             email: string;
@@ -1743,6 +1858,9 @@ export interface components {
             maxVideoSizeMb: number;
             clientPhoneVisibleToPainter: boolean;
             painterPhoneVisibleToClient: boolean;
+            companyName: string;
+            companyTaxId: string;
+            companyAddress: string;
             /** Format: uint32 */
             version: number;
             /** Format: date-time */
@@ -1830,6 +1948,8 @@ export interface components {
             reason: string;
             /** Format: uint32 */
             version: null | number;
+            /** Format: date */
+            scheduledOn?: null | string;
         };
         UploadUrlRequest: {
             /** Format: uuid */
@@ -1930,6 +2050,60 @@ export interface operations {
             };
             /** @description Too Many Requests */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    ListAdminJobPayments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentDto"][];
+                };
+            };
+        };
+    };
+    GetPaymentReceipt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                paymentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/pdf": string;
+                };
+            };
+            /** @description Not Found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3944,7 +4118,9 @@ export interface operations {
     };
     AdminCancellationPreview: {
         parameters: {
-            query?: never;
+            query?: {
+                fullRefund?: boolean;
+            };
             header?: never;
             path: {
                 id: string;
@@ -4029,6 +4205,117 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListJobPayments: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentDto"][];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CreatePayment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePaymentRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CreatePaymentResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Gone */
+            410: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Bad Gateway */
+            502: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
         };

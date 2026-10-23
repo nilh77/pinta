@@ -8,13 +8,15 @@ using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.SharedKernel.Time;
 
+using Pinta.SharedKernel.Http;
+
 namespace Pinta.Modules.Jobs.Features.Expiry;
 
 /// <summary>
 /// Daily at 03:00 Lisbon (S3): confirmed prices past their last valid day move to "Expirado" and the client gets an
 /// email. Confirmed on day D, valid through D+15, expired on D+16 (docs/pricing-engine.md).
 /// </summary>
-public sealed class ExpireQuotes(JobsDbContext db, IUserDirectory users, IEmailQueue emails, JobLinks links, TimeProvider clock)
+public sealed class ExpireQuotes(JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock)
 {
     public const string JobId = "expire-quotes";
 
@@ -30,7 +32,7 @@ public sealed class ExpireQuotes(JobsDbContext db, IUserDirectory users, IEmailQ
             var client = await users.FindAsync(job.ClientId);
             if (client is not null)
             {
-                await emails.EnqueueAsync(new PriceExpiredEmail(client.Email, client.Locale, client.Name, job.Code, links.Client(job, client.Locale))
+                await emails.EnqueueAsync(new PriceExpiredEmail(client.Email, client.Locale, client.Name, job.Code, links.ClientJob(job.Id, client.Locale))
                 {
                     JobId = job.Id,
                 });

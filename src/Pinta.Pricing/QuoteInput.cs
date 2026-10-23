@@ -12,6 +12,12 @@ public sealed record QuoteInput(IReadOnlyList<QuoteElement> Elements, string Occ
     /// not apply.
     /// </summary>
     public decimal? ManualSubtotal { get; init; }
+
+    /// <summary>
+    /// A paid, deductible site visit, VAT included (rule "Visita técnica"): the subtotal drops by the visit without its
+    /// VAT, and VAT, total, margin and deposit follow.
+    /// </summary>
+    public decimal SiteVisitCredit { get; init; }
 }
 
 /// <summary>A room or a loose surface.</summary>

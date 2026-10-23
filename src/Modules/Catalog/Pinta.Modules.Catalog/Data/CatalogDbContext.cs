@@ -64,6 +64,10 @@ public sealed class CatalogDbContext(DbContextOptions<CatalogDbContext> options)
         {
             settings.ToTable("settings");
             settings.Property(s => s.MinLeadBusinessDays).HasDefaultValue(3);
+            // Existing databases get the demo company until the admin edits it.
+            settings.Property(s => s.CompanyName).HasMaxLength(200).HasDefaultValue("Pinta · NHIT-DEV");
+            settings.Property(s => s.CompanyTaxId).HasMaxLength(9).HasDefaultValue("999999990");
+            settings.Property(s => s.CompanyAddress).HasMaxLength(300).HasDefaultValue("Avenida da Liberdade, 100, 1250-146 Lisboa");
             settings.Property(s => s.Version).IsRowVersion();
             foreach (var property in settings.Metadata.GetProperties().Where(p => p.ClrType == typeof(decimal)))
             {

@@ -60,6 +60,9 @@ public sealed class Job
 
     public decimal? SiteVisitPrice { get; set; }
 
+    /// <summary>The day the work starts (H5: set by the admin; H6: from the painter assignment). Refunds count down to it.</summary>
+    public DateOnly? ScheduledOn { get; set; }
+
     /// <summary>End of the review deadline (2 working days by default) once the job is in review.</summary>
     public DateOnly? ReviewDueOn { get; private set; }
 

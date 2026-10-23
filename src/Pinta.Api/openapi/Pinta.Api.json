@@ -75,6 +75,91 @@
         }
       }
     },
+    "/api/admin/jobs/{id}/payments": {
+      "get": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "ListAdminJobPayments",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{id}/payments/{paymentId}/receipt": {
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "operationId": "GetPaymentReceipt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/antiforgery": {
       "get": {
         "tags": [
@@ -2604,6 +2689,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "fullRefund",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -2697,6 +2789,149 @@
               "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/jobs/{id}/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "operationId": "CreatePayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePaymentResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "410": {
+            "description": "Gone",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Bad Gateway",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Payments"
+        ],
+        "operationId": "ListJobPayments",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -3011,6 +3246,7 @@
           "reviewDueOn",
           "light",
           "quoteValidUntil",
+          "scheduledOn",
           "siteVisit",
           "currentQuote",
           "draft",
@@ -3086,6 +3322,13 @@
             ]
           },
           "quoteValidUntil": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "scheduledOn": {
             "type": [
               "null",
               "string"
@@ -3242,6 +3485,7 @@
           "premiumOverride",
           "manualSubtotalCents",
           "adjustmentReason",
+          "siteVisitCreditCents",
           "note",
           "validUntil",
           "createdAt",
@@ -3297,6 +3541,10 @@
               "null",
               "string"
             ]
+          },
+          "siteVisitCreditCents": {
+            "type": "integer",
+            "format": "int64"
           },
           "note": {
             "type": [
@@ -3374,7 +3622,8 @@
         "required": [
           "cancellable",
           "depositPaidCents",
-          "refundCents"
+          "refundCents",
+          "daysBeforeStart"
         ],
         "type": "object",
         "properties": {
@@ -3388,6 +3637,13 @@
           "refundCents": {
             "type": "integer",
             "format": "int64"
+          },
+          "daysBeforeStart": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "int32"
           }
         }
       },
@@ -3573,6 +3829,7 @@
           "preferredDates",
           "reviewDueOn",
           "quoteValidUntil",
+          "scheduledOn",
           "quote",
           "siteVisit",
           "timeline",
@@ -3636,6 +3893,13 @@
             "format": "date"
           },
           "quoteValidUntil": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
+          },
+          "scheduledOn": {
             "type": [
               "null",
               "string"
@@ -3881,7 +4145,8 @@
       "ClientQuoteLineKind": {
         "enum": [
           "work",
-          "extra"
+          "extra",
+          "site_visit"
         ]
       },
       "ClientSiteVisit": {
@@ -4049,6 +4314,57 @@
               "null",
               "string"
             ]
+          }
+        }
+      },
+      "CreatePaymentRequest": {
+        "required": [
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/PaymentType"
+          }
+        }
+      },
+      "CreatePaymentResponse": {
+        "required": [
+          "paymentId",
+          "type",
+          "amountCents",
+          "clientSecret",
+          "publishableKey",
+          "methods",
+          "mbWayLimitWarning"
+        ],
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PaymentType"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientSecret": {
+            "type": "string"
+          },
+          "publishableKey": {
+            "type": "string"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentMethod"
+            }
+          },
+          "mbWayLimitWarning": {
+            "type": "boolean"
           }
         }
       },
@@ -4760,6 +5076,29 @@
           }
         }
       },
+      "MultibancoDto": {
+        "required": [
+          "entity",
+          "reference",
+          "expiresAt"
+        ],
+        "type": "object",
+        "properties": {
+          "entity": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "expiresAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
       "Occupancy": {
         "enum": [
           "empty",
@@ -4938,6 +5277,118 @@
             "type": "string"
           }
         }
+      },
+      "PaymentDto": {
+        "required": [
+          "id",
+          "type",
+          "status",
+          "method",
+          "amountCents",
+          "refundedCents",
+          "multibanco",
+          "error",
+          "receiptNumber",
+          "paidAt",
+          "createdAt",
+          "refunds"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PaymentType"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "method": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PaymentMethod"
+              }
+            ]
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "refundedCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "multibanco": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MultibancoDto"
+              }
+            ]
+          },
+          "error": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "receiptNumber": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "paidAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "refunds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RefundDto"
+            }
+          }
+        }
+      },
+      "PaymentMethod": {
+        "enum": [
+          "card",
+          "mb_way",
+          "multibanco",
+          null
+        ]
+      },
+      "PaymentStatus": {
+        "enum": [
+          "pending",
+          "requires_action",
+          "succeeded",
+          "failed",
+          "cancelled",
+          "refunded",
+          "partially_refunded"
+        ]
+      },
+      "PaymentType": {
+        "enum": [
+          "deposit",
+          "balance",
+          "site_visit"
+        ]
       },
       "PreferredDatesDto": {
         "required": [
@@ -5551,6 +6002,54 @@
           }
         }
       },
+      "RefundDto": {
+        "required": [
+          "id",
+          "amountCents",
+          "status",
+          "reason",
+          "createdAt",
+          "completedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RefundStatus"
+          },
+          "reason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "RefundStatus": {
+        "enum": [
+          "pending",
+          "succeeded",
+          "failed"
+        ]
+      },
       "RegisterRequest": {
         "required": [
           "name",
@@ -5934,6 +6433,9 @@
           "maxVideoSizeMb",
           "clientPhoneVisibleToPainter",
           "painterPhoneVisibleToClient",
+          "companyName",
+          "companyTaxId",
+          "companyAddress",
           "version",
           "updatedAt"
         ],
@@ -6035,6 +6537,15 @@
           },
           "painterPhoneVisibleToClient": {
             "type": "boolean"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "companyTaxId": {
+            "type": "string"
+          },
+          "companyAddress": {
+            "type": "string"
           },
           "version": {
             "type": "integer",
@@ -6337,6 +6848,13 @@
               "integer"
             ],
             "format": "uint32"
+          },
+          "scheduledOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           }
         }
       },
@@ -6473,6 +6991,12 @@
       "name": "Quotes"
     },
     {
+      "name": "Admin jobs"
+    },
+    {
+      "name": "Payments"
+    },
+    {
       "name": "Auth"
     },
     {
@@ -6489,9 +7013,6 @@
     },
     {
       "name": "Jobs"
-    },
-    {
-      "name": "Admin jobs"
     },
     {
       "name": "Media"

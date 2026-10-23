@@ -1,7 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="QuestPDF" />
+    <ProjectReference Include="..\..\Catalog\Pinta.Modules.Catalog.Contracts\Pinta.Modules.Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\Jobs\Pinta.Modules.Jobs.Contracts\Pinta.Modules.Jobs.Contracts.csproj" />
+    <ProjectReference Include="..\..\Notifications\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\Pinta.Modules.Payments.Contracts\Pinta.Modules.Payments.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Stripe.net" />
   </ItemGroup>
 </Project>
