@@ -191,15 +191,15 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 ### P3 · Visita técnica
 
 - **Ruta y board**: `/{locale}/pintor/visitas/{id}` · PintorVisita.dc.html. \[P3.1\]
-- **Datos**: lo mismo que P2 más la estimación original del cliente elemento por elemento.
-- **Acciones**: corregir medidas, paredes, pintura y daños por elemento; añadir partidas extra propuestas (descripción y horas o importe al pintor); fotos; nota para el revisor. `POST /api/painter/visits/{id}/report`, que deja el trabajo listo para que el admin cierre el precio.
+- **Datos**: `GET /api/painter/visits/{id}` (el id es el del trabajo): lo mismo que P2 sin importes, más la estimación original del cliente elemento por elemento. Aparece en P1 dentro de «Próximos» con la etiqueta «Visita».
+- **Acciones**: corregir medidas, paredes, pintura y daños por elemento; añadir partidas extra propuestas (del catálogo, o libres con descripción e importe al pintor); fotos (`POST /api/painter/visits/{id}/media/upload-url`, contexto `site_visit`); nota para el revisor. `POST /api/painter/visits/{id}/report` devuelve el trabajo a «En revisión» y sus medidas pasan a ser el borrador del admin; las partidas libres llegan con el precio al cliente por fijar.
 - **Validaciones**: las del editor de estancia (pantalla 3).
 - **Estados**: borrador guardado localmente si se pierde la cobertura en la obra.
 
 ### P4 · Mis pagos
 
 - **Ruta y board**: `/{locale}/pintor/pagos` · PintorPagos.dc.html. \[P4.1\]
-- **Datos**: `GET /api/painter/payouts`: total del mes, pendiente y pagado, y lista por trabajo con importe y estado (`pending` o `paid` con fecha). IBAN enmascarado.
+- **Datos**: `GET /api/painter/payouts?month=AAAA-MM`: total del mes, pendiente y pagado, y lista por trabajo con importe y estado (`pending` o `paid` con fecha y referencia). IBAN enmascarado. El pago pendiente se crea al cerrarse el trabajo por el importe de la oferta aceptada.
 - **Acciones**: filtrar por mes; editar el IBAN (vuelve a pedir la contraseña).
 - **Estados**: vacío → «Aún no hay pagos».
 
@@ -220,7 +220,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 
 - **Ruta y board**: `/{locale}/admin/revision` y `/{locale}/admin/trabajos/{id}` · AdminRevision.dc.html. \[A2.1–A2.9\]
 - **Datos**: cola de trabajos `in_review` ordenada por antigüedad, con semáforo del plazo de 2 días laborables. Detalle: datos del cliente, dirección, ocupación, fechas, elementos con fotos y vídeos (visor a pantalla completa), descripción y borrador de cotización con desglose interno (material, mano de obra, pago al pintor, margen y % con alerta por debajo del 20%).
-- **Acciones**: ajustar elementos; añadir partidas extra (importe al cliente y al pintor); marcar Premium a mano; guardar borrador (`PUT …/draft-quote`); confirmar el precio y enviarlo al cliente (`POST …/confirm-quote`); pedir visita técnica eligiendo pintor, fecha y precio (`POST …/site-visit`); rechazar con motivo (`POST …/reject`); nota interna.
+- **Acciones**: ajustar elementos; añadir partidas extra (importe al cliente y al pintor); marcar Premium a mano; guardar borrador (`PUT …/draft-quote`); confirmar el precio y enviarlo al cliente (`POST …/confirm-quote`); pedir visita técnica eligiendo socio o pintor activo que cubra el concelho, fecha y precio (`POST …/site-visit`); ver el informe de la visita del pintor (notas, fotos) junto al borrador que crea, con las partidas libres por poner precio; rechazar con motivo (`POST …/reject`); nota interna.
 - **Validaciones**: confirmar con margen < 20% pide confirmación explícita; motivo obligatorio al rechazar.
 - **Estados**: cola vacía → «Todo revisado».
 

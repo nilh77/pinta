@@ -24,10 +24,11 @@ export function toDraftRequest(quote: AdminQuote): DraftQuoteRequest {
         clientKey,
       }),
     ),
-    extras: quote.extras.map(({ catalogKey, description, clientPriceCents, painterPayCents }) => ({
+    // A free item from the painter's visit report keeps its client price unset (null) until the admin types it (P3.1).
+    extras: quote.extras.map(({ catalogKey, description, clientPriceCents, painterPayCents, clientPriceToSet }) => ({
       catalogKey,
       description,
-      clientPriceCents,
+      clientPriceCents: clientPriceToSet ? null : clientPriceCents,
       painterPayCents,
     })),
     premium: quote.premiumOverride,

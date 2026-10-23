@@ -19,7 +19,7 @@ internal sealed class DraftQuoteRequestValidator : AbstractValidator<DraftQuoteR
             extra.RuleFor(x => x.ClientPriceCents).GreaterThanOrEqualTo(0);
             extra.RuleFor(x => x.PainterPayCents).GreaterThanOrEqualTo(0);
             extra.RuleFor(x => x)
-                .Must(x => !string.IsNullOrWhiteSpace(x.Description) && x.ClientPriceCents is not null && x.PainterPayCents is not null)
+                .Must(x => !string.IsNullOrWhiteSpace(x.Description) && x.PainterPayCents is not null)
                 .When(x => string.IsNullOrWhiteSpace(x.CatalogKey))
                 .WithName("description")
                 .WithMessage(_ => QuotingMessages.Get("extra_needs_price"));

@@ -104,6 +104,7 @@ internal sealed class QuoteVersions(
         db.RemoveRange(draft.Extras);
         draft.Elements.Clear();
         draft.Extras.Clear();
+        draft.Origin = origin;
         draft.Occupancy = priced.Input.Occupancy;
         draft.PremiumOverride = request.Premium;
         draft.ManualAdjustment = manualSubtotal;
@@ -199,7 +200,7 @@ internal sealed class QuoteVersions(
         var latest = await Load().AsNoTracking().Where(v => v.JobId == jobId).OrderByDescending(v => v.Number).FirstOrDefaultAsync(cancellationToken)
             ?? throw new InvalidOperationException($"Job {jobId} has no quote version.");
         var elements = latest.Elements.Select(ToRequest).ToList();
-        var extras = latest.Extras.Select(x => new ResolvedExtra(x.CatalogKey, x.Name, x.Description, x.ClientPrice, x.PainterPay)).ToList();
+        var extras = latest.Extras.Select(x => new ResolvedExtra(x.CatalogKey, x.Name, x.Description, x.ClientPrice, x.PainterPay, x.ClientPriceToSet)).ToList();
         var priced = QuotePricing.PriceWith(
             await snapshots.GetCurrentAsync(cancellationToken), QuotePricing.ParseOccupancy(latest.Occupancy), elements,
             [.. extras.Select(x => new ExtraLine(x.ClientPrice, x.PainterPay))], latest.ManualAdjustment, siteVisitCredit);
@@ -230,7 +231,10 @@ internal sealed class QuoteVersions(
         return draft;
     }
 
-    private sealed record ResolvedExtra(string? CatalogKey, Pinta.SharedKernel.Text.LocalizedText? Name, string Description, decimal ClientPrice, decimal PainterPay);
+    /// <summary><see cref="ClientPriceToSet"/>: a free item without client price, priced at 0 until the admin sets one.</summary>
+    private sealed record ResolvedExtra(
+        string? CatalogKey, Pinta.SharedKernel.Text.LocalizedText? Name, string Description, decimal ClientPrice, decimal PainterPay,
+        bool ClientPriceToSet = false);
 
     private async Task<(List<ResolvedExtra> Extras, Dictionary<string, string[]> Errors)> ResolveExtrasAsync(
         IReadOnlyList<DraftExtraRequest> requests, CancellationToken cancellationToken)
@@ -242,7 +246,9 @@ internal sealed class QuoteVersions(
             var r = requests[i];
             if (string.IsNullOrWhiteSpace(r.CatalogKey))
             {
-                extras.Add(new ResolvedExtra(null, null, r.Description!.Trim(), Money.FromCents(r.ClientPriceCents!.Value), Money.FromCents(r.PainterPayCents!.Value)));
+                extras.Add(new ResolvedExtra(
+                    null, null, r.Description!.Trim(), Money.FromCents(r.ClientPriceCents ?? 0), Money.FromCents(r.PainterPayCents!.Value),
+                    r.ClientPriceCents is null));
                 continue;
             }
 
@@ -305,6 +311,7 @@ internal sealed class QuoteVersions(
                 Description = x.Description,
                 ClientPrice = x.ClientPrice,
                 PainterPay = x.PainterPay,
+                ClientPriceToSet = x.ClientPriceToSet,
             });
         }
     }
@@ -357,7 +364,7 @@ internal sealed class QuoteVersions(
     {
         var b = Calculate(v);
         var language = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
-        var extras = v.Extras.Select(x => new QuoteExtraView(x.CatalogKey, x.Name?.In(language) ?? x.Description, Money.ToCents(x.ClientPrice), Money.ToCents(x.PainterPay))).ToList();
+        var extras = v.Extras.Select(x => new QuoteExtraView(x.CatalogKey, x.Name?.In(language) ?? x.Description, Money.ToCents(x.ClientPrice), Money.ToCents(x.PainterPay), x.ClientPriceToSet)).ToList();
         var breakdown = BreakdownMapper.ToDto(b, [.. extras.Select(x => new ExtraLineDto(x.Description, x.ClientPriceCents, x.PainterPayCents))]) with
         {
             Premium = v.Premium,

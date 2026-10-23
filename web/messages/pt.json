@@ -501,7 +501,9 @@
         "subtotal": "Subtotal sem IVA (€)",
         "adjustmentReason": "Motivo (obrigatório)",
         "addCatalogExtra": "Adicionar trabalho do catálogo",
-        "addFreeExtra": "Adicionar trabalho livre"
+        "addFreeExtra": "Adicionar trabalho livre",
+        "priceToSet": "Proposto na visita · pintor {painter} · preço ao cliente por fixar",
+        "setPrice": "Fixar"
       },
       "versions": {
         "number": "Versão",
@@ -548,7 +550,8 @@
           "acknowledge": "Confirmo com a margem abaixo do mínimo.",
           "submit": "Confirmar e enviar",
           "cancel": "Voltar",
-          "done": "Preço confirmado e enviado ao cliente."
+          "done": "Preço confirmado e enviado ao cliente.",
+          "unpriced": "Há trabalhos extra da visita sem preço ao cliente. Indique-o no orçamento antes de confirmar."
         },
         "reject": {
           "open": "Recusar",
@@ -563,14 +566,16 @@
         "visit": {
           "open": "Pedir visita",
           "title": "Visita técnica para {code}",
-          "body": "O cliente e o sócio recebem a data por email.",
+          "body": "O cliente recebe a data por email; o sócio ou o pintor também.",
           "who": "Quem vai",
-          "choose": "Escolher sócio…",
+          "choose": "Escolher sócio ou pintor…",
           "when": "Data e hora",
           "price": "Preço da visita com IVA (€)",
           "submit": "Marcar visita",
           "cancel": "Voltar",
-          "done": "Visita marcada."
+          "done": "Visita marcada.",
+          "partners": "Sócios",
+          "painters": "Pintores que cobrem o concelho"
         },
         "completeVisit": {
           "open": "Visita feita: voltar a revisão",
@@ -625,6 +630,11 @@
         "replaces": "Há uma oferta à espera: a nova retira-a.",
         "submit": "Enviar oferta",
         "sent": "Oferta enviada a {name}."
+      },
+      "visitReport": {
+        "title": "Relatório da visita de {who} · {date}",
+        "draft": "As medidas reais já estão no rascunho do orçamento; os trabalhos extra propostos esperam o preço ao cliente.",
+        "noPhotos": "Sem fotos da visita."
       }
     },
     "jobs": {
@@ -778,6 +788,18 @@
       "jobs": {
         "title": "Trabalhos",
         "empty": "Ainda sem trabalhos."
+      },
+      "payouts": {
+        "title": "Pagamentos ao pintor",
+        "loading": "A carregar…",
+        "error": "Não conseguimos carregar os pagamentos.",
+        "empty": "Ainda sem trabalhos fechados.",
+        "pending": "Por pagar: {amount}",
+        "status": {
+          "pending": "Por pagar",
+          "paid": "Pago"
+        },
+        "markLater": "Marcar como pago chega com Finanças."
       }
     }
   },
@@ -1433,7 +1455,9 @@
         "declineSubmit": "Recusar oferta",
         "reason": "Motivo",
         "cancel": "Voltar"
-      }
+      },
+      "visitTag": "Visita",
+      "openVisit": "Abrir visita"
     },
     "job": {
       "title": "Trabalho",
@@ -1484,18 +1508,93 @@
       "result": {
         "title": "Fotos do resultado",
         "body": "Tire pelo menos {min} fotos do trabalho terminado: o cliente vai vê-las.",
-        "add": "Adicionar",
-        "photo": "Foto {n}",
-        "remove": "Remover foto {n}",
-        "error": "Erro",
-        "format": "{name}: use JPG, PNG ou WebP.",
-        "failed": "Não conseguimos enviar {name}.",
         "count": "{count} de {min} fotos",
         "finish": "Marcar como terminado",
         "confirmTitle": "Terminar o trabalho?",
         "confirmBody": "Enviamos as fotos ao cliente e pedimos o pagamento do restante.",
         "cancel": "Voltar",
         "finished": "Trabalho terminado. Obrigado!"
+      }
+    },
+    "nav": {
+      "label": "Secções do pintor",
+      "jobs": "Trabalhos",
+      "payouts": "Pagamentos"
+    },
+    "photos": {
+      "add": "Adicionar",
+      "photo": "Foto {n}",
+      "remove": "Remover foto {n}",
+      "error": "Erro",
+      "format": "{name}: use JPG, PNG ou WebP.",
+      "failed": "Não conseguimos enviar {name}."
+    },
+    "visit": {
+      "title": "Visita técnica",
+      "loading": "A carregar a visita…",
+      "error": "Não conseguimos carregar a visita.",
+      "notFound": "Não encontrámos esta visita.",
+      "retry": "Tentar outra vez",
+      "back": "Os meus trabalhos",
+      "at": "Visita a {date}",
+      "address": "Morada",
+      "access": "Acesso: {notes}",
+      "map": "Abrir no mapa",
+      "client": "Cliente",
+      "call": "Ligar {phone}",
+      "declared": "O que o cliente indicou",
+      "sent": "Relatório enviado a {date}. A Pinta vai rever o preço.",
+      "report": {
+        "loading": "A preparar o relatório…",
+        "title": "Relatório da visita",
+        "body": "Corrija as medidas reais, indique trabalhos extra, tire fotos e deixe uma nota para quem revê o preço.",
+        "correct": "Corrigir",
+        "doneEditing": "Feito",
+        "remove": "Remover {name}",
+        "addRoom": "Adicionar divisão",
+        "chooseRoom": "Escolha o tipo",
+        "extras": "Trabalhos extra",
+        "extrasHint": "O que encontrou e quanto cobraria por isso. A Pinta põe o preço ao cliente.",
+        "extraDescription": "Descrição",
+        "extraPay": "O seu pagamento (€)",
+        "removeExtra": "Remover trabalho extra {n}",
+        "addExtra": "Adicionar trabalho extra",
+        "photos": "Fotos",
+        "notes": "Nota para a Pinta",
+        "send": "Enviar relatório",
+        "kept": "O relatório fica guardado neste telemóvel até o enviar.",
+        "fixElement": "Corrija as medidas de {name}.",
+        "fixExtras": "Cada trabalho extra precisa de descrição e pagamento.",
+        "done": "Relatório enviado. Obrigado!"
+      }
+    },
+    "payouts": {
+      "title": "Os meus pagamentos",
+      "month": "Mês",
+      "loading": "A carregar…",
+      "error": "Não conseguimos carregar os pagamentos.",
+      "retry": "Tentar outra vez",
+      "pending": "Por receber",
+      "paidIn": "Pago em {month}",
+      "empty": "Ainda não há pagamentos",
+      "emptyBody": "Cada trabalho fechado aparece aqui por receber.",
+      "since": "Por receber desde {date}",
+      "paidOn": "Pago a {date} · ref. {reference}",
+      "status": {
+        "pending": "Por receber",
+        "paid": "Pago"
+      },
+      "iban": {
+        "title": "IBAN para os pagamentos",
+        "none": "Sem IBAN",
+        "change": "Alterar IBAN",
+        "add": "Indicar IBAN",
+        "body": "IBAN português (PT50…). Para o alterar, confirme a sua palavra-passe.",
+        "iban": "Novo IBAN",
+        "password": "Palavra-passe",
+        "save": "Guardar",
+        "cancel": "Voltar",
+        "saved": "IBAN guardado."
       }
     }
   }

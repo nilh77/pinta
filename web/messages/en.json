@@ -501,7 +501,9 @@
         "subtotal": "Subtotal before VAT (€)",
         "adjustmentReason": "Reason (required)",
         "addCatalogExtra": "Add catalog item",
-        "addFreeExtra": "Add free item"
+        "addFreeExtra": "Add free item",
+        "priceToSet": "Proposed at the visit · painter {painter} · client price to set",
+        "setPrice": "Set"
       },
       "versions": {
         "number": "Version",
@@ -548,7 +550,8 @@
           "acknowledge": "I confirm with the margin below the minimum.",
           "submit": "Confirm and send",
           "cancel": "Back",
-          "done": "Price confirmed and sent to the client."
+          "done": "Price confirmed and sent to the client.",
+          "unpriced": "Some extra work from the visit has no client price. Set it in the quote before confirming."
         },
         "reject": {
           "open": "Reject",
@@ -563,14 +566,16 @@
         "visit": {
           "open": "Request a visit",
           "title": "Site visit for {code}",
-          "body": "The client and the partner get the date by email.",
+          "body": "The client gets the date by email, and so does the partner or painter.",
           "who": "Who goes",
-          "choose": "Choose a partner…",
+          "choose": "Choose a partner or painter…",
           "when": "Date and time",
           "price": "Visit price with VAT (€)",
           "submit": "Schedule visit",
           "cancel": "Back",
-          "done": "Visit scheduled."
+          "done": "Visit scheduled.",
+          "partners": "Partners",
+          "painters": "Painters covering the municipality"
         },
         "completeVisit": {
           "open": "Visit done: back to review",
@@ -625,6 +630,11 @@
         "replaces": "An offer is waiting: the new one withdraws it.",
         "submit": "Send offer",
         "sent": "Offer sent to {name}."
+      },
+      "visitReport": {
+        "title": "Visit report by {who} · {date}",
+        "draft": "The real measures are already in the draft quote; proposed extra work waits for its client price.",
+        "noPhotos": "No visit photos."
       }
     },
     "jobs": {
@@ -778,6 +788,18 @@
       "jobs": {
         "title": "Jobs",
         "empty": "No jobs yet."
+      },
+      "payouts": {
+        "title": "Payouts",
+        "loading": "Loading…",
+        "error": "We could not load the payouts.",
+        "empty": "No closed jobs yet.",
+        "pending": "Pending: {amount}",
+        "status": {
+          "pending": "Pending",
+          "paid": "Paid"
+        },
+        "markLater": "Marking as paid arrives with Finance."
       }
     }
   },
@@ -1433,7 +1455,9 @@
         "declineSubmit": "Decline offer",
         "reason": "Reason",
         "cancel": "Back"
-      }
+      },
+      "visitTag": "Visit",
+      "openVisit": "Open visit"
     },
     "job": {
       "title": "Job",
@@ -1484,18 +1508,93 @@
       "result": {
         "title": "Result photos",
         "body": "Take at least {min} photos of the finished work: the client will see them.",
-        "add": "Add",
-        "photo": "Photo {n}",
-        "remove": "Remove photo {n}",
-        "error": "Error",
-        "format": "{name}: use JPG, PNG or WebP.",
-        "failed": "We could not upload {name}.",
         "count": "{count} of {min} photos",
         "finish": "Mark as finished",
         "confirmTitle": "Finish the job?",
         "confirmBody": "We send the photos to the client and ask for the balance.",
         "cancel": "Back",
         "finished": "Job finished. Thank you!"
+      }
+    },
+    "nav": {
+      "label": "Painter sections",
+      "jobs": "Jobs",
+      "payouts": "Payouts"
+    },
+    "photos": {
+      "add": "Add",
+      "photo": "Photo {n}",
+      "remove": "Remove photo {n}",
+      "error": "Error",
+      "format": "{name}: use JPG, PNG or WebP.",
+      "failed": "We could not upload {name}."
+    },
+    "visit": {
+      "title": "Site visit",
+      "loading": "Loading the visit…",
+      "error": "We could not load the visit.",
+      "notFound": "We could not find this visit.",
+      "retry": "Try again",
+      "back": "My jobs",
+      "at": "Visit on {date}",
+      "address": "Address",
+      "access": "Access: {notes}",
+      "map": "Open in maps",
+      "client": "Client",
+      "call": "Call {phone}",
+      "declared": "What the client described",
+      "sent": "Report sent on {date}. Pinta will review the price.",
+      "report": {
+        "loading": "Preparing the report…",
+        "title": "Visit report",
+        "body": "Correct the real measures, add extra work, take photos and leave a note for whoever reviews the price.",
+        "correct": "Correct",
+        "doneEditing": "Done",
+        "remove": "Remove {name}",
+        "addRoom": "Add room",
+        "chooseRoom": "Choose the type",
+        "extras": "Extra work",
+        "extrasHint": "What you found and what you would charge for it. Pinta sets the client price.",
+        "extraDescription": "Description",
+        "extraPay": "Your pay (€)",
+        "removeExtra": "Remove extra work {n}",
+        "addExtra": "Add extra work",
+        "photos": "Photos",
+        "notes": "Note for Pinta",
+        "send": "Send report",
+        "kept": "The report is kept on this phone until you send it.",
+        "fixElement": "Correct the measures of {name}.",
+        "fixExtras": "Each extra needs a description and pay.",
+        "done": "Report sent. Thank you!"
+      }
+    },
+    "payouts": {
+      "title": "My payouts",
+      "month": "Month",
+      "loading": "Loading…",
+      "error": "We could not load your payouts.",
+      "retry": "Try again",
+      "pending": "Pending",
+      "paidIn": "Paid in {month}",
+      "empty": "No payouts yet",
+      "emptyBody": "Each closed job shows here as pending.",
+      "since": "Pending since {date}",
+      "paidOn": "Paid on {date} · ref. {reference}",
+      "status": {
+        "pending": "Pending",
+        "paid": "Paid"
+      },
+      "iban": {
+        "title": "IBAN for payouts",
+        "none": "No IBAN",
+        "change": "Change IBAN",
+        "add": "Add IBAN",
+        "body": "Portuguese IBAN (PT50…). To change it, confirm your password.",
+        "iban": "New IBAN",
+        "password": "Password",
+        "save": "Save",
+        "cancel": "Back",
+        "saved": "IBAN saved."
       }
     }
   }

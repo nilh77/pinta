@@ -11,6 +11,7 @@ using Pinta.Modules.Jobs.Domain;
 using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Jobs.Resources;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Painters.Contracts;
 using Pinta.Modules.Quoting.Contracts;
 using Pinta.Modules.Payments.Contracts;
 using Pinta.SharedKernel.Time;
@@ -27,6 +28,9 @@ public sealed record ReasonRequest(string Reason, uint? Version);
 public sealed record SiteVisitRequest(Guid AssigneeId, DateTimeOffset At, long? PriceCents, uint? Version);
 
 public sealed record VersionRequest(uint? Version);
+
+/// <summary>Who can do a site visit (A2.6): a partner (admin) or an active painter covering the concelho, by user id.</summary>
+public sealed record SiteVisitAssignee(Guid UserId, string Name, bool IsPainter);
 
 /// <summary><see cref="ScheduledOn"/> is required to move to <c>scheduled</c> (H5: the admin sets the date).</summary>
 public sealed record TransitionRequest(JobStatus To, string Reason, uint? Version, DateOnly? ScheduledOn = null);
@@ -78,6 +82,7 @@ internal static class AdminJobCommands
         job.MapPut("/draft-quote", SaveDraftAsync).WithValidation<DraftQuoteRequest>().WithName("SaveDraftQuote");
         job.MapPost("/confirm-quote", ConfirmAsync).WithValidation<ConfirmQuoteRequest>().WithName("ConfirmQuote");
         job.MapPost("/reject", RejectAsync).WithValidation<ReasonRequest>().WithName("RejectJob");
+        job.MapGet("/site-visit-assignees", SiteVisitAssigneesAsync).WithName("ListSiteVisitAssignees");
         job.MapPost("/site-visit", SiteVisitAsync).WithValidation<SiteVisitRequest>().WithName("ScheduleSiteVisit");
         job.MapPost("/site-visit/complete", CompleteSiteVisitAsync).WithName("CompleteSiteVisit");
         job.MapPost("/transition", TransitionAsync).WithValidation<TransitionRequest>().WithName("TransitionJob");
@@ -127,6 +132,12 @@ internal static class AdminJobCommands
         if (request.Version is { } version && version != job.Version)
         {
             return JobProblems.ConcurrencyConflict();
+        }
+
+        // Free items a painter proposed at the visit need their client price first (P3.1).
+        if ((await quotes.GetDraftAsync(job.Id, cancellationToken))?.Extras.Any(x => x.ClientPriceToSet) == true)
+        {
+            return ApiProblem.Validation(new Dictionary<string, string[]> { ["extras"] = [JobsMessages.Get("extras_to_price")] });
         }
 
         var adminId = http.User.GetUserId()!.Value;
@@ -179,9 +190,20 @@ internal static class AdminJobCommands
         return TypedResults.NoContent();
     }
 
+    private static async Task<Results<Ok<IReadOnlyList<SiteVisitAssignee>>, ProblemHttpResult>> SiteVisitAssigneesAsync(
+        Guid id, JobsDbContext db, IUserDirectory users, IPainterDirectory painters, CancellationToken cancellationToken)
+    {
+        var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
+        return job is null
+            ? JobProblems.NotFound()
+            : TypedResults.Ok<IReadOnlyList<SiteVisitAssignee>>([
+                .. (await users.ListAdminsAsync(cancellationToken)).Select(a => new SiteVisitAssignee(a.Id, a.Name, false)),
+                .. (await painters.CoveringAsync(job.Municipality, cancellationToken)).Select(p => new SiteVisitAssignee(p.UserId, p.Name, true))]);
+    }
+
     private static async Task<Results<NoContent, ProblemHttpResult>> SiteVisitAsync(
-        Guid id, SiteVisitRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IRequestSettings settings,
-        IEmailQueue emails, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, SiteVisitRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IPainterDirectory painters,
+        IRequestSettings settings, IEmailQueue emails, WebLinks links, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -189,8 +211,12 @@ internal static class AdminJobCommands
             return JobProblems.NotFound();
         }
 
-        // In H4 a partner (admin) goes; painters arrive in H6 (docs/plan.md).
-        var assignee = (await users.ListAdminsAsync(cancellationToken)).SingleOrDefault(a => a.Id == request.AssigneeId);
+        // A partner (admin) or, since H6b, an active painter who covers the concelho (docs/plan.md).
+        var painter = await painters.FindByUserAsync(request.AssigneeId, cancellationToken);
+        var covering = painter is not null && painter.Status == PainterStatus.Active && painter.Municipalities.Contains(job.Municipality);
+        var assignee = covering
+            ? await users.FindAsync(request.AssigneeId, cancellationToken)
+            : painter is null ? (await users.ListAdminsAsync(cancellationToken)).SingleOrDefault(a => a.Id == request.AssigneeId) : null;
         if (assignee is null)
         {
             return ApiProblem.Validation(new Dictionary<string, string[]> { ["assigneeId"] = [JobsMessages.Get("site_visit_assignee")] });
@@ -210,6 +236,8 @@ internal static class AdminJobCommands
         job.SiteVisitAt = request.At;
         job.SiteVisitAssigneeId = assignee.Id;
         job.SiteVisitPrice = price;
+        job.SiteVisitNotes = null;
+        job.SiteVisitReportedAt = null;
         job.RequiresSiteVisit = true;
         var problem = await MoveAsync(db, job, JobStatus.SiteVisit, http, null, request.Version, clock, cancellationToken);
         if (problem is not null)
@@ -218,10 +246,18 @@ internal static class AdminJobCommands
         }
 
         var client = (await users.FindAsync(job.ClientId, cancellationToken))!;
-        foreach (var to in new[] { client, assignee })
+        foreach (var to in covering ? [client] : new[] { client, assignee })
         {
             await emails.EnqueueAsync(new SiteVisitScheduledEmail(
                 to.Email, to.Locale, to.Name, job.Code, request.At, assignee.Name, Money.ToCents(price)) { JobId = job.Id }, cancellationToken);
+        }
+
+        // The painter is told where and when, never what the client pays for the visit.
+        if (covering)
+        {
+            await emails.EnqueueAsync(new SiteVisitAssignedEmail(
+                assignee.Email, assignee.Locale, assignee.Name, job.Code, request.At, job.Municipality, links.PainterVisit(job.Id, assignee.Locale))
+            { JobId = job.Id }, cancellationToken);
         }
 
         return TypedResults.NoContent();

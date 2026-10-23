@@ -87,4 +87,11 @@
   <data name="JobFinished.Body" xml:space="preserve"><value>The painter has finished the job. See the result photos and pay the balance so we can close it.</value></data>
   <data name="JobFinished.Balance" xml:space="preserve"><value>Balance due</value></data>
   <data name="JobFinished.Button" xml:space="preserve"><value>See photos and pay</value></data>
+  <data name="SiteVisitAssigned.Subject" xml:space="preserve"><value>Site visit {0}</value></data>
+  <data name="SiteVisitAssigned.Body" xml:space="preserve"><value>We have assigned you a site visit. Check the real measures, take photos and send the report in the app.</value></data>
+  <data name="SiteVisitAssigned.When" xml:space="preserve"><value>When</value></data>
+  <data name="SiteVisitAssigned.Where" xml:space="preserve"><value>Municipality</value></data>
+  <data name="SiteVisitAssigned.Button" xml:space="preserve"><value>Open the visit</value></data>
+  <data name="SiteVisitReported.Subject" xml:space="preserve"><value>Site visit report {0}</value></data>
+  <data name="SiteVisitReported.Body" xml:space="preserve"><value>{0} sent the site visit report. The draft has the real measures; review the extra items and confirm the price.</value></data>
 </root>

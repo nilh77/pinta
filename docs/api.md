@@ -76,9 +76,10 @@ Todas las rutas exigen rol Pintor y devuelven solo recursos asignados a él. Las
 | POST | `/api/painter/assignments/{id}/decline` | Rechaza con motivo | P1.2 |
 | POST | `/api/painter/jobs/{id}/start` | Marca "En curso" | P2.1 |
 | POST | `/api/painter/jobs/{id}/finish` | Marca "Finalizado" con `fileIds` del resultado | P2.2 |
-| GET | `/api/painter/visits/{id}` | Datos de la visita y lo declarado por el cliente | P3.1 |
-| POST | `/api/painter/visits/{id}/report` | Medidas reales, extras detectados, fotos y observaciones | P3.1 |
-| GET | `/api/painter/payouts` | Pagos pendientes y pagados | P4.1 |
+| GET | `/api/painter/visits/{id}` | Datos de la visita (el id es el del trabajo) y lo declarado por el cliente, sin importes | P3.1 |
+| POST | `/api/painter/visits/{id}/media/upload-url` | URL firmada para una foto de la visita (`site_visit`) | P3.1 |
+| POST | `/api/painter/visits/{id}/report` | `{ elements, extras: [{ catalogKey?, description, painterPayCents }], fileIds, notes }`: vuelve a «En revisión» y crea el borrador `site_visit` | P3.1 |
+| GET | `/api/painter/payouts?month=AAAA-MM` | Todo lo pendiente y lo pagado en el mes, con los pagos por trabajo (el IBAN enmascarado viene de `/api/painter/me`) | P4.1 |
 | GET / PUT | `/api/painter/me` | Ficha propia para completar el alta: teléfono, zonas, NIF e IBAN (cambiar el IBAN pide la contraseña) | A4.2 |
 | POST | `/api/painter/jobs/{id}/media/upload-url` | URL firmada para subir una foto del resultado (`result`) | P2.2 |
 
@@ -103,9 +104,10 @@ Todas las rutas exigen rol Admin.
 | GET | `/api/admin/partners` | Socios (admins) a los que asignar una visita técnica en H4 | A2.6 |
 | GET | `/api/admin/jobs/{id}` | Detalle completo con desglose interno e historial | A2.2, A3.5 |
 | PUT | `/api/admin/jobs/{id}/draft-quote` | Edita estancias, ocupación, extras, Premium y ajuste manual del borrador de revisión; devuelve el desglose | A2.3–A2.5, A2.7 |
-| POST | `/api/admin/jobs/{id}/confirm-quote` | Confirma el precio con nota opcional | A2.8 |
+| POST | `/api/admin/jobs/{id}/confirm-quote` | Confirma el precio con nota opcional; 422 `extras` si alguna partida libre del informe de visita sigue sin precio al cliente | A2.8 |
 | POST | `/api/admin/jobs/{id}/reject` | Rechaza con motivo | A2.9 |
-| POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado y fecha | A2.6 |
+| GET | `/api/admin/jobs/{id}/site-visit-assignees` | Socios y pintores activos que cubren el concelho | A2.6 |
+| POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado (socio o pintor, por su id de usuario) y fecha | A2.6 |
 | POST | `/api/admin/jobs/{id}/site-visit/complete` | Visita hecha: vuelve a revisión; el siguiente borrador tiene origen `site_visit` | A2.6 |
 | POST | `/api/admin/jobs/{id}/assignments` | Ofrece el trabajo a un pintor activo que cubre el concelho, con fecha `scheduledOn`; retira la oferta abierta anterior | A3.2 |
 | POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422); `scheduled` exige `scheduledOn` (hoy o después) | A3.3 |
@@ -119,7 +121,7 @@ Todas las rutas exigen rol Admin.
 | GET | `/api/admin/finance/summary?from=&to=` | Panel de finanzas del periodo | A5.1 |
 | GET / POST / PUT / DELETE | `/api/admin/finance/costs[/{id}]` | Costes de operación | A5.2 |
 | POST | `/api/admin/finance/closings` | Cierra un mes | A5.3 |
-| GET | `/api/admin/payouts?status=` | Pagos a pintores | A5.4 |
+| GET | `/api/admin/payouts?painterId=&status=` | Pagos a pintores (solo lectura desde H6b) | A5.4 |
 | POST | `/api/admin/payouts/{id}/mark-paid` | Marca pagado con referencia | A5.4 |
 | GET | `/hangfire` | Panel de tareas (no es API) | — |
 

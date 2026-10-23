@@ -33,6 +33,7 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             job.Property(j => j.TaxId).HasMaxLength(9);
             job.Property(j => j.CompanyName).HasMaxLength(200);
             job.Property(j => j.SiteVisitPrice).HasPrecision(12, 2);
+            job.Property(j => j.SiteVisitNotes).HasMaxLength(2000);
             job.Property(j => j.Version).IsRowVersion();
             job.HasMany(j => j.History).WithOne().HasForeignKey(c => c.JobId);
             job.Navigation(j => j.History).UsePropertyAccessMode(PropertyAccessMode.Field).HasField("_history");

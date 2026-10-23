@@ -44,7 +44,10 @@ public sealed record QuoteBreakdownDto(
     bool Premium,
     bool RangeWidened);
 
-/// <summary>An extra item of a review draft: from the catalog by key (its prices unless given) or free.</summary>
+/// <summary>
+/// An extra item of a review draft: from the catalog by key (its prices unless given) or free. A free item without
+/// <see cref="ClientPriceCents"/> is kept with its client price to set; the price cannot be confirmed until it has one.
+/// </summary>
 public sealed record DraftExtraRequest(string? CatalogKey, string? Description, long? ClientPriceCents, long? PainterPayCents);
 
 /// <summary>
@@ -77,7 +80,7 @@ public sealed record QuoteElementView(
     string? ClientKey,
     decimal AreaM2);
 
-public sealed record QuoteExtraView(string? CatalogKey, string Description, long ClientPriceCents, long PainterPayCents);
+public sealed record QuoteExtraView(string? CatalogKey, string Description, long ClientPriceCents, long PainterPayCents, bool ClientPriceToSet);
 
 /// <summary>A quote version as the admin sees it: what was priced and the full internal breakdown.</summary>
 public sealed record AdminQuote(

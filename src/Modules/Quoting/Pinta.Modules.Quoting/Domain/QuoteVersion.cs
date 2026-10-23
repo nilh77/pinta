@@ -16,7 +16,7 @@ public sealed class QuoteVersion
 
     public int Number { get; init; }
 
-    public QuoteOrigin Origin { get; init; }
+    public QuoteOrigin Origin { get; set; }
 
     public required PriceSnapshot PriceSnapshot { get; init; }
 
@@ -143,4 +143,7 @@ public sealed class QuoteExtra
     public decimal ClientPrice { get; init; }
 
     public decimal PainterPay { get; init; }
+
+    /// <summary>A free item a painter proposed at the site visit: the admin still has to set its client price (P3.1).</summary>
+    public bool ClientPriceToSet { get; init; }
 }

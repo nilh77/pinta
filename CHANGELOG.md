@@ -6,9 +6,41 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H6a · Pintores: alta, asignación y ejecución
+Nada todavía.
 
-#### Añadido
+## H6b · Visita técnica del pintor y pagos al pintor — 2026-10-23, [PR #8](https://github.com/nilh77/pinta/pull/8)
+
+### Añadido
+
+- Visita técnica hecha por un pintor: «Pedir visita» ofrece los socios y los pintores activos que cubren el concelho; el pintor recibe un email sin el precio de la visita y la ve en «Próximos» con la etiqueta «Visita» (A2.6).
+- P3 · `/pintor/visitas/{id}`: lo que indicó el cliente, las medidas reales corregidas con el editor de estancia del constructor (añadir o quitar estancias), trabajos extra con el pago al pintor, fotos directas a almacenamiento y una nota. El informe sin enviar se guarda en el móvil. Al enviarlo, el trabajo vuelve a «En revisión» con nuevo plazo, sus medidas pasan a ser el borrador `site_visit` y los admins reciben un email (P3.1).
+- Admin: panel «Informe de la visita» con la nota y las fotos; las partidas libres propuestas en la visita llegan con el pago al pintor y el precio al cliente «por fijar», y confirmar el precio se bloquea (422 `extras`) hasta ponerlo.
+- Pagos al pintor: al cerrarse un trabajo con el pago del resto se crea un pago pendiente por el importe de la oferta aceptada, uno por trabajo aunque el webhook se repita (`finance.painter_payouts`). `GET /api/painter/payouts` y `GET /api/admin/payouts` (solo lectura) (A5.4, primera mitad).
+- P4 · `/pintor/pagos`: lo pendiente, lo pagado en el mes elegido, la lista por trabajo y el IBAN enmascarado, que se cambia con la contraseña (P4.1). Submenú Trabajos / Pagos en la zona del pintor.
+- Ficha del pintor en el admin: sección «Pagos al pintor» de solo lectura.
+- Test de contrato ampliado: `/api/painter/visits/{id}` no lleva ningún importe y `/api/painter/payouts` no lleva precio al cliente ni margen.
+
+### Cambiado
+
+- Documentos: decisiones de H6b en `docs/plan.md`, P3, P4 y A2 en `docs/screens.md`, rutas y cuerpos en `docs/api.md`, informe de visita y pago al pintor en `docs/data-model.md`, y la transición del pintor en `docs/states.md`.
+- Las fotos de resultado (P2) y de visita (P3) usan el mismo selector de fotos.
+
+### Corregido
+
+- La caducidad diaria de precios ya no se detiene entera si un trabajo cambia mientras corre (por ejemplo, llega la señal): ese trabajo se deja y sigue con los demás (S3). Su test ya no adelanta el reloj sobre la base de datos compartida, lo que podía caducar precios de otros tests.
+
+### Verificado
+
+- En el navegador a 390 y 1440 px (todo en pt; «Mis pagos» también en en y la ficha del admin en es), con Stripe en modo test: el admin pide la visita de TC01 a Carla; Carla corrige el largo a 5 m, propone «Reparar fissura» por 40 € con 2 fotos y una nota (el borrador sobrevive a recargar la página) y envía; el admin ve el informe, no puede confirmar hasta poner 90 € al extra y confirma la versión 2. Tras la señal, la oferta, el trabajo y el resto pagados con webhooks reales, Carla ve 289,20 € pendientes en «Mis pagos» y el admin los ve en su ficha.
+
+### Pendiente
+
+- Marcar los pagos al pintor como pagados con referencia y la pantalla de Finanzas: H7 (A5.4).
+- P3 propone solo partidas libres: el catálogo de partidas extra no es público; la API ya acepta `catalogKey`.
+
+## H6a · Pintores: alta, asignación y ejecución — 2026-10-23, [PR #7](https://github.com/nilh77/pinta/pull/7)
+
+### Añadido
 
 - Admin › Pintores: lista con estado (invitado, activo, inactivo), zonas, trabajos hechos y valoración; alta con nombre, email e idioma y, si se quiere, teléfono, NIF, especialidades, concelhos, IBAN y notas, que envía la invitación (válida 72 h). Ficha para editar los datos (IBAN cifrado y siempre enmascarado, valoración interna), reenviar la invitación, activar o desactivar (un pintor desactivado no puede entrar ni recibir ofertas), documentos con caducidad y sus trabajos (A4.1–A4.4).
 - `/pintor/alta`: el pintor elige la contraseña desde el enlace del email y confirma o completa la ficha que preparó el admin (teléfono, NIF, concelhos e IBAN); un enlace caducado pide una nueva invitación (A4.2).
@@ -20,15 +52,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Datos de demo: Rui y Carla activos con zonas y valoración, João invitado.
 - Emails: invitación del pintor, oferta nueva, oferta rechazada y sin respuesta (admins), trabajo programado y trabajo terminado (cliente).
 
-#### Cambiado
+### Cambiado
 
 - Documentos: H6 en dos PR, al menos 3 fotos para terminar (P2.2), alta preparada por el admin, invitación de 72 h y el pintor que acepta como actor de «Señal pagada → Programado» en `docs/plan.md`, `docs/functional-requirements.md`, `docs/screens.md`, `docs/states.md`, `docs/api.md` y `docs/data-model.md`.
 
-#### Verificado
+### Verificado
 
 - En el navegador a 390 y 1440 px y en pt, es y en, con la señal de TC01 pagada en Stripe modo test: el admin invita a un pintor, el pintor se da de alta con el enlace de Mailpit, el admin le ofrece el trabajo, el pintor lo acepta, lo empieza el día programado, sube 3 fotos y lo termina; el cliente ve las fotos y el botón para pagar el resto.
 
-#### Pendiente
+### Pendiente
 
 - H6b: informe de la visita técnica del pintor (P3.1), pagos al pintor pendientes al cerrar el trabajo y pantalla P4 «Mis pagos».
 - H8: fotos de avance y «reportar incidencia» en P2.

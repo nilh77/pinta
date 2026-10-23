@@ -95,3 +95,10 @@ public sealed record JobScheduledEmail(string To, Locale Locale, string Name, st
 
 /// <summary>To the client: the painter finished; the balance is due (P2.2, C5.5).</summary>
 public sealed record JobFinishedEmail(string To, Locale Locale, string Name, string Code, long BalanceCents, string JobUrl) : Email(To, Locale);
+
+/// <summary>To a painter: a site visit is assigned, without the price the client pays (A2.6).</summary>
+public sealed record SiteVisitAssignedEmail(string To, Locale Locale, string Name, string Code, DateTimeOffset VisitAt, string Municipality, string Url)
+    : Email(To, Locale);
+
+/// <summary>To the admins: the painter sent the site visit report; the draft has the real measures (P3.1).</summary>
+public sealed record SiteVisitReportedEmail(string To, Locale Locale, string Code, string PainterName, string AdminUrl) : Email(To, Locale);

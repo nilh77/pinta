@@ -1,8 +1,8 @@
 "use client";
 
-import { ArrowLeft, CircleCheck, Clock, ImagePlus, Loader2, MapPin, Navigation, Phone, Play, Trash2 } from "lucide-react";
+import { ArrowLeft, CircleCheck, Clock, Loader2, MapPin, Navigation, Phone, Play } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { formatArea, formatCents, formatDate, formatMetres } from "@/lib/format";
 import { useCatalog } from "@/lib/quote/use-quote-data";
-import { prepareImage } from "@/lib/quote/uploads";
 import {
   uploadResultPhoto,
   useFinishJob,
@@ -22,9 +21,9 @@ import {
   type PainterElement,
   type PainterJobDetail,
 } from "@/lib/painter/use-painter";
+import { PhotoPicker, type PickedPhoto } from "./photo-picker";
 
 type JobFile = components["schemas"]["JobFile"];
-const RESULT_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const WALLS = ["A", "B", "C", "D"];
 
 /** P2 · Trabajo y ejecución (board PintorDetalle) [P1.3, P2.1, P2.2]. Never the client price: only the painter's pay. */
@@ -153,7 +152,7 @@ export function PainterJobScreen({ id }: { id: string }) {
   );
 }
 
-function Card({ title, children }: { title: string; children: ReactNode }) {
+export function Card({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="rounded-[20px] border border-border bg-card p-4">
       <h2 className="mb-2 text-[13px] font-semibold text-muted-foreground uppercase">{title}</h2>
@@ -233,7 +232,7 @@ function Work({ job }: { job: PainterJobDetail }) {
   );
 }
 
-function FileGrid({ files }: { files: JobFile[] }) {
+export function FileGrid({ files }: { files: JobFile[] }) {
   const t = useTranslations("painter.job");
   return (
     <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -298,42 +297,16 @@ function Actions({ job }: { job: PainterJobDetail }) {
   }
 }
 
-type LocalPhoto = { key: string; thumbnail: string | null; progress: number; fileId: string | null; failed: boolean };
-
 /** Result photos straight to storage, then «Marcar como terminado» with at least `minResultPhotos` (P2.2). */
 function ResultPhotos({ job }: { job: PainterJobDetail }) {
   const t = useTranslations("painter.job.result");
   const errorText = useErrorText();
   const finish = useFinishJob(job.id);
-  const input = useRef<HTMLInputElement>(null);
-  const [photos, setPhotos] = useState<LocalPhoto[]>([]);
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
   const [confirming, setConfirming] = useState(false);
   const uploaded = photos.filter((p) => p.fileId);
   const uploading = photos.some((p) => !p.fileId && !p.failed);
   const enough = uploaded.length >= job.minResultPhotos;
-
-  const update = (key: string, change: Partial<LocalPhoto>) => setPhotos((all) => all.map((p) => (p.key === key ? { ...p, ...change } : p)));
-
-  const add = async (files: FileList | null) => {
-    for (const file of Array.from(files ?? [])) {
-      if (!RESULT_TYPES.includes(file.type)) {
-        toast.error(t("format", { name: file.name }));
-        continue;
-      }
-
-      const key = crypto.randomUUID();
-      setPhotos((all) => [...all, { key, thumbnail: null, progress: 0, fileId: null, failed: false }]);
-      try {
-        const prepared = await prepareImage(file, file.type);
-        update(key, { thumbnail: prepared.thumbnail });
-        const fileId = await uploadResultPhoto(job.id, prepared.blob, prepared.contentType, (progress) => update(key, { progress }));
-        update(key, { fileId, progress: 100 });
-      } catch {
-        update(key, { failed: true });
-        toast.error(t("failed", { name: file.name }));
-      }
-    }
-  };
 
   return (
     <section aria-labelledby="result-title" className="flex flex-col gap-3 rounded-[20px] border-2 border-accent bg-card p-4">
@@ -344,50 +317,7 @@ function ResultPhotos({ job }: { job: PainterJobDetail }) {
         <p className="text-sm text-muted-foreground">{t("body", { min: job.minResultPhotos })}</p>
       </div>
 
-      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-        {photos.map((p, i) => (
-          <li key={p.key} className="relative aspect-square overflow-hidden rounded-xl bg-muted">
-            {/* eslint-disable-next-line @next/next/no-img-element -- local data URL thumbnail */}
-            {p.thumbnail && <img src={p.thumbnail} alt={t("photo", { n: i + 1 })} className="size-full object-cover" />}
-            {!p.fileId && !p.failed && (
-              <span className="absolute inset-x-0 bottom-0 bg-foreground/60 py-0.5 text-center text-xs text-background tabular-nums">{p.progress}%</span>
-            )}
-            {p.failed && <span className="absolute inset-0 grid place-items-center bg-destructive/70 text-xs font-semibold text-background">{t("error")}</span>}
-            <button
-              type="button"
-              onClick={() => setPhotos((all) => all.filter((x) => x.key !== p.key))}
-              className="absolute top-1 right-1 grid size-8 place-items-center rounded-full bg-card/90 text-foreground"
-              aria-label={t("remove", { n: i + 1 })}
-            >
-              <Trash2 aria-hidden="true" className="size-4" />
-            </button>
-          </li>
-        ))}
-        <li>
-          <button
-            type="button"
-            onClick={() => input.current?.click()}
-            className="grid aspect-square w-full place-items-center rounded-xl border-2 border-dashed border-border text-sm font-semibold text-primary hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-          >
-            <span className="flex flex-col items-center gap-1">
-              <ImagePlus aria-hidden="true" className="size-6" />
-              {t("add")}
-            </span>
-          </button>
-          <input
-            ref={input}
-            type="file"
-            accept={RESULT_TYPES.join(",")}
-            multiple
-            className="sr-only"
-            tabIndex={-1}
-            onChange={(event) => {
-              void add(event.target.files);
-              event.target.value = "";
-            }}
-          />
-        </li>
-      </ul>
+      <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress)} />
 
       <p aria-live="polite" className="text-sm font-semibold tabular-nums">
         {t("count", { count: uploaded.length, min: job.minResultPhotos })}

@@ -85,6 +85,14 @@ export const useDeleteDocument = (id: string) =>
     orThrow(await api.DELETE("/api/admin/painters/{id}/documents/{documentId}", { params: { path: { id, documentId } } })),
   );
 
+/** A5.4 (read-only until H7): the painter's payouts, newest first. */
+export function usePainterPayoutsForAdmin(painterId: string) {
+  return useQuery({
+    queryKey: ["admin", "payouts", painterId],
+    queryFn: async () => orThrow(await api.GET("/api/admin/payouts", { params: { query: { painterId } } })),
+  });
+}
+
 /** A3.2: active painters covering the job's concelho. */
 export function useAssignablePainters(jobId: string, enabled: boolean) {
   return useQuery({

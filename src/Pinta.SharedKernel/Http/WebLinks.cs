@@ -15,5 +15,7 @@ public sealed class WebLinks(IConfiguration configuration)
 
     public string PainterHome(Locale locale) => $"{Web}/{Lang(locale)}/pintor";
 
+    public string PainterVisit(Guid jobId, Locale locale) => $"{Web}/{Lang(locale)}/pintor/visitas/{jobId}";
+
     private static string Lang(Locale locale) => locale.ToString().ToLowerInvariant();
 }

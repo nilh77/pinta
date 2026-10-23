@@ -33,3 +33,9 @@ public interface IPayableJobs
 /// exception) gives back from the deposit; Payments refunds it through Stripe.
 /// </summary>
 public sealed record JobCancelled(Guid JobId, long DepositRefundCents, string? Reason) : IIntegrationEvent;
+
+/// <summary>
+/// The balance closed the job (docs/states.md): <see cref="PainterId"/> and <see cref="PainterPayCents"/> come from the accepted
+/// offer, null when no painter did it (A5.4).
+/// </summary>
+public sealed record JobClosed(Guid JobId, string Code, Guid? PainterId, long PainterPayCents) : IIntegrationEvent;

@@ -161,6 +161,7 @@ erDiagram
     uuid asignado_a
     timestamptz fecha
     text observaciones
+    timestamptz enviada_en
   }
   ARCHIVO {
     uuid id PK
@@ -274,6 +275,8 @@ erDiagram
 ```
 
 - **Pago.tipo:** señal, resto o visita técnica. **Pago.metodo:** tarjeta, MB WAY o Multibanco. **Pago.estado:** pendiente, requiere acción (Multibanco a la espera), pagado, fallido, cancelado, reembolsado (total o parcial). **Pago.numero_justificante:** `SIM-AAAA-NNNN`, se asigna al pagarse; el PDF se genera al pedirlo a partir de los datos guardados.
+- **Visita técnica:** en H6b el informe del pintor guarda observaciones y fecha de envío; las medidas van al borrador de cotización de origen `site_visit` y las fotos son archivos con contexto `site_visit`. Las partidas extra libres que propone llevan `precio_por_fijar` hasta que el admin les pone precio.
+- **Pago al pintor:** uno por trabajo cerrado (único por `trabajo_id`), por el importe de la asignación aceptada, `pendiente` hasta que el admin lo marca `pagado` con referencia (H7).
 - **Trabajo.fecha_programada:** en H5 la fija el admin al pasar a «Programado»; la política de reembolso cuenta los días hasta ella.
 - **Coste de operación.categoría** usa la lista cerrada del acuerdo de socios: infraestructura, comisiones de pago, facturación y contabilista, seguro, marketing.
 - **Cierre mensual:** el reparto 50/50 se calcula en vivo, pero al cerrar un mes queda congelado. Un coste registrado tarde no cambia lo ya repartido.

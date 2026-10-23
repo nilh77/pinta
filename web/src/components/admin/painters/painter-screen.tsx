@@ -18,6 +18,7 @@ import {
   useDeleteDocument,
   useResendInvitation,
   useSetPainterActive,
+  usePainterPayoutsForAdmin,
   useUpdatePainter,
   type PainterDetail,
   type PainterDocumentKind,
@@ -77,6 +78,7 @@ export function PainterScreen({ id }: { id: string }) {
         <div className="flex flex-col gap-5">
           <Documents painter={data} />
           <Jobs painter={data} />
+          <Payouts painterId={data.id} />
         </div>
       </div>
     </div>
@@ -275,6 +277,51 @@ function Jobs({ painter }: { painter: PainterDetail }) {
             </li>
           ))}
         </ul>
+      )}
+    </section>
+  );
+}
+
+/** What Pinta owes the painter per closed job (A5.4); marking it paid arrives with Finanzas in H7. */
+function Payouts({ painterId }: { painterId: string }) {
+  const t = useTranslations("admin.painters.payouts");
+  const locale = useLocale();
+  const payouts = usePainterPayoutsForAdmin(painterId);
+  const pending = (payouts.data ?? []).filter((p) => p.status === "pending").reduce((sum, p) => sum + p.amountCents, 0);
+  return (
+    <section aria-labelledby="payouts-title" className="rounded-[20px] border border-border bg-card p-4">
+      <h2 id="payouts-title" className="mb-1 font-bold">
+        {t("title")}
+      </h2>
+      {payouts.isPending ? (
+        <p role="status" className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 aria-hidden="true" className="size-4 animate-spin motion-reduce:animate-none" />
+          {t("loading")}
+        </p>
+      ) : payouts.isError ? (
+        <p role="alert" className="text-sm text-destructive">
+          {t("error")}
+        </p>
+      ) : payouts.data.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
+      ) : (
+        <>
+          <p className="mb-3 text-sm">{t("pending", { amount: formatCents(locale, pending) })}</p>
+          <ul className="flex flex-col gap-2">
+            {payouts.data.map((p) => (
+              <li key={p.id} className="flex items-center justify-between gap-2 rounded-xl border border-border px-3 py-2 text-sm">
+                <Link href={`/admin/trabajos/${p.jobId}`} className="font-semibold text-primary">
+                  {p.code}
+                </Link>
+                <span className="tabular-nums">{formatCents(locale, p.amountCents)}</span>
+                <span className={p.status === "paid" ? "text-xs font-semibold text-primary" : "text-xs font-semibold text-accent-ink"}>
+                  {t(`status.${p.status}`)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted-foreground">{t("markLater")}</p>
+        </>
       )}
     </section>
   );
