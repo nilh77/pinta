@@ -3079,6 +3079,246 @@
         }
       }
     },
+    "/api/painter/jobs/{id}": {
+      "get": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "GetPainterJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PainterJobDetail"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/media/upload-url": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "CreateResultUploadUrl",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedUpload"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/start": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "StartJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/finish": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "FinishJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinishJobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/painters": {
       "get": {
         "tags": [
@@ -4727,6 +4967,8 @@
           "scheduledOn",
           "quote",
           "siteVisit",
+          "painter",
+          "resultPhotos",
           "timeline",
           "canCancel",
           "canRequote"
@@ -4820,6 +5062,22 @@
                 "$ref": "#/components/schemas/ClientSiteVisit"
               }
             ]
+          },
+          "painter": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ClientPainter"
+              }
+            ]
+          },
+          "resultPhotos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
           },
           "timeline": {
             "type": "array",
@@ -4919,6 +5177,17 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ClientPainter": {
+        "required": [
+          "firstName"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
           }
         }
       },
@@ -5676,6 +5945,21 @@
           }
         }
       },
+      "FinishJobRequest": {
+        "required": [
+          "fileIds"
+        ],
+        "type": "object",
+        "properties": {
+          "fileIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
       "ForgotPasswordRequest": {
         "required": [
           "email"
@@ -6388,6 +6672,126 @@
           "other"
         ]
       },
+      "PainterElement": {
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "roomTypeId",
+          "size",
+          "length",
+          "width",
+          "height",
+          "walls",
+          "ceiling",
+          "surfaceTypeId",
+          "paintId",
+          "damage",
+          "areaM2",
+          "litres"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ElementKind"
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "roomTypeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "size": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/RoomSize"
+              }
+            ]
+          },
+          "length": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "width": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "height": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          },
+          "walls": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "boolean"
+            }
+          },
+          "ceiling": {
+            "type": "boolean"
+          },
+          "surfaceTypeId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "paintId": {
+            "type": "string"
+          },
+          "damage": {
+            "type": "boolean"
+          },
+          "areaM2": {
+            "type": "number",
+            "format": "double"
+          },
+          "litres": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "PainterExtra": {
+        "required": [
+          "description",
+          "painterPayCents"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "PainterJob": {
         "required": [
           "jobId",
@@ -6419,6 +6823,138 @@
           "painterPayCents": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "PainterJobDetail": {
+        "required": [
+          "id",
+          "assignmentId",
+          "code",
+          "status",
+          "scheduledOn",
+          "addressLine1",
+          "postalCode",
+          "locality",
+          "municipality",
+          "accessNotes",
+          "description",
+          "clientName",
+          "clientPhone",
+          "areaM2",
+          "elements",
+          "paints",
+          "extras",
+          "reviewerNote",
+          "painterPayCents",
+          "clientFiles",
+          "resultFiles",
+          "canStart",
+          "minResultPhotos"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assignmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "scheduledOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "municipality": {
+            "type": "string"
+          },
+          "accessNotes": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "description": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "clientName": {
+            "type": "string"
+          },
+          "clientPhone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "areaM2": {
+            "type": "number",
+            "format": "double"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterElement"
+            }
+          },
+          "paints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaintQuantity"
+            }
+          },
+          "extras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterExtra"
+            }
+          },
+          "reviewerNote": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "clientFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
+          },
+          "resultFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
+          },
+          "canStart": {
+            "type": "boolean"
+          },
+          "minResultPhotos": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -6644,6 +7180,22 @@
           "active",
           "inactive"
         ]
+      },
+      "PaintQuantity": {
+        "required": [
+          "paintId",
+          "litres"
+        ],
+        "type": "object",
+        "properties": {
+          "paintId": {
+            "type": "string"
+          },
+          "litres": {
+            "type": "number",
+            "format": "double"
+          }
+        }
       },
       "PaintRequest": {
         "required": [
@@ -7552,6 +8104,22 @@
           },
           "password": {
             "type": "string"
+          }
+        }
+      },
+      "ResultUploadRequest": {
+        "required": [
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },

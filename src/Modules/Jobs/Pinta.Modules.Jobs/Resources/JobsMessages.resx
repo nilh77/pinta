@@ -18,4 +18,5 @@
   <data name="transition_use_action" xml:space="preserve"><value>Use a ação própria deste estado.</value></data>
   <data name="scheduled_on" xml:space="preserve"><value>Indique a data de início (hoje ou depois).</value></data>
   <data name="painter_not_available" xml:space="preserve"><value>Escolha um pintor ativo que trabalhe neste concelho.</value></data>
+  <data name="result_photos" xml:space="preserve"><value>Envie pelo menos 3 fotos do resultado.</value></data>
 </root>

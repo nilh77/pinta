@@ -50,7 +50,7 @@ public class AdminReviewTests(PintaApiFactory factory)
 
         var response = await job.Client.GetAsync($"/api/jobs/{job.JobId}");
         var raw = await response.Content.ReadAsStringAsync();
-        foreach (var hidden in new[] { "margin", "painter", "material", "labour", "rate" })
+        foreach (var hidden in new[] { "margin", "painterPay", "painterTotal", "material", "labour", "rate" })
         {
             Assert.DoesNotContain(hidden, raw, StringComparison.OrdinalIgnoreCase);
         }

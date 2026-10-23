@@ -10,7 +10,9 @@ using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Jobs.Domain;
 using Pinta.Modules.Jobs.Features.Shared;
+using Pinta.Modules.Media.Contracts;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Painters.Contracts;
 using Pinta.Modules.Payments.Contracts;
 using Pinta.Modules.Quoting.Contracts;
 using Pinta.SharedKernel;
@@ -39,9 +41,13 @@ public sealed record ClientTimelineEntry(JobStatus Status, DateTimeOffset At, st
 
 public sealed record ClientSiteVisit(DateTimeOffset At, string VisitorName, long PriceCents);
 
+/// <summary>The painter who accepted the job (C5.4): first name only; every Pinta painter is vetted.</summary>
+public sealed record ClientPainter(string FirstName);
+
 /// <summary>
 /// GET /api/jobs/{id} (screens 8 and 10). Estimate fields (<see cref="AreaM2"/>, range) come from the client's estimate;
-/// <see cref="Quote"/> is the confirmed price when there is one. Never rates, painter pay or margin.
+/// <see cref="Quote"/> is the confirmed price when there is one; <see cref="Painter"/> once one accepted it and
+/// <see cref="ResultPhotos"/> once finished (C5.4, C5.5). Never rates, painter pay or margin.
 /// </summary>
 public sealed record ClientJobDetail(
     Guid Id,
@@ -61,6 +67,8 @@ public sealed record ClientJobDetail(
     DateOnly? ScheduledOn,
     ClientQuote? Quote,
     ClientSiteVisit? SiteVisit,
+    ClientPainter? Painter,
+    IReadOnlyList<JobFile> ResultPhotos,
     IReadOnlyList<ClientTimelineEntry> Timeline,
     bool CanCancel,
     bool CanRequote);
@@ -134,7 +142,8 @@ internal static class ClientJobEndpoints
     }
 
     private static async Task<Results<Ok<ClientJobDetail>, ProblemHttpResult>> DetailAsync(
-        Guid id, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, CancellationToken cancellationToken)
+        Guid id, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IPainterDirectory painters, IMediaService media,
+        CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: false, cancellationToken);
         if (job is null)
@@ -148,6 +157,12 @@ internal static class ClientJobEndpoints
             ? await quotes.GetClientAsync(job.CurrentQuoteVersionId, CultureInfo.CurrentUICulture.TwoLetterISOLanguageName, cancellationToken)
             : null;
         var visitor = job.SiteVisitAssigneeId is { } assignee ? await users.FindAsync(assignee, cancellationToken) : null;
+        var painterId = await db.Assignments.Where(a => a.JobId == job.Id && (a.Status == AssignmentStatus.Accepted || a.Status == AssignmentStatus.Completed))
+            .Select(a => (Guid?)a.PainterId).FirstOrDefaultAsync(cancellationToken);
+        var painter = painterId is { } pid ? await painters.FindAsync(pid, cancellationToken) : null;
+        var resultPhotos = job.Status is JobStatus.Finished or JobStatus.Closed
+            ? [.. (await media.ListForJobAsync(job.Id, cancellationToken)).Where(f => f.Context == MediaContext.Result)]
+            : Array.Empty<JobFile>();
         return TypedResults.Ok(new ClientJobDetail(
             job.Id,
             job.Code,
@@ -166,6 +181,8 @@ internal static class ClientJobEndpoints
             job.ScheduledOn,
             confirmed,
             job.SiteVisitAt is { } at ? new ClientSiteVisit(at, visitor?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0)) : null,
+            painter is null ? null : new ClientPainter(Assignments.AssignmentEndpoints.FirstName(painter.Name)),
+            resultPhotos,
             [.. job.History.OrderBy(h => h.ChangedAt).Select(h => new ClientTimelineEntry(
                 h.To, h.ChangedAt, h.To is JobStatus.Rejected or JobStatus.Cancelled ? h.Reason : null))],
             JobStateMachine.CancellableFrom.Contains(job.Status),

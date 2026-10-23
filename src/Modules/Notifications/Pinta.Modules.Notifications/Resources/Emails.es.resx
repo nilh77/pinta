@@ -83,4 +83,8 @@
   <data name="JobScheduled.Body" xml:space="preserve"><value>Ya tenemos pintor y fecha para tu trabajo.</value></data>
   <data name="JobScheduled.Painter" xml:space="preserve"><value>Pintor</value></data>
   <data name="JobScheduled.Start" xml:space="preserve"><value>Inicio</value></data>
+  <data name="JobFinished.Subject" xml:space="preserve"><value>Tu trabajo {0} está terminado</value></data>
+  <data name="JobFinished.Body" xml:space="preserve"><value>El pintor ha terminado el trabajo. Mira las fotos del resultado y paga el resto para que lo cerremos.</value></data>
+  <data name="JobFinished.Balance" xml:space="preserve"><value>Resto a pagar</value></data>
+  <data name="JobFinished.Button" xml:space="preserve"><value>Ver fotos y pagar</value></data>
 </root>

@@ -92,3 +92,6 @@ public sealed record AssignmentUnansweredEmail(string To, Locale Locale, string 
 /// <summary>To the client: the job has a painter and a start date (A3.2).</summary>
 public sealed record JobScheduledEmail(string To, Locale Locale, string Name, string Code, DateOnly ScheduledOn, string PainterName, string JobUrl)
     : Email(To, Locale);
+
+/// <summary>To the client: the painter finished; the balance is due (P2.2, C5.5).</summary>
+public sealed record JobFinishedEmail(string To, Locale Locale, string Name, string Code, long BalanceCents, string JobUrl) : Email(To, Locale);

@@ -964,6 +964,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/painter/jobs/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetPainterJob"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/jobs/{id}/media/upload-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CreateResultUploadUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/jobs/{id}/start": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["StartJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/jobs/{id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["FinishJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/painters": {
         parameters: {
             query?: never;
@@ -1423,6 +1487,8 @@ export interface components {
             scheduledOn: null | string;
             quote: null | components["schemas"]["ClientQuote"];
             siteVisit: null | components["schemas"]["ClientSiteVisit"];
+            painter: null | components["schemas"]["ClientPainter"];
+            resultPhotos: components["schemas"]["JobFile"][];
             timeline: components["schemas"]["ClientTimelineEntry"][];
             canCancel: boolean;
             canRequote: boolean;
@@ -1451,6 +1517,9 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        ClientPainter: {
+            firstName: string;
         };
         ClientQuote: {
             /** Format: uuid */
@@ -1649,6 +1718,9 @@ export interface components {
             /** Format: int64 */
             painterPayCents: number;
         };
+        FinishJobRequest: {
+            fileIds: string[];
+        };
         ForgotPasswordRequest: {
             email: string;
         };
@@ -1836,6 +1908,34 @@ export interface components {
         };
         /** @enum {unknown} */
         PainterDocumentKind: "insurance" | "activity" | "contract" | "other";
+        PainterElement: {
+            /** Format: uuid */
+            id: string;
+            kind: components["schemas"]["ElementKind"];
+            name: null | string;
+            roomTypeId: null | string;
+            size: null | components["schemas"]["RoomSize"];
+            /** Format: double */
+            length: null | number;
+            /** Format: double */
+            width: null | number;
+            /** Format: double */
+            height: null | number;
+            walls: null | boolean[];
+            ceiling: boolean;
+            surfaceTypeId: null | string;
+            paintId: string;
+            damage: boolean;
+            /** Format: double */
+            areaM2: number;
+            /** Format: double */
+            litres: number;
+        };
+        PainterExtra: {
+            description: string;
+            /** Format: int64 */
+            painterPayCents: number;
+        };
         PainterJob: {
             /** Format: uuid */
             jobId: string;
@@ -1846,6 +1946,37 @@ export interface components {
             scheduledOn: string;
             /** Format: int64 */
             painterPayCents: number;
+        };
+        PainterJobDetail: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            assignmentId: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            /** Format: date */
+            scheduledOn: string;
+            addressLine1: string;
+            postalCode: string;
+            locality: string;
+            municipality: string;
+            accessNotes: null | string;
+            description: null | string;
+            clientName: string;
+            clientPhone: null | string;
+            /** Format: double */
+            areaM2: number;
+            elements: components["schemas"]["PainterElement"][];
+            paints: components["schemas"]["PaintQuantity"][];
+            extras: components["schemas"]["PainterExtra"][];
+            reviewerNote: null | string;
+            /** Format: int64 */
+            painterPayCents: number;
+            clientFiles: components["schemas"]["JobFile"][];
+            resultFiles: components["schemas"]["JobFile"][];
+            canStart: boolean;
+            /** Format: int32 */
+            minResultPhotos: number;
         };
         PainterJobItem: {
             /** Format: uuid */
@@ -1901,6 +2032,11 @@ export interface components {
         };
         /** @enum {unknown} */
         PainterStatus: "invited" | "active" | "inactive";
+        PaintQuantity: {
+            paintId: string;
+            /** Format: double */
+            litres: number;
+        };
         PaintRequest: {
             key: null | string;
             name: components["schemas"]["LocalizedTextDto"];
@@ -2139,6 +2275,11 @@ export interface components {
             userId: string;
             token: string;
             password: string;
+        };
+        ResultUploadRequest: {
+            contentType: string;
+            /** Format: int64 */
+            sizeBytes: number;
         };
         ReviewItem: {
             /** Format: uuid */
@@ -4846,6 +4987,197 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["DeclineRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    GetPainterJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PainterJobDetail"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CreateResultUploadUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultUploadRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedUpload"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    StartJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    FinishJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishJobRequest"];
             };
         };
         responses: {

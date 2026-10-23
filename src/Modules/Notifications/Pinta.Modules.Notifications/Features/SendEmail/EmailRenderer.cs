@@ -94,6 +94,10 @@ public sealed class EmailRenderer(IServiceProvider services)
                 paragraphs: [text["JobScheduled.Body"]],
                 rows: [(text["Common.Code"], e.Code), (text["JobScheduled.Start"], Date(text, e.ScheduledOn)), (text["JobScheduled.Painter"], e.PainterName)],
                 button: (text["Common.SeeJob"], e.JobUrl)),
+            JobFinishedEmail e => Notice(text, e, text.Format("JobFinished.Subject", e.Code), greeting: e.Name,
+                paragraphs: [text["JobFinished.Body"]],
+                rows: [(text["Common.Code"], e.Code), (text["JobFinished.Balance"], Euros(text, e.BalanceCents))],
+                button: (text["JobFinished.Button"], e.JobUrl)),
             _ => throw new NotSupportedException($"No template for {email.GetType().Name}."),
         };
     }
