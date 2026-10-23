@@ -78,3 +78,17 @@ public sealed record PaymentDisputeEmail(string To, Locale Locale, string Code, 
 
 /// <summary>The admin invited a painter: link to sign up, valid 72 h (A4.2).</summary>
 public sealed record PainterInvitationEmail(string To, Locale Locale, string Name, string SignUpUrl) : Email(To, Locale);
+
+/// <summary>To a painter: a job is offered with its date and pay (A3.2).</summary>
+public sealed record AssignmentOfferedEmail(
+    string To, Locale Locale, string Name, string Code, string Municipality, DateOnly ScheduledOn, long PainterPayCents, string Url) : Email(To, Locale);
+
+/// <summary>To the admins: a painter declined an offer (P1.2).</summary>
+public sealed record AssignmentDeclinedEmail(string To, Locale Locale, string Code, string PainterName, string Reason, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the admins: an offer is still unanswered after 48 h (P1.2).</summary>
+public sealed record AssignmentUnansweredEmail(string To, Locale Locale, string Code, string PainterName, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the client: the job has a painter and a start date (A3.2).</summary>
+public sealed record JobScheduledEmail(string To, Locale Locale, string Name, string Code, DateOnly ScheduledOn, string PainterName, string JobUrl)
+    : Email(To, Locale);

@@ -108,6 +108,37 @@ public sealed class Job
     }
 }
 
+/// <summary>
+/// An offer of a job to a painter (docs/data-model.md, ASIGNACION; A3.2): the date and the painter's pay are frozen when
+/// the admin makes it. Accepting it schedules the job.
+/// </summary>
+public sealed class Assignment
+{
+    public Guid Id { get; init; } = Guid.CreateVersion7();
+
+    public Guid JobId { get; init; }
+
+    public Guid PainterId { get; init; }
+
+    public DateOnly ScheduledOn { get; init; }
+
+    /// <summary>What the painter gets for the job (labour and extras), VAT not applicable.</summary>
+    public decimal PainterPay { get; init; }
+
+    public AssignmentStatus Status { get; set; }
+
+    public string? DeclineReason { get; set; }
+
+    public DateTimeOffset OfferedAt { get; init; }
+
+    public DateTimeOffset? RespondedAt { get; set; }
+
+    /// <summary>When the admins were told the offer is still unanswered after 48 h (P1.2).</summary>
+    public DateTimeOffset? ReminderSentAt { get; set; }
+
+    public uint Version { get; private set; }
+}
+
 /// <summary>One row of the status history (docs/data-model.md, HISTORIAL_ESTADO).</summary>
 public sealed class JobStatusChange
 {

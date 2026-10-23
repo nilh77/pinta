@@ -17,4 +17,5 @@
   <data name="site_visit_future" xml:space="preserve"><value>Choose a future date.</value></data>
   <data name="transition_use_action" xml:space="preserve"><value>Use this state's own action.</value></data>
   <data name="scheduled_on" xml:space="preserve"><value>Enter the start date (today or later).</value></data>
+  <data name="painter_not_available" xml:space="preserve"><value>Choose an active painter who works in this municipality.</value></data>
 </root>

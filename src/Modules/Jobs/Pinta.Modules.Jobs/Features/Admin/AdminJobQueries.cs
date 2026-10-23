@@ -10,7 +10,9 @@ using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Jobs.Domain;
+using Pinta.Modules.Jobs.Features.Assignments;
 using Pinta.Modules.Jobs.Features.Shared;
+using Pinta.Modules.Painters.Contracts;
 using Pinta.Modules.Media.Contracts;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Quoting.Contracts;
@@ -105,6 +107,7 @@ public sealed record AdminJobDetail(
     IReadOnlyList<JobHistoryEntry> History,
     IReadOnlyList<SentEmail> Emails,
     IReadOnlyList<JobStatus> AllowedTransitions,
+    IReadOnlyList<AssignmentDto> Assignments,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt);
 
@@ -157,7 +160,8 @@ internal static class AdminJobQueries
     }
 
     private static async Task<Results<Ok<Paged<AdminJobListItem>>, ProblemHttpResult>> ListAsync(
-        [AsParameters] AdminJobsQuery query, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, CancellationToken cancellationToken)
+        [AsParameters] AdminJobsQuery query, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IPainterDirectory painters,
+        CancellationToken cancellationToken)
     {
         var (filtered, problem) = await FilterAsync(query, db, users, cancellationToken);
         if (problem is not null)
@@ -168,11 +172,12 @@ internal static class AdminJobQueries
         var (page, pageSize) = Paged<AdminJobListItem>.Normalize(query.Page, query.PageSize);
         var total = await filtered!.CountAsync(cancellationToken);
         var jobs = await filtered!.OrderByDescending(j => j.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
-        return TypedResults.Ok(new Paged<AdminJobListItem>(await ToListItemsAsync(jobs, quotes, users, cancellationToken), page, pageSize, total));
+        return TypedResults.Ok(new Paged<AdminJobListItem>(await ToListItemsAsync(jobs, db, quotes, users, painters, cancellationToken), page, pageSize, total));
     }
 
     private static async Task<Results<FileContentHttpResult, ProblemHttpResult>> ExportAsync(
-        [AsParameters] AdminJobsQuery query, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, CancellationToken cancellationToken)
+        [AsParameters] AdminJobsQuery query, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IPainterDirectory painters,
+        CancellationToken cancellationToken)
     {
         var (filtered, problem) = await FilterAsync(query, db, users, cancellationToken);
         if (problem is not null)
@@ -182,7 +187,7 @@ internal static class AdminJobQueries
 
         var jobs = await filtered!.OrderByDescending(j => j.UpdatedAt).Take(10_000).ToListAsync(cancellationToken);
         var csv = new StringBuilder("code,status,client,email,locality,municipality,total_eur,margin_eur,premium,created_at,updated_at\n");
-        foreach (var j in await ToListItemsAsync(jobs, quotes, users, cancellationToken))
+        foreach (var j in await ToListItemsAsync(jobs, db, quotes, users, painters, cancellationToken))
         {
             csv.AppendJoin(',',
                 j.Code, JsonNamingPolicy.SnakeCaseLower.ConvertName(j.Status.ToString()), Csv.Field(j.ClientName), Csv.Field(j.ClientEmail), Csv.Field(j.Locality),
@@ -250,23 +255,28 @@ internal static class AdminJobQueries
     }
 
     private static async Task<IReadOnlyList<AdminJobListItem>> ToListItemsAsync(
-        List<Job> jobs, IQuoteVersions quotes, IUserDirectory users, CancellationToken cancellationToken)
+        List<Job> jobs, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IPainterDirectory painters, CancellationToken cancellationToken)
     {
+        var jobIds = jobs.Select(j => j.Id).ToList();
+        var accepted = await db.Assignments.AsNoTracking()
+            .Where(a => jobIds.Contains(a.JobId) && (a.Status == AssignmentStatus.Accepted || a.Status == AssignmentStatus.Completed))
+            .ToListAsync(cancellationToken);
+        var painterNames = (await painters.FindManyAsync([.. accepted.Select(a => a.PainterId).Distinct()], cancellationToken)).ToDictionary(p => p.Id, p => p.Name);
+        var painterOf = accepted.GroupBy(a => a.JobId).ToDictionary(g => g.Key, g => painterNames.GetValueOrDefault(g.First().PainterId));
         var clients = (await users.FindManyAsync([.. jobs.Select(j => j.ClientId).Distinct()], cancellationToken)).ToDictionary(u => u.Id);
         var totals = (await quotes.GetTotalsAsync([.. jobs.Select(j => j.CurrentQuoteVersionId)], cancellationToken)).ToDictionary(t => t.VersionId);
         return jobs.Select(j =>
         {
             var client = clients.GetValueOrDefault(j.ClientId);
             var total = totals.GetValueOrDefault(j.CurrentQuoteVersionId);
-            // The painter arrives with assignments in H6.
             return new AdminJobListItem(j.Id, j.Code, j.Status, client?.Name ?? "", client?.Email ?? "", j.Locality, j.Municipality,
-                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, null, j.ScheduledOn, j.CreatedAt, j.UpdatedAt);
+                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, painterOf.GetValueOrDefault(j.Id), j.ScheduledOn, j.CreatedAt, j.UpdatedAt);
         }).ToList();
     }
 
     private static async Task<Results<Ok<AdminJobDetail>, ProblemHttpResult>> DetailAsync(
-        Guid id, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IMediaService media, IEmailLog emails, TimeProvider clock,
-        CancellationToken cancellationToken)
+        Guid id, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IMediaService media, IEmailLog emails, IPainterDirectory painters,
+        TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().Include(j => j.History).SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         var current = job is null ? null : await quotes.GetAdminAsync(job.CurrentQuoteVersionId, cancellationToken);
@@ -306,8 +316,17 @@ internal static class AdminJobQueries
                 new JobHistoryEntry(h.From, h.To, h.Actor, h.UserId is { } u ? people.GetValueOrDefault(u)?.Name : null, h.Reason, h.ChangedAt))],
             await emails.ListForJobAsync(job.Id, cancellationToken),
             AllowedTransitions(job.Status),
+            await AssignmentsAsync(job.Id, db, painters, cancellationToken),
             job.CreatedAt,
             job.UpdatedAt));
+    }
+
+    private static async Task<IReadOnlyList<AssignmentDto>> AssignmentsAsync(
+        Guid jobId, JobsDbContext db, IPainterDirectory painters, CancellationToken cancellationToken)
+    {
+        var assignments = await db.Assignments.AsNoTracking().Where(a => a.JobId == jobId).OrderBy(a => a.OfferedAt).ToListAsync(cancellationToken);
+        var names = (await painters.FindManyAsync([.. assignments.Select(a => a.PainterId).Distinct()], cancellationToken)).ToDictionary(p => p.Id, p => p.Name);
+        return [.. assignments.Select(a => AssignmentEndpoints.ToDto(a, names.GetValueOrDefault(a.PainterId) ?? ""))];
     }
 
     /// <summary>What the admin may move the job to (A3.3): only transitions of docs/states.md the admin performs.</summary>

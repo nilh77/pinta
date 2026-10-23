@@ -11,5 +11,9 @@ public sealed class WebLinks(IConfiguration configuration)
 
     public string AdminJob(Guid jobId, Locale locale) => $"{Web}/{Lang(locale)}/admin/trabajos/{jobId}";
 
+    public string PainterJob(Guid jobId, Locale locale) => $"{Web}/{Lang(locale)}/pintor/trabajos/{jobId}";
+
+    public string PainterHome(Locale locale) => $"{Web}/{Lang(locale)}/pintor";
+
     private static string Lang(Locale locale) => locale.ToString().ToLowerInvariant();
 }

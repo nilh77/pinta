@@ -1,4 +1,5 @@
 using Hangfire;
+using Pinta.Modules.Jobs.Features.Assignments;
 using Pinta.Modules.Jobs.Features.Expiry;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
@@ -42,6 +43,7 @@ public static class HangfireSetup
         var lisbon = new RecurringJobOptions { TimeZone = BusinessDays.Lisbon };
         jobs.AddOrUpdate<MediaCleanup>(MediaCleanup.JobId, cleanup => cleanup.RunAsync(), Cron.Daily(3), lisbon);
         jobs.AddOrUpdate<ExpireQuotes>(ExpireQuotes.JobId, expiry => expiry.RunAsync(), Cron.Daily(3), lisbon);
+        jobs.AddOrUpdate<OfferReminders>(OfferReminders.JobId, reminders => reminders.RunAsync(), Cron.Hourly(), lisbon);
     }
 
     public static IEndpointRouteBuilder MapHangfireAdminDashboard(this IEndpointRouteBuilder app)

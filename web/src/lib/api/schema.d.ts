@@ -884,6 +884,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/jobs/{id}/assignable-painters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListAssignablePainters"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/jobs/{id}/assignments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OfferJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/jobs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListPainterJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/assignments/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AcceptAssignment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/assignments/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["DeclineAssignment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/painters": {
         parameters: {
             query?: never;
@@ -1175,6 +1255,7 @@ export interface components {
             history: components["schemas"]["JobHistoryEntry"][];
             emails: components["schemas"]["SentEmail"][];
             allowedTransitions: components["schemas"]["JobStatus"][];
+            assignments: components["schemas"]["AssignmentDto"][];
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -1230,6 +1311,33 @@ export interface components {
         AntiforgeryTokenResponse: {
             token: string;
         };
+        AssignablePainter: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            phone: null | string;
+            /** Format: double */
+            rating: null | number;
+        };
+        AssignmentDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            painterId: string;
+            painterName: string;
+            /** Format: date */
+            scheduledOn: string;
+            status: components["schemas"]["AssignmentStatus"];
+            /** Format: int64 */
+            painterPayCents: number;
+            /** Format: date-time */
+            offeredAt: string;
+            /** Format: date-time */
+            respondedAt: null | string;
+            declineReason: null | string;
+        };
+        /** @enum {unknown} */
+        AssignmentStatus: "offered" | "accepted" | "declined" | "withdrawn" | "completed";
         AuthProvidersResponse: {
             google: boolean;
         };
@@ -1450,6 +1558,9 @@ export interface components {
             methods: components["schemas"]["PaymentMethod"][];
             mbWayLimitWarning: boolean;
         };
+        DeclineRequest: {
+            reason: string;
+        };
         DocumentUploadRequest: {
             contentType: string;
             /** Format: int64 */
@@ -1647,6 +1758,14 @@ export interface components {
         };
         /** @enum {unknown} */
         Occupancy: "empty" | "furnished" | "inhabited";
+        OfferJobRequest: {
+            /** Format: uuid */
+            painterId: string;
+            /** Format: date */
+            scheduledOn: string;
+            /** Format: uint32 */
+            version: null | number;
+        };
         PagedOfAdminJobListItem: {
             items: components["schemas"]["AdminJobListItem"][];
             /** Format: int32 */
@@ -1700,6 +1819,7 @@ export interface components {
             status: components["schemas"]["PainterStatus"];
             signedUp: boolean;
             documents: components["schemas"]["PainterDocumentDto"][];
+            jobs: components["schemas"]["PainterJob"][];
             /** Format: uint32 */
             version: number;
             /** Format: date-time */
@@ -1716,6 +1836,42 @@ export interface components {
         };
         /** @enum {unknown} */
         PainterDocumentKind: "insurance" | "activity" | "contract" | "other";
+        PainterJob: {
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            status: components["schemas"]["JobStatus"];
+            assignment: components["schemas"]["AssignmentStatus"];
+            /** Format: date */
+            scheduledOn: string;
+            /** Format: int64 */
+            painterPayCents: number;
+        };
+        PainterJobItem: {
+            /** Format: uuid */
+            assignmentId: string;
+            /** Format: uuid */
+            jobId: string;
+            code: string;
+            jobStatus: components["schemas"]["JobStatus"];
+            status: components["schemas"]["AssignmentStatus"];
+            municipality: string;
+            locality: string;
+            /** Format: date */
+            scheduledOn: string;
+            /** Format: double */
+            areaM2: number;
+            /** Format: int64 */
+            painterPayCents: number;
+            /** Format: date-time */
+            offeredAt: string;
+        };
+        PainterJobs: {
+            offers: components["schemas"]["PainterJobItem"][];
+            upcoming: components["schemas"]["PainterJobItem"][];
+            inProgress: components["schemas"]["PainterJobItem"][];
+            done: components["schemas"]["PainterJobItem"][];
+        };
         PainterListItem: {
             /** Format: uuid */
             id: string;
@@ -1727,6 +1883,8 @@ export interface components {
             specialties: string[];
             /** Format: double */
             rating: null | number;
+            /** Format: int32 */
+            jobsDone: number;
             /** Format: date-time */
             createdAt: string;
         };
@@ -4504,6 +4662,190 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["AdminCancelRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListAssignablePainters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssignablePainter"][];
+                };
+            };
+        };
+    };
+    OfferJob: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OfferJobRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssignmentDto"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ListPainterJobs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PainterJobs"];
+                };
+            };
+        };
+    };
+    AcceptAssignment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    DeclineAssignment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeclineRequest"];
             };
         };
         responses: {

@@ -69,4 +69,18 @@
   <data name="PainterInvitation.Body" xml:space="preserve"><value>El equipo de Pinta te ha invitado a la red de pintores. Elige tu contraseña y confirma tus datos.</value></data>
   <data name="PainterInvitation.Validity" xml:space="preserve"><value>El enlace es válido durante 72 horas.</value></data>
   <data name="PainterInvitation.Button" xml:space="preserve"><value>Crear mi cuenta</value></data>
+  <data name="AssignmentOffered.Subject" xml:space="preserve"><value>Nuevo trabajo para ti: {0}</value></data>
+  <data name="AssignmentOffered.Body" xml:space="preserve"><value>Pinta te ofrece este trabajo. Acéptalo o recházalo en tu área.</value></data>
+  <data name="AssignmentOffered.Where" xml:space="preserve"><value>Concelho</value></data>
+  <data name="AssignmentOffered.When" xml:space="preserve"><value>Inicio</value></data>
+  <data name="AssignmentOffered.Pay" xml:space="preserve"><value>Tu pago</value></data>
+  <data name="AssignmentOffered.Button" xml:space="preserve"><value>Ver el trabajo</value></data>
+  <data name="AssignmentDeclined.Subject" xml:space="preserve"><value>El pintor rechazó la solicitud {0}</value></data>
+  <data name="AssignmentDeclined.Body" xml:space="preserve"><value>{0} rechazó la oferta. Motivo:</value></data>
+  <data name="AssignmentUnanswered.Subject" xml:space="preserve"><value>Oferta sin respuesta en la solicitud {0}</value></data>
+  <data name="AssignmentUnanswered.Body" xml:space="preserve"><value>{0} lleva 48 horas sin responder a la oferta. Puedes ofrecerla a otro pintor.</value></data>
+  <data name="JobScheduled.Subject" xml:space="preserve"><value>Tu trabajo {0} está programado</value></data>
+  <data name="JobScheduled.Body" xml:space="preserve"><value>Ya tenemos pintor y fecha para tu trabajo.</value></data>
+  <data name="JobScheduled.Painter" xml:space="preserve"><value>Pintor</value></data>
+  <data name="JobScheduled.Start" xml:space="preserve"><value>Inicio</value></data>
 </root>

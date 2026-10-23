@@ -17,4 +17,5 @@
   <data name="site_visit_future" xml:space="preserve"><value>Elige una fecha futura.</value></data>
   <data name="transition_use_action" xml:space="preserve"><value>Usa la acción propia de este estado.</value></data>
   <data name="scheduled_on" xml:space="preserve"><value>Indica la fecha de inicio (hoy o después).</value></data>
+  <data name="painter_not_available" xml:space="preserve"><value>Elige un pintor activo que trabaje en este concelho.</value></data>
 </root>

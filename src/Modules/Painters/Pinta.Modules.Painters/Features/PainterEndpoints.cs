@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Pinta.Modules.Catalog.Contracts;
 using Pinta.Modules.Identity.Contracts;
+using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Media.Contracts;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Painters.Contracts;
@@ -19,7 +20,7 @@ namespace Pinta.Modules.Painters.Features;
 
 public sealed record PainterListItem(
     Guid Id, string Name, string Email, string? Phone, PainterStatus Status, IReadOnlyList<string> Municipalities,
-    IReadOnlyList<string> Specialties, decimal? Rating, DateTimeOffset CreatedAt);
+    IReadOnlyList<string> Specialties, decimal? Rating, int JobsDone, DateTimeOffset CreatedAt);
 
 public sealed record PainterDocumentDto(Guid Id, PainterDocumentKind Kind, DateOnly? ExpiresOn, bool Expired, StoredFile? File);
 
@@ -39,6 +40,7 @@ public sealed record PainterDetail(
     PainterStatus Status,
     bool SignedUp,
     IReadOnlyList<PainterDocumentDto> Documents,
+    IReadOnlyList<PainterJob> Jobs,
     uint Version,
     DateTimeOffset CreatedAt);
 
@@ -148,13 +150,21 @@ internal static class PainterEndpoints
         painter.MapPut("/me", UpdateMeAsync).WithValidation<UpdateProfileRequest>().WithName("UpdatePainterProfile");
     }
 
-    private static async Task<Ok<IReadOnlyList<PainterListItem>>> ListAsync(PaintersDbContext db, CancellationToken cancellationToken) =>
-        TypedResults.Ok<IReadOnlyList<PainterListItem>>([.. (await db.Painters.AsNoTracking().OrderBy(p => p.Name).ToListAsync(cancellationToken))
-            .Select(p => new PainterListItem(p.Id, p.Name, p.Email, p.Phone, p.Status, p.Municipalities, p.Specialties, p.Rating, p.CreatedAt))]);
+    private static async Task<Ok<IReadOnlyList<PainterListItem>>> ListAsync(PaintersDbContext db, IPainterWork work, CancellationToken cancellationToken)
+    {
+        var items = new List<PainterListItem>();
+        foreach (var p in await db.Painters.AsNoTracking().OrderBy(p => p.Name).ToListAsync(cancellationToken))
+        {
+            var done = (await work.ForPainterAsync(p.Id, cancellationToken)).Count(j => j.Status is JobStatus.Finished or JobStatus.Closed);
+            items.Add(new PainterListItem(p.Id, p.Name, p.Email, p.Phone, p.Status, p.Municipalities, p.Specialties, p.Rating, done, p.CreatedAt));
+        }
+
+        return TypedResults.Ok<IReadOnlyList<PainterListItem>>(items);
+    }
 
     private static async Task<Results<Created<PainterDetail>, ProblemHttpResult>> CreateAsync(
         CreatePainterRequest request, HttpContext http, PaintersDbContext db, IPainterAccounts accounts, ICoverageService coverage, IbanProtector protector,
-        IEmailQueue emails, IMediaService media, TimeProvider clock, CancellationToken cancellationToken)
+        IEmailQueue emails, IMediaService media, IPainterWork work, TimeProvider clock, CancellationToken cancellationToken)
     {
         var municipalities = (request.Municipalities ?? []).Distinct().ToList();
         if (await UnknownMunicipalitiesAsync(municipalities, coverage, cancellationToken) is { } problem)
@@ -188,19 +198,19 @@ internal static class PainterEndpoints
         await db.SaveChangesAsync(cancellationToken);
 
         await emails.EnqueueAsync(new PainterInvitationEmail(email, locale, painter.Name, await accounts.InvitationLinkAsync(userId.Value, cancellationToken)), cancellationToken);
-        return TypedResults.Created($"/api/admin/painters/{painter.Id}", await ToDetailAsync(painter, accounts, media, clock, cancellationToken));
+        return TypedResults.Created($"/api/admin/painters/{painter.Id}", await ToDetailAsync(painter, accounts, media, work, clock, cancellationToken));
     }
 
     private static async Task<Results<Ok<PainterDetail>, ProblemHttpResult>> DetailAsync(
-        Guid id, PaintersDbContext db, IPainterAccounts accounts, IMediaService media, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, PaintersDbContext db, IPainterAccounts accounts, IMediaService media, IPainterWork work, TimeProvider clock, CancellationToken cancellationToken)
     {
         var painter = await db.Painters.AsNoTracking().Include(p => p.Documents).SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
-        return painter is null ? NotFound() : TypedResults.Ok(await ToDetailAsync(painter, accounts, media, clock, cancellationToken));
+        return painter is null ? NotFound() : TypedResults.Ok(await ToDetailAsync(painter, accounts, media, work, clock, cancellationToken));
     }
 
     private static async Task<Results<Ok<PainterDetail>, ProblemHttpResult>> UpdateAsync(
         Guid id, UpdatePainterRequest request, HttpContext http, PaintersDbContext db, IPainterAccounts accounts, ICoverageService coverage,
-        IbanProtector protector, IMediaService media, TimeProvider clock, CancellationToken cancellationToken)
+        IbanProtector protector, IMediaService media, IPainterWork work, TimeProvider clock, CancellationToken cancellationToken)
     {
         var painter = await db.Painters.Include(p => p.Documents).SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
         if (painter is null)
@@ -233,7 +243,7 @@ internal static class PainterEndpoints
         }
 
         await accounts.UpdateContactAsync(painter.UserId, painter.Name, painter.Phone, cancellationToken);
-        return TypedResults.Ok(await ToDetailAsync(painter, accounts, media, clock, cancellationToken));
+        return TypedResults.Ok(await ToDetailAsync(painter, accounts, media, work, clock, cancellationToken));
     }
 
     /// <summary>Sends the invitation again (A4.2) while the painter has not signed up.</summary>
@@ -397,14 +407,15 @@ internal static class PainterEndpoints
     }
 
     private static async Task<PainterDetail> ToDetailAsync(
-        Painter p, IPainterAccounts accounts, IMediaService media, TimeProvider clock, CancellationToken cancellationToken)
+        Painter p, IPainterAccounts accounts, IMediaService media, IPainterWork work, TimeProvider clock, CancellationToken cancellationToken)
     {
         var files = (await media.FindAsync([.. p.Documents.Select(d => d.FileId)], cancellationToken)).ToDictionary(f => f.Id);
         var today = BusinessDays.Today(clock);
         return new PainterDetail(
             p.Id, p.UserId, p.Name, p.Email, p.Phone, p.TaxId, p.Specialties, p.Municipalities,
             p.IbanLast4 is null ? null : Iban.Mask(p.IbanLast4), p.Notes, p.Rating, p.Status, await accounts.HasSignedUpAsync(p.UserId, cancellationToken),
-            [.. p.Documents.OrderBy(d => d.CreatedAt).Select(d => ToDto(d, files.GetValueOrDefault(d.FileId), today))], p.Version, p.CreatedAt);
+            [.. p.Documents.OrderBy(d => d.CreatedAt).Select(d => ToDto(d, files.GetValueOrDefault(d.FileId), today))],
+            await work.ForPainterAsync(p.Id, cancellationToken), p.Version, p.CreatedAt);
     }
 
     private static PainterDocumentDto ToDto(PainterDocument d, StoredFile? file, DateOnly today) =>

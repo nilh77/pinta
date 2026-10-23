@@ -41,7 +41,8 @@ public static class JobStateMachine
         (JobStatus.Quoted, JobStatus.DepositPaid, [JobActor.System]),
         (JobStatus.Quoted, JobStatus.Expired, [JobActor.System]),
         (JobStatus.Expired, JobStatus.InReview, [JobActor.Client]),
-        (JobStatus.DepositPaid, JobStatus.Scheduled, [JobActor.Admin]),
+        // The painter accepting the offer, or the admin by hand with a date.
+        (JobStatus.DepositPaid, JobStatus.Scheduled, [JobActor.Admin, JobActor.Painter]),
         (JobStatus.Scheduled, JobStatus.InProgress, [JobActor.Painter]),
         (JobStatus.InProgress, JobStatus.Finished, [JobActor.Painter]),
         (JobStatus.Finished, JobStatus.Closed, [JobActor.System]),

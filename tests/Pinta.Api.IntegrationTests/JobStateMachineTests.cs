@@ -19,6 +19,7 @@ public class JobStateMachineTests
         { JobStatus.Quoted, JobStatus.Expired, JobActor.System },
         { JobStatus.Expired, JobStatus.InReview, JobActor.Client },
         { JobStatus.DepositPaid, JobStatus.Scheduled, JobActor.Admin },
+        { JobStatus.DepositPaid, JobStatus.Scheduled, JobActor.Painter },
         { JobStatus.Scheduled, JobStatus.InProgress, JobActor.Painter },
         { JobStatus.InProgress, JobStatus.Finished, JobActor.Painter },
         { JobStatus.Finished, JobStatus.Closed, JobActor.System },
@@ -36,6 +37,7 @@ public class JobStateMachineTests
         { JobStatus.Finished, JobStatus.Cancelled, JobActor.Admin },
         { JobStatus.Rejected, JobStatus.InReview, JobActor.Client },
         { JobStatus.Closed, JobStatus.InReview, JobActor.Admin },
+        { JobStatus.Quoted, JobStatus.Scheduled, JobActor.Painter },
     };
 
     [Theory]

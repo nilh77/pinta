@@ -2846,6 +2846,239 @@
         }
       }
     },
+    "/api/admin/jobs/{id}/assignable-painters": {
+      "get": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "ListAssignablePainters",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AssignablePainter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/jobs/{id}/assignments": {
+      "post": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "OfferJob",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OfferJobRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssignmentDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs": {
+      "get": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "ListPainterJobs",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PainterJobs"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/assignments/{id}/accept": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "AcceptAssignment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/assignments/{id}/decline": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "DeclineAssignment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeclineRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/painters": {
       "get": {
         "tags": [
@@ -3815,6 +4048,7 @@
           "history",
           "emails",
           "allowedTransitions",
+          "assignments",
           "createdAt",
           "updatedAt"
         ],
@@ -3946,6 +4180,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/JobStatus"
+            }
+          },
+          "assignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssignmentDto"
             }
           },
           "createdAt": {
@@ -4145,6 +4385,101 @@
             "type": "string"
           }
         }
+      },
+      "AssignablePainter": {
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "rating"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "rating": {
+            "type": [
+              "null",
+              "number"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "AssignmentDto": {
+        "required": [
+          "id",
+          "painterId",
+          "painterName",
+          "scheduledOn",
+          "status",
+          "painterPayCents",
+          "offeredAt",
+          "respondedAt",
+          "declineReason"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "painterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "painterName": {
+            "type": "string"
+          },
+          "scheduledOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AssignmentStatus"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "offeredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "respondedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "declineReason": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "AssignmentStatus": {
+        "enum": [
+          "offered",
+          "accepted",
+          "declined",
+          "withdrawn",
+          "completed"
+        ]
       },
       "AuthProvidersResponse": {
         "required": [
@@ -5002,6 +5337,17 @@
           }
         }
       },
+      "DeclineRequest": {
+        "required": [
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
       "DocumentUploadRequest": {
         "required": [
           "contentType",
@@ -5756,6 +6102,31 @@
           "inhabited"
         ]
       },
+      "OfferJobRequest": {
+        "required": [
+          "painterId",
+          "scheduledOn",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "painterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scheduledOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "version": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "uint32"
+          }
+        }
+      },
       "PagedOfAdminJobListItem": {
         "required": [
           "items",
@@ -5879,6 +6250,7 @@
           "status",
           "signedUp",
           "documents",
+          "jobs",
           "version",
           "createdAt"
         ],
@@ -5953,6 +6325,12 @@
               "$ref": "#/components/schemas/PainterDocumentDto"
             }
           },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterJob"
+            }
+          },
           "version": {
             "type": "integer",
             "format": "uint32"
@@ -6010,6 +6388,132 @@
           "other"
         ]
       },
+      "PainterJob": {
+        "required": [
+          "jobId",
+          "code",
+          "status",
+          "assignment",
+          "scheduledOn",
+          "painterPayCents"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "assignment": {
+            "$ref": "#/components/schemas/AssignmentStatus"
+          },
+          "scheduledOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PainterJobItem": {
+        "required": [
+          "assignmentId",
+          "jobId",
+          "code",
+          "jobStatus",
+          "status",
+          "municipality",
+          "locality",
+          "scheduledOn",
+          "areaM2",
+          "painterPayCents",
+          "offeredAt"
+        ],
+        "type": "object",
+        "properties": {
+          "assignmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "jobStatus": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AssignmentStatus"
+          },
+          "municipality": {
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "scheduledOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "areaM2": {
+            "type": "number",
+            "format": "double"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "offeredAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PainterJobs": {
+        "required": [
+          "offers",
+          "upcoming",
+          "inProgress",
+          "done"
+        ],
+        "type": "object",
+        "properties": {
+          "offers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterJobItem"
+            }
+          },
+          "upcoming": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterJobItem"
+            }
+          },
+          "inProgress": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterJobItem"
+            }
+          },
+          "done": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterJobItem"
+            }
+          }
+        }
+      },
       "PainterListItem": {
         "required": [
           "id",
@@ -6020,6 +6524,7 @@
           "municipalities",
           "specialties",
           "rating",
+          "jobsDone",
           "createdAt"
         ],
         "type": "object",
@@ -6061,6 +6566,10 @@
               "number"
             ],
             "format": "double"
+          },
+          "jobsDone": {
+            "type": "integer",
+            "format": "int32"
           },
           "createdAt": {
             "type": "string",
@@ -8112,10 +8621,10 @@
       "name": "Jobs"
     },
     {
-      "name": "Admin painters"
+      "name": "Painter"
     },
     {
-      "name": "Painter"
+      "name": "Admin painters"
     },
     {
       "name": "Media"

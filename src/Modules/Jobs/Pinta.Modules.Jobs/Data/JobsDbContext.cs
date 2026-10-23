@@ -10,6 +10,8 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
 
     public DbSet<Job> Jobs => Set<Job>();
 
+    public DbSet<Assignment> Assignments => Set<Assignment>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
@@ -46,6 +48,17 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             change.Property(c => c.To).HasSnakeCaseConversion(20);
             change.Property(c => c.Actor).HasSnakeCaseConversion(10);
             change.Property(c => c.Reason).HasMaxLength(500);
+        });
+        modelBuilder.Entity<Assignment>(assignment =>
+        {
+            assignment.ToTable("assignments");
+            assignment.HasIndex(a => new { a.JobId, a.Status });
+            assignment.HasIndex(a => new { a.PainterId, a.Status });
+            assignment.Property(a => a.Status).HasSnakeCaseConversion(20);
+            assignment.Property(a => a.PainterPay).HasPrecision(12, 2);
+            assignment.Property(a => a.DeclineReason).HasMaxLength(500);
+            assignment.Property(a => a.Version).IsRowVersion();
+            assignment.HasOne<Job>().WithMany().HasForeignKey(a => a.JobId);
         });
         modelBuilder.Entity<JobCodeCounter>(counter =>
         {

@@ -10,6 +10,7 @@ using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Payments.Contracts;
 using Pinta.Modules.Jobs.Features.Access;
 using Pinta.Modules.Jobs.Features.Admin;
+using Pinta.Modules.Jobs.Features.Assignments;
 using Pinta.Modules.Jobs.Features.Client;
 using Pinta.Modules.Jobs.Features.Expiry;
 using Pinta.Modules.Jobs.Features.Payments;
@@ -32,6 +33,8 @@ public static class JobsModule
         builder.Services.AddScoped<IJobAccess, JobAccess>();
         builder.Services.AddScoped<IPayableJobs, PayableJobs>();
         builder.Services.AddScoped<JobCancellation>();
+        builder.Services.AddScoped<OfferReminders>();
+        builder.Services.AddScoped<IPainterWork, PainterWork>();
         builder.Services.AddEventHandler<PaymentSucceeded, MoveJobWhenPaid>();
         builder.Services.TryAddSingleton<WebLinks>();
         builder.Services.AddScoped<ExpireQuotes>();
@@ -48,6 +51,7 @@ public static class JobsModule
             .RequireAuthorization(policy => policy.RequireRole(RoleNames.Admin));
         AdminJobQueries.Map(admin);
         AdminJobCommands.Map(admin);
+        AssignmentEndpoints.Map(app);
         return app;
     }
 }

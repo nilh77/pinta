@@ -39,6 +39,71 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                     b.ToTable("code_counters", "jobs");
                 });
 
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.Assignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("DeclineReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("decline_reason");
+
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<DateTimeOffset>("OfferedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("offered_at");
+
+                    b.Property<Guid>("PainterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("painter_id");
+
+                    b.Property<decimal>("PainterPay")
+                        .HasPrecision(12, 2)
+                        .HasColumnType("numeric(12,2)")
+                        .HasColumnName("painter_pay");
+
+                    b.Property<DateTimeOffset?>("ReminderSentAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reminder_sent_at");
+
+                    b.Property<DateTimeOffset?>("RespondedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("responded_at");
+
+                    b.Property<DateOnly>("ScheduledOn")
+                        .HasColumnType("date")
+                        .HasColumnName("scheduled_on");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_assignments");
+
+                    b.HasIndex("JobId", "Status")
+                        .HasDatabaseName("ix_assignments_job_id_status");
+
+                    b.HasIndex("PainterId", "Status")
+                        .HasDatabaseName("ix_assignments_painter_id_status");
+
+                    b.ToTable("assignments", "jobs");
+                });
+
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.Job", b =>
                 {
                     b.Property<Guid>("Id")
@@ -237,6 +302,16 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .HasDatabaseName("ix_status_history_job_id");
 
                     b.ToTable("status_history", "jobs");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.Assignment", b =>
+                {
+                    b.HasOne("Pinta.Modules.Jobs.Domain.Job", null)
+                        .WithMany()
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_assignments_jobs_job_id");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobStatusChange", b =>
