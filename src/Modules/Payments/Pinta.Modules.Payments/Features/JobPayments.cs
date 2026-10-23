@@ -16,6 +16,9 @@ internal sealed class JobPayments(PaymentsDbContext db) : IJobPayments
         return Money.ToCents(deposits.Sum(p => p.Amount - p.Refunded));
     }
 
+    // Refunds count from the moment they are decided, so after a cancellation the deposit held is what Pinta keeps.
+    public Task<long> DepositRetainedCentsAsync(Guid jobId, CancellationToken cancellationToken = default) => DepositHeldCentsAsync(jobId, cancellationToken);
+
     public async Task<long> SiteVisitPaidCentsAsync(Guid jobId, CancellationToken cancellationToken = default) =>
         Money.ToCents(await db.Payments.AsNoTracking()
             .Where(p => p.JobId == jobId && p.Type == PaymentType.SiteVisit && p.Status == PaymentStatus.Succeeded)

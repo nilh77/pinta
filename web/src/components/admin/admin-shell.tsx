@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardCheck, LayoutList, Loader2, MapPinned, PaintRoller, Tags } from "lucide-react";
+import { ClipboardCheck, LayoutList, Loader2, MapPinned, PaintRoller, Settings, Tags, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
@@ -15,6 +15,8 @@ const SECTIONS = [
   { href: "/admin/precios", key: "pricing", icon: Tags },
   { href: "/admin/pintores", key: "painters", icon: PaintRoller },
   { href: "/admin/cobertura", key: "coverage", icon: MapPinned },
+  { href: "/admin/finanzas", key: "finance", icon: Wallet },
+  { href: "/admin/ajustes", key: "settings", icon: Settings },
 ] as const;
 
 /** Admin area: only for the admin role. Without a session it goes to sign-in and back; other roles see a 403 page. */

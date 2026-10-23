@@ -18,6 +18,7 @@ public static class PaintersModule
         builder.Services.AddModuleDbContext<PaintersDbContext>(PaintersDbContext.Schema);
         builder.Services.AddSingleton<IbanProtector>();
         builder.Services.AddScoped<IPainterDirectory, PainterDirectory>();
+        builder.Services.AddScoped<PainterDocumentAlerts>();
         builder.Services.AddEventHandler<PainterSignedUp, ActivateOnSignUp>();
         builder.Services.AddValidatorsFromAssemblyContaining<CreatePainterRequest>(includeInternalTypes: true);
         return builder;

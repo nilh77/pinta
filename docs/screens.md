@@ -140,10 +140,10 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
   - `quoted`: precio cerrado frente a estimación; desglose para el cliente como en el board Trabajo y el documento 6.3: una línea «Pintura de N elementos · m²» y una por partida extra, con IVA incluido, más total, señal y resto (nunca material desglosado, tarifas, pago al pintor ni margen); validez con cuenta atrás y notas del revisor.
   - `deposit_paid` y `scheduled`: fecha, pintor asignado (nombre, foto y teléfono si el ajuste lo permite) y saldo pendiente.
   - `in_progress`: fotos de avance.
-  - `finished`: fotos del resultado, pago del saldo y valoración.
+  - `finished`: fotos del resultado y pago del saldo.
   - `expired`, `rejected` y `cancelled`: motivo y reembolso si lo hay.
-- **Acciones**: «Pagar señal» → pantalla 11 (llega en H5); «Tengo dudas» (mensaje al admin por email, sin cambiar el estado, como C5.2; no hay «Pedir cambios» porque `docs/states.md` no permite volver de «Precio confirmado» a «En revisión»); «Rechazar precio» con motivo opcional (pasa a «Cancelado»); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); «Valorar» (1 a 5 estrellas y comentario) una vez terminado; descargar factura.
-- **Validaciones**: la cancelación exige confirmación escribiendo el código o marcando una casilla; valoración con estrellas obligatorias y comentario opcional de hasta 500 caracteres.
+- **Acciones**: «Pagar señal» → pantalla 11 (llega en H5); «Tengo dudas» (mensaje al admin por email, sin cambiar el estado, como C5.2; no hay «Pedir cambios» porque `docs/states.md` no permite volver de «Precio confirmado» a «En revisión»); «Rechazar precio» con motivo opcional (pasa a «Cancelado»); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); descargar el justificante. Las valoraciones del cliente quedan fuera del MVP (`docs/prd-overview.md`).
+- **Validaciones**: la cancelación exige confirmación escribiendo el código o marcando una casilla;
 - **Estados**: `quote_expired` → «El precio caducó» con «Pedir revisión de nuevo». Se refresca cada 30 s mientras esté en primer plano en estados que esperan al admin.
 
 ### 11 · Pago
@@ -157,8 +157,8 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
 ### 12 · Cuenta del cliente
 
 - **Ruta y board**: `/{locale}/cuenta` · Perfil.dc.html. \[C1.1, C4.3\]
-- **Datos**: `GET /api/me`: nombre, email (con estado de confirmación), teléfono, NIF, razón social, idioma y consentimiento de marketing.
-- **Acciones**: editar (`PUT /api/me`), cambiar contraseña, cambiar idioma (cambia también el de los emails), cerrar sesión y solicitar el borrado de la cuenta (lo gestiona el admin; RGPD).
+- **Datos**: `GET /api/me`: nombre, email (con estado de confirmación), teléfono, NIF y razón social por defecto (se proponen al pedir factura), idioma y consentimiento de marketing.
+- **Acciones**: editar (`PUT /api/me`), cambiar contraseña (`POST /api/me/password`), cambiar idioma (cambia también el de los emails), cerrar sesión y solicitar el borrado de la cuenta (`POST /api/me/delete-request`; lo ejecuta el admin desde Ajustes; RGPD).
 - **Validaciones**: las mismas que en la pantalla 7. Cambiar el email exige confirmarlo de nuevo.
 
 ## Pintor
@@ -246,14 +246,14 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### Finanzas (no dibujado)
 
 - **Ruta**: `/{locale}/admin/finanzas`. \[A5.1–A5.4\]
-- **Datos**: por mes: cobrado, IVA, material, pagos a pintores, comisiones de Stripe, costes operativos por categoría, beneficio y reparto 50/50 entre socios. Lista de pagos a pintores pendientes.
-- **Acciones**: añadir costes operativos (categoría cerrada, importe y nota); marcar un pago a pintor como hecho (fecha y referencia); cerrar el mes (`CIERRE_MENSUAL`, congela el reparto; exige confirmación); exportar CSV.
-- **Validaciones**: un mes cerrado no admite cambios (`period_closed`).
+- **Datos**: `GET /api/admin/finance/summary?month=`: ingresos sin IVA (trabajos cerrados en el mes y señales retenidas de cancelaciones), IVA, material, pagos a pintores (el importe real del pago si existe), margen bruto y %, costes operativos por categoría (las comisiones de Stripe son costes de «comisiones de pago»), beneficio y la mitad de cada socio. Trabajos del mes y lista de pagos a pintores pendientes.
+- **Acciones**: añadir, editar y borrar costes operativos (categoría cerrada, fecha, importe y descripción); marcar un pago a pintor como hecho (fecha y referencia; el pintor lo ve en P4); cerrar un mes ya terminado (`CIERRE_MENSUAL`, congela las cifras; exige confirmación); exportar CSV.
+- **Validaciones**: un mes cerrado no admite cambios de costes (`period_closed`); el mes en curso no se puede cerrar. Marcar pagos a pintores sigue permitido (es caja, no reparto).
 
 ### Ajustes (no dibujado)
 
 - **Ruta**: `/{locale}/admin/ajustes`.
-- **Datos y acciones**: datos de la empresa para facturas, teléfono del cliente visible al pintor (sí o no), plazo de revisión, días de antelación mínimos, plantillas de email por idioma (solo lectura en el MVP) y, solo en demo, «Restablecer datos de demo».
+- **Datos y acciones**: desde H7, la cola de «Supresión de cuentas» (C5.8): clientes que la pidieron, con «Anonimizar» y una confirmación que lista los trabajos que se cancelarán y sus reembolsos. Más adelante: datos de la empresa para facturas, teléfono del cliente visible al pintor (sí o no), plazo de revisión, días de antelación mínimos, plantillas de email por idioma (solo lectura en el MVP) y, solo en demo, «Restablecer datos de demo».
 
 ## Escritorio, componentes y estados globales
 

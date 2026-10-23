@@ -1,4 +1,4 @@
-using System.Globalization;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Pinta.Modules.Finance.Contracts;
 using Pinta.Modules.Finance.Data;
 using Pinta.Modules.Finance.Domain;
+using Pinta.Modules.Finance.Resources;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Painters.Contracts;
@@ -22,13 +23,21 @@ public sealed record PayoutDto(
     Guid Id, Guid PainterId, Guid JobId, string Code, long AmountCents, PayoutStatus Status, DateTimeOffset CreatedAt, DateTimeOffset? PaidAt,
     string? Reference);
 
+/// <summary>A5.4: the transfer was made on <see cref="PaidOn"/> (today or before) with this <see cref="Reference"/>.</summary>
+public sealed record MarkPaidRequest(DateOnly PaidOn, string Reference);
+
+internal sealed class MarkPaidRequestValidator : AbstractValidator<MarkPaidRequest>
+{
+    public MarkPaidRequestValidator() => RuleFor(r => r.Reference).NotEmpty().MaximumLength(100);
+}
+
 /// <summary>
 /// P4.1: <see cref="PendingCents"/> is everything still owed; <see cref="PaidCents"/> what was paid in <see cref="Month"/>.
 /// <see cref="Items"/> holds the pending payouts and the ones paid that month.
 /// </summary>
 public sealed record PainterPayouts(string Month, long PendingCents, long PaidCents, IReadOnlyList<PayoutDto> Items);
 
-/// <summary>GET /api/painter/payouts (P4.1) and the admin's read-only list (A5.4; marking paid arrives in H7).</summary>
+/// <summary>GET /api/painter/payouts (P4.1), the admin's list and «marcar como pagado» (A5.4).</summary>
 internal static class PayoutEndpoints
 {
     public static void Map(IEndpointRouteBuilder app)
@@ -36,22 +45,18 @@ internal static class PayoutEndpoints
         app.MapGroup("/api/painter/payouts").WithTags("Painter")
             .RequireAuthorization(policy => policy.RequireRole(RoleNames.Painter))
             .MapGet("", PainterAsync).WithName("ListMyPayouts").ProducesProblem(StatusCodes.Status404NotFound);
-        app.MapGroup("/api/admin/payouts").WithTags("Admin finance")
-            .RequireAuthorization(policy => policy.RequireRole(RoleNames.Admin))
-            .MapGet("", AdminAsync).WithName("ListPayouts");
+        var admin = app.MapGroup("/api/admin/payouts").WithTags("Admin finance")
+            .RequireAuthorization(policy => policy.RequireRole(RoleNames.Admin));
+        admin.MapGet("", AdminAsync).WithName("ListPayouts");
+        admin.MapPost("/{id:guid}/mark-paid", MarkPaidAsync).WithValidation<MarkPaidRequest>().WithName("MarkPayoutPaid")
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
     }
 
     /// <param name="month"><c>YYYY-MM</c>; the current month in Lisbon when left out.</param>
     private static async Task<Results<Ok<PainterPayouts>, ProblemHttpResult>> PainterAsync(
         string? month, HttpContext http, FinanceDbContext db, IPainterDirectory painters, TimeProvider clock, CancellationToken cancellationToken)
     {
-        DateOnly first;
-        if (month is null)
-        {
-            var today = BusinessDays.Today(clock);
-            first = new DateOnly(today.Year, today.Month, 1);
-        }
-        else if (!DateOnly.TryParseExact($"{month}-01", "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out first))
+        if (!Months.TryParse(month, clock, out var first))
         {
             return ApiProblem.Validation(new Dictionary<string, string[]> { ["month"] = ["Use YYYY-MM."] });
         }
@@ -62,15 +67,14 @@ internal static class PayoutEndpoints
             return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);
         }
 
-        var from = LisbonStart(first);
-        var to = LisbonStart(first.AddMonths(1));
+        var (from, to) = Months.Bounds(first);
         var items = await db.PainterPayouts.AsNoTracking()
             .Where(p => p.PainterId == painter.Id
                 && (p.Status == PayoutStatus.Pending || (p.Status == PayoutStatus.Paid && p.PaidAt >= from && p.PaidAt < to)))
             .OrderBy(p => p.Status).ThenByDescending(p => p.CreatedAt)
             .ToListAsync(cancellationToken);
         return TypedResults.Ok(new PainterPayouts(
-            first.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+            Months.Format(first),
             items.Where(p => p.Status == PayoutStatus.Pending).Sum(p => Money.ToCents(p.Amount)),
             items.Where(p => p.Status == PayoutStatus.Paid).Sum(p => Money.ToCents(p.Amount)),
             [.. items.Select(ToDto)]));
@@ -93,13 +97,47 @@ internal static class PayoutEndpoints
         return TypedResults.Ok<IReadOnlyList<PayoutDto>>([.. (await query.OrderByDescending(p => p.CreatedAt).ToListAsync(cancellationToken)).Select(ToDto)]);
     }
 
-    private static DateTimeOffset LisbonStart(DateOnly day)
+    /// <summary>
+    /// A5.4: cash paid, so it stays allowed after the month is closed; the painter sees it paid in P4. Paid once: a second
+    /// mark is <c>invalid_transition</c>.
+    /// </summary>
+    private static async Task<Results<Ok<PayoutDto>, ProblemHttpResult>> MarkPaidAsync(
+        Guid id, MarkPaidRequest request, FinanceDbContext db, TimeProvider clock, CancellationToken cancellationToken)
     {
-        var local = day.ToDateTime(TimeOnly.MinValue);
-        return new DateTimeOffset(local, BusinessDays.Lisbon.GetUtcOffset(local)).ToUniversalTime();
+        var payout = await db.PainterPayouts.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+        if (payout is null)
+        {
+            return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);
+        }
+
+        if (request.PaidOn > BusinessDays.Today(clock))
+        {
+            return ApiProblem.Validation(new Dictionary<string, string[]> { ["paidOn"] = [FinanceMessages.Get("paid_on_future")] });
+        }
+
+        if (payout.Status == PayoutStatus.Paid)
+        {
+            return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.InvalidTransition);
+        }
+
+        // The day of the transfer, at noon in Lisbon, so it falls in that month whatever the time zone.
+        var noon = request.PaidOn.ToDateTime(new TimeOnly(12, 0));
+        payout.PaidAt = new DateTimeOffset(noon, BusinessDays.Lisbon.GetUtcOffset(noon)).ToUniversalTime();
+        payout.Reference = request.Reference.Trim();
+        payout.Status = PayoutStatus.Paid;
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.InvalidTransition);
+        }
+
+        return TypedResults.Ok(ToDto(payout));
     }
 
-    private static PayoutDto ToDto(PainterPayout p) =>
+    internal static PayoutDto ToDto(PainterPayout p) =>
         new(p.Id, p.PainterId, p.JobId, p.JobCode, Money.ToCents(p.Amount), p.Status, p.CreatedAt, p.PaidAt, p.Reference);
 }
 

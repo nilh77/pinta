@@ -42,6 +42,12 @@ public interface IJobPayments
     /// <summary>The paid deposit still held (paid minus refunded), in cents; 0 when there is none.</summary>
     Task<long> DepositHeldCentsAsync(Guid jobId, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// The paid deposit Pinta keeps after a cancellation: paid minus every refund decided, completed or not (failed ones
+    /// excluded), in cents (A5.1).
+    /// </summary>
+    Task<long> DepositRetainedCentsAsync(Guid jobId, CancellationToken cancellationToken = default);
+
     /// <summary>A paid site visit, VAT included, in cents; 0 when there is none.</summary>
     Task<long> SiteVisitPaidCentsAsync(Guid jobId, CancellationToken cancellationToken = default);
 }

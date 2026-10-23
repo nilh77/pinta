@@ -94,4 +94,13 @@
   <data name="SiteVisitAssigned.Button" xml:space="preserve"><value>Open the visit</value></data>
   <data name="SiteVisitReported.Subject" xml:space="preserve"><value>Site visit report {0}</value></data>
   <data name="SiteVisitReported.Body" xml:space="preserve"><value>{0} sent the site visit report. The draft has the real measures; review the extra items and confirm the price.</value></data>
+  <data name="AccountDeletion.Subject" xml:space="preserve"><value>Account deletion request</value></data>
+  <data name="AccountDeletion.Body" xml:space="preserve"><value>{0} ({1}) asked to delete their account. Execute it in Settings: active jobs are cancelled under the usual policy and the accounts are kept.</value></data>
+  <data name="PriceExpiring.Subject" xml:space="preserve"><value>The price of request {0} expires in 3 days</value></data>
+  <data name="PriceExpiring.Body" xml:space="preserve"><value>The confirmed price is valid until {0}. Pay the deposit so we can schedule the job.</value></data>
+  <data name="PriceExpiring.Deposit" xml:space="preserve"><value>Deposit</value></data>
+  <data name="OverdueReviews.Subject" xml:space="preserve"><value>{0} requests past their review deadline</value></data>
+  <data name="OverdueReviews.Body" xml:space="preserve"><value>These requests are past their review deadline:</value></data>
+  <data name="DocumentsExpiring.Subject" xml:space="preserve"><value>{0} painter documents expire within 30 days</value></data>
+  <data name="DocumentsExpiring.Body" xml:space="preserve"><value>Ask for these documents to be renewed:</value></data>
 </root>

@@ -138,7 +138,7 @@ La numeración de C3–C4 se ha revisado respecto a la Fase 3, porque la estimac
 
 - Puede editar nombre, teléfono, idioma, datos de facturación y avisos por email.
 - Puede cerrar sesión.
-- Puede pedir la supresión de su cuenta: sus datos personales se anonimizan, sus trabajos activos se cancelan con la política habitual y los registros contables se conservan.
+- Puede pedir la supresión de su cuenta: los admins reciben el aviso y la ejecutan desde Ajustes; entonces sus datos personales se anonimizan, sus trabajos activos se cancelan con la política habitual y los registros contables se conservan.
 
 ## Admin: precios, simulador y revisión
 

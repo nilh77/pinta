@@ -106,7 +106,11 @@ function JobCard({ job }: { job: ClientJobListItem }) {
           ? t("confirmEmail")
           : job.status === "in_review"
             ? t("inReview")
-            : null;
+            : job.status === "scheduled" && job.scheduledOn
+              ? t("startsOn", { date: formatDate(locale, job.scheduledOn, true) })
+              : job.status === "finished"
+                ? t("payBalance")
+                : null;
 
   return (
     <Link
@@ -138,7 +142,7 @@ function JobCard({ job }: { job: ClientJobListItem }) {
         </span>
         {job.needsAction ? (
           <span className="inline-flex items-center gap-1 rounded-xl bg-accent px-3 py-2 text-sm font-semibold text-accent-foreground">
-            {t("review")}
+            {t(job.status === "finished" ? "pay" : "review")}
             <ChevronRight aria-hidden="true" className="size-4" />
           </span>
         ) : (

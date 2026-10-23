@@ -606,6 +606,187 @@
         }
       }
     },
+    "/api/me": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "GetAccount",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountProfile"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "UpdateAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAccountRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountProfile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/password": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "ChangePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/me/delete-request": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "operationId": "RequestAccountDeletion",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/admin/deletion-requests": {
+      "get": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ListDeletionRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeletionRequest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/deletion-requests/{userId}/execute": {
+      "post": {
+        "tags": [
+          "Admin settings"
+        ],
+        "operationId": "ExecuteAccountDeletion",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/coverage/check": {
       "get": {
         "tags": [
@@ -4451,6 +4632,458 @@
           }
         }
       }
+    },
+    "/api/admin/payouts/{id}/mark-paid": {
+      "post": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "MarkPayoutPaid",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkPaidRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayoutDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/finance/summary": {
+      "get": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "GetFinanceSummary",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/finance/costs": {
+      "get": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "ListOperatingCosts",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CostDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "AddOperatingCost",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CostDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/finance/costs/{id}": {
+      "put": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "UpdateOperatingCost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CostRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CostDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "DeleteOperatingCost",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/admin/finance/export": {
+      "get": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "ExportFinance",
+        "parameters": [
+          {
+            "name": "month",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/finance/closings": {
+      "post": {
+        "tags": [
+          "Admin finance"
+        ],
+        "operationId": "CloseMonth",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloseMonthRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MonthSummary"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4472,6 +5105,62 @@
           },
           "password": {
             "type": "string"
+          }
+        }
+      },
+      "AccountProfile": {
+        "required": [
+          "name",
+          "email",
+          "emailConfirmed",
+          "phone",
+          "locale",
+          "taxId",
+          "companyName",
+          "marketingConsent",
+          "deletionRequestedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "phone": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "marketingConsent": {
+            "type": "boolean"
+          },
+          "deletionRequestedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
           }
         }
       },
@@ -5228,6 +5917,37 @@
           }
         }
       },
+      "CategoryTotal": {
+        "required": [
+          "category",
+          "amountCents"
+        ],
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/OperatingCostCategory"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ChangePasswordRequest": {
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        }
+      },
       "ClientCancelRequest": {
         "required": [
           "reason"
@@ -5422,6 +6142,35 @@
           }
         }
       },
+      "ClientJobForDeletion": {
+        "required": [
+          "jobId",
+          "code",
+          "status",
+          "action",
+          "refundCents"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "action": {
+            "$ref": "#/components/schemas/DeletionAction"
+          },
+          "refundCents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "ClientJobListItem": {
         "required": [
           "id",
@@ -5435,6 +6184,7 @@
           "overMax",
           "quoteValidUntil",
           "siteVisitAt",
+          "scheduledOn",
           "needsAction",
           "createdAt",
           "updatedAt"
@@ -5495,6 +6245,13 @@
               "string"
             ],
             "format": "date-time"
+          },
+          "scheduledOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           },
           "needsAction": {
             "type": "boolean"
@@ -5686,6 +6443,17 @@
           }
         }
       },
+      "CloseMonthRequest": {
+        "required": [
+          "month"
+        ],
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          }
+        }
+      },
       "ConfirmEmailRequest": {
         "required": [
           "userId",
@@ -5718,6 +6486,74 @@
           },
           "acknowledgeLowMargin": {
             "type": "boolean"
+          },
+          "version": {
+            "type": [
+              "null",
+              "integer"
+            ],
+            "format": "uint32"
+          }
+        }
+      },
+      "CostDto": {
+        "required": [
+          "id",
+          "date",
+          "category",
+          "description",
+          "amountCents",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "category": {
+            "$ref": "#/components/schemas/OperatingCostCategory"
+          },
+          "description": {
+            "type": "string"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "version": {
+            "type": "integer",
+            "format": "uint32"
+          }
+        }
+      },
+      "CostRequest": {
+        "required": [
+          "date",
+          "category",
+          "description",
+          "amountCents",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "category": {
+            "$ref": "#/components/schemas/OperatingCostCategory"
+          },
+          "description": {
+            "type": "string"
+          },
+          "amountCents": {
+            "type": "integer",
+            "format": "int64"
           },
           "version": {
             "type": [
@@ -5943,6 +6779,45 @@
         "properties": {
           "reason": {
             "type": "string"
+          }
+        }
+      },
+      "DeletionAction": {
+        "enum": [
+          "cancel",
+          "blocked",
+          "keep"
+        ]
+      },
+      "DeletionRequest": {
+        "required": [
+          "userId",
+          "name",
+          "email",
+          "requestedAt",
+          "jobs"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClientJobForDeletion"
+            }
           }
         }
       },
@@ -6274,6 +7149,56 @@
           }
         }
       },
+      "FinanceJobLine": {
+        "required": [
+          "jobId",
+          "code",
+          "status",
+          "at",
+          "incomeCents",
+          "vatCents",
+          "materialCents",
+          "painterPayCents",
+          "marginCents"
+        ],
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "code": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/JobStatus"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "incomeCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vatCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "materialCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marginCents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
       "FinishJobRequest": {
         "required": [
           "fileIds"
@@ -6523,6 +7448,22 @@
           }
         }
       },
+      "MarkPaidRequest": {
+        "required": [
+          "paidOn",
+          "reference"
+        ],
+        "type": "object",
+        "properties": {
+          "paidOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "reference": {
+            "type": "string"
+          }
+        }
+      },
       "MediaContext": {
         "enum": [
           "element",
@@ -6685,6 +7626,106 @@
           }
         }
       },
+      "MonthSummary": {
+        "required": [
+          "month",
+          "closed",
+          "closedAt",
+          "canClose",
+          "incomeCents",
+          "vatCents",
+          "materialCents",
+          "painterPayCents",
+          "grossMarginCents",
+          "marginPct",
+          "costsCents",
+          "profitCents",
+          "perPartnerCents",
+          "costsByCategory",
+          "jobs",
+          "costs",
+          "pendingPayouts"
+        ],
+        "type": "object",
+        "properties": {
+          "month": {
+            "type": "string"
+          },
+          "closed": {
+            "type": "boolean"
+          },
+          "closedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "canClose": {
+            "type": "boolean"
+          },
+          "incomeCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "vatCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "materialCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "painterPayCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "grossMarginCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "marginPct": {
+            "type": "number",
+            "format": "double"
+          },
+          "costsCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "profitCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "perPartnerCents": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "costsByCategory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryTotal"
+            }
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinanceJobLine"
+            }
+          },
+          "costs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CostDto"
+            }
+          },
+          "pendingPayouts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PayoutDto"
+            }
+          }
+        }
+      },
       "MultibancoDto": {
         "required": [
           "entity",
@@ -6739,6 +7780,15 @@
             "format": "uint32"
           }
         }
+      },
+      "OperatingCostCategory": {
+        "enum": [
+          "infrastructure",
+          "payment_fees",
+          "accounting",
+          "insurance",
+          "marketing"
+        ]
       },
       "PagedOfAdminJobListItem": {
         "required": [
@@ -9579,6 +10629,47 @@
           }
         }
       },
+      "UpdateAccountRequest": {
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "locale",
+          "taxId",
+          "companyName",
+          "marketingConsent"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "locale": {
+            "$ref": "#/components/schemas/Locale"
+          },
+          "taxId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "companyName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "marketingConsent": {
+            "type": "boolean"
+          }
+        }
+      },
       "UpdatePainterRequest": {
         "required": [
           "name",
@@ -9858,13 +10949,16 @@
       "name": "Auth"
     },
     {
+      "name": "Account"
+    },
+    {
+      "name": "Admin settings"
+    },
+    {
       "name": "Coverage"
     },
     {
       "name": "Admin catalog"
-    },
-    {
-      "name": "Admin settings"
     },
     {
       "name": "Admin quotes"

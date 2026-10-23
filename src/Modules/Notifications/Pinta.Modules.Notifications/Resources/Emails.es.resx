@@ -94,4 +94,13 @@
   <data name="SiteVisitAssigned.Button" xml:space="preserve"><value>Abrir la visita</value></data>
   <data name="SiteVisitReported.Subject" xml:space="preserve"><value>Informe de la visita {0}</value></data>
   <data name="SiteVisitReported.Body" xml:space="preserve"><value>{0} ha enviado el informe de la visita. El borrador ya tiene las medidas reales; revisa las partidas extra y confirma el precio.</value></data>
+  <data name="AccountDeletion.Subject" xml:space="preserve"><value>Solicitud de supresión de cuenta</value></data>
+  <data name="AccountDeletion.Body" xml:space="preserve"><value>{0} ({1}) ha pedido suprimir su cuenta. Ejecútala en Ajustes: los trabajos activos se cancelan con la política habitual y la contabilidad se conserva.</value></data>
+  <data name="PriceExpiring.Subject" xml:space="preserve"><value>El precio de la solicitud {0} caduca en 3 días</value></data>
+  <data name="PriceExpiring.Body" xml:space="preserve"><value>El precio confirmado vale hasta el {0}. Paga la señal para que programemos el trabajo.</value></data>
+  <data name="PriceExpiring.Deposit" xml:space="preserve"><value>Señal</value></data>
+  <data name="OverdueReviews.Subject" xml:space="preserve"><value>{0} solicitudes con el plazo de revisión vencido</value></data>
+  <data name="OverdueReviews.Body" xml:space="preserve"><value>Estas solicitudes han pasado el plazo de revisión:</value></data>
+  <data name="DocumentsExpiring.Subject" xml:space="preserve"><value>{0} documentos de pintores caducan en 30 días</value></data>
+  <data name="DocumentsExpiring.Body" xml:space="preserve"><value>Pide la renovación de estos documentos:</value></data>
 </root>

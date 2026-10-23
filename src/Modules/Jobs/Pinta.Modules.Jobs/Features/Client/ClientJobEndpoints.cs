@@ -32,6 +32,7 @@ public sealed record ClientJobListItem(
     bool OverMax,
     DateOnly? QuoteValidUntil,
     DateTimeOffset? SiteVisitAt,
+    DateOnly? ScheduledOn,
     bool NeedsAction,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt);
@@ -134,7 +135,8 @@ internal static class ClientJobEndpoints
             var priced = job.QuoteValidUntil is not null;
             items.Add(new ClientJobListItem(
                 job.Id, job.Code, job.Status, job.Locality, quote?.AreaM2 ?? 0, priced ? quote?.TotalCents : null, quote?.RangeMinCents,
-                quote?.RangeMaxCents, quote?.OverMax ?? false, job.QuoteValidUntil, job.SiteVisitAt, job.Status == JobStatus.Quoted,
+                quote?.RangeMaxCents, quote?.OverMax ?? false, job.QuoteValidUntil, job.SiteVisitAt, job.ScheduledOn,
+                job.Status is JobStatus.Quoted or JobStatus.Finished,
                 job.CreatedAt, job.UpdatedAt));
         }
 

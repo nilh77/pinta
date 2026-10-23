@@ -1,6 +1,6 @@
 "use client";
 
-import { Briefcase } from "lucide-react";
+import { Briefcase, UserRound } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
@@ -33,9 +33,19 @@ export function SiteHeader({ children }: { children?: ReactNode }) {
                 <span className="max-sm:sr-only">{t(me.data.role === "admin" ? "admin" : me.data.role === "painter" ? "painterJobs" : "myJobs")}</span>
               </Link>
             </Button>
+            {me.data.role === "client" && (
+              <Button asChild variant="ghost" size="sm" className="max-sm:size-11 max-sm:px-0">
+                <Link href="/cuenta">
+                  <UserRound aria-hidden="true" className="sm:hidden" />
+                  <span className="max-sm:sr-only">{t("account")}</span>
+                </Link>
+              </Button>
+            )}
+            {/* On a phone the client signs out from «Conta»: the header has no room for both. */}
             <Button
               variant="ghost"
               size="sm"
+              className={me.data.role === "client" ? "max-sm:hidden" : undefined}
               disabled={signOut.isPending}
               onClick={() => signOut.mutate(undefined, { onSuccess: () => router.push("/") })}
             >

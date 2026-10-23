@@ -110,6 +110,7 @@ public static class IdentityModule
         PasswordResetEndpoints.Map(auth);
         AcceptInviteEndpoint.Map(auth);
         GoogleLoginEndpoints.Map(auth);
+        Features.Account.AccountEndpoints.Map(app);
         return app;
     }
 

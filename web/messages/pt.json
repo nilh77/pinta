@@ -21,7 +21,8 @@
     "greeting": "Olá, {name}",
     "myJobs": "Os meus trabalhos",
     "admin": "Painel",
-    "painterJobs": "Trabalhos"
+    "painterJobs": "Trabalhos",
+    "account": "Conta"
   },
   "home": {
     "badge": "Distrito de Lisboa",
@@ -193,7 +194,9 @@
       "jobs": "Trabalhos",
       "review": "Revisão",
       "coverage": "Cobertura",
-      "painters": "Pintores"
+      "painters": "Pintores",
+      "finance": "Finanças",
+      "settings": "Ajustes"
     },
     "forbidden": {
       "title": "Área reservada",
@@ -801,6 +804,112 @@
         },
         "markLater": "Marcar como pago chega com Finanças."
       }
+    },
+    "finance": {
+      "title": "Finanças",
+      "subtitle": "Cobrado, custos e a divisão 50/50 entre sócios, mês a mês.",
+      "month": "Mês",
+      "export": "Exportar CSV",
+      "loading": "A carregar…",
+      "error": "Não conseguimos carregar as finanças.",
+      "retry": "Tentar outra vez",
+      "closedOn": "Mês fechado a {date}",
+      "figures": {
+        "title": "Números do mês",
+        "income": "Ingressos sem IVA",
+        "incomeHint": "IVA cobrado {vat}",
+        "material": "Material",
+        "painters": "Pintores",
+        "margin": "Margem bruta",
+        "marginPct": "{pct}% dos ingressos",
+        "costs": "Custos de operação",
+        "profit": "Lucro",
+        "split": "Divisão entre sócios (50/50)",
+        "each": "{amount} cada um"
+      },
+      "categories": {
+        "infrastructure": "Infraestrutura",
+        "payment_fees": "Comissões de pagamento",
+        "accounting": "Faturação e contabilista",
+        "insurance": "Seguro",
+        "marketing": "Marketing"
+      },
+      "jobs": {
+        "title": "Trabalhos do mês",
+        "empty": "Nenhum trabalho fechado ou cancelado com sinal retido neste mês.",
+        "columns": {
+          "code": "Trabalho",
+          "date": "Data",
+          "income": "Ingresso",
+          "material": "Material",
+          "painter": "Pintor",
+          "margin": "Margem"
+        }
+      },
+      "costs": {
+        "title": "Custos de operação",
+        "add": "Adicionar",
+        "empty": "Sem custos neste mês.",
+        "closed": "O mês está fechado: os custos já não mudam.",
+        "edit": "Editar {description}",
+        "remove": "Apagar {description}",
+        "removeTitle": "Apagar este custo?",
+        "removeConfirm": "Apagar",
+        "removed": "Custo apagado.",
+        "addTitle": "Novo custo",
+        "editTitle": "Editar custo",
+        "date": "Data",
+        "category": "Categoria",
+        "description": "Descrição",
+        "amount": "Valor (€, IVA incluído)",
+        "save": "Guardar",
+        "saved": "Custo guardado.",
+        "cancel": "Voltar"
+      },
+      "payouts": {
+        "title": "Pagamentos a pintores por fazer",
+        "empty": "Tudo pago.",
+        "since": "desde {date}",
+        "markPaid": "Marcar como pago",
+        "dialogTitle": "Pagamento de {code}",
+        "dialogBody": "Transferência de {amount} para {painter}. O pintor vê-a como paga.",
+        "paidOn": "Data da transferência",
+        "reference": "Referência",
+        "done": "Pagamento marcado como pago.",
+        "cancel": "Voltar"
+      },
+      "close": {
+        "button": "Fechar mês",
+        "title": "Fechar {month}?",
+        "body": "Os números ficam congelados: lucro {profit}, {each} para cada sócio. Os custos deste mês deixam de poder mudar.",
+        "confirm": "Fechar mês",
+        "cancel": "Voltar",
+        "done": "Mês fechado."
+      }
+    },
+    "settings": {
+      "title": "Ajustes",
+      "loading": "A carregar…",
+      "error": "Não conseguimos carregar os pedidos.",
+      "retry": "Tentar outra vez",
+      "deletion": {
+        "title": "Supressão de contas",
+        "body": "Clientes que pediram para apagar a conta. Ao executar: os trabalhos ativos são cancelados com a política habitual, os dados pessoais apagam-se e a contabilidade conserva-se.",
+        "empty": "Nenhum pedido pendente.",
+        "requested": "pedido a {date}",
+        "execute": "Anonimizar",
+        "actions": {
+          "cancel": "Será cancelado · reembolso {refund}",
+          "blocked": "Em curso ou com restante por pagar",
+          "keep": "Fica na contabilidade sem dados pessoais"
+        },
+        "blocked": "Espere que os trabalhos em curso terminem e sejam pagos.",
+        "confirmTitle": "Anonimizar {name}?",
+        "confirmCancels": "Cancelam-se e reembolsam-se: {jobs}. Não se pode desfazer.",
+        "confirmBody": "Os dados pessoais apagam-se e a conta deixa de poder entrar. Não se pode desfazer.",
+        "cancel": "Voltar",
+        "done": "Conta anonimizada."
+      }
     }
   },
   "quote": {
@@ -1196,7 +1305,10 @@
       "confirmEmail": "Confirme o seu email",
       "inReview": "Estamos a rever",
       "review": "Rever e aceitar",
-      "customQuote": "Orçamento personalizado"
+      "customQuote": "Orçamento personalizado",
+      "startsOn": "Começa a {date}",
+      "payBalance": "Trabalho terminado: falta pagar o restante",
+      "pay": "Pagar o restante"
     },
     "detail": {
       "title": "O meu trabalho",
@@ -1596,6 +1708,54 @@
         "cancel": "Voltar",
         "saved": "IBAN guardado."
       }
+    }
+  },
+  "account": {
+    "title": "A minha conta",
+    "loading": "A carregar…",
+    "error": "Não conseguimos carregar a sua conta.",
+    "retry": "Tentar outra vez",
+    "errors": {
+      "taxId": "O NIF tem 9 dígitos."
+    },
+    "data": {
+      "title": "Os meus dados",
+      "name": "Nome",
+      "email": "Email",
+      "emailHint": "Se o mudar, enviamos um email para o confirmar.",
+      "phone": "Telemóvel",
+      "locale": "Idioma",
+      "localeHint": "Também o dos emails que lhe enviamos.",
+      "taxId": "NIF para faturas (opcional)",
+      "company": "Empresa (opcional)",
+      "marketing": "Quero receber novidades e promoções da Pinta por email.",
+      "save": "Guardar",
+      "saved": "Dados guardados.",
+      "savedConfirm": "Dados guardados. Confirme o novo email: enviámos um link para {email}.",
+      "unconfirmed": "O email {email} ainda não está confirmado. Procure a nossa mensagem."
+    },
+    "password": {
+      "title": "Palavra-passe",
+      "current": "Palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "hint": "Pelo menos {min} caracteres.",
+      "submit": "Mudar palavra-passe",
+      "done": "Palavra-passe mudada."
+    },
+    "session": {
+      "title": "Sessão",
+      "signOut": "Sair"
+    },
+    "deletion": {
+      "title": "Apagar a conta",
+      "body": "Pedimos à equipa da Pinta que apague os seus dados. Os trabalhos ativos são cancelados com a política habitual de reembolso; os registos contabilísticos conservam-se como exige a lei.",
+      "button": "Pedir para apagar a conta",
+      "confirmTitle": "Pedir para apagar a conta?",
+      "confirmBody": "A equipa da Pinta executa o pedido. Depois não poderá entrar e os seus dados pessoais deixam de existir.",
+      "confirm": "Pedir",
+      "cancel": "Voltar",
+      "sent": "Pedido enviado à equipa da Pinta.",
+      "requested": "Pediu para apagar a conta a {date}. A equipa da Pinta está a tratar disso."
     }
   }
 }
