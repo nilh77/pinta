@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H6a · Pintores: alta, asignación y ejecución
+Nada todavía.
 
-#### Añadido
+## H6a · Pintores: alta, asignación y ejecución — 2026-10-23, [PR #7](https://github.com/nilh77/pinta/pull/7)
+
+### Añadido
 
 - Admin › Pintores: lista con estado (invitado, activo, inactivo), zonas, trabajos hechos y valoración; alta con nombre, email e idioma y, si se quiere, teléfono, NIF, especialidades, concelhos, IBAN y notas, que envía la invitación (válida 72 h). Ficha para editar los datos (IBAN cifrado y siempre enmascarado, valoración interna), reenviar la invitación, activar o desactivar (un pintor desactivado no puede entrar ni recibir ofertas), documentos con caducidad y sus trabajos (A4.1–A4.4).
 - `/pintor/alta`: el pintor elige la contraseña desde el enlace del email y confirma o completa la ficha que preparó el admin (teléfono, NIF, concelhos e IBAN); un enlace caducado pide una nueva invitación (A4.2).
@@ -20,15 +22,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Datos de demo: Rui y Carla activos con zonas y valoración, João invitado.
 - Emails: invitación del pintor, oferta nueva, oferta rechazada y sin respuesta (admins), trabajo programado y trabajo terminado (cliente).
 
-#### Cambiado
+### Cambiado
 
 - Documentos: H6 en dos PR, al menos 3 fotos para terminar (P2.2), alta preparada por el admin, invitación de 72 h y el pintor que acepta como actor de «Señal pagada → Programado» en `docs/plan.md`, `docs/functional-requirements.md`, `docs/screens.md`, `docs/states.md`, `docs/api.md` y `docs/data-model.md`.
 
-#### Verificado
+### Verificado
 
 - En el navegador a 390 y 1440 px y en pt, es y en, con la señal de TC01 pagada en Stripe modo test: el admin invita a un pintor, el pintor se da de alta con el enlace de Mailpit, el admin le ofrece el trabajo, el pintor lo acepta, lo empieza el día programado, sube 3 fotos y lo termina; el cliente ve las fotos y el botón para pagar el resto.
 
-#### Pendiente
+### Pendiente
 
 - H6b: informe de la visita técnica del pintor (P3.1), pagos al pintor pendientes al cerrar el trabajo y pantalla P4 «Mis pagos».
 - H8: fotos de avance y «reportar incidencia» en P2.

@@ -11,7 +11,7 @@ Esta tabla es la especificación de la máquina de estados: cualquier transició
 | (nuevo) | Pendiente de email | Cliente | Envía la solicitud sin email confirmado |
 | (nuevo) o Pendiente de email | En revisión | Cliente / sistema | Email confirmado; empieza el plazo de 2 días laborables |
 | En revisión | Visita técnica | Admin | Asigna visita a un pintor o al socio, con fecha |
-| Visita técnica | En revisión | Pintor / socio | Envía medidas reales, fotos y observaciones |
+| Visita técnica | En revisión | Pintor / socio | Envía medidas reales, fotos y observaciones; el informe del pintor crea el borrador de origen `site_visit` (el socio usa «Visita hecha») |
 | En revisión | Precio confirmado | Admin | Crea la versión confirmada; empieza la validez de 15 días |
 | En revisión | Rechazado | Admin | Motivo obligatorio; email al cliente |
 | Precio confirmado | Señal pagada | Sistema | Webhook de Stripe con pago correcto |
