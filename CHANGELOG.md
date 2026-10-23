@@ -6,9 +6,11 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H4 · Revisión y máquina de estados
+Nada todavía.
 
-#### Añadido
+## H4 · Revisión y máquina de estados — 2026-10-23, [PR #5](https://github.com/nilh77/pinta/pull/5)
+
+### Añadido
 
 - Admin · Revisión: cola «En revisión» de la más antigua a la más reciente con semáforo del plazo (verde, ámbar con menos de 24 h laborables, rojo vencido) y los «Pendiente de email» aparte; detalle con cliente, dirección, fechas, descripción y fotos a pantalla completa (A2.1, A2.2).
 - Borrador de revisión que se recalcula en el servidor al editar: estancias y medidas, pintura, ocupación, añadir estancias, partidas extra del catálogo o libres, Premium a mano y subtotal fijado a mano con motivo obligatorio. Desglose interno con material, mano de obra, pago al pintor y margen con aviso por debajo del 20% (A2.3–A2.5, A2.7).
@@ -24,16 +26,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Caso dorado TC14 (TC10 con subtotal fijado a mano) en el motor de precios.
 - Enlace «Mis trabajos» o «Panel» en la cabecera y «Ver mi trabajo» en la confirmación.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: pagos (C5.3) y reembolsos pasan a H5, asignación de pintores a H6; en H4 la visita técnica la hace un socio. La pantalla 10 ofrece «Tengo dudas» en lugar de «Pedir cambios». Nuevos endpoints en `docs/api.md`: socios, exportación CSV y fin de visita.
 - Toda transición pasa por la máquina de estados: las no permitidas devuelven `409 invalid_transition`; editar con una versión antigua del trabajo, `409 concurrency_conflict`.
 
-#### Corregido
+### Corregido
 
 - Cerrar sesión en el panel o en el área del cliente lleva al inicio en lugar de a «Entrar».
 
-#### Pendiente
+### Pendiente
 
 - «Aceptar y pagar» muestra «Pago disponible en breve» hasta H5; la cancelación aún no envía email ni reembolsa porque no hay pagos.
 
