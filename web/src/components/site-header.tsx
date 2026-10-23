@@ -41,9 +41,11 @@ export function SiteHeader({ children }: { children?: ReactNode }) {
                 </Link>
               </Button>
             )}
+            {/* On a phone the client signs out from «Conta»: the header has no room for both. */}
             <Button
               variant="ghost"
               size="sm"
+              className={me.data.role === "client" ? "max-sm:hidden" : undefined}
               disabled={signOut.isPending}
               onClick={() => signOut.mutate(undefined, { onSuccess: () => router.push("/") })}
             >

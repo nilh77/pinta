@@ -68,7 +68,7 @@ export function AccountScreen() {
     <div className="flex flex-col gap-5">
       <h1 className="text-[28px] font-extrabold tracking-tight">{t("title")}</h1>
       <Section title={t("data.title")}>
-        <ProfileForm key={account.dataUpdatedAt} profile={account.data} />
+        <ProfileForm profile={account.data} />
       </Section>
       <Section title={t("password.title")}>
         <PasswordForm />
