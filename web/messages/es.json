@@ -21,7 +21,8 @@
     "greeting": "Hola, {name}",
     "myJobs": "Mis trabajos",
     "admin": "Panel",
-    "painterJobs": "Trabajos"
+    "painterJobs": "Trabajos",
+    "account": "Cuenta"
   },
   "home": {
     "badge": "Distrito de Lisboa",
@@ -1304,7 +1305,10 @@
       "confirmEmail": "Confirma tu email",
       "inReview": "Lo estamos revisando",
       "review": "Revisar y aceptar",
-      "customQuote": "Cotización personalizada"
+      "customQuote": "Cotización personalizada",
+      "startsOn": "Empieza el {date}",
+      "payBalance": "Trabajo terminado: falta pagar el resto",
+      "pay": "Pagar el resto"
     },
     "detail": {
       "title": "Mi trabajo",
@@ -1704,6 +1708,54 @@
         "cancel": "Volver",
         "saved": "IBAN guardado."
       }
+    }
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "loading": "Cargando…",
+    "error": "No hemos podido cargar tu cuenta.",
+    "retry": "Reintentar",
+    "errors": {
+      "taxId": "El NIF tiene 9 dígitos."
+    },
+    "data": {
+      "title": "Mis datos",
+      "name": "Nombre",
+      "email": "Email",
+      "emailHint": "Si lo cambias, te enviamos un email para confirmarlo.",
+      "phone": "Teléfono",
+      "locale": "Idioma",
+      "localeHint": "También el de los emails que te enviamos.",
+      "taxId": "NIF para facturas (opcional)",
+      "company": "Empresa (opcional)",
+      "marketing": "Quiero recibir novedades y promociones de Pinta por email.",
+      "save": "Guardar",
+      "saved": "Datos guardados.",
+      "savedConfirm": "Datos guardados. Confirma el nuevo email: hemos enviado un enlace a {email}.",
+      "unconfirmed": "El email {email} aún no está confirmado. Busca nuestro mensaje."
+    },
+    "password": {
+      "title": "Contraseña",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "hint": "Al menos {min} caracteres.",
+      "submit": "Cambiar contraseña",
+      "done": "Contraseña cambiada."
+    },
+    "session": {
+      "title": "Sesión",
+      "signOut": "Cerrar sesión"
+    },
+    "deletion": {
+      "title": "Borrar la cuenta",
+      "body": "Pedimos al equipo de Pinta que borre tus datos. Los trabajos activos se cancelan con la política habitual de reembolso; los registros contables se conservan como exige la ley.",
+      "button": "Pedir borrar la cuenta",
+      "confirmTitle": "¿Pedir borrar la cuenta?",
+      "confirmBody": "El equipo de Pinta ejecuta la solicitud. Después no podrás entrar y tus datos personales dejan de existir.",
+      "confirm": "Pedir",
+      "cancel": "Volver",
+      "sent": "Solicitud enviada al equipo de Pinta.",
+      "requested": "Pediste borrar la cuenta el {date}. El equipo de Pinta se está ocupando."
     }
   }
 }

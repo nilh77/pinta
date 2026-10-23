@@ -1814,6 +1814,8 @@ export interface components {
             quoteValidUntil: null | string;
             /** Format: date-time */
             siteVisitAt: null | string;
+            /** Format: date */
+            scheduledOn: null | string;
             needsAction: boolean;
             /** Format: date-time */
             createdAt: string;

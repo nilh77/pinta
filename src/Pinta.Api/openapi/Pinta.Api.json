@@ -6184,6 +6184,7 @@
           "overMax",
           "quoteValidUntil",
           "siteVisitAt",
+          "scheduledOn",
           "needsAction",
           "createdAt",
           "updatedAt"
@@ -6244,6 +6245,13 @@
               "string"
             ],
             "format": "date-time"
+          },
+          "scheduledOn": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date"
           },
           "needsAction": {
             "type": "boolean"

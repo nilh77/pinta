@@ -21,7 +21,8 @@
     "greeting": "Olá, {name}",
     "myJobs": "Os meus trabalhos",
     "admin": "Painel",
-    "painterJobs": "Trabalhos"
+    "painterJobs": "Trabalhos",
+    "account": "Conta"
   },
   "home": {
     "badge": "Distrito de Lisboa",
@@ -1304,7 +1305,10 @@
       "confirmEmail": "Confirme o seu email",
       "inReview": "Estamos a rever",
       "review": "Rever e aceitar",
-      "customQuote": "Orçamento personalizado"
+      "customQuote": "Orçamento personalizado",
+      "startsOn": "Começa a {date}",
+      "payBalance": "Trabalho terminado: falta pagar o restante",
+      "pay": "Pagar o restante"
     },
     "detail": {
       "title": "O meu trabalho",
@@ -1704,6 +1708,54 @@
         "cancel": "Voltar",
         "saved": "IBAN guardado."
       }
+    }
+  },
+  "account": {
+    "title": "A minha conta",
+    "loading": "A carregar…",
+    "error": "Não conseguimos carregar a sua conta.",
+    "retry": "Tentar outra vez",
+    "errors": {
+      "taxId": "O NIF tem 9 dígitos."
+    },
+    "data": {
+      "title": "Os meus dados",
+      "name": "Nome",
+      "email": "Email",
+      "emailHint": "Se o mudar, enviamos um email para o confirmar.",
+      "phone": "Telemóvel",
+      "locale": "Idioma",
+      "localeHint": "Também o dos emails que lhe enviamos.",
+      "taxId": "NIF para faturas (opcional)",
+      "company": "Empresa (opcional)",
+      "marketing": "Quero receber novidades e promoções da Pinta por email.",
+      "save": "Guardar",
+      "saved": "Dados guardados.",
+      "savedConfirm": "Dados guardados. Confirme o novo email: enviámos um link para {email}.",
+      "unconfirmed": "O email {email} ainda não está confirmado. Procure a nossa mensagem."
+    },
+    "password": {
+      "title": "Palavra-passe",
+      "current": "Palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "hint": "Pelo menos {min} caracteres.",
+      "submit": "Mudar palavra-passe",
+      "done": "Palavra-passe mudada."
+    },
+    "session": {
+      "title": "Sessão",
+      "signOut": "Sair"
+    },
+    "deletion": {
+      "title": "Apagar a conta",
+      "body": "Pedimos à equipa da Pinta que apague os seus dados. Os trabalhos ativos são cancelados com a política habitual de reembolso; os registos contabilísticos conservam-se como exige a lei.",
+      "button": "Pedir para apagar a conta",
+      "confirmTitle": "Pedir para apagar a conta?",
+      "confirmBody": "A equipa da Pinta executa o pedido. Depois não poderá entrar e os seus dados pessoais deixam de existir.",
+      "confirm": "Pedir",
+      "cancel": "Voltar",
+      "sent": "Pedido enviado à equipa da Pinta.",
+      "requested": "Pediu para apagar a conta a {date}. A equipa da Pinta está a tratar disso."
     }
   }
 }

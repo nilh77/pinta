@@ -21,7 +21,8 @@
     "greeting": "Hi, {name}",
     "myJobs": "My jobs",
     "admin": "Dashboard",
-    "painterJobs": "Jobs"
+    "painterJobs": "Jobs",
+    "account": "Account"
   },
   "home": {
     "badge": "Lisbon district",
@@ -1304,7 +1305,10 @@
       "confirmEmail": "Confirm your email",
       "inReview": "We're reviewing it",
       "review": "Review and accept",
-      "customQuote": "Custom quote"
+      "customQuote": "Custom quote",
+      "startsOn": "Starts on {date}",
+      "payBalance": "Job finished: the balance is due",
+      "pay": "Pay the balance"
     },
     "detail": {
       "title": "My job",
@@ -1704,6 +1708,54 @@
         "cancel": "Back",
         "saved": "IBAN saved."
       }
+    }
+  },
+  "account": {
+    "title": "My account",
+    "loading": "Loading…",
+    "error": "We could not load your account.",
+    "retry": "Try again",
+    "errors": {
+      "taxId": "The NIF has 9 digits."
+    },
+    "data": {
+      "title": "My details",
+      "name": "Name",
+      "email": "Email",
+      "emailHint": "If you change it, we send an email to confirm it.",
+      "phone": "Phone",
+      "locale": "Language",
+      "localeHint": "Also the language of our emails.",
+      "taxId": "Tax number for invoices (optional)",
+      "company": "Company (optional)",
+      "marketing": "I want to receive Pinta news and offers by email.",
+      "save": "Save",
+      "saved": "Details saved.",
+      "savedConfirm": "Details saved. Confirm your new email: we sent a link to {email}.",
+      "unconfirmed": "The email {email} is not confirmed yet. Look for our message."
+    },
+    "password": {
+      "title": "Password",
+      "current": "Current password",
+      "new": "New password",
+      "hint": "At least {min} characters.",
+      "submit": "Change password",
+      "done": "Password changed."
+    },
+    "session": {
+      "title": "Session",
+      "signOut": "Sign out"
+    },
+    "deletion": {
+      "title": "Delete account",
+      "body": "We ask the Pinta team to delete your data. Active jobs are cancelled under the usual refund policy; accounting records are kept as the law requires.",
+      "button": "Ask to delete my account",
+      "confirmTitle": "Ask to delete your account?",
+      "confirmBody": "The Pinta team executes the request. Afterwards you cannot sign in and your personal data no longer exists.",
+      "confirm": "Ask",
+      "cancel": "Back",
+      "sent": "Request sent to the Pinta team.",
+      "requested": "You asked to delete your account on {date}. The Pinta team is handling it."
     }
   }
 }
