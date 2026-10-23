@@ -148,8 +148,8 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
 
 ### 11 · Pago
 
-- **Ruta y board**: `/{locale}/mis-trabajos/{id}/pagar?tipo=deposit|balance` · Pago.dc.html. \[C5.4, C5.7\]
-- **Datos**: importe (señal del 30% o saldo), resumen del trabajo y Stripe Payment Element con tarjeta, MB WAY y Multibanco según `POST /api/jobs/{id}/payments`.
+- **Ruta y board**: `/{locale}/mis-trabajos/{id}/pagar?tipo=deposit|balance|site_visit` · Pago.dc.html. \[C5.3, C5.5\]
+- **Datos**: importe (señal del 30%, saldo o visita técnica), resumen del trabajo y Stripe Payment Element con tarjeta, MB WAY y Multibanco según `POST /api/jobs/{id}/payments`. Tras el pago, enlace al justificante PDF simulado.
 - **Acciones**: pagar. MB WAY: pide el teléfono y muestra «Acepta el pago en la app MB WAY» con cuenta atrás de 5 minutos. Multibanco: muestra entidad, referencia e importe con botón de copiar y la fecha límite; el trabajo queda en espera hasta el webhook.
 - **Validaciones**: por encima de 1.000 €, aviso del límite diario habitual de MB WAY; por encima de 5.000 €, MB WAY no aparece.
 - **Estados**: se considera pagado solo tras el webhook; mientras, «Confirmando el pago…» con consulta periódica. Pago fallido → mensaje de Stripe traducido y reintentar. Volver atrás no duplica pagos (mismo PaymentIntent).
@@ -228,7 +228,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 
 - **Ruta**: `/{locale}/admin/trabajos`. \[A3.1–A3.5\]
 - **Datos**: tabla filtrable por estado, fechas, localidad, pintor y Premium, con búsqueda por código, cliente o email. Columnas: código, cliente, localidad, estado, total, margen, pintor, fecha programada y última actividad. Exportar a CSV.
-- **Acciones**: abrir el detalle (el mismo de A2 con pestañas Cotización, Versiones, Pagos, Asignación, Archivos e Historial); asignar u ofrecer a un pintor (`POST …/assignments`); programar fecha; forzar transición con motivo (`POST …/transition`, solo transiciones válidas de la tabla de estados); cancelar con reembolso calculado (`POST …/cancel`); cerrar el trabajo.
+- **Acciones**: abrir el detalle (el mismo de A2 con pestañas Cotización, Versiones, Pagos, Asignación, Archivos e Historial); asignar u ofrecer a un pintor (`POST …/assignments`); programar fecha (en H5, al pasar a «Programado» el admin indica la fecha; en H6 viene de la asignación); forzar transición con motivo (`POST …/transition`, solo transiciones válidas de la tabla de estados); pestaña Pagos con pagos, reembolsos y justificantes; cancelar con reembolso calculado (`POST …/cancel`); cerrar el trabajo.
 - **Estados**: transición inválida → `invalid_transition` traducido.
 
 ### Pintores (no dibujado)

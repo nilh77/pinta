@@ -74,7 +74,8 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 ### H5 · Pagos
 
 - **Alcance**: módulo Payments con Stripe Payment Element (tarjeta, MB WAY y Multibanco) en modo test; webhooks firmados e idempotentes; señal del 30% y saldo; reembolsos según la política de cancelación; reglas de importe para MB WAY; pantalla 11; facturas simuladas en PDF.
-- **Historias**: C5.4–C5.7, A3.4.
+- **Historias**: C5.3, C5.5 (pago del resto), C5.6, A3.4 y S4.
+- **Decisiones de H5**: la fecha programada la fija el admin al pasar «Señal pagada → Programado» (en H6 vendrá de la asignación del pintor); un justificante PDF simulado por cada pago (señal, resto y visita), marcado «Documento simulado, sin validez fiscal», con los datos de la empresa de la configuración y el NIF del cliente si lo dio; la visita técnica con precio se cobra en H5 y, si es descontable, se descuenta del subtotal del trabajo; la política de reembolso se aplica a la señal (la visita hecha no se reembolsa); un pago que llega para un trabajo cancelado o expirado se reembolsa entero y se avisa al admin. El pago del resto se prueba con tests de integración: «Finalizado» llega con los pintores en H6.
 - **Criterio de salida**: con Stripe CLI, se paga la señal de TC01 con tarjeta de prueba y el trabajo pasa a `deposit_paid` solo tras el webhook; repetir el webhook no duplica nada; cancelar 3 días antes reembolsa el 50%.
 - **Prompt**: «Lee CLAUDE.md, docs/integrations.md y docs/api.md (pagos y webhooks). Implementa el hito H5.»
 

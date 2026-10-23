@@ -218,6 +218,11 @@ erDiagram
     text estado
     text metodo
     text stripe_payment_intent
+    text multibanco_entidad
+    text multibanco_referencia
+    timestamptz multibanco_vence
+    text error
+    text numero_justificante
     timestamptz pagado_en
   }
   REEMBOLSO {
@@ -264,7 +269,8 @@ erDiagram
   }
 ```
 
-- **Pago.metodo:** tarjeta, MB WAY o Multibanco. **Pago.estado:** pendiente, pagado, fallido, reembolsado (total o parcial).
+- **Pago.tipo:** señal, resto o visita técnica. **Pago.metodo:** tarjeta, MB WAY o Multibanco. **Pago.estado:** pendiente, requiere acción (Multibanco a la espera), pagado, fallido, cancelado, reembolsado (total o parcial). **Pago.numero_justificante:** `SIM-AAAA-NNNN`, se asigna al pagarse; el PDF se genera al pedirlo a partir de los datos guardados.
+- **Trabajo.fecha_programada:** en H5 la fija el admin al pasar a «Programado»; la política de reembolso cuenta los días hasta ella.
 - **Coste de operación.categoría** usa la lista cerrada del acuerdo de socios: infraestructura, comisiones de pago, facturación y contabilista, seguro, marketing.
 - **Cierre mensual:** el reparto 50/50 se calcula en vivo, pero al cerrar un mes queda congelado. Un coste registrado tarde no cambia lo ya repartido.
 - **Notificaciones** solo tiene una tabla de registro de emails enviados: destinatario, plantilla, idioma, estado y fecha.

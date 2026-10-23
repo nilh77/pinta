@@ -121,7 +121,7 @@ El material se vende a precio de coste: el margen sale solo de la mano de obra, 
 | Ajuste manual | El admin puede fijar el subtotal a mano con motivo obligatorio; el IVA y el margen se recalculan sobre el nuevo subtotal, y con ellos el total, la señal y el resto. No se aplica el mínimo |
 | Señal | Señal = total × 30%, a 2 decimales. Resto = total − señal |
 | Reembolso por cancelación | 100% de la señal si no hay fecha programada o faltan 7 días o más; 50% si faltan menos de 7 días. Después de "En curso" no se puede cancelar |
-| Visita técnica | Si tiene precio, se cobra como pago aparte y se descuenta del subtotal del trabajo cuando es descontable |
+| Visita técnica | Si tiene precio (IVA incluido), se cobra como pago aparte. Si es descontable y está pagada, la cotización que sigue a la visita resta del subtotal `R2(precio / (1 + IVA))`; el IVA, el total, el margen, la señal y el resto se calculan sobre el subtotal ya descontado. No se aplica el mínimo después del descuento |
 | Lo que ve el cliente | Solo rango, total con IVA, señal, resto, áreas y partidas extra con su precio. Nunca tarifas, material desglosado, pago al pintor ni margen |
 
 ## Casos de prueba
