@@ -13,7 +13,7 @@ namespace Pinta.Api.Seed;
 
 /// <summary>
 /// Demo data on an empty database in Development (docs/plan.md, "Datos de demo"): the catalog, the two admins and the
-/// three painters (Rui and Carla signed up, João only invited), and the finance month of <see cref="FinanceDemoSeeder"/>.
+/// three painters (Rui and Carla signed up, João only invited), and the finance month of <see cref="DemoJobsSeeder"/>.
 /// </summary>
 public static class DemoSeeder
 {
@@ -86,7 +86,7 @@ public static class DemoSeeder
         }
 
         await painters.SaveChangesAsync();
-        await FinanceDemoSeeder.SeedAsync(scope.ServiceProvider, users, password, now);
+        await DemoJobsSeeder.SeedAsync(scope.ServiceProvider, users, password, now);
     }
 
     private static void Ensure(IdentityResult result)

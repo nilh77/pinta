@@ -174,7 +174,7 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 
 ### Finanzas
 
-Mes anterior con dos trabajos cerrados por Rui y una cancelación tardía, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe de los cinco pagos estimadas en 1,5% + 0,25 € cada uno, porque los pagos de la demo no pasan por Stripe) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto. Lo siembra H7 (`src/Pinta.Api/Seed/FinanceDemoSeeder.cs`); los demás trabajos de demo, H8.
+Mes anterior con dos trabajos cerrados por Rui y una cancelación tardía, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe de los cinco pagos estimadas en 1,5% + 0,25 € cada uno, porque los pagos de la demo no pasan por Stripe) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto. Lo siembra H7 (`src/Pinta.Api/Seed/DemoJobsSeeder.cs`); los demás trabajos de demo, H8.
 
 Cálculo a mano del mes anterior (criterio de salida de H7; importes del documento 6.3):
 
