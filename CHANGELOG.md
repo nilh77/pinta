@@ -6,7 +6,26 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-Nada todavía.
+### H8a · Pulido para la demo: datos y pintor
+
+#### Añadido
+
+- Datos de demo con un trabajo en cada estado relevante, construidos con los servicios reales (precios del motor, pagos, asignaciones y pagos a pintores) y fechas relativas a hoy: PT-…-0101 y 0102 en revisión (0102 con el semáforo ámbar), 0103 con visita técnica de Rui (Premium), 0104 con precio confirmado, 0105 con la señal pagada por MB WAY, 0106 programado hoy para Carla con un extra de catálogo, 0107 en curso con fotos de avance, 0108 terminado con fotos del resultado, 0094 caducado y 0095 rechazado. Las fotos son ilustraciones generadas (`tools/demo_images.py`) que se suben a MinIO.
+- Admin › Ajustes › «Restablecer datos de demo» (`POST /api/admin/demo/reset`, solo en Development, con confirmación): vacía los módulos y los ficheros, conserva a los dos socios (el admin sigue con la sesión iniciada) y vuelve a sembrar la demo con fechas relativas a hoy.
+- P2 · Fotos de avance: con el trabajo en curso, el pintor envía fotos de avance y el cliente las ve en la pantalla 10.
+- P2 · «Reportar incidencia» (programado o en curso): texto y fotos opcionales; los socios reciben un email y la ven en el detalle del trabajo en admin. El cliente no la ve.
+
+#### Cambiado
+
+- Documentos: reparto de H8 en dos PR y decisiones en `docs/plan.md`; las rutas son las mismas en los tres idiomas, fotos de avance, incidencias y el reinicio de la demo en `docs/screens.md`; contextos `progress` e `incident`, `/progress`, `/incidents` y `/api/admin/demo/reset` en `docs/api.md`.
+
+#### Corregido
+
+- Al ejecutar la supresión de una cuenta (C5.8), el registro de emails enviados ya no conserva la dirección ni el contenido de los emails del cliente.
+
+#### Verificado
+
+- En el navegador sobre un stack nuevo: el reinicio desde Ajustes deja los 13 trabajos de demo en sus estados; a 390 px Rui ve sus trabajos, añade una foto de avance a 0107 y reporta una incidencia; Miguel ve las 3 fotos de avance y nada de la incidencia; a 1440 px el admin ve la incidencia (pt, es, en) y los dos socios reciben el email. El mes cerrado de H7 sigue igual al cálculo a mano.
 
 ## H7 · Finanzas y área del cliente — 2026-10-23, [PR #9](https://github.com/nilh77/pinta/pull/9)
 
