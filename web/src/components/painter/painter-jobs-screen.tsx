@@ -12,6 +12,7 @@ import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { formatArea, formatCents, formatDate, formatDateTime } from "@/lib/format";
 import { useAcceptOffer, useDeclineOffer, usePainterJobs, type PainterJobItem, type PainterVisitItem } from "@/lib/painter/use-painter";
+import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
 const TABS = ["offers", "upcoming", "inProgress", "done"] as const;
 type Tab = (typeof TABS)[number];
@@ -31,8 +32,8 @@ export function PainterJobsScreen() {
     <div className="flex flex-col gap-5">
       <h1 className="text-[28px] font-extrabold tracking-tight">{t("title")}</h1>
 
-      <div role="tablist" aria-label={t("tabs.label")} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1 sm:grid-cols-4">
-        {TABS.map((key) => {
+      <div role="tablist" aria-label={t("tabs.label")} onKeyDown={tabListKeyDown} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1 sm:grid-cols-4">
+        {TABS.map((key, i) => {
           const count = (jobs.data?.[key].length ?? 0) + (key === "upcoming" ? (jobs.data?.visits.length ?? 0) : 0);
           return (
             <button
@@ -40,6 +41,7 @@ export function PainterJobsScreen() {
               role="tab"
               type="button"
               aria-selected={tab === key}
+              tabIndex={rovingTabIndex(tab === key, i, true)}
               onClick={() => setChosen(key)}
               className="h-11 rounded-xl text-sm font-medium text-muted-foreground aria-selected:bg-primary aria-selected:font-semibold aria-selected:text-primary-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
             >

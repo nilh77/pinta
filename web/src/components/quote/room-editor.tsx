@@ -16,6 +16,7 @@ import {
   type RoomSize,
 } from "@/lib/quote/draft";
 import type { PublicCatalog } from "@/lib/quote/use-quote-data";
+import { radioGroupKeyDown, rovingTabIndex } from "@/lib/arrow-keys";
 import { cn } from "@/lib/utils";
 
 type RoomEditorProps = {
@@ -90,8 +91,8 @@ export function RoomEditor({ element, onChange, errors, catalog, info }: RoomEdi
         )}
         {element.kind === "room" && element.mode === "size" ? (
           <>
-            <div role="radiogroup" aria-label={t("size")} className="grid grid-cols-3 gap-2">
-              {(["S", "M", "L"] as const).map((size: RoomSize) => {
+            <div role="radiogroup" aria-label={t("size")} onKeyDown={radioGroupKeyDown} className="grid grid-cols-3 gap-2">
+              {(["S", "M", "L"] as const).map((size: RoomSize, i) => {
                 const [length, width] = info.roomTypes[element.roomTypeId]?.sizes[size] ?? [0, 0];
                 return (
                   <button
@@ -99,6 +100,7 @@ export function RoomEditor({ element, onChange, errors, catalog, info }: RoomEdi
                     type="button"
                     role="radio"
                     aria-checked={element.size === size}
+                    tabIndex={rovingTabIndex(element.size === size, i, element.size != null)}
                     onClick={() => onChange({ ...element, size })}
                     className="flex h-16 flex-col items-center justify-center gap-0.5 rounded-xl border-[1.5px] border-border bg-card transition-colors aria-checked:border-2 aria-checked:border-primary aria-checked:bg-primary-soft focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none motion-reduce:transition-none"
                   >
@@ -138,13 +140,14 @@ export function RoomEditor({ element, onChange, errors, catalog, info }: RoomEdi
         <h3 id={`${element.id}-paint`} className="text-sm font-semibold">
           {t("paint")}
         </h3>
-        <div role="radiogroup" aria-labelledby={`${element.id}-paint`} className="flex flex-col gap-2">
-          {catalog.paints.map((paint) => (
+        <div role="radiogroup" aria-labelledby={`${element.id}-paint`} onKeyDown={radioGroupKeyDown} className="flex flex-col gap-2">
+          {catalog.paints.map((paint, i) => (
             <button
               key={paint.id}
               type="button"
               role="radio"
               aria-checked={element.paintId === paint.id}
+              tabIndex={rovingTabIndex(element.paintId === paint.id, i, catalog.paints.some((p) => p.id === element.paintId))}
               onClick={() => onChange({ ...element, paintId: paint.id, paintChosen: true })}
               className="flex min-h-12 items-center gap-3 rounded-2xl border-[1.5px] border-border bg-card px-3.5 py-2.5 text-left transition-colors aria-checked:border-2 aria-checked:border-primary aria-checked:bg-primary-soft focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none motion-reduce:transition-none"
             >

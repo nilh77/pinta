@@ -18,6 +18,7 @@ import { DraftEditor } from "./draft-editor";
 import { JobActions } from "./job-actions";
 import { JobFiles } from "./job-files";
 import { ReviewLightBadge } from "./review-light";
+import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
 const TABS = ["quote", "versions", "files", "history", "payments", "assignment"] as const;
 type Tab = (typeof TABS)[number];
@@ -77,15 +78,16 @@ function Tabbed({ job }: { job: AdminJobDetail }) {
         <ArrowLeft aria-hidden="true" className="size-4" />
         {t("backToJobs")}
       </Link>
-      <Overview job={job} />
-      <div role="tablist" aria-label={t("tabs.label")} className="flex gap-1 overflow-x-auto border-b border-border">
-        {TABS.map((key) => (
+      <Overview job={job} pageTitle />
+      <div role="tablist" aria-label={t("tabs.label")} onKeyDown={tabListKeyDown} className="flex gap-1 overflow-x-auto border-b border-border">
+        {TABS.map((key, i) => (
           <button
             key={key}
             id={`tab-${key}`}
             role="tab"
             type="button"
             aria-selected={tab === key}
+            tabIndex={rovingTabIndex(tab === key, i, true)}
             aria-controls={`panel-${key}`}
             onClick={() => setTab(key)}
             className="-mb-px min-h-11 border-b-2 border-transparent px-3 text-sm font-semibold whitespace-nowrap text-muted-foreground aria-selected:border-primary aria-selected:text-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
@@ -95,6 +97,8 @@ function Tabbed({ job }: { job: AdminJobDetail }) {
         ))}
       </div>
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {/* The page title is the h1 (job code): each panel opens with its own h2 for the outline. */}
+        <h2 className="sr-only">{t(`tabs.${tab}`)}</h2>
         {tab === "quote" && <QuoteSection job={job} />}
         {tab === "versions" && <Versions job={job} />}
         {tab === "files" && <JobFiles files={job.files} />}
@@ -128,7 +132,7 @@ function PaymentsTab({ jobId }: { jobId: string }) {
 }
 
 /** Client, address, dates, description and deadlines (A2.2). */
-function Overview({ job }: { job: AdminJobDetail }) {
+function Overview({ job, pageTitle }: { job: AdminJobDetail; pageTitle?: boolean }) {
   const t = useTranslations("admin.job");
   const locale = useLocale();
   const dates =
@@ -136,10 +140,13 @@ function Overview({ job }: { job: AdminJobDetail }) {
       ? t("asap")
       : `${formatDate(locale, job.preferredDates.from, true)} – ${formatDate(locale, job.preferredDates.to)}`;
 
+  // On its own page the code is the page title; inside Revisión that page has its own.
+  const Heading = pageTitle ? "h1" : "h2";
+
   return (
     <section className="flex flex-col gap-4 rounded-[20px] border border-border bg-card p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-xl font-extrabold tracking-tight">{job.code}</h2>
+        <Heading className="text-xl font-extrabold tracking-tight">{job.code}</Heading>
         <JobStatusBadge status={job.status} />
         {job.light && <ReviewLightBadge light={job.light} dueOn={job.reviewDueOn} />}
         {job.premium && <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent-ink">Premium</span>}

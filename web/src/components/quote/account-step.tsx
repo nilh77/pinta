@@ -20,6 +20,7 @@ import { toSubmitRequest, validateBilling } from "@/lib/quote/request";
 import { rememberLastRequest, useSubmitJob } from "@/lib/quote/use-submit";
 import { cn } from "@/lib/utils";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
+import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
 /** Screen 7 · Cuenta (board Cuenta) [C4.3, C4.4]: create an account or sign in, then send the request. */
 export function AccountStep() {
@@ -160,14 +161,15 @@ function AccountForm({ draft, info, update }: QuoteContext) {
             </>
           )}
 
-          <div role="tablist" aria-label={t("tabsLabel")} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1">
-            {(["register", "login"] as const).map((name) => (
+          <div role="tablist" aria-label={t("tabsLabel")} onKeyDown={tabListKeyDown} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1">
+            {(["register", "login"] as const).map((name, i) => (
               <button
                 key={name}
                 type="button"
                 role="tab"
                 id={`tab-${name}`}
                 aria-selected={tab === name}
+                tabIndex={rovingTabIndex(tab === name, i, true)}
                 aria-controls={`panel-${name}`}
                 onClick={() => setTab(name)}
                 className="h-11 rounded-xl text-[13px] font-medium text-muted-foreground transition-colors aria-selected:bg-primary aria-selected:font-semibold aria-selected:text-primary-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none motion-reduce:transition-none"

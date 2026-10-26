@@ -85,8 +85,7 @@ export function PhotoPicker({
           type="file"
           accept={PHOTO_TYPES.join(",")}
           multiple
-          className="sr-only"
-          tabIndex={-1}
+          hidden
           onChange={(event) => {
             void add(event.target.files);
             event.target.value = "";

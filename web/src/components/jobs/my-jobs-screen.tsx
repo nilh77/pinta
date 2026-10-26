@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { JobProgress } from "./job-progress";
 import { JobStatusBadge } from "./job-status-badge";
 import { PriceRange } from "@/components/quote/price-range";
+import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
 /** Screen 9 · Mis trabajos (board MisTrabajos) [C5.1]. */
 export function MyJobsScreen() {
@@ -32,13 +33,14 @@ export function MyJobsScreen() {
         </Button>
       </div>
 
-      <div role="tablist" aria-label={t("tabs.label")} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1 sm:w-80">
-        {(["active", "history"] as const).map((key) => (
+      <div role="tablist" aria-label={t("tabs.label")} onKeyDown={tabListKeyDown} className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-card p-1 sm:w-80">
+        {(["active", "history"] as const).map((key, i) => (
           <button
             key={key}
             role="tab"
             type="button"
             aria-selected={tab === key}
+            tabIndex={rovingTabIndex(tab === key, i, true)}
             onClick={() => setTab(key)}
             className="h-11 rounded-xl text-sm font-medium text-muted-foreground aria-selected:bg-primary aria-selected:font-semibold aria-selected:text-primary-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
           >

@@ -305,15 +305,15 @@ function QuoteCard({ job }: { job: ClientJobDetail }) {
             </dd>
           </div>
         )}
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <div className="rounded-xl bg-primary-soft p-3">
-            <dt className="text-xs text-muted-foreground">{t("deposit")}</dt>
-            <dd className="font-bold">{formatCents(locale, quote.depositCents)}</dd>
-          </div>
-          <div className="rounded-xl bg-background p-3">
-            <dt className="text-xs text-muted-foreground">{t("balance")}</dt>
-            <dd className="font-bold">{formatCents(locale, quote.balanceCents)}</dd>
-          </div>
+      </dl>
+      <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <div className="rounded-xl bg-primary-soft p-3">
+          <dt className="text-xs text-muted-foreground">{t("deposit")}</dt>
+          <dd className="font-bold">{formatCents(locale, quote.depositCents)}</dd>
+        </div>
+        <div className="rounded-xl bg-background p-3">
+          <dt className="text-xs text-muted-foreground">{t("balance")}</dt>
+          <dd className="font-bold">{formatCents(locale, quote.balanceCents)}</dd>
         </div>
       </dl>
       {quote.note && (
