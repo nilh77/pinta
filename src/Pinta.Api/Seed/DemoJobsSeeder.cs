@@ -64,12 +64,11 @@ internal static class DemoJobsSeeder
         var nathan = (await users.FindByEmailAsync("nathan@demo.pinta.pt"))!;
         var painters = services.GetRequiredService<PaintersDbContext>();
         var rui = await painters.Painters.SingleAsync(p => p.Email == "rui@demo.pinta.pt");
-        var carla = await painters.Painters.SingleAsync(p => p.Email == "carla@demo.pinta.pt");
         var today = BusinessDays.Today(services.GetRequiredService<TimeProvider>());
         var b = new DemoJobBuilder(services, nathan.Id, today.Year);
 
         await LastMonthAsync(services, b, clients, rui, nathan, today, now);
-        await ThisMonthAsync(b, clients, rui, carla, today);
+        await ThisMonthAsync(b, clients, rui, today);
 
         // New requests are numbered after the demo jobs.
         await services.GetRequiredService<JobsDbContext>().Database.ExecuteSqlInterpolatedAsync($"""
@@ -150,7 +149,7 @@ internal static class DemoJobsSeeder
     }
 
     /// <summary>One job in every state the demo shows (docs/plan.md, "Trabajos"), with D = today.</summary>
-    private static async Task ThisMonthAsync(DemoJobBuilder b, Dictionary<Client, User> clients, Painter rui, Painter carla, DateOnly today)
+    private static async Task ThisMonthAsync(DemoJobBuilder b, Dictionary<Client, User> clients, Painter rui, DateOnly today)
     {
         DateTimeOffset D(int days, int hour = 10)
         {
@@ -159,7 +158,7 @@ internal static class DemoJobsSeeder
         }
 
         var lisboa = ("Lisboa", "Lisboa");
-        var cascais = ("Cascais", "Cascais");
+        var oeiras = ("Oeiras", "Oeiras");
 
         // 0101 · Ana · TC01 in review since D−1 with 4 photos: to review live.
         var j101 = await b.RequestAsync(101, clients[Ana], null, null, ("Rua das Flores, 24", "1200-195"), lisboa, Occupancy.Empty,
@@ -193,13 +192,13 @@ internal static class DemoJobsSeeder
         await b.PayAsync(j105, clients[Miguel].Id, PaymentType.Deposit, q105.Breakdown.DepositCents, D(-4), PaymentMethod.MbWay);
         j105.TransitionTo(JobStatus.DepositPaid, JobActor.System, null, null, D(-4));
 
-        // 0106 · Lisboa Rent · TC10 scheduled with Carla, starts today: «Empezar trabajo» live.
-        var j106 = await b.RequestAsync(106, clients[LisboaRent], LisboaRent.TaxId, LisboaRent.Company, ("Avenida Marginal, 8100", "2750-427"), cascais,
+        // 0106 · Lisboa Rent · TC10 in Oeiras scheduled with Rui, starts today: «Empezar trabajo» live.
+        var j106 = await b.RequestAsync(106, clients[LisboaRent], LisboaRent.TaxId, LisboaRent.Company, ("Avenida Marginal, 6300", "2780-322"), oeiras,
             Occupancy.Furnished, Flat, D(-10));
         var q106 = await b.ConfirmAsync(j106, D(-9), [new DraftExtraRequest("anti_damp_treatment", null, null, null)]);
         await b.PayAsync(j106, clients[LisboaRent].Id, PaymentType.Deposit, q106.Breakdown.DepositCents, D(-8), PaymentMethod.Card);
         j106.TransitionTo(JobStatus.DepositPaid, JobActor.System, null, null, D(-8));
-        await b.ScheduleAsync(j106, carla, q106, today, D(-7));
+        await b.ScheduleAsync(j106, rui, q106, today, D(-7));
 
         // 0107 · Miguel · TC06 in progress with Rui since yesterday, with progress photos.
         var j107 = await b.RequestAsync(107, clients[Miguel], null, null, ("Rua dos Fanqueiros, 38", "1100-231"), lisboa, Occupancy.Empty,

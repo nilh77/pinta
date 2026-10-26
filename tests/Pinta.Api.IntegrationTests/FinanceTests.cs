@@ -214,7 +214,7 @@ public class DemoJobsTests(PintaApiFactory factory)
                 break;
             case "0106":
                 Assert.Equal(lisbon.ToString("yyyy-MM-dd"), detail.GetProperty("scheduledOn").GetString());
-                Assert.Equal("Carla Santos", Assert.Single(detail.GetProperty("assignments").EnumerateArray()).GetProperty("painterName").GetString());
+                Assert.Equal("Rui Almeida", Assert.Single(detail.GetProperty("assignments").EnumerateArray()).GetProperty("painterName").GetString());
                 break;
         }
     }
