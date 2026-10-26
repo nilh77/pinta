@@ -92,7 +92,16 @@
       "title": "How much would it cost to paint your home?",
       "body": "Find out in a minute, no strings attached."
     },
-    "footer": "Home painting in the Lisbon district."
+    "footer": "Home painting in the Lisbon district.",
+    "coverage": {
+      "title": "Do we work in your area?",
+      "label": "Postcode",
+      "placeholder": "Postcode (e.g. 2710-405)",
+      "check": "Check",
+      "covered": "Yes, we work in {municipality}.",
+      "invalid": "Enter the postcode as 1234-567.",
+      "error": "We couldn't check it right now. Please try again."
+    }
   },
   "emailBanner": {
     "title": "Confirm your email",

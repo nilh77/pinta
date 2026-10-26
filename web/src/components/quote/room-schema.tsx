@@ -99,6 +99,8 @@ function RoomCard({
         className={cn(
           "flex min-w-0 flex-1 gap-3 rounded-2xl p-3 pr-12 text-left focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none",
           wide ? "items-center" : "flex-col justify-end",
+          // Narrow cards keep the top strip for the check, so a wrapped name or the damp badge never runs under it.
+          !wide && element.described && !invalid && "pt-11",
         )}
       >
         <span className="min-w-0">

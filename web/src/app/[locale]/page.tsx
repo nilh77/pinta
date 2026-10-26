@@ -1,5 +1,6 @@
 import { ArrowRight, Lock, MapPin, PaintRoller, Search, ShieldCheck } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { CoverageCheck } from "@/components/coverage-check";
 import { EmailConfirmationBanner } from "@/components/email-confirmation-banner";
 import { HouseIllustration } from "@/components/house-illustration";
 import { Logo } from "@/components/logo";
@@ -59,6 +60,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <Button asChild variant="ghost" size="lg">
                 <a href="#como">{t("howLink")}</a>
               </Button>
+            </div>
+            <div className="max-w-md">
+              <CoverageCheck />
             </div>
           </div>
           <div className="mx-auto w-full max-w-sm lg:max-w-md">

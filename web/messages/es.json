@@ -92,7 +92,16 @@
       "title": "¿Cuánto costaría pintar tu casa?",
       "body": "Descúbrelo en un minuto, sin compromiso."
     },
-    "footer": "Pintura de viviendas en el distrito de Lisboa."
+    "footer": "Pintura de viviendas en el distrito de Lisboa.",
+    "coverage": {
+      "title": "¿Llegamos a tu zona?",
+      "label": "Código postal",
+      "placeholder": "Código postal (ej.: 2710-405)",
+      "check": "Comprobar",
+      "covered": "Sí, llegamos a {municipality}.",
+      "invalid": "Escribe el código postal con el formato 1234-567.",
+      "error": "No hemos podido comprobarlo ahora. Inténtalo de nuevo."
+    }
   },
   "emailBanner": {
     "title": "Confirma tu email",
