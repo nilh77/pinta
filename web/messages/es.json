@@ -1801,5 +1801,31 @@
       "share": "Compartir",
       "dismiss": "Cerrar"
     }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "Sin conexión. Puedes seguir viendo y preparando la cotización; para enviar, vuelve a conectarte."
+    },
+    "sessionExpired": {
+      "title": "Tu sesión ha caducado",
+      "body": "Vuelve a entrar para continuar. La cotización que preparabas sigue guardada en este dispositivo.",
+      "signIn": "Entrar"
+    },
+    "cookies": {
+      "label": "Aviso de cookies",
+      "message": "Pinta solo usa cookies técnicas: la sesión, la seguridad de los formularios y el idioma. Sin publicidad ni seguimiento.",
+      "ok": "Entendido"
+    },
+    "notFound": {
+      "title": "Esta página no existe",
+      "body": "La dirección puede estar mal o la página ya no está disponible.",
+      "home": "Ir al inicio"
+    },
+    "error": {
+      "title": "Algo ha ido mal",
+      "body": "Hemos tenido un problema al mostrar esta página. Inténtalo de nuevo; si sigue, vuelve más tarde.",
+      "retry": "Reintentar",
+      "home": "Ir al inicio"
+    }
   }
 }

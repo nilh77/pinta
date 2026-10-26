@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect, useState, type ReactNode } from "react";
 import { setApiLanguage } from "@/lib/api/client";
 import { startPwa } from "@/lib/pwa/install";
+import { CookieNotice, OfflineBanner, SessionExpiredDialog } from "./global-states";
 import { Toaster } from "./toaster";
 
 export function Providers({ locale, children }: { locale: string; children: ReactNode }) {
@@ -13,8 +14,11 @@ export function Providers({ locale, children }: { locale: string; children: Reac
   useEffect(startPwa, []);
   return (
     <QueryClientProvider client={queryClient}>
+      <OfflineBanner />
       {children}
       <Toaster />
+      <SessionExpiredDialog />
+      <CookieNotice />
     </QueryClientProvider>
   );
 }

@@ -1801,5 +1801,31 @@
       "share": "Share",
       "dismiss": "Close"
     }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "You're offline. You can keep browsing and preparing your quote; reconnect to send."
+    },
+    "sessionExpired": {
+      "title": "Your session has expired",
+      "body": "Sign in again to continue. The quote you were preparing is still saved on this device.",
+      "signIn": "Sign in"
+    },
+    "cookies": {
+      "label": "Cookie notice",
+      "message": "Pinta only uses technical cookies: your session, form security and language. No advertising or tracking.",
+      "ok": "Got it"
+    },
+    "notFound": {
+      "title": "This page doesn't exist",
+      "body": "The address may be wrong, or the page is no longer available.",
+      "home": "Go to the home page"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "body": "We had a problem showing this page. Try again; if it keeps happening, come back later.",
+      "retry": "Try again",
+      "home": "Go to the home page"
+    }
   }
 }

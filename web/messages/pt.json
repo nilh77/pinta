@@ -1801,5 +1801,31 @@
       "share": "Partilhar",
       "dismiss": "Fechar"
     }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "Sem ligação. Pode continuar a ver e a preparar a cotação; para enviar, volte a ligar-se."
+    },
+    "sessionExpired": {
+      "title": "A sua sessão expirou",
+      "body": "Entre de novo para continuar. A cotação que estava a preparar continua guardada neste dispositivo.",
+      "signIn": "Entrar"
+    },
+    "cookies": {
+      "label": "Aviso de cookies",
+      "message": "A Pinta só usa cookies técnicos: a sessão, a segurança dos formulários e o idioma. Sem publicidade nem seguimento.",
+      "ok": "Entendido"
+    },
+    "notFound": {
+      "title": "Esta página não existe",
+      "body": "O endereço pode estar errado ou a página já não está disponível.",
+      "home": "Ir para o início"
+    },
+    "error": {
+      "title": "Algo correu mal",
+      "body": "Tivemos um problema a mostrar esta página. Tente de novo; se continuar, volte mais tarde.",
+      "retry": "Tentar de novo",
+      "home": "Ir para o início"
+    }
   }
 }
