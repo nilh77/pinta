@@ -52,4 +52,9 @@ internal sealed class EmailLog(NotificationsDbContext db) : IEmailLog
             .OrderBy(e => e.CreatedAt)
             .Select(e => new SentEmail(e.Type, e.To, e.Subject, e.Status.ToString().ToLower(), e.Attempts, e.CreatedAt, e.SentAt))
             .ToListAsync(cancellationToken);
+
+    public Task<int> AnonymizeRecipientAsync(string email, string replacement, CancellationToken cancellationToken = default) =>
+        db.Outbox
+            .Where(e => e.To.ToLower() == email.ToLower() && e.Status != OutgoingEmailStatus.Queued)
+            .ExecuteUpdateAsync(e => e.SetProperty(x => x.To, replacement).SetProperty(x => x.Html, ""), cancellationToken);
 }
