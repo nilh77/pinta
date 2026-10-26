@@ -277,8 +277,8 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### Estados globales
 
 - **Toasts**: éxito (3 s), error (hasta cerrarlo) y deshacer (5 s). Arriba en móvil y abajo a la derecha en escritorio.
-- **Sesión caducada**: un 401 en cualquier petición → diálogo «Tu sesión ha caducado» con «Entrar»; el borrador local se conserva.
+- **Sesión caducada**: un 401 en cualquier petición de una pantalla con sesión (no en entrar, registro ni recuperar) → diálogo «Tu sesión ha caducado» con «Entrar», que vuelve a la misma página; el borrador local se conserva.
 - **Sin conexión**: banda superior «Sin conexión». El constructor sigue funcionando (el área se calcula en el cliente; la estimación queda pendiente). Las acciones que escriben quedan desactivadas.
-- **PWA**: manifiesto con nombre, iconos y colores de la paleta B (`#0F766E` y `#F2B705`); el service worker cachea la estructura de la app y los textos, nunca las respuestas de la API con datos personales. Invitación a instalar tras enviar la primera solicitud.
+- **PWA**: manifiesto con nombre, iconos y colores de la paleta B (`#0F766E` y `#F2B705`); el service worker cachea la estructura de la app y los textos, nunca las respuestas de la API con datos personales. Invitación a instalar en la pantalla 8 tras enviar la solicitud: botón «Instalar» donde el navegador lo ofrece y, en iOS, la indicación «Compartir › Añadir a pantalla de inicio»; cerrada una vez, no vuelve. El service worker solo se registra en el build de producción.
 - **Errores 404 y 500**: páginas propias traducidas con enlace a inicio.
 - **Cookies**: solo técnicas en el MVP (sesión, antiforgery e idioma); banner informativo sin opciones de seguimiento.

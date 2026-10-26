@@ -104,6 +104,7 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 - **Prompt**: «Lee CLAUDE.md y docs/plan.md (seed y guion). Prepara el hito H8 y ensáyame el guion paso a paso.»
 - **Reparto acordado en H8**: dos PR. H8a: trabajos de demo de la tabla con fotos, «Restablecer datos de demo», fotos de avance y «reportar incidencia» del pintor, y el registro de emails anonimizado al suprimir una cuenta. H8b: PWA, repaso de escritorio D1–D3, accesibilidad, idiomas y estados vacío/carga/error, Lighthouse y los dos ensayos del guion.
 - **Decisiones de H8**: las fotos de avance y «reportar incidencia» entran (el cliente ve las fotos de avance mientras el trabajo está en curso; la incidencia, con texto y fotos, avisa a los admins y la ven en el trabajo, nunca el cliente); las rutas siguen iguales en los tres idiomas (sin `pathnames` traducidos); las fotos de demo son ilustraciones generadas en el repositorio. «Restablecer datos de demo» solo existe en Development: vacía las tablas de todos los módulos salvo los dos admins (así quien lo pulsa sigue con la sesión abierta), borra los archivos guardados y vuelve a sembrar con fechas relativas a hoy; Mailpit no se toca.
+- **Decisiones de H8b**: PT-2026-0106 pasa a Rui (en Oeiras, una de sus zonas) para que una sola pestaña de pintor cubra la parte P1–P2 del guion. Los dos ensayos los hace Claude en el navegador tras un restablecimiento y dejan `docs/demo-checklist.md` para la demo en vivo. PWA sin librerías: manifiesto de Next, iconos generados en la paleta B (`tools/pwa_icons.py`) y un service worker propio que solo funciona en el build de producción; cachea los estáticos de `/_next/static`, los iconos y las páginas visitadas como respaldo sin conexión, y nunca `/api/*`. La invitación a instalar aparece en la pantalla 8: botón donde el navegador lo permite (Chrome, Android) y una indicación en iOS; si se cierra, no vuelve.
 
 ## Definición de hecho
 
@@ -163,7 +164,7 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 | PT-2026-0103 | Lisboa Rent | TC11 | `site_visit` | Premium; visita con Rui en D+2 |
 | PT-2026-0104 | Ana | TC04 | `quoted` | Precio confirmado en D−1, válido hasta D+14; para pagar la señal en vivo |
 | PT-2026-0105 | Miguel | TC07 | `deposit_paid` | Señal con MB WAY; pendiente de asignar |
-| PT-2026-0106 | Lisboa Rent | TC10 | `scheduled` | Asignado a Carla; empieza en D (para «Empezar trabajo» en vivo) |
+| PT-2026-0106 | Lisboa Rent | TC10 | `scheduled` | En Oeiras, asignado a Rui; empieza en D (para «Empezar trabajo» en vivo) |
 | PT-2026-0107 | Miguel | TC06 | `in_progress` | Rui, empezó en D−1, fotos de avance |
 | PT-2026-0108 | Ana | TC02 | `finished` | Rui, con fotos del resultado; saldo pendiente |
 | PT-2026-0091 | Lisboa Rent | TC08 | `closed` | Mes anterior; pagado |
