@@ -177,3 +177,45 @@ public class DemoFinanceTests(PintaApiFactory factory)
             new { date = $"{month}-15", category = "marketing", description = "Folhetos", amountCents = 5000 }, ApiClient.Json), System.Net.HttpStatusCode.UnprocessableEntity, "period_closed");
     }
 }
+
+/// <summary>H8: the demo jobs of docs/plan.md («Datos de demo» › Trabajos), one in every state, with their photos.</summary>
+public class DemoJobsTests(PintaApiFactory factory)
+{
+    [Theory]
+    [InlineData("0101", "in_review", 4)]
+    [InlineData("0102", "in_review", 0)]
+    [InlineData("0103", "site_visit", 0)]
+    [InlineData("0104", "quoted", 0)]
+    [InlineData("0105", "deposit_paid", 0)]
+    [InlineData("0106", "scheduled", 0)]
+    [InlineData("0107", "in_progress", 2)]
+    [InlineData("0108", "finished", 3)]
+    [InlineData("0094", "expired", 0)]
+    [InlineData("0095", "rejected", 0)]
+    public async Task H8_each_demo_job_is_in_its_state(string number, string status, int files)
+    {
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        var lisbon = DateOnly.FromDateTime(TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, Pinta.SharedKernel.Time.BusinessDays.Lisbon).DateTime);
+        var code = $"PT-{lisbon.Year}-{number}";
+
+        var list = await (await admin.GetAsync($"/api/admin/jobs?q={code}")).ReadJsonAsync();
+        var id = Assert.Single(list.GetProperty("items").EnumerateArray(), j => j.GetProperty("code").GetString() == code).GetProperty("id").GetGuid();
+        var detail = await (await admin.GetAsync($"/api/admin/jobs/{id}")).ReadJsonAsync();
+
+        Assert.Equal((status, files), (detail.GetProperty("status").GetString(), detail.GetProperty("files").GetArrayLength()));
+        switch (number)
+        {
+            case "0102":
+                Assert.Equal("amber", detail.GetProperty("light").GetString());
+                break;
+            case "0103":
+                Assert.True(detail.GetProperty("premium").GetBoolean());
+                Assert.Equal("Rui Almeida", detail.GetProperty("siteVisit").GetProperty("assigneeName").GetString());
+                break;
+            case "0106":
+                Assert.Equal(lisbon.ToString("yyyy-MM-dd"), detail.GetProperty("scheduledOn").GetString());
+                Assert.Equal("Carla Santos", Assert.Single(detail.GetProperty("assignments").EnumerateArray()).GetProperty("painterName").GetString());
+                break;
+        }
+    }
+}

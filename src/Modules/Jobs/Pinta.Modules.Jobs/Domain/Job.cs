@@ -147,6 +147,22 @@ public sealed class Assignment
     public uint Version { get; private set; }
 }
 
+/// <summary>An incident the painter reports on a scheduled or running job (P2): text and photos, for the admins only.</summary>
+public sealed class JobIncident
+{
+    public Guid Id { get; init; } = Guid.CreateVersion7();
+
+    public Guid JobId { get; init; }
+
+    public Guid PainterId { get; init; }
+
+    public required string Text { get; init; }
+
+    public List<Guid> FileIds { get; init; } = [];
+
+    public DateTimeOffset CreatedAt { get; init; }
+}
+
 /// <summary>One row of the status history (docs/data-model.md, HISTORIAL_ESTADO).</summary>
 public sealed class JobStatusChange
 {

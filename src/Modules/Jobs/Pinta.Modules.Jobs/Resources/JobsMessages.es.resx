@@ -20,4 +20,5 @@
   <data name="painter_not_available" xml:space="preserve"><value>Elige un pintor activo que trabaje en este concelho.</value></data>
   <data name="result_photos" xml:space="preserve"><value>Sube al menos 3 fotos del resultado.</value></data>
   <data name="extras_to_price" xml:space="preserve"><value>Indica el precio al cliente de las partidas propuestas en la visita.</value></data>
+  <data name="progress_photos" xml:space="preserve"><value>Sube al menos una foto de avance.</value></data>
 </root>

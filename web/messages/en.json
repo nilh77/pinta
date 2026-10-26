@@ -639,6 +639,9 @@
         "title": "Visit report by {who} · {date}",
         "draft": "The real measures are already in the draft quote; proposed extra work waits for its client price.",
         "noPhotos": "No visit photos."
+      },
+      "incidents": {
+        "title": "{count, plural, one {Incident reported by the painter} other {# incidents reported by the painter}}"
       }
     },
     "jobs": {
@@ -910,6 +913,18 @@
         "confirmBody": "Personal data is removed and the account can no longer sign in. This cannot be undone.",
         "cancel": "Back",
         "done": "Account anonymised."
+      },
+      "demo": {
+        "title": "Demo data",
+        "body": "Puts back the demo jobs, clients, painters and finances, with dates from today. Only available locally.",
+        "button": "Reset demo data",
+        "running": "Resetting…",
+        "confirmTitle": "Reset the demo data?",
+        "confirmBody": "Deletes everything created (requests, payments, photos, costs) except the partners' accounts and creates the demo again. Emails in Mailpit stay.",
+        "confirm": "Reset",
+        "cancel": "Back",
+        "done": "Demo data reset.",
+        "unavailable": "Only available locally."
       }
     }
   },
@@ -1431,7 +1446,9 @@
       "painter": "Painter: {name}",
       "verified": "Verified by Pinta",
       "resultPhotos": "Result photos",
-      "resultPhoto": "Result photo {n}"
+      "resultPhoto": "Result photo {n}",
+      "progressPhotos": "Progress photos",
+      "progressPhoto": "Progress photo {n}"
     }
   },
   "payment": {
@@ -1627,6 +1644,22 @@
         "confirmBody": "We send the photos to the client and ask for the balance.",
         "cancel": "Back",
         "finished": "Job finished. Thank you!"
+      },
+      "progress": {
+        "title": "Progress photos",
+        "body": "The client sees them while the work goes on.",
+        "send": "{count, plural, =0 {Send photos} one {Send # photo} other {Send # photos}}",
+        "sent": "Photos sent to the client."
+      },
+      "incident": {
+        "title": "Incidents",
+        "open": "Report an incident",
+        "dialogTitle": "Incident on {code}",
+        "dialogBody": "Say what happened and add photos. Only the Pinta team sees it; we email them.",
+        "text": "What happened",
+        "submit": "Send incident",
+        "cancel": "Back",
+        "sent": "Incident sent to Pinta."
       }
     },
     "nav": {

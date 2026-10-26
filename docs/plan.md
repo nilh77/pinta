@@ -102,6 +102,8 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 - **Alcance**: seed de demo y botón de restablecer (las fechas se calculan desde hoy); repaso de escritorio D1–D3; PWA instalable; repaso de accesibilidad y de los tres idiomas; estados vacío, carga y error en todas las pantallas; ensayo del guion de la demo.
 - **Criterio de salida**: el guion de la demo se hace dos veces seguidas, sin errores, tras un restablecimiento; Lighthouse ≥ 90 en rendimiento y accesibilidad en la pantalla 2 en móvil.
 - **Prompt**: «Lee CLAUDE.md y docs/plan.md (seed y guion). Prepara el hito H8 y ensáyame el guion paso a paso.»
+- **Reparto acordado en H8**: dos PR. H8a: trabajos de demo de la tabla con fotos, «Restablecer datos de demo», fotos de avance y «reportar incidencia» del pintor, y el registro de emails anonimizado al suprimir una cuenta. H8b: PWA, repaso de escritorio D1–D3, accesibilidad, idiomas y estados vacío/carga/error, Lighthouse y los dos ensayos del guion.
+- **Decisiones de H8**: las fotos de avance y «reportar incidencia» entran (el cliente ve las fotos de avance mientras el trabajo está en curso; la incidencia, con texto y fotos, avisa a los admins y la ven en el trabajo, nunca el cliente); las rutas siguen iguales en los tres idiomas (sin `pathnames` traducidos); las fotos de demo son ilustraciones generadas en el repositorio. «Restablecer datos de demo» solo existe en Development: vacía las tablas de todos los módulos salvo los dos admins (así quien lo pulsa sigue con la sesión abierta), borra los archivos guardados y vuelve a sembrar con fechas relativas a hoy; Mailpit no se toca.
 
 ## Definición de hecho
 
@@ -172,7 +174,7 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 
 ### Finanzas
 
-Mes anterior con dos trabajos cerrados por Rui y una cancelación tardía, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe de los cinco pagos estimadas en 1,5% + 0,25 € cada uno, porque los pagos de la demo no pasan por Stripe) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto. Lo siembra H7 (`src/Pinta.Api/Seed/FinanceDemoSeeder.cs`); los demás trabajos de demo, H8.
+Mes anterior con dos trabajos cerrados por Rui y una cancelación tardía, costes operativos de ejemplo (alojamiento 25 €, dominio y correo 6 €, comisiones de Stripe de los cinco pagos estimadas en 1,5% + 0,25 € cada uno, porque los pagos de la demo no pasan por Stripe) y los pagos a Rui marcados como hechos, para enseñar un mes cerrado. Mes actual abierto. Lo siembra H7 (`src/Pinta.Api/Seed/DemoJobsSeeder.cs`); los demás trabajos de demo, H8.
 
 Cálculo a mano del mes anterior (criterio de salida de H7; importes del documento 6.3):
 

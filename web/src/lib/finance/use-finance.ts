@@ -77,3 +77,12 @@ export function useExecuteDeletion() {
     onSettled: () => Promise.all([queryClient.invalidateQueries({ queryKey: ["admin", "deletion-requests"] }), queryClient.invalidateQueries({ queryKey: ["admin", "jobs"] })]),
   });
 }
+
+/** H8: «Restablecer datos de demo» (Development only; 404 elsewhere). Everything cached is stale afterwards. */
+export function useResetDemo() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => orThrow(await api.POST("/api/admin/demo/reset")),
+    onSuccess: () => queryClient.invalidateQueries(),
+  });
+}

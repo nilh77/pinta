@@ -15,13 +15,13 @@ public sealed class OutgoingEmail
 {
     public Guid Id { get; init; } = Guid.CreateVersion7();
 
-    public required string To { get; init; }
+    public required string To { get; set; }
 
     public required string Type { get; init; }
 
     public required string Subject { get; init; }
 
-    public required string Html { get; init; }
+    public required string Html { get; set; }
 
     public Guid? JobId { get; init; }
 

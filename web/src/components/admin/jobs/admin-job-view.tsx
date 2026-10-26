@@ -188,6 +188,7 @@ function Overview({ job }: { job: AdminJobDetail }) {
         </div>
       </div>
       {job.siteVisit?.reportedAt && <VisitReport job={job} />}
+      {job.incidents.length > 0 && <Incidents job={job} />}
       {job.description && (
         <blockquote className="rounded-xl bg-background px-3 py-2 text-sm">
           <p className="text-xs font-semibold text-muted-foreground">{t("description")}</p>
@@ -212,6 +213,31 @@ function VisitReport({ job }: { job: AdminJobDetail }) {
       <p className="text-muted-foreground">{t("draft")}</p>
       {job.siteVisit!.reportNotes && <p className="whitespace-pre-line">{job.siteVisit!.reportNotes}</p>}
       <JobFiles files={photos} emptyText={t("noPhotos")} />
+    </section>
+  );
+}
+
+/** P2: what the painter reported during the job, with photos; the client never sees it. */
+function Incidents({ job }: { job: AdminJobDetail }) {
+  const t = useTranslations("admin.job.incidents");
+  const locale = useLocale();
+  return (
+    <section aria-labelledby="incidents-title" className="flex flex-col gap-2 rounded-xl border border-destructive/40 bg-destructive/5 px-3 py-3 text-sm">
+      <h3 id="incidents-title" className="font-bold text-destructive">
+        {t("title", { count: job.incidents.length })}
+      </h3>
+      <ul className="flex flex-col gap-3">
+        {job.incidents.map((i) => (
+          <li key={i.id} className="flex flex-col gap-2">
+            <p>
+              <span className="font-semibold">{i.painterName}</span>
+              <span className="text-muted-foreground"> · {formatDateTime(locale, i.createdAt)}</span>
+            </p>
+            <p className="whitespace-pre-line">{i.text}</p>
+            {i.files.length > 0 && <JobFiles files={i.files} />}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

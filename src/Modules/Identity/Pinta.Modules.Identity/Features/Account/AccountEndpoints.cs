@@ -189,7 +189,8 @@ internal static class AccountEndpoints
     /// its name, email, phone, invoice details, password and logins and can never sign in again. Accounts stay.
     /// </summary>
     private static async Task<Results<NoContent, ProblemHttpResult>> ExecuteAsync(
-        Guid userId, HttpContext http, UserManager<User> users, IClientAccountJobs jobs, TimeProvider clock, CancellationToken cancellationToken)
+        Guid userId, HttpContext http, UserManager<User> users, IClientAccountJobs jobs, IEmailLog emailLog, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var user = await users.FindByIdAsync(userId.ToString());
         if (user is null || user.DeletionRequestedAt is null || user.AnonymizedAt is not null)
@@ -210,6 +211,7 @@ internal static class AccountEndpoints
 
         await users.RemovePasswordAsync(user);
         var anonymous = $"deleted-{user.Id:N}@anonymous.invalid";
+        await emailLog.AnonymizeRecipientAsync(user.Email!, anonymous, cancellationToken);
         user.Name = "—";
         user.Email = anonymous;
         user.UserName = anonymous;

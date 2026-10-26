@@ -1,17 +1,18 @@
 "use client";
 
-import { CheckCircle2, Loader2, UserX } from "lucide-react";
+import { CheckCircle2, Loader2, RotateCcw, UserX } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { useDeletionRequests, useExecuteDeletion, type DeletionRequest } from "@/lib/finance/use-finance";
+import { ApiError } from "@/lib/api/problem";
+import { useDeletionRequests, useExecuteDeletion, useResetDemo, type DeletionRequest } from "@/lib/finance/use-finance";
 import { formatCents, formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-/** Ajustes: for now the account deletion queue (C5.8); H8 adds «Restablecer datos de demo». */
+/** Ajustes: the account deletion queue (C5.8) and, in the local demo, «Restablecer datos de demo» (H8). */
 export function SettingsScreen() {
   const t = useTranslations("admin.settings");
   const requests = useDeletionRequests();
@@ -55,7 +56,44 @@ export function SettingsScreen() {
           </ul>
         )}
       </section>
+      <DemoReset />
     </div>
+  );
+}
+
+/** Development only: the API answers 404 elsewhere and the page says so. */
+function DemoReset() {
+  const t = useTranslations("admin.settings.demo");
+  const errorText = useErrorText();
+  const reset = useResetDemo();
+  const [confirming, setConfirming] = useState(false);
+  return (
+    <section aria-labelledby="demo-title" className="flex flex-col items-start gap-3 rounded-[20px] border border-border bg-card p-4">
+      <div>
+        <h2 id="demo-title" className="font-bold">
+          {t("title")}
+        </h2>
+        <p className="text-sm text-muted-foreground">{t("body")}</p>
+      </div>
+      <Button variant="outline" disabled={reset.isPending} onClick={() => setConfirming(true)}>
+        {reset.isPending ? <Loader2 aria-hidden="true" className="animate-spin" /> : <RotateCcw aria-hidden="true" />}
+        {reset.isPending ? t("running") : t("button")}
+      </Button>
+      <ConfirmDialog
+        open={confirming}
+        onOpenChange={setConfirming}
+        title={t("confirmTitle")}
+        description={t("confirmBody")}
+        confirmLabel={t("confirm")}
+        cancelLabel={t("cancel")}
+        onConfirm={() =>
+          reset.mutate(undefined, {
+            onSuccess: () => toast.success(t("done")),
+            onError: (e) => toast.error(e instanceof ApiError && e.code === "not_found" ? t("unavailable") : errorText(e)),
+          })
+        }
+      />
+    </section>
   );
 }
 

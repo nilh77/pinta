@@ -172,6 +172,32 @@ public sealed class ObjectStorage(StorageOptions options, TimeProvider clock) : 
     public Task DeleteAsync(string key, CancellationToken cancellationToken) =>
         _s3.DeleteObjectAsync(options.Bucket, key, cancellationToken);
 
+    /// <summary>Stores a file from the server itself (the demo seed); everything else uploads through a signed POST.</summary>
+    public async Task PutAsync(string key, byte[] content, string contentType, CancellationToken cancellationToken)
+    {
+        await EnsureBucketAsync(cancellationToken);
+        using var stream = new MemoryStream(content);
+        await _s3.PutObjectAsync(new PutObjectRequest { BucketName = options.Bucket, Key = key, InputStream = stream, ContentType = contentType }, cancellationToken);
+    }
+
+    /// <summary>Removes every stored file (the demo reset).</summary>
+    public async Task DeleteAllAsync(CancellationToken cancellationToken)
+    {
+        await EnsureBucketAsync(cancellationToken);
+        string? token = null;
+        do
+        {
+            var page = await _s3.ListObjectsV2Async(new ListObjectsV2Request { BucketName = options.Bucket, ContinuationToken = token }, cancellationToken);
+            foreach (var item in page.S3Objects ?? [])
+            {
+                await _s3.DeleteObjectAsync(options.Bucket, item.Key, cancellationToken);
+            }
+
+            token = page.IsTruncated == true ? page.NextContinuationToken : null;
+        }
+        while (token is not null);
+    }
+
     public void Dispose()
     {
         _s3.Dispose();

@@ -1,6 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Notifications.Data;
+using Pinta.Modules.Notifications.Domain;
 
 namespace Pinta.Api.IntegrationTests;
 
@@ -92,5 +96,37 @@ public class AccountTests(PintaApiFactory factory)
             HttpStatusCode.Conflict, "invalid_transition");
         await ProblemAssert.HasCodeAsync(await s.Painter.GetAsync("/api/me"), HttpStatusCode.Forbidden, "forbidden");
         await ProblemAssert.HasCodeAsync(await s.Job.Client.GetAsync("/api/admin/deletion-requests"), HttpStatusCode.Forbidden, "forbidden");
+    }
+
+    [Fact]
+    public async Task C5_8_the_deletion_also_removes_the_address_and_content_of_the_emails_already_sent()
+    {
+        var job = await TestJobs.SendAsync(factory);
+        var admin = await ApiClient.CreateAdminAsync(factory);
+        Guid sent, queued;
+        await using (var scope = factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+            var now = DateTimeOffset.UtcNow;
+            var a = new OutgoingEmail { To = job.Email, Type = "RequestReceivedEmail", Subject = job.Code, Html = "<p>Olá Ana Costa</p>", Status = OutgoingEmailStatus.Sent, CreatedAt = now, SentAt = now };
+            var b = new OutgoingEmail { To = job.Email, Type = "RefundEmail", Subject = job.Code, Html = "<p>Reembolso</p>", Status = OutgoingEmailStatus.Queued, CreatedAt = now };
+            db.Outbox.AddRange(a, b);
+            await db.SaveChangesAsync();
+            (sent, queued) = (a.Id, b.Id);
+        }
+
+        await job.Client.PostAsJsonAsync("/api/me/delete-request", new { }, ApiClient.Json);
+        var userId = (await (await admin.GetAsync("/api/admin/deletion-requests")).ReadJsonAsync()).EnumerateArray()
+            .Single(r => r.GetProperty("email").GetString() == job.Email).GetProperty("userId").GetGuid();
+        Assert.Equal(HttpStatusCode.NoContent, (await admin.PostAsJsonAsync($"/api/admin/deletion-requests/{userId}/execute", new { }, ApiClient.Json)).StatusCode);
+
+        await using (var scope = factory.Services.CreateAsyncScope())
+        {
+            var db = scope.ServiceProvider.GetRequiredService<NotificationsDbContext>();
+            var a = await db.Outbox.AsNoTracking().SingleAsync(e => e.Id == sent);
+            var b = await db.Outbox.AsNoTracking().SingleAsync(e => e.Id == queued);
+            Assert.Equal(($"deleted-{userId:N}@anonymous.invalid", "", job.Code), (a.To, a.Html, a.Subject));
+            Assert.Equal(job.Email, b.To);
+        }
     }
 }

@@ -58,12 +58,39 @@ public sealed record PainterJobDetail(
     long PainterPayCents,
     IReadOnlyList<JobFile> ClientFiles,
     IReadOnlyList<JobFile> ResultFiles,
+    IReadOnlyList<JobFile> ProgressFiles,
+    IReadOnlyList<PainterIncident> Incidents,
     bool CanStart,
     int MinResultPhotos);
 
-public sealed record ResultUploadRequest(string ContentType, long SizeBytes);
+/// <summary>
+/// A photo of the job: <see cref="Context"/> <c>result</c> (the default), <c>progress</c> or <c>incident</c>. The site visit
+/// upload takes the same body and ignores it.
+/// </summary>
+public sealed record ResultUploadRequest(string ContentType, long SizeBytes, MediaContext? Context = null);
+
+public sealed record ProgressRequest(IReadOnlyList<Guid> FileIds);
+
+public sealed record IncidentRequest(string Text, IReadOnlyList<Guid>? FileIds);
+
+/// <summary>An incident as the painter who reported it sees it.</summary>
+public sealed record PainterIncident(Guid Id, string Text, DateTimeOffset CreatedAt);
 
 public sealed record FinishJobRequest(IReadOnlyList<Guid> FileIds);
+
+internal sealed class ProgressRequestValidator : AbstractValidator<ProgressRequest>
+{
+    public ProgressRequestValidator() => RuleFor(r => r.FileIds).NotEmpty().Must(ids => ids.Count <= 20);
+}
+
+internal sealed class IncidentRequestValidator : AbstractValidator<IncidentRequest>
+{
+    public IncidentRequestValidator()
+    {
+        RuleFor(r => r.Text).NotEmpty().MaximumLength(2000);
+        RuleFor(r => r.FileIds).Must(ids => ids is null || ids.Count <= 10);
+    }
+}
 
 internal sealed class FinishJobRequestValidator : AbstractValidator<FinishJobRequest>
 {
@@ -84,6 +111,8 @@ internal static class PainterJobEndpoints
             .ProducesProblem(StatusCodes.Status413PayloadTooLarge).ProducesProblem(StatusCodes.Status415UnsupportedMediaType);
         jobs.MapPost("/start", StartAsync).WithName("StartJob");
         jobs.MapPost("/finish", FinishAsync).WithValidation<FinishJobRequest>().WithName("FinishJob");
+        jobs.MapPost("/progress", ProgressAsync).WithValidation<ProgressRequest>().WithName("AddProgressPhotos");
+        jobs.MapPost("/incidents", IncidentAsync).WithValidation<IncidentRequest>().WithName("ReportIncident");
         jobs.ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
     }
 
@@ -125,8 +154,11 @@ internal static class PainterJobEndpoints
             [.. quote.Extras.Select(x => new PainterExtra(x.Description, x.PainterPayCents))],
             quote.Note,
             Money.ToCents(assignment.PainterPay),
-            [.. files.Where(f => f.Context != MediaContext.Result)],
+            [.. files.Where(f => f.Context is MediaContext.Element or MediaContext.JobGeneral)],
             [.. files.Where(f => f.Context == MediaContext.Result)],
+            [.. files.Where(f => f.Context == MediaContext.Progress)],
+            [.. (await db.Incidents.AsNoTracking().Where(i => i.JobId == job.Id).OrderBy(i => i.CreatedAt).ToListAsync(cancellationToken))
+                .Select(i => new PainterIncident(i.Id, i.Text, i.CreatedAt))],
             CanStart(job, clock),
             MinResultPhotos));
     }
@@ -141,13 +173,21 @@ internal static class PainterJobEndpoints
             return JobProblems.NotFound();
         }
 
-        if (job.Status != JobStatus.InProgress)
+        // Result and progress photos while the work runs; incident photos also before it starts.
+        var context = request.Context ?? MediaContext.Result;
+        var allowed = context switch
+        {
+            MediaContext.Result or MediaContext.Progress => job.Status == JobStatus.InProgress,
+            MediaContext.Incident => job.Status is JobStatus.Scheduled or JobStatus.InProgress,
+            _ => false,
+        };
+        if (!allowed)
         {
             return JobProblems.InvalidTransition();
         }
 
         var (upload, refusal) = await media.CreateOwnedUploadAsync(
-            new OwnedUploadRequest(MediaContext.Result, http.User.GetUserId()!.Value, job.Id, null, request.ContentType, request.SizeBytes), cancellationToken);
+            new OwnedUploadRequest(context, http.User.GetUserId()!.Value, job.Id, null, request.ContentType, request.SizeBytes), cancellationToken);
         return refusal switch
         {
             UploadRefusal.UnsupportedType => ApiProblem.Create(StatusCodes.Status415UnsupportedMediaType, ErrorCodes.UnsupportedMediaType),
@@ -212,6 +252,65 @@ internal static class PainterJobEndpoints
             var balance = (await quotes.GetClientAsync(job.CurrentQuoteVersionId, language, cancellationToken))?.BalanceCents ?? 0;
             await emails.EnqueueAsync(new JobFinishedEmail(
                 client.Email, client.Locale, client.Name, job.Code, balance, links.ClientJob(job.Id, client.Locale)) { JobId = job.Id }, cancellationToken);
+        }
+
+        return TypedResults.NoContent();
+    }
+
+    /// <summary>P2: progress photos while the job runs; the client sees them on screen 10.</summary>
+    private static async Task<Results<NoContent, ProblemHttpResult>> ProgressAsync(
+        Guid id, ProgressRequest request, HttpContext http, JobsDbContext db, IPainterDirectory painters, IMediaService media,
+        CancellationToken cancellationToken)
+    {
+        var (job, _) = await FindOwnAsync(id, http, db, painters, tracked: false, cancellationToken);
+        if (job is null)
+        {
+            return JobProblems.NotFound();
+        }
+
+        if (job.Status != JobStatus.InProgress)
+        {
+            return JobProblems.InvalidTransition();
+        }
+
+        var photos = await media.ConfirmOwnedAsync([.. request.FileIds.Distinct()], http.User.GetUserId()!.Value, job.Id, null, MediaContext.Progress,
+            cancellationToken);
+        return photos.Count == 0
+            ? ApiProblem.Validation(new Dictionary<string, string[]> { ["fileIds"] = [JobsMessages.Get("progress_photos")] })
+            : TypedResults.NoContent();
+    }
+
+    /// <summary>P2: an incident with text and photos, scheduled or in progress; the admins get an email.</summary>
+    private static async Task<Results<NoContent, ProblemHttpResult>> IncidentAsync(
+        Guid id, IncidentRequest request, HttpContext http, JobsDbContext db, IPainterDirectory painters, IMediaService media,
+        IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock, CancellationToken cancellationToken)
+    {
+        var (job, assignment) = await FindOwnAsync(id, http, db, painters, tracked: false, cancellationToken);
+        if (job is null)
+        {
+            return JobProblems.NotFound();
+        }
+
+        if (job.Status is not (JobStatus.Scheduled or JobStatus.InProgress))
+        {
+            return JobProblems.InvalidTransition();
+        }
+
+        var userId = http.User.GetUserId()!.Value;
+        var photos = request.FileIds is { Count: > 0 } ids
+            ? await media.ConfirmOwnedAsync([.. ids.Distinct()], userId, job.Id, null, MediaContext.Incident, cancellationToken)
+            : [];
+        db.Incidents.Add(new JobIncident
+        {
+            JobId = job.Id, PainterId = assignment!.PainterId, Text = request.Text.Trim(), FileIds = [.. photos.Select(p => p.Id)], CreatedAt = clock.GetUtcNow(),
+        });
+        await db.SaveChangesAsync(cancellationToken);
+
+        var painter = await painters.FindAsync(assignment.PainterId, cancellationToken);
+        foreach (var admin in await users.ListAdminsAsync(cancellationToken))
+        {
+            await emails.EnqueueAsync(new IncidentReportedEmail(
+                admin.Email, admin.Locale, job.Code, painter?.Name ?? "", request.Text.Trim(), links.AdminJob(job.Id, admin.Locale)) { JobId = job.Id }, cancellationToken);
         }
 
         return TypedResults.NoContent();

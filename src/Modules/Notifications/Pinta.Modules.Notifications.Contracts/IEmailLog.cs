@@ -6,4 +6,10 @@ public sealed record SentEmail(string Type, string To, string Subject, string St
 public interface IEmailLog
 {
     Task<IReadOnlyList<SentEmail>> ListForJobAsync(Guid jobId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// C5.8: the emails already sent (or failed) to <paramref name="email"/> keep their type, subject and dates but get
+    /// <paramref name="replacement"/> as address and lose their content. Queued ones still go out to the person.
+    /// </summary>
+    Task<int> AnonymizeRecipientAsync(string email, string replacement, CancellationToken cancellationToken = default);
 }

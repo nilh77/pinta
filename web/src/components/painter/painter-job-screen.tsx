@@ -1,21 +1,24 @@
 "use client";
 
-import { ArrowLeft, CircleCheck, Clock, Loader2, MapPin, Navigation, Phone, Play } from "lucide-react";
+import { ArrowLeft, CircleCheck, Clock, Loader2, MapPin, Navigation, Phone, Play, TriangleAlert } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { Link } from "@/i18n/navigation";
 import type { components } from "@/lib/api/schema";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { formatArea, formatCents, formatDate, formatMetres } from "@/lib/format";
+import { formatArea, formatCents, formatDate, formatDateTime, formatMetres } from "@/lib/format";
 import { useCatalog } from "@/lib/quote/use-quote-data";
 import {
   uploadResultPhoto,
+  useAddProgress,
   useFinishJob,
+  useReportIncident,
   usePainterJob,
   useStartJob,
   type PainterElement,
@@ -277,10 +280,17 @@ function Actions({ job }: { job: PainterJobDetail }) {
               {t("startFrom", { date: formatDate(locale, job.scheduledOn) })}
             </p>
           )}
+          <Incident job={job} />
         </section>
       );
     case "in_progress":
-      return <ResultPhotos job={job} />;
+      return (
+        <>
+          <ResultPhotos job={job} />
+          <Progress job={job} />
+          <Incident job={job} />
+        </>
+      );
     case "finished":
     case "closed":
       return (
@@ -295,6 +305,107 @@ function Actions({ job }: { job: PainterJobDetail }) {
     default:
       return null;
   }
+}
+
+/** P2: progress photos while the work runs; the client sees them on their job. */
+function Progress({ job }: { job: PainterJobDetail }) {
+  const t = useTranslations("painter.job.progress");
+  const errorText = useErrorText();
+  const add = useAddProgress(job.id);
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
+  const ready = photos.filter((p) => p.fileId);
+  const uploading = photos.some((p) => !p.fileId && !p.failed);
+
+  return (
+    <section aria-labelledby="progress-title" className="flex flex-col gap-3 rounded-[20px] border border-border bg-card p-4">
+      <div>
+        <h2 id="progress-title" className="font-bold">
+          {t("title")}
+        </h2>
+        <p className="text-sm text-muted-foreground">{t("body")}</p>
+      </div>
+      {job.progressFiles.length > 0 && <FileGrid files={job.progressFiles} />}
+      <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress, "progress")} />
+      <Button
+        variant="outline"
+        className="self-start"
+        disabled={ready.length === 0 || uploading || add.isPending}
+        onClick={() =>
+          add.mutate(
+            ready.map((p) => p.fileId!),
+            { onSuccess: () => (setPhotos([]), toast.success(t("sent"))), onError: (e) => toast.error(errorText(e)) },
+          )
+        }
+      >
+        {add.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+        {t("send", { count: ready.length })}
+      </Button>
+    </section>
+  );
+}
+
+/** P2: «Reportar incidencia» with text and photos, before or during the work; only Pinta sees it. */
+function Incident({ job }: { job: PainterJobDetail }) {
+  const t = useTranslations("painter.job.incident");
+  const locale = useLocale();
+  const errorText = useErrorText();
+  const report = useReportIncident(job.id);
+  const [open, setOpen] = useState(false);
+  const [text, setText] = useState("");
+  const [photos, setPhotos] = useState<PickedPhoto[]>([]);
+  const uploading = photos.some((p) => !p.fileId && !p.failed);
+
+  return (
+    <section className="flex flex-col gap-2 rounded-[20px] border border-border bg-card p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h2 className="font-bold">{t("title")}</h2>
+        <Button variant="outline" size="sm" className="text-destructive" onClick={() => setOpen(true)}>
+          <TriangleAlert aria-hidden="true" />
+          {t("open")}
+        </Button>
+      </div>
+      {job.incidents.length > 0 && (
+        <ul className="flex flex-col gap-1 text-sm">
+          {job.incidents.map((i) => (
+            <li key={i.id}>
+              <span className="text-xs text-muted-foreground">{formatDateTime(locale, i.createdAt)} · </span>
+              {i.text}
+            </li>
+          ))}
+        </ul>
+      )}
+      <FormDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t("dialogTitle", { code: job.code })}
+        description={t("dialogBody")}
+        submitLabel={t("submit")}
+        cancelLabel={t("cancel")}
+        pending={report.isPending}
+        submitDisabled={!text.trim() || uploading}
+        destructive
+        onSubmit={() =>
+          report.mutate(
+            { text: text.trim(), fileIds: photos.filter((p) => p.fileId).map((p) => p.fileId!) },
+            {
+              onSuccess: () => {
+                setOpen(false);
+                setText("");
+                setPhotos([]);
+                toast.success(t("sent"));
+              },
+              onError: (e) => toast.error(errorText(e)),
+            },
+          )
+        }
+      >
+        <div className="flex flex-col gap-3">
+          <TextAreaField id={`incident-${job.id}`} label={t("text")} value={text} onChange={setText} max={2000} required />
+          <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress, "incident")} />
+        </div>
+      </FormDialog>
+    </section>
+  );
 }
 
 /** Result photos straight to storage, then «Marcar como terminado» with at least `minResultPhotos` (P2.2). */

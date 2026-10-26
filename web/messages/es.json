@@ -639,6 +639,9 @@
         "title": "Informe de la visita de {who} · {date}",
         "draft": "Las medidas reales ya están en el borrador de la cotización; los trabajos extra propuestos esperan el precio al cliente.",
         "noPhotos": "Sin fotos de la visita."
+      },
+      "incidents": {
+        "title": "{count, plural, one {Incidencia reportada por el pintor} other {# incidencias reportadas por el pintor}}"
       }
     },
     "jobs": {
@@ -910,6 +913,18 @@
         "confirmBody": "Los datos personales se borran y la cuenta ya no podrá entrar. No se puede deshacer.",
         "cancel": "Volver",
         "done": "Cuenta anonimizada."
+      },
+      "demo": {
+        "title": "Datos de demo",
+        "body": "Vuelve a poner los trabajos, clientes, pintores y finanzas de demo, con fechas a partir de hoy. Solo existe en el entorno local.",
+        "button": "Restablecer datos de demo",
+        "running": "Restableciendo…",
+        "confirmTitle": "¿Restablecer los datos de demo?",
+        "confirmBody": "Borra todo lo creado (solicitudes, pagos, fotos, costes) salvo las cuentas de los socios y vuelve a crear la demo. Los emails de Mailpit se quedan.",
+        "confirm": "Restablecer",
+        "cancel": "Volver",
+        "done": "Datos de demo restablecidos.",
+        "unavailable": "Solo disponible en el entorno local."
       }
     }
   },
@@ -1431,7 +1446,9 @@
       "painter": "Pintor: {name}",
       "verified": "Verificado por Pinta",
       "resultPhotos": "Fotos del resultado",
-      "resultPhoto": "Foto del resultado {n}"
+      "resultPhoto": "Foto del resultado {n}",
+      "progressPhotos": "Fotos de avance",
+      "progressPhoto": "Foto de avance {n}"
     }
   },
   "payment": {
@@ -1627,6 +1644,22 @@
         "confirmBody": "Enviamos las fotos al cliente y le pedimos el pago del resto.",
         "cancel": "Volver",
         "finished": "Trabajo terminado. ¡Gracias!"
+      },
+      "progress": {
+        "title": "Fotos de avance",
+        "body": "El cliente las ve en su zona mientras dura el trabajo.",
+        "send": "{count, plural, =0 {Enviar fotos} one {Enviar # foto} other {Enviar # fotos}}",
+        "sent": "Fotos enviadas al cliente."
+      },
+      "incident": {
+        "title": "Incidencias",
+        "open": "Reportar incidencia",
+        "dialogTitle": "Incidencia en {code}",
+        "dialogBody": "Cuenta qué pasa y añade fotos. Solo lo ve el equipo de Pinta; le avisamos por email.",
+        "text": "Qué pasa",
+        "submit": "Enviar incidencia",
+        "cancel": "Volver",
+        "sent": "Incidencia enviada a Pinta."
       }
     },
     "nav": {
