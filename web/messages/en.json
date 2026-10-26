@@ -909,6 +909,18 @@
         "confirmBody": "Personal data is removed and the account can no longer sign in. This cannot be undone.",
         "cancel": "Back",
         "done": "Account anonymised."
+      },
+      "demo": {
+        "title": "Demo data",
+        "body": "Puts back the demo jobs, clients, painters and finances, with dates from today. Only available locally.",
+        "button": "Reset demo data",
+        "running": "Resetting…",
+        "confirmTitle": "Reset the demo data?",
+        "confirmBody": "Deletes everything created (requests, payments, photos, costs) except the partners' accounts and creates the demo again. Emails in Mailpit stay.",
+        "confirm": "Reset",
+        "cancel": "Back",
+        "done": "Demo data reset.",
+        "unavailable": "Only available locally."
       }
     }
   },

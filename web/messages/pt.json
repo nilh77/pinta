@@ -909,6 +909,18 @@
         "confirmBody": "Os dados pessoais apagam-se e a conta deixa de poder entrar. Não se pode desfazer.",
         "cancel": "Voltar",
         "done": "Conta anonimizada."
+      },
+      "demo": {
+        "title": "Dados de demonstração",
+        "body": "Volta a pôr os trabalhos, clientes, pintores e finanças de demonstração, com datas a partir de hoje. Só existe no ambiente local.",
+        "button": "Restabelecer dados de demonstração",
+        "running": "A restabelecer…",
+        "confirmTitle": "Restabelecer os dados de demonstração?",
+        "confirmBody": "Apaga tudo o que foi criado (pedidos, pagamentos, fotos, custos) exceto as contas dos sócios e volta a criar a demonstração. Os emails no Mailpit ficam.",
+        "confirm": "Restabelecer",
+        "cancel": "Voltar",
+        "done": "Dados de demonstração restabelecidos.",
+        "unavailable": "Só disponível no ambiente local."
       }
     }
   },

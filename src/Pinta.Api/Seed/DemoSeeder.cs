@@ -30,14 +30,21 @@ public static class DemoSeeder
         ("João Ferreira", "joao@demo.pinta.pt", "+351912000003", ["Loures"], 0m, "", false),
     ];
 
-    public static async Task SeedAsync(IServiceProvider services)
+    /// <summary>The emails of the two partners: a reset keeps their accounts, so whoever presses it stays signed in.</summary>
+    public static IReadOnlyList<string> AdminEmails => [.. Admins.Select(a => a.Email)];
+
+    /// <summary>
+    /// On an empty database everything; with <paramref name="adminsKept"/> (after a reset) everything but the admins,
+    /// who are already there.
+    /// </summary>
+    public static async Task SeedAsync(IServiceProvider services, bool adminsKept = false)
     {
         await using var scope = services.CreateAsyncScope();
         var now = scope.ServiceProvider.GetRequiredService<TimeProvider>().GetUtcNow();
         await CatalogSeeder.SeedAsync(scope.ServiceProvider.GetRequiredService<CatalogDbContext>(), now);
 
         var users = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        if (await users.Users.AnyAsync())
+        if (!adminsKept && await users.Users.AnyAsync())
         {
             return;
         }
@@ -45,7 +52,7 @@ public static class DemoSeeder
         var password = scope.ServiceProvider.GetRequiredService<IConfiguration>()["Seed:DemoPassword"]
             ?? throw new InvalidOperationException("Seed:DemoPassword is not configured.");
 
-        foreach (var (name, email) in Admins)
+        foreach (var (name, email) in adminsKept ? [] : Admins)
         {
             var admin = new User
             {

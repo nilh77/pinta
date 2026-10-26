@@ -909,6 +909,18 @@
         "confirmBody": "Los datos personales se borran y la cuenta ya no podrá entrar. No se puede deshacer.",
         "cancel": "Volver",
         "done": "Cuenta anonimizada."
+      },
+      "demo": {
+        "title": "Datos de demo",
+        "body": "Vuelve a poner los trabajos, clientes, pintores y finanzas de demo, con fechas a partir de hoy. Solo existe en el entorno local.",
+        "button": "Restablecer datos de demo",
+        "running": "Restableciendo…",
+        "confirmTitle": "¿Restablecer los datos de demo?",
+        "confirmBody": "Borra todo lo creado (solicitudes, pagos, fotos, costes) salvo las cuentas de los socios y vuelve a crear la demo. Los emails de Mailpit se quedan.",
+        "confirm": "Restablecer",
+        "cancel": "Volver",
+        "done": "Datos de demo restablecidos.",
+        "unavailable": "Solo disponible en el entorno local."
       }
     }
   },

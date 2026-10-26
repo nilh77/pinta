@@ -93,6 +93,7 @@ app.MapPaymentsEndpoints();
 app.MapMediaEndpoints();
 app.MapNotificationsEndpoints();
 app.MapFinanceEndpoints();
+DemoReset.Map(app);
 
 if (app.Environment.IsDevelopment())
 {
