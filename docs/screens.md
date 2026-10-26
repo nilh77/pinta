@@ -100,7 +100,7 @@ Reglas comunes a todas las pantallas:
 
 ## Acceso (sin board)
 
-Formularios sencillos con el estilo de la pantalla 7. Las rutas son las mismas en los tres idiomas; los `pathnames` traducidos llegan en H8.
+Formularios sencillos con el estilo de la pantalla 7. Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` traducidos).
 
 ### Entrar
 
@@ -139,7 +139,7 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
   - `site_visit`: fecha propuesta, precio de la visita (0 € por defecto) y nombre del pintor.
   - `quoted`: precio cerrado frente a estimación; desglose para el cliente como en el board Trabajo y el documento 6.3: una línea «Pintura de N elementos · m²» y una por partida extra, con IVA incluido, más total, señal y resto (nunca material desglosado, tarifas, pago al pintor ni margen); validez con cuenta atrás y notas del revisor.
   - `deposit_paid` y `scheduled`: fecha, pintor asignado (nombre, foto y teléfono si el ajuste lo permite) y saldo pendiente.
-  - `in_progress`: fotos de avance.
+  - `in_progress`: fotos de avance del pintor (no las incidencias, que son internas).
   - `finished`: fotos del resultado y pago del saldo.
   - `expired`, `rejected` y `cancelled`: motivo y reembolso si lo hay.
 - **Acciones**: «Pagar señal» → pantalla 11 (llega en H5); «Tengo dudas» (mensaje al admin por email, sin cambiar el estado, como C5.2; no hay «Pedir cambios» porque `docs/states.md` no permite volver de «Precio confirmado» a «En revisión»); «Rechazar precio» con motivo opcional (pasa a «Cancelado»); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); descargar el justificante. Las valoraciones del cliente quedan fuera del MVP (`docs/prd-overview.md`).
@@ -184,7 +184,7 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 
 - **Ruta y board**: `/{locale}/pintor/trabajos/{id}` · PintorDetalle.dc.html. \[P2.1, P2.2\]
 - **Datos**: dirección con enlace a mapas, notas de acceso, nombre y teléfono del cliente (botón de llamar), fecha, lista de elementos con medidas, paredes, pintura y litros previstos, fotos del cliente y notas del revisor. Material: lo entrega Pinta, con la cantidad por pintura.
-- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos del resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`). Las fotos de avance y «reportar incidencia» (texto y fotos, avisa al admin) llegan en H8.
+- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos del resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`). Desde H8, mientras está en curso, «Fotos de avance» (`POST …/progress`; el cliente las ve en la pantalla 10) y, programado o en curso, «Reportar incidencia» con texto y fotos (`POST …/incidents`), que avisa a los admins por email y se ve en el trabajo del admin.
 - **Validaciones**: terminar exige las fotos de resultado; no se puede empezar antes de la fecha.
 - **Estados**: tras terminar queda en solo lectura con «Pendiente de cierre por Pinta».
 
@@ -253,7 +253,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### Ajustes (no dibujado)
 
 - **Ruta**: `/{locale}/admin/ajustes`.
-- **Datos y acciones**: desde H7, la cola de «Supresión de cuentas» (C5.8): clientes que la pidieron, con «Anonimizar» y una confirmación que lista los trabajos que se cancelarán y sus reembolsos. Más adelante: datos de la empresa para facturas, teléfono del cliente visible al pintor (sí o no), plazo de revisión, días de antelación mínimos, plantillas de email por idioma (solo lectura en el MVP) y, solo en demo, «Restablecer datos de demo».
+- **Datos y acciones**: desde H7, la cola de «Supresión de cuentas» (C5.8): clientes que la pidieron, con «Anonimizar» y una confirmación que lista los trabajos que se cancelarán y sus reembolsos. Desde H8, solo en Development, «Restablecer datos de demo» con confirmación (`POST /api/admin/demo/reset`). Más adelante: datos de la empresa para facturas, teléfono del cliente visible al pintor (sí o no), plazo de revisión, días de antelación mínimos y plantillas de email por idioma (solo lectura en el MVP).
 
 ## Escritorio, componentes y estados globales
 

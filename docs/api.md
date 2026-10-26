@@ -82,7 +82,9 @@ Todas las rutas exigen rol Pintor y devuelven solo recursos asignados a él. Las
 | POST | `/api/painter/visits/{id}/report` | `{ elements, extras: [{ catalogKey?, description, painterPayCents }], fileIds, notes }`: vuelve a «En revisión» y crea el borrador `site_visit` | P3.1 |
 | GET | `/api/painter/payouts?month=AAAA-MM` | Todo lo pendiente y lo pagado en el mes, con los pagos por trabajo (el IBAN enmascarado viene de `/api/painter/me`) | P4.1 |
 | GET / PUT | `/api/painter/me` | Ficha propia para completar el alta: teléfono, zonas, NIF e IBAN (cambiar el IBAN pide la contraseña) | A4.2 |
-| POST | `/api/painter/jobs/{id}/media/upload-url` | URL firmada para subir una foto del resultado (`result`) | P2.2 |
+| POST | `/api/painter/jobs/{id}/media/upload-url` | URL firmada para subir una foto del trabajo: `context` `result` (por defecto), `progress` o `incident` | P2.2 |
+| POST | `/api/painter/jobs/{id}/progress` | `{ fileIds }`: fotos de avance mientras está en curso; el cliente las ve | P2 |
+| POST | `/api/painter/jobs/{id}/incidents` | `{ text, fileIds }`: incidencia con fotos, programado o en curso; avisa a los admins | P2 |
 
 ## Admin
 
@@ -123,6 +125,7 @@ Todas las rutas exigen rol Admin.
 | GET / POST / PUT / DELETE | `/api/admin/finance/costs[/{id}]` | Costes de operación; en un mes cerrado, 422 `period_closed` | A5.2 |
 | POST | `/api/admin/finance/closings` | `{ month }`: cierra un mes ya terminado y congela sus cifras (una vez) | A5.3 |
 | GET | `/api/admin/finance/export?month=AAAA-MM` | CSV (UTF-8) del mes: trabajos, costes y totales | A5.1 |
+| POST | `/api/admin/demo/reset` | Solo en Development: restablece los datos de demo con fechas relativas a hoy (los dos admins se conservan) | — |
 | GET | `/api/admin/deletion-requests` | Clientes que pidieron la supresión de su cuenta | C5.8 |
 | POST | `/api/admin/deletion-requests/{userId}/execute` | Anonimiza al cliente, cancela sus trabajos activos con la política y conserva la contabilidad | C5.8 |
 | GET | `/api/admin/payouts?painterId=&status=` | Pagos a pintores (solo lectura desde H6b) | A5.4 |
@@ -242,7 +245,7 @@ Las enumeraciones viajan en JSON como cadenas en `snake_case`; en C# son `enum` 
 | `PaymentMethod` | `card`, `mb_way`, `multibanco` |
 | `PaymentStatus` | `pending`, `requires_action`, `succeeded`, `failed`, `cancelled`, `refunded`, `partially_refunded` |
 | `AssignmentStatus` | `offered`, `accepted`, `declined`, `withdrawn`, `completed` |
-| `MediaContext` | `element`, `job_general`, `site_visit`, `result`, `painter_document` |
+| `MediaContext` | `element`, `job_general`, `site_visit`, `result`, `progress`, `incident`, `painter_document` |
 | `MediaKind` | `image`, `video`, `document` |
 | `Role` | `client`, `painter`, `admin` |
 | `OperatingCostCategory` | `infrastructure`, `payment_fees`, `accounting`, `insurance`, `marketing` (la lista cerrada del acuerdo de socios) |
