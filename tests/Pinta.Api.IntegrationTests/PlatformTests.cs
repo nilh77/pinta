@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
@@ -52,6 +53,18 @@ public class PlatformTests(PintaApiFactory factory)
         var admin = await ApiClient.CreateAsync(factory);
         await admin.LoginAsync("nathan@demo.pinta.pt", TestData.DemoPassword);
         Assert.Equal(HttpStatusCode.OK, (await admin.GetAsync("/hangfire")).StatusCode);
+    }
+
+    [Theory]
+    [InlineData("""{ "occupancy": "abandoned", "elements": [] }""")]
+    [InlineData("""{ "occupancy": "empty", "elements": [ """)]
+    public async Task Body_that_cannot_be_read_returns_400_bad_request(string body)
+    {
+        var client = await ApiClient.CreateAsync(factory);
+
+        var response = await client.PostAsync("/api/quotes/estimate", new StringContent(body, Encoding.UTF8, "application/json"));
+
+        await ProblemAssert.HasCodeAsync(response, HttpStatusCode.BadRequest, "bad_request");
     }
 
     [Fact]
