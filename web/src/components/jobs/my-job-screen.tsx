@@ -155,13 +155,14 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
               </span>
             </p>
           )}
+          {job.status === "in_progress" && <Photos photos={job.progressPhotos} label={t("progressPhotos")} photoLabel="progressPhoto" />}
           {job.quote && <p className="mt-3 text-sm">{t("balanceDue", { amount: formatCents(locale, job.quote.balanceCents) })}</p>}
         </Notice>
       );
     case "finished":
       return (
         <Notice icon={<CircleCheck aria-hidden="true" />} title={t("finished.title")} body={t("finished.body")}>
-          <ResultPhotos job={job} />
+          <Photos photos={job.resultPhotos} label={t("resultPhotos")} photoLabel="resultPhoto" />
           {job.quote && (
             <Button asChild className="mt-4">
               <Link href={`/mis-trabajos/${job.id}/pagar?tipo=balance`}>{t("finished.pay", { amount: formatCents(locale, job.quote.balanceCents) })}</Link>
@@ -172,7 +173,7 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
     case "closed":
       return (
         <Notice icon={<CircleCheck aria-hidden="true" />} title={t("closed.title")} body={t("closed.body")}>
-          <ResultPhotos job={job} />
+          <Photos photos={job.resultPhotos} label={t("resultPhotos")} photoLabel="resultPhoto" />
         </Notice>
       );
     case "expired":
@@ -186,17 +187,17 @@ function StatusSection({ job, payments }: { job: ClientJobDetail; payments: Paym
   }
 }
 
-/** C5.5: the painter's result photos, each opening full size. */
-function ResultPhotos({ job }: { job: ClientJobDetail }) {
+/** The painter's photos (progress while it runs, C5.5 results when finished), each opening full size. */
+function Photos({ photos, label, photoLabel }: { photos: ClientJobDetail["resultPhotos"]; label: string; photoLabel: "resultPhoto" | "progressPhoto" }) {
   const t = useTranslations("myJobs.detail");
-  if (job.resultPhotos.length === 0) return null;
+  if (photos.length === 0) return null;
   return (
-    <ul aria-label={t("resultPhotos")} className="mt-3 grid grid-cols-3 gap-2">
-      {job.resultPhotos.map((photo, i) => (
+    <ul aria-label={label} className="mt-3 grid grid-cols-3 gap-2">
+      {photos.map((photo, i) => (
         <li key={photo.id} className="aspect-square overflow-hidden rounded-xl bg-muted">
           <a href={photo.url} target="_blank" rel="noopener noreferrer">
             {/* eslint-disable-next-line @next/next/no-img-element -- signed storage URLs, not optimisable */}
-            <img src={photo.url} alt={t("resultPhoto", { n: i + 1 })} className="size-full object-cover" loading="lazy" />
+            <img src={photo.url} alt={t(photoLabel, { n: i + 1 })} className="size-full object-cover" loading="lazy" />
           </a>
         </li>
       ))}

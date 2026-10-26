@@ -638,6 +638,9 @@
         "title": "Informe de la visita de {who} · {date}",
         "draft": "Las medidas reales ya están en el borrador de la cotización; los trabajos extra propuestos esperan el precio al cliente.",
         "noPhotos": "Sin fotos de la visita."
+      },
+      "incidents": {
+        "title": "{count, plural, one {Incidencia reportada por el pintor} other {# incidencias reportadas por el pintor}}"
       }
     },
     "jobs": {
@@ -1442,7 +1445,9 @@
       "painter": "Pintor: {name}",
       "verified": "Verificado por Pinta",
       "resultPhotos": "Fotos del resultado",
-      "resultPhoto": "Foto del resultado {n}"
+      "resultPhoto": "Foto del resultado {n}",
+      "progressPhotos": "Fotos de avance",
+      "progressPhoto": "Foto de avance {n}"
     }
   },
   "payment": {
@@ -1638,6 +1643,22 @@
         "confirmBody": "Enviamos las fotos al cliente y le pedimos el pago del resto.",
         "cancel": "Volver",
         "finished": "Trabajo terminado. ¡Gracias!"
+      },
+      "progress": {
+        "title": "Fotos de avance",
+        "body": "El cliente las ve en su zona mientras dura el trabajo.",
+        "send": "{count, plural, =0 {Enviar fotos} one {Enviar # foto} other {Enviar # fotos}}",
+        "sent": "Fotos enviadas al cliente."
+      },
+      "incident": {
+        "title": "Incidencias",
+        "open": "Reportar incidencia",
+        "dialogTitle": "Incidencia en {code}",
+        "dialogBody": "Cuenta qué pasa y añade fotos. Solo lo ve el equipo de Pinta; le avisamos por email.",
+        "text": "Qué pasa",
+        "submit": "Enviar incidencia",
+        "cancel": "Volver",
+        "sent": "Incidencia enviada a Pinta."
       }
     },
     "nav": {

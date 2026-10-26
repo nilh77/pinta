@@ -99,14 +99,37 @@ export const useFinishJob = (id: string) =>
     id,
   );
 
-/** A result photo: signed URL for the job, then straight to storage; confirmed when the job is finished (P2.2). */
-export async function uploadResultPhoto(jobId: string, blob: Blob, contentType: string, onProgress: (percent: number) => void): Promise<string> {
+/**
+ * A photo of the job: signed URL, then straight to storage; it is attached by the call that uses it (finish, progress
+ * or incident, P2).
+ */
+export async function uploadResultPhoto(
+  jobId: string,
+  blob: Blob,
+  contentType: string,
+  onProgress: (percent: number) => void,
+  context: "result" | "progress" | "incident" = "result",
+): Promise<string> {
   const upload = orThrow(
-    await api.POST("/api/painter/jobs/{id}/media/upload-url", { params: { path: { id: jobId } }, body: { contentType, sizeBytes: blob.size } }),
+    await api.POST("/api/painter/jobs/{id}/media/upload-url", { params: { path: { id: jobId } }, body: { contentType, sizeBytes: blob.size, context } }),
   );
   await postToStorage(upload, blob, onProgress);
   return upload.fileId;
 }
+
+/** P2: progress photos the client sees while the job runs. */
+export const useAddProgress = (id: string) =>
+  usePainterAction(
+    async (fileIds: string[]) => orThrow(await api.POST("/api/painter/jobs/{id}/progress", { params: { path: { id } }, body: { fileIds } })),
+    id,
+  );
+
+/** P2: an incident with text and photos; the admins get an email. */
+export const useReportIncident = (id: string) =>
+  usePainterAction(
+    async (body: { text: string; fileIds: string[] }) => orThrow(await api.POST("/api/painter/jobs/{id}/incidents", { params: { path: { id } }, body })),
+    id,
+  );
 
 /** Where each role lands after signing in without a `next` path. */
 export const homeFor = (role: string | undefined) => (role === "painter" ? "/pintor" : role === "admin" ? "/admin/revision" : "/");
