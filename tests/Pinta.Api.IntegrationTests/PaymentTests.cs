@@ -197,9 +197,10 @@ public class PaymentTests(PintaApiFactory factory)
         await ProblemAssert.HasCodeAsync(await job.Client.GetAsync($"/api/admin/jobs/{job.JobId}/payments"), HttpStatusCode.Forbidden, "forbidden");
     }
 
+    // Hangfire polls its PostgreSQL queue every 15 s, so a background job can take that long to start: wait up to 30 s.
     private static async Task WaitForAsync(Func<bool> condition)
     {
-        for (var i = 0; i < 100 && !condition(); i++)
+        for (var i = 0; i < 300 && !condition(); i++)
         {
             await Task.Delay(100);
         }
@@ -209,7 +210,7 @@ public class PaymentTests(PintaApiFactory factory)
 
     private async Task WaitForStripeIdAsync(string intent)
     {
-        for (var i = 0; i < 100; i++)
+        for (var i = 0; i < 300; i++)
         {
             await using var scope = factory.Services.CreateAsyncScope();
             var db = scope.ServiceProvider.GetRequiredService<PaymentsDbContext>();
@@ -319,7 +320,7 @@ public class RefundTests(PintaApiFactory factory)
         await using var scope = factory.Services.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<PaymentsDbContext>();
         var intent = (await db.Payments.SingleAsync(p => p.JobId == jobId && p.Type == PaymentType.Deposit)).StripePaymentIntentId;
-        for (var i = 0; i < 100 && !factory.Stripe.Refunds.Any(r => r.PaymentIntentId == intent); i++)
+        for (var i = 0; i < 300 && !factory.Stripe.Refunds.Any(r => r.PaymentIntentId == intent); i++)
         {
             await Task.Delay(100);
         }
