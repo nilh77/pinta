@@ -67,3 +67,8 @@ export function daysUntil(isoDate: string, now: Date = new Date()): number {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Lisbon" }).format(now);
   return Math.round((Date.parse(`${isoDate.slice(0, 10)}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`)) / 86_400_000);
 }
+
+/** "Sintra" rather than "Sintra, Sintra": the municipality only when it is not the locality itself. */
+export function formatPlace(locality: string, municipality: string | null | undefined, separator = ", ") {
+  return municipality && municipality.trim().toLocaleLowerCase() !== locality.trim().toLocaleLowerCase() ? `${locality}${separator}${municipality}` : locality;
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatEuros, formatMetres, daysUntil, formatCents, formatDate } from "./format";
+import { formatArea, formatEuros, formatMetres, daysUntil, formatCents, formatDate, formatPlace } from "./format";
 
 // Intl uses narrow no-break spaces; compare with plain spaces.
 const plain = (text: string) => text.replace(/[  ]/g, " ");
@@ -35,5 +35,14 @@ describe("job formats", () => {
     expect(formatDate("en", "2026-11-06", true)).toBe("6 November");
     expect(daysUntil("2026-11-06", new Date("2026-10-23T10:00:00Z"))).toBe(14);
     expect(daysUntil("2026-10-22", new Date("2026-10-23T10:00:00Z"))).toBe(-1);
+  });
+});
+
+describe("formatPlace", () => {
+  it("names the municipality only when it differs from the locality", () => {
+    expect(formatPlace("Sintra", "Sintra")).toBe("Sintra");
+    expect(formatPlace("Carcavelos", "Cascais")).toBe("Carcavelos, Cascais");
+    expect(formatPlace("Algés", "Oeiras", " · ")).toBe("Algés · Oeiras");
+    expect(formatPlace("Lisboa", null)).toBe("Lisboa");
   });
 });

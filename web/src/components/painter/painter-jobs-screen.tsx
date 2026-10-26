@@ -10,7 +10,7 @@ import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { formatArea, formatCents, formatDate, formatDateTime } from "@/lib/format";
+import { formatArea, formatCents, formatDate, formatDateTime, formatPlace } from "@/lib/format";
 import { useAcceptOffer, useDeclineOffer, usePainterJobs, type PainterJobItem, type PainterVisitItem } from "@/lib/painter/use-painter";
 import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
@@ -97,7 +97,7 @@ function Facts({ job }: { job: PainterJobItem }) {
           <p className="text-[13px] font-semibold text-muted-foreground">{job.code}</p>
           <p className="flex items-center gap-1.5 truncate text-base font-bold">
             <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
-            {job.locality}, {job.municipality}
+            {formatPlace(job.locality, job.municipality)}
           </p>
         </div>
         <JobStatusBadge status={job.jobStatus} />
@@ -222,7 +222,7 @@ function VisitCard({ visit }: { visit: PainterVisitItem }) {
           <p className="text-[13px] font-semibold text-muted-foreground">{visit.code}</p>
           <p className="flex items-center gap-1.5 truncate text-base font-bold">
             <MapPin aria-hidden="true" className="size-4 shrink-0 text-primary" />
-            {visit.locality}, {visit.municipality}
+            {formatPlace(visit.locality, visit.municipality)}
           </p>
         </div>
         <span className="rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold whitespace-nowrap text-accent-ink">{t("visitTag")}</span>
