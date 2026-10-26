@@ -190,13 +190,13 @@ Costes: alojamiento 25,00 + dominio y correo 6,00 + Stripe 32,93 (8,31 + 19,05 +
 
 ## Guion de la demo
 
-Unos 25 minutos para el socio, con el móvil del cliente (navegador en modo móvil o un teléfono en la misma red) y el portátil con el admin. Antes: restablecer los datos de demo, abrir Mailpit y la consola de Stripe en modo test, y tener tres pestañas con sesiones de cliente, admin y pintor.
+Unos 25 minutos para el socio, con el móvil del cliente (navegador en modo móvil o un teléfono en la misma red) y el portátil con el admin. Antes: restablecer los datos de demo, abrir Mailpit y la consola de Stripe en modo test, y tener tres pestañas con sesiones de cliente, admin y pintor (en un mismo navegador, cada rol en su propia dirección para no compartir cookies; detalle en `docs/demo-checklist.md`).
 
 | Min. | Quién y dónde | Qué se enseña | Mensaje clave |
 | --- | --- | --- | --- |
 | 0–2 | Cliente · pantalla 0 | Landing en portugués, cambio a español, comprobar el código postal de Sintra | Mobile-first y en tres idiomas |
 | 2–9 | Cliente · pantallas 1–4 | Vivienda con muebles: sala por talla, dormitorio con medidas, quitar una pared, baño con humedad. El rango se mueve en vivo | El constructor: cualquiera cotiza en dos minutos sin saber de m² |
-| 9–12 | Cliente · pantallas 5–8 | Fotos desde el móvil, dirección y fecha, cuenta nueva, código de solicitud y email en Mailpit | La solicitud llega completa: menos visitas y menos llamadas |
+| 9–12 | Cliente · pantallas 5–8 | Fotos desde el móvil, dirección y fecha (en Lisboa, zona de Rui, para poder asignársela), cuenta nueva, código de solicitud y email en Mailpit; confirmar el email desde Mailpit para que la solicitud pase a revisión | La solicitud llega completa: menos visitas y menos llamadas |
 | 12–16 | Admin · A2 | Abrir la solicitud recién enviada: fotos, desglose interno y margen. Añadir una partida extra, confirmar el precio | Revisión humana en minutos, con el margen siempre a la vista |
 | 16–18 | Admin · A1 | Subir la tarifa de techos, ver el simulador y volver a dejarla | Los precios son del negocio, no del código |
 | 18–20 | Cliente · pantallas 10–11 | Precio cerrado frente a estimación; pagar la señal con MB WAY de prueba y ver el estado cambiar | Cobramos antes de mover a nadie |
