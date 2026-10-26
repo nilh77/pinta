@@ -8,6 +8,12 @@ public enum MediaContext
     SiteVisit,
     Result,
     PainterDocument,
+
+    /// <summary>The painter's photos while the job is in progress; the client sees them (P2).</summary>
+    Progress,
+
+    /// <summary>Photos of an incident the painter reports; only the admins see them (P2).</summary>
+    Incident,
 }
 
 /// <summary>Serialized as <c>image</c>, <c>video</c>, <c>document</c>.</summary>

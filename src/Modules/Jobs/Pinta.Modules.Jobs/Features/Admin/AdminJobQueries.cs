@@ -110,10 +110,14 @@ public sealed record AdminJobDetail(
     IReadOnlyList<SentEmail> Emails,
     IReadOnlyList<JobStatus> AllowedTransitions,
     IReadOnlyList<AssignmentDto> Assignments,
+    IReadOnlyList<AdminIncident> Incidents,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt);
 
 public sealed record PartnerDto(Guid Id, string Name, string Email);
+
+/// <summary>An incident reported by the painter (P2), with its photos; only the admins see it.</summary>
+public sealed record AdminIncident(Guid Id, string PainterName, string Text, DateTimeOffset CreatedAt, IReadOnlyList<JobFile> Files);
 
 /// <summary>GET /api/admin/reviews, /api/admin/jobs (+ export), /api/admin/jobs/{id} and /api/admin/partners (A2.1, A2.2, A3.1, A3.5).</summary>
 internal static class AdminJobQueries
@@ -291,6 +295,7 @@ internal static class AdminJobQueries
             [.. job.History.Where(h => h.UserId is not null).Select(h => h.UserId!.Value).Append(job.ClientId).Concat(job.SiteVisitAssigneeId is { } a ? [a] : []).Distinct()],
             cancellationToken)).ToDictionary(u => u.Id);
         var client = people[job.ClientId];
+        var files = await media.ListForJobAsync(job.Id, cancellationToken);
         return TypedResults.Ok(new AdminJobDetail(
             job.Id,
             job.Code,
@@ -314,14 +319,24 @@ internal static class AdminJobQueries
             current,
             await quotes.GetDraftAsync(job.Id, cancellationToken),
             await quotes.ListAsync(job.Id, cancellationToken),
-            await media.ListForJobAsync(job.Id, cancellationToken),
+            files,
             [.. job.History.OrderBy(h => h.ChangedAt).Select(h =>
                 new JobHistoryEntry(h.From, h.To, h.Actor, h.UserId is { } u ? people.GetValueOrDefault(u)?.Name : null, h.Reason, h.ChangedAt))],
             await emails.ListForJobAsync(job.Id, cancellationToken),
             AllowedTransitions(job.Status),
             await AssignmentsAsync(job.Id, db, painters, cancellationToken),
+            await IncidentsAsync(job.Id, files, db, painters, cancellationToken),
             job.CreatedAt,
             job.UpdatedAt));
+    }
+
+    private static async Task<IReadOnlyList<AdminIncident>> IncidentsAsync(
+        Guid jobId, IReadOnlyList<JobFile> files, JobsDbContext db, IPainterDirectory painters, CancellationToken cancellationToken)
+    {
+        var incidents = await db.Incidents.AsNoTracking().Where(i => i.JobId == jobId).OrderBy(i => i.CreatedAt).ToListAsync(cancellationToken);
+        var names = (await painters.FindManyAsync([.. incidents.Select(i => i.PainterId).Distinct()], cancellationToken)).ToDictionary(p => p.Id, p => p.Name);
+        return [.. incidents.Select(i => new AdminIncident(
+            i.Id, names.GetValueOrDefault(i.PainterId) ?? "", i.Text, i.CreatedAt, [.. files.Where(f => i.FileIds.Contains(f.Id))]))];
     }
 
     private static async Task<IReadOnlyList<AssignmentDto>> AssignmentsAsync(

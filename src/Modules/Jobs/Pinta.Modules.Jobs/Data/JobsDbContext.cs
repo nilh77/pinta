@@ -12,9 +12,19 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
 
     public DbSet<Assignment> Assignments => Set<Assignment>();
 
+    public DbSet<JobIncident> Incidents => Set<JobIncident>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
+        modelBuilder.Entity<JobIncident>(incident =>
+        {
+            incident.ToTable("incidents");
+            incident.Property(x => x.Id).ValueGeneratedNever();
+            incident.Property(x => x.Text).HasMaxLength(2000);
+            incident.HasIndex(x => x.JobId);
+            incident.HasOne<Job>().WithMany().HasForeignKey(x => x.JobId);
+        });
         modelBuilder.Entity<Job>(job =>
         {
             job.ToTable("jobs");

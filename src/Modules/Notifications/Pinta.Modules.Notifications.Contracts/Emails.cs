@@ -115,3 +115,6 @@ public sealed record OverdueReviewsEmail(string To, Locale Locale, IReadOnlyList
 
 /// <summary>To the admins, on Mondays: painter documents that expire within 30 days, as "name · kind · date" lines (S3).</summary>
 public sealed record PainterDocumentsExpiringEmail(string To, Locale Locale, IReadOnlyList<string> Lines, string AdminUrl) : Email(To, Locale);
+
+/// <summary>To the admins: a painter reported an incident on a job (P2).</summary>
+public sealed record IncidentReportedEmail(string To, Locale Locale, string Code, string PainterName, string Text, string AdminUrl) : Email(To, Locale);

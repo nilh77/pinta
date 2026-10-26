@@ -103,4 +103,6 @@
   <data name="OverdueReviews.Body" xml:space="preserve"><value>Estes pedidos passaram o prazo de revisão:</value></data>
   <data name="DocumentsExpiring.Subject" xml:space="preserve"><value>{0} documentos de pintores expiram em 30 dias</value></data>
   <data name="DocumentsExpiring.Body" xml:space="preserve"><value>Peça a renovação destes documentos:</value></data>
+  <data name="Incident.Subject" xml:space="preserve"><value>Incidência no trabalho {0}</value></data>
+  <data name="Incident.Body" xml:space="preserve"><value>{0} reportou uma incidência:</value></data>
 </root>

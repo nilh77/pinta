@@ -20,4 +20,5 @@
   <data name="painter_not_available" xml:space="preserve"><value>Choose an active painter who works in this municipality.</value></data>
   <data name="result_photos" xml:space="preserve"><value>Upload at least 3 result photos.</value></data>
   <data name="extras_to_price" xml:space="preserve"><value>Set the client price of the items proposed at the site visit.</value></data>
+  <data name="progress_photos" xml:space="preserve"><value>Upload at least one progress photo.</value></data>
 </root>

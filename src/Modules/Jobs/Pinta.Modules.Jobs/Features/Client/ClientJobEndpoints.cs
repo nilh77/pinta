@@ -70,6 +70,7 @@ public sealed record ClientJobDetail(
     ClientSiteVisit? SiteVisit,
     ClientPainter? Painter,
     IReadOnlyList<JobFile> ResultPhotos,
+    IReadOnlyList<JobFile> ProgressPhotos,
     IReadOnlyList<ClientTimelineEntry> Timeline,
     bool CanCancel,
     bool CanRequote);
@@ -162,8 +163,12 @@ internal static class ClientJobEndpoints
         var painterId = await db.Assignments.Where(a => a.JobId == job.Id && (a.Status == AssignmentStatus.Accepted || a.Status == AssignmentStatus.Completed))
             .Select(a => (Guid?)a.PainterId).FirstOrDefaultAsync(cancellationToken);
         var painter = painterId is { } pid ? await painters.FindAsync(pid, cancellationToken) : null;
+        // The painter's photos: progress from the start, results once finished; incidents never (P2, C5.5).
+        var painterFiles = job.Status is JobStatus.InProgress or JobStatus.Finished or JobStatus.Closed
+            ? await media.ListForJobAsync(job.Id, cancellationToken)
+            : [];
         var resultPhotos = job.Status is JobStatus.Finished or JobStatus.Closed
-            ? [.. (await media.ListForJobAsync(job.Id, cancellationToken)).Where(f => f.Context == MediaContext.Result)]
+            ? [.. painterFiles.Where(f => f.Context == MediaContext.Result)]
             : Array.Empty<JobFile>();
         return TypedResults.Ok(new ClientJobDetail(
             job.Id,
@@ -185,6 +190,7 @@ internal static class ClientJobEndpoints
             job.SiteVisitAt is { } at ? new ClientSiteVisit(at, visitor?.Name ?? "", Money.ToCents(job.SiteVisitPrice ?? 0)) : null,
             painter is null ? null : new ClientPainter(Assignments.AssignmentEndpoints.FirstName(painter.Name)),
             resultPhotos,
+            [.. painterFiles.Where(f => f.Context == MediaContext.Progress)],
             [.. job.History.OrderBy(h => h.ChangedAt).Select(h => new ClientTimelineEntry(
                 h.To, h.ChangedAt, h.To is JobStatus.Rejected or JobStatus.Cancelled ? h.Reason : null))],
             JobStateMachine.CancellableFrom.Contains(job.Status),

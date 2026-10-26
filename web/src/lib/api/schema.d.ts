@@ -1124,6 +1124,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/painter/jobs/{id}/progress": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AddProgressPhotos"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/painter/jobs/{id}/incidents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ReportIncident"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/painter/visits/{id}": {
         parameters: {
             query?: never;
@@ -1574,6 +1606,15 @@ export interface components {
             /** Format: uint32 */
             version: null | number;
         };
+        AdminIncident: {
+            /** Format: uuid */
+            id: string;
+            painterName: string;
+            text: string;
+            /** Format: date-time */
+            createdAt: string;
+            files: components["schemas"]["JobFile"][];
+        };
         AdminJobDetail: {
             /** Format: uuid */
             id: string;
@@ -1604,6 +1645,7 @@ export interface components {
             emails: components["schemas"]["SentEmail"][];
             allowedTransitions: components["schemas"]["JobStatus"][];
             assignments: components["schemas"]["AssignmentDto"][];
+            incidents: components["schemas"]["AdminIncident"][];
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -1782,6 +1824,7 @@ export interface components {
             siteVisit: null | components["schemas"]["ClientSiteVisit"];
             painter: null | components["schemas"]["ClientPainter"];
             resultPhotos: components["schemas"]["JobFile"][];
+            progressPhotos: components["schemas"]["JobFile"][];
             timeline: components["schemas"]["ClientTimelineEntry"][];
             canCancel: boolean;
             canRequote: boolean;
@@ -2095,6 +2138,10 @@ export interface components {
             code: string;
             traceId?: string;
         };
+        IncidentRequest: {
+            text: string;
+            fileIds: null | string[];
+        };
         /** @enum {unknown} */
         JobActor: "client" | "admin" | "painter" | "system";
         JobFile: {
@@ -2140,7 +2187,7 @@ export interface components {
             reference: string;
         };
         /** @enum {unknown} */
-        MediaContext: "element" | "job_general" | "site_visit" | "result" | "painter_document";
+        MediaContext: "element" | "job_general" | "site_visit" | "result" | "painter_document" | "progress" | "incident";
         MediaFileDto: {
             /** Format: uuid */
             id: string;
@@ -2330,6 +2377,13 @@ export interface components {
             /** Format: int64 */
             painterPayCents: number;
         };
+        PainterIncident: {
+            /** Format: uuid */
+            id: string;
+            text: string;
+            /** Format: date-time */
+            createdAt: string;
+        };
         PainterJob: {
             /** Format: uuid */
             jobId: string;
@@ -2368,6 +2422,8 @@ export interface components {
             painterPayCents: number;
             clientFiles: components["schemas"]["JobFile"][];
             resultFiles: components["schemas"]["JobFile"][];
+            progressFiles: components["schemas"]["JobFile"][];
+            incidents: components["schemas"]["PainterIncident"][];
             canStart: boolean;
             /** Format: int32 */
             minResultPhotos: number;
@@ -2579,6 +2635,9 @@ export interface components {
             code: string;
             traceId?: string;
         };
+        ProgressRequest: {
+            fileIds: string[];
+        };
         QuestionRequest: {
             message: string;
         };
@@ -2740,6 +2799,7 @@ export interface components {
             contentType: string;
             /** Format: int64 */
             sizeBytes: number;
+            context?: null | components["schemas"]["MediaContext"];
         };
         ReviewItem: {
             /** Format: uuid */
@@ -5877,6 +5937,108 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["FinishJobRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    AddProgressPhotos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProgressRequest"];
+            };
+        };
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+        };
+    };
+    ReportIncident: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IncidentRequest"];
             };
         };
         responses: {

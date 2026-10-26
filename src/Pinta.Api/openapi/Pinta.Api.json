@@ -3554,6 +3554,134 @@
         }
       }
     },
+    "/api/painter/jobs/{id}/progress": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "AddProgressPhotos",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProgressRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/incidents": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "ReportIncident",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncidentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/painter/visits/{id}": {
       "get": {
         "tags": [
@@ -5281,6 +5409,38 @@
           }
         }
       },
+      "AdminIncident": {
+        "required": [
+          "id",
+          "painterName",
+          "text",
+          "createdAt",
+          "files"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "painterName": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
+          }
+        }
+      },
       "AdminJobDetail": {
         "required": [
           "id",
@@ -5307,6 +5467,7 @@
           "emails",
           "allowedTransitions",
           "assignments",
+          "incidents",
           "createdAt",
           "updatedAt"
         ],
@@ -5444,6 +5605,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AssignmentDto"
+            }
+          },
+          "incidents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminIncident"
             }
           },
           "createdAt": {
@@ -6018,6 +6185,7 @@
           "siteVisit",
           "painter",
           "resultPhotos",
+          "progressPhotos",
           "timeline",
           "canCancel",
           "canRequote"
@@ -6123,6 +6291,12 @@
             ]
           },
           "resultPhotos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
+          },
+          "progressPhotos": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/JobFile"
@@ -7279,6 +7453,28 @@
           }
         }
       },
+      "IncidentRequest": {
+        "required": [
+          "text",
+          "fileIds"
+        ],
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "fileIds": {
+            "type": [
+              "null",
+              "array"
+            ],
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
       "JobActor": {
         "enum": [
           "client",
@@ -7470,7 +7666,9 @@
           "job_general",
           "site_visit",
           "result",
-          "painter_document"
+          "painter_document",
+          "progress",
+          "incident"
         ]
       },
       "MediaFileDto": {
@@ -8171,6 +8369,27 @@
           }
         }
       },
+      "PainterIncident": {
+        "required": [
+          "id",
+          "text",
+          "createdAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "PainterJob": {
         "required": [
           "jobId",
@@ -8228,6 +8447,8 @@
           "painterPayCents",
           "clientFiles",
           "resultFiles",
+          "progressFiles",
+          "incidents",
           "canStart",
           "minResultPhotos"
         ],
@@ -8326,6 +8547,18 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/JobFile"
+            }
+          },
+          "progressFiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/JobFile"
+            }
+          },
+          "incidents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PainterIncident"
             }
           },
           "canStart": {
@@ -9138,6 +9371,21 @@
           }
         }
       },
+      "ProgressRequest": {
+        "required": [
+          "fileIds"
+        ],
+        "type": "object",
+        "properties": {
+          "fileIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
       "QuestionRequest": {
         "required": [
           "message"
@@ -9748,6 +9996,16 @@
           "sizeBytes": {
             "type": "integer",
             "format": "int64"
+          },
+          "context": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MediaContext"
+              }
+            ]
           }
         }
       },

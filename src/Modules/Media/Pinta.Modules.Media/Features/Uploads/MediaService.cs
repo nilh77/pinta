@@ -35,7 +35,7 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
             return (null, UploadRefusal.TooLarge);
         }
 
-        var folder = request.PainterId is { } painterId ? $"painters/{painterId:N}" : $"jobs/{request.JobId:N}/{request.Context switch { MediaContext.Result => "result", MediaContext.SiteVisit => "visit", _ => "files" }}";
+        var folder = request.PainterId is { } painterId ? $"painters/{painterId:N}" : $"jobs/{request.JobId:N}/{request.Context switch { MediaContext.Result => "result", MediaContext.SiteVisit => "visit", MediaContext.Progress => "progress", MediaContext.Incident => "incident", _ => "files" }}";
         var file = new MediaFile
         {
             UploadedBy = request.UploadedBy,

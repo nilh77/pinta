@@ -114,6 +114,8 @@ public sealed class EmailRenderer(IServiceProvider services)
                 paragraphs: [text["OverdueReviews.Body"], string.Join(", ", e.Codes)], button: (text["Common.OpenAdmin"], e.AdminUrl)),
             PainterDocumentsExpiringEmail e => Notice(text, e, text.Format("DocumentsExpiring.Subject", e.Lines.Count),
                 paragraphs: [text["DocumentsExpiring.Body"], .. e.Lines], button: (text["Common.OpenAdmin"], e.AdminUrl)),
+            IncidentReportedEmail e => Notice(text, e, text.Format("Incident.Subject", e.Code),
+                paragraphs: [text.Format("Incident.Body", e.PainterName)], quote: e.Text, button: (text["Common.OpenAdmin"], e.AdminUrl)),
             _ => throw new NotSupportedException($"No template for {email.GetType().Name}."),
         };
     }
