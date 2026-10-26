@@ -4,6 +4,7 @@ export type Problem = components["schemas"]["HttpValidationProblemDetails"];
 
 /** Error codes the UI has a message for (messages: errors.*). Anything else shows the generic error. */
 export const KNOWN_ERROR_CODES = [
+  "bad_request",
   "unauthenticated",
   "invalid_credentials",
   "forbidden",

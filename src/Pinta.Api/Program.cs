@@ -72,7 +72,12 @@ var app = builder.Build();
 
 // First, so error responses written on the way out still see the request language.
 app.UseRequestLocalization();
-app.UseExceptionHandler();
+app.UseExceptionHandler(new ExceptionHandlerOptions
+{
+    // A body or parameter that cannot be bound (malformed JSON, unknown enum value) is the client's fault: 400 bad_request, not 500.
+    StatusCodeSelector = exception => exception is BadHttpRequestException bad ? bad.StatusCode : StatusCodes.Status500InternalServerError,
+    SuppressDiagnosticsCallback = context => context.Exception is BadHttpRequestException,
+});
 app.UseStatusCodePages();
 app.UseSerilogRequestLogging();
 app.UseAuthentication();
