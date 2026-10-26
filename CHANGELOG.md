@@ -6,7 +6,33 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-Nada todavía.
+### H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos
+
+#### Añadido
+
+- PWA instalable: manifiesto con la paleta B, iconos generados (`tools/pwa_icons.py`) y un service worker propio, solo en el build de producción, que guarda los estáticos, los iconos y las páginas visitadas para abrir sin conexión y nunca `/api`. En la pantalla 8, invitación a instalar: botón donde el navegador lo ofrece y la indicación «Compartir › Añadir a pantalla de inicio» en iOS.
+- Estados globales: banda «Sin conexión», diálogo «Tu sesión ha caducado» que vuelve a la misma página tras entrar (el borrador local se conserva), páginas 404 y de error traducidas y aviso de cookies técnicas.
+- Pantalla 0: comprobador de cobertura por código postal (C1.1, C4.1) con la lista de espera si aún no llegamos, la misma que en la pantalla 6.
+- Escritorio D3: el detalle del trabajo en dos columnas a partir de 1024 px (estado e historial a la izquierda, desglose y pagos a la derecha); en el móvil, mismo orden que antes.
+- `docs/demo-checklist.md`: preparación de la demo, el guion paso a paso con lo que hay que comprobar y el plan B.
+
+#### Cambiado
+
+- PT-2026-0106 pasa a Rui, en Oeiras, para que una sola pestaña de pintor cubra la parte P1–P2 del guion.
+- El guion pide la dirección de la solicitud en una zona de Rui, confirmar el email desde Mailpit y una dirección por rol en el navegador (`docs/plan.md`).
+- Documentos: decisiones de H8b en `docs/plan.md`; PWA, sesión caducada y pantalla 0 sin «desde X €/m²» (el cliente nunca recibe tarifas) en `docs/screens.md`.
+- Accesibilidad (revisión con axe en todas las pantallas y con teclado): los grupos de opciones (pantalla 1, talla y pintura) y las pestañas (mis trabajos, pintor, cuenta, trabajo del admin) se manejan con las flechas; el selector de idioma se nombra empezando por el código visible; el trabajo del admin tiene su `h1` y cada pestaña su `h2`; listas de definición corregidas; los campos de archivo ocultos tras su botón.
+
+#### Corregido
+
+- Sesiones: la cookie de sesión había perdido la comprobación del sello de seguridad, así que un pintor desactivado (A4.2), un cliente anonimizado (C5.8) o una cuenta borrada al restablecer la demo seguían con la sesión abierta. Ahora se cierra en un minuto como máximo. En el ensayo, una foto subida con la sesión de una cuenta borrada no llegaba al trabajo.
+- En las tarjetas estrechas del esquema, la marca de «descrita» tapaba el nombre cuando aparecía «Humedad».
+- El pintor veía «Sintra, Sintra» u «Oeiras · Oeiras»: el municipio solo aparece si es distinto de la localidad.
+
+#### Verificado
+
+- Lighthouse móvil en la pantalla 2 (con un borrador): 100 de rendimiento y 100 de accesibilidad en tres pasadas (LCP 0,9–1,5 s, CLS ≈ 0), en local con la simulación de móvil de Lighthouse.
+- Guion de la demo: tres ensayos completos en el navegador tras restablecer, con cliente a 390 px en `127.0.0.1`, admin a 1440 px en `localhost` y pintor en `[::1]`, pago MB WAY real de Stripe en modo test y emails en Mailpit. El primero encontró lo corregido arriba; el segundo y el tercero, seguidos y tras restablecer, sin errores de la aplicación (criterio de salida de H8). Finanzas del mes anterior igual al cálculo a mano en los tres.
 
 ## H8a · Pulido para la demo: datos y pintor — 2026-10-26, [PR #11](https://github.com/nilh77/pinta/pull/11)
 
