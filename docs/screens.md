@@ -27,11 +27,11 @@ Reglas comunes a todas las pantallas:
 ### 0 · Inicio
 
 - **Ruta y board**: `/{locale}` · Inicio.dc.html. Pública, sin sesión. \[C1.1\]
-- **Datos**: textos estáticos traducidos; desde-precio por m² tomado de `GET /api/catalog` (tarifa mínima de `interior_wall`); comprobador de cobertura.
+- **Datos**: textos estáticos traducidos; comprobador de cobertura. Sin «desde X €/m²»: el cliente nunca recibe tarifas (decisión de H8).
 - **Acciones**: «Calcular mi precio» → pantalla 1. Código postal → `GET /api/coverage/check?postalCode=`; si está fuera, formulario de lista de espera (`POST /api/coverage/waitlist`). Selector de idioma en la cabecera. «Entrar» para clientes con cuenta.
 - **Validaciones**: código postal `^\d{4}-\d{3}$`.
-- **Estados**: si el catálogo falla, se oculta el desde-precio y el resto funciona. Cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos».
-- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura ni el desde-precio; ambos llegan en H3 con C4.1. La comprobación es `GET /api/coverage/check?postalCode=` (docs/api.md).
+- **Estados**: cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos» con la lista de espera; si la comprobación falla, un aviso para reintentar.
+- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura, que llega en H8 (en H3 solo se hizo en la pantalla 6). La comprobación es `GET /api/coverage/check?postalCode=` (docs/api.md).
 
 ### 1 · Tipo de trabajo
 
