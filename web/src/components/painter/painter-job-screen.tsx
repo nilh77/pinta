@@ -12,7 +12,7 @@ import { Link } from "@/i18n/navigation";
 import type { components } from "@/lib/api/schema";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { formatArea, formatCents, formatDate, formatDateTime, formatMetres } from "@/lib/format";
+import { formatArea, formatCents, formatDate, formatDateTime, formatMetres, formatPlace } from "@/lib/format";
 import { useCatalog } from "@/lib/quote/use-quote-data";
 import {
   uploadResultPhoto,
@@ -90,7 +90,7 @@ export function PainterJobScreen({ id }: { id: string }) {
             <span>
               {data.addressLine1}
               <br />
-              {data.postalCode} {data.locality} · {data.municipality}
+              {data.postalCode} {formatPlace(data.locality, data.municipality, " · ")}
             </span>
           </p>
           {data.accessNotes && (

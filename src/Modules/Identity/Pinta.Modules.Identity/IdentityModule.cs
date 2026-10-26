@@ -80,12 +80,11 @@ public static class IdentityModule
                 : CookieSecurePolicy.Always;
             options.ExpireTimeSpan = TimeSpan.FromDays(14);
             options.SlidingExpiration = true;
-            // An API answers 401/403 (turned into ProblemDetails by the host) instead of redirecting.
-            options.Events = new CookieAuthenticationEvents
-            {
-                OnRedirectToLogin = context => SetStatus(context.Response, StatusCodes.Status401Unauthorized),
-                OnRedirectToAccessDenied = context => SetStatus(context.Response, StatusCodes.Status403Forbidden),
-            };
+            // An API answers 401/403 (turned into ProblemDetails by the host) instead of redirecting. The events object is
+            // Identity's own: replacing it would drop the security stamp check, and a deleted, anonymised or deactivated
+            // account would keep its session.
+            options.Events.OnRedirectToLogin = context => SetStatus(context.Response, StatusCodes.Status401Unauthorized);
+            options.Events.OnRedirectToAccessDenied = context => SetStatus(context.Response, StatusCodes.Status403Forbidden);
         });
         services.AddAuthorization();
 

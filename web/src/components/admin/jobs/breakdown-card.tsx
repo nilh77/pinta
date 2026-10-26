@@ -27,8 +27,7 @@ export function BreakdownCard({ breakdown, saving }: { breakdown: Breakdown; sav
         <Row label={t("subtotal")} value={money(breakdown.subtotalCents)} strong />
         <Row label={t("vat")} value={money(breakdown.vatCents)} />
         <Row label={t("total")} value={money(breakdown.totalCents)} strong big />
-        <hr className="my-1.5 border-border" />
-        <Row label={t("painter")} value={money(breakdown.painterTotalCents)} />
+        <Row label={t("painter")} value={money(breakdown.painterTotalCents)} separated />
         <Row
           label={t("margin")}
           value={`${money(breakdown.marginCents)} · ${breakdown.marginPct.toLocaleString(locale, { maximumFractionDigits: 1 })}%`}
@@ -56,9 +55,10 @@ export function BreakdownCard({ breakdown, saving }: { breakdown: Breakdown; sav
   );
 }
 
-function Row({ label, value, strong, big, tone }: { label: string; value: string; strong?: boolean; big?: boolean; tone?: "ok" | "danger" }) {
+function Row({ label, value, strong, big, tone, separated }: { label: string; value: string; strong?: boolean; big?: boolean; tone?: "ok" | "danger"; separated?: boolean }) {
   return (
-    <div className="flex justify-between gap-3">
+    // A <dl> may only hold groups: the line between client price and internal figures is a border, not an <hr>.
+    <div className={cn("flex justify-between gap-3", separated && "mt-1.5 border-t border-border pt-3")}>
       <dt className="text-muted-foreground">{label}</dt>
       <dd className={cn("text-right whitespace-nowrap", strong && "font-semibold", big && "text-lg font-extrabold", tone === "danger" && "text-destructive", tone === "ok" && "text-primary")}>
         {value}

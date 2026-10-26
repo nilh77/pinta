@@ -50,6 +50,9 @@ export function MyJobScreen({ id }: { id: string }) {
   }
 
   const data = job.data;
+  const showQuote = !!data.quote && data.status !== "quoted";
+  const hasPayments = (payments.data?.length ?? 0) > 0;
+  const hasSide = showQuote || hasPayments;
   return (
     <div className="flex flex-col gap-5">
       <Link href="/mis-trabajos" className="inline-flex min-h-11 items-center gap-1.5 self-start text-sm font-semibold text-primary">
@@ -68,26 +71,39 @@ export function MyJobScreen({ id }: { id: string }) {
         <JobProgress status={data.status} />
       </header>
 
-      <StatusSection job={data} payments={payments.data ?? []} />
-
-      {data.quote && data.status !== "quoted" && <QuoteCard job={data} />}
-
-      {(payments.data?.length ?? 0) > 0 && (
-        <section aria-labelledby="payments-title">
-          <h2 id="payments-title" className="mb-3 text-[13px] font-semibold">
-            {t("payments")}
-          </h2>
-          <PaymentsList jobId={data.id} payments={payments.data!} emptyText="" />
-        </section>
-      )}
-
-      <Timeline job={data} />
-
-      <div className="flex flex-col gap-2 border-t border-border pt-5 sm:flex-row">
-        {data.canRequote && <RequoteButton id={data.id} />}
-        {data.canCancel && <CancelButton job={data} />}
+      {/* D3: status and timeline left, breakdown and payments right on desktop; one column, same order, on phones. */}
+      <div className={hasSide ? "flex flex-col gap-5 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,380px)] lg:items-start lg:gap-8" : "flex flex-col gap-5"}>
+        <div className="contents lg:flex lg:flex-col lg:gap-5">
+          <div className="order-1">
+            <StatusSection job={data} payments={payments.data ?? []} />
+          </div>
+          <div className="order-4">
+            <Timeline job={data} />
+          </div>
+          <div className="order-5 flex flex-col gap-2 border-t border-border pt-5 sm:flex-row empty:hidden">
+            {data.canRequote && <RequoteButton id={data.id} />}
+            {data.canCancel && <CancelButton job={data} />}
+          </div>
+          <p className="order-6 text-xs text-muted-foreground">{t("createdAt", { date: formatDate(locale, data.createdAt) })}</p>
+        </div>
+        {hasSide && (
+          <div className="contents lg:sticky lg:top-6 lg:flex lg:flex-col lg:gap-5">
+            {showQuote && (
+              <div className="order-2">
+                <QuoteCard job={data} />
+              </div>
+            )}
+            {hasPayments && (
+              <section aria-labelledby="payments-title" className="order-3">
+                <h2 id="payments-title" className="mb-3 text-[13px] font-semibold">
+                  {t("payments")}
+                </h2>
+                <PaymentsList jobId={data.id} payments={payments.data!} emptyText="" />
+              </section>
+            )}
+          </div>
+        )}
       </div>
-      <p className="text-xs text-muted-foreground">{t("createdAt", { date: formatDate(locale, data.createdAt) })}</p>
     </div>
   );
 }
@@ -289,15 +305,15 @@ function QuoteCard({ job }: { job: ClientJobDetail }) {
             </dd>
           </div>
         )}
-        <div className="mt-2 grid grid-cols-2 gap-2">
-          <div className="rounded-xl bg-primary-soft p-3">
-            <dt className="text-xs text-muted-foreground">{t("deposit")}</dt>
-            <dd className="font-bold">{formatCents(locale, quote.depositCents)}</dd>
-          </div>
-          <div className="rounded-xl bg-background p-3">
-            <dt className="text-xs text-muted-foreground">{t("balance")}</dt>
-            <dd className="font-bold">{formatCents(locale, quote.balanceCents)}</dd>
-          </div>
+      </dl>
+      <dl className="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <div className="rounded-xl bg-primary-soft p-3">
+          <dt className="text-xs text-muted-foreground">{t("deposit")}</dt>
+          <dd className="font-bold">{formatCents(locale, quote.depositCents)}</dd>
+        </div>
+        <div className="rounded-xl bg-background p-3">
+          <dt className="text-xs text-muted-foreground">{t("balance")}</dt>
+          <dd className="font-bold">{formatCents(locale, quote.balanceCents)}</dd>
         </div>
       </dl>
       {quote.note && (

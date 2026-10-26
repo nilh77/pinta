@@ -92,7 +92,16 @@
       "title": "¿Cuánto costaría pintar tu casa?",
       "body": "Descúbrelo en un minuto, sin compromiso."
     },
-    "footer": "Pintura de viviendas en el distrito de Lisboa."
+    "footer": "Pintura de viviendas en el distrito de Lisboa.",
+    "coverage": {
+      "title": "¿Llegamos a tu zona?",
+      "label": "Código postal",
+      "placeholder": "Código postal (ej.: 2710-405)",
+      "check": "Comprobar",
+      "covered": "Sí, llegamos a {municipality}.",
+      "invalid": "Escribe el código postal con el formato 1234-567.",
+      "error": "No hemos podido comprobarlo ahora. Inténtalo de nuevo."
+    }
   },
   "emailBanner": {
     "title": "Confirma tu email",
@@ -1790,6 +1799,42 @@
       "cancel": "Volver",
       "sent": "Solicitud enviada al equipo de Pinta.",
       "requested": "Pediste borrar la cuenta el {date}. El equipo de Pinta se está ocupando."
+    }
+  },
+  "pwa": {
+    "install": {
+      "title": "Instala Pinta en el móvil",
+      "body": "Abre tus trabajos con un toque, como una app.",
+      "button": "Instalar",
+      "ios": "Toca en <share></share> «Compartir» y después en «Añadir a pantalla de inicio».",
+      "share": "Compartir",
+      "dismiss": "Cerrar"
+    }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "Sin conexión. Puedes seguir viendo y preparando la cotización; para enviar, vuelve a conectarte."
+    },
+    "sessionExpired": {
+      "title": "Tu sesión ha caducado",
+      "body": "Vuelve a entrar para continuar. La cotización que preparabas sigue guardada en este dispositivo.",
+      "signIn": "Entrar"
+    },
+    "cookies": {
+      "label": "Aviso de cookies",
+      "message": "Pinta solo usa cookies técnicas: la sesión, la seguridad de los formularios y el idioma. Sin publicidad ni seguimiento.",
+      "ok": "Entendido"
+    },
+    "notFound": {
+      "title": "Esta página no existe",
+      "body": "La dirección puede estar mal o la página ya no está disponible.",
+      "home": "Ir al inicio"
+    },
+    "error": {
+      "title": "Algo ha ido mal",
+      "body": "Hemos tenido un problema al mostrar esta página. Inténtalo de nuevo; si sigue, vuelve más tarde.",
+      "retry": "Reintentar",
+      "home": "Ir al inicio"
     }
   }
 }

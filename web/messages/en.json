@@ -92,7 +92,16 @@
       "title": "How much would it cost to paint your home?",
       "body": "Find out in a minute, no strings attached."
     },
-    "footer": "Home painting in the Lisbon district."
+    "footer": "Home painting in the Lisbon district.",
+    "coverage": {
+      "title": "Do we work in your area?",
+      "label": "Postcode",
+      "placeholder": "Postcode (e.g. 2710-405)",
+      "check": "Check",
+      "covered": "Yes, we work in {municipality}.",
+      "invalid": "Enter the postcode as 1234-567.",
+      "error": "We couldn't check it right now. Please try again."
+    }
   },
   "emailBanner": {
     "title": "Confirm your email",
@@ -1790,6 +1799,42 @@
       "cancel": "Back",
       "sent": "Request sent to the Pinta team.",
       "requested": "You asked to delete your account on {date}. The Pinta team is handling it."
+    }
+  },
+  "pwa": {
+    "install": {
+      "title": "Install Pinta on your phone",
+      "body": "Open your jobs with one tap, like an app.",
+      "button": "Install",
+      "ios": "Tap <share></share> «Share», then «Add to Home Screen».",
+      "share": "Share",
+      "dismiss": "Close"
+    }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "You're offline. You can keep browsing and preparing your quote; reconnect to send."
+    },
+    "sessionExpired": {
+      "title": "Your session has expired",
+      "body": "Sign in again to continue. The quote you were preparing is still saved on this device.",
+      "signIn": "Sign in"
+    },
+    "cookies": {
+      "label": "Cookie notice",
+      "message": "Pinta only uses technical cookies: your session, form security and language. No advertising or tracking.",
+      "ok": "Got it"
+    },
+    "notFound": {
+      "title": "This page doesn't exist",
+      "body": "The address may be wrong, or the page is no longer available.",
+      "home": "Go to the home page"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "body": "We had a problem showing this page. Try again; if it keeps happening, come back later.",
+      "retry": "Try again",
+      "home": "Go to the home page"
     }
   }
 }

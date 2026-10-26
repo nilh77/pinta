@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { formatArea, formatDateTime } from "@/lib/format";
+import { formatArea, formatDateTime, formatPlace } from "@/lib/format";
 import { uploadVisitPhoto, usePainterVisit, useReportVisit } from "@/lib/painter/use-painter";
 import {
   firstInvalid,
@@ -86,7 +86,7 @@ export function PainterVisitScreen({ id }: { id: string }) {
             <span>
               {data.addressLine1}
               <br />
-              {data.postalCode} {data.locality} · {data.municipality}
+              {data.postalCode} {formatPlace(data.locality, data.municipality, " · ")}
             </span>
           </p>
           {data.accessNotes && <p className="mt-2 text-sm">{t("access", { notes: data.accessNotes })}</p>}

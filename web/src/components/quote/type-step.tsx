@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useRouter } from "@/i18n/navigation";
 import { startDraft, type Draft, type JobType } from "@/lib/quote/draft";
+import { radioGroupKeyDown, rovingTabIndex } from "@/lib/arrow-keys";
 import { cn } from "@/lib/utils";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
 
@@ -78,13 +79,20 @@ function TypeChooser({ draft, info, update, reset }: QuoteContext) {
       <h1 className="text-[28px] leading-tight font-bold tracking-tight">{t("title")}</h1>
       <p className="mt-2 text-sm text-muted-foreground">{t("subtitle")}</p>
 
-      <div role="radiogroup" aria-label={t("title")} aria-describedby={showError ? "type-error" : undefined} className="mt-5 flex flex-col gap-3">
-        {OPTIONS.map(({ type, icon: Icon }) => (
+      <div
+        role="radiogroup"
+        aria-label={t("title")}
+        aria-describedby={showError ? "type-error" : undefined}
+        onKeyDown={radioGroupKeyDown}
+        className="mt-5 flex flex-col gap-3"
+      >
+        {OPTIONS.map(({ type, icon: Icon }, i) => (
           <button
             key={type}
             type="button"
             role="radio"
             aria-checked={selected === type}
+            tabIndex={rovingTabIndex(selected === type, i, selected !== null)}
             onClick={() => {
               setSelected(type);
               setShowError(false);

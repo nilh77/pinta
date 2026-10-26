@@ -104,6 +104,7 @@ Las historias remiten al documento 6.2 y las rutas al 6.5. Cada prompt sugerido 
 - **Prompt**: «Lee CLAUDE.md y docs/plan.md (seed y guion). Prepara el hito H8 y ensáyame el guion paso a paso.»
 - **Reparto acordado en H8**: dos PR. H8a: trabajos de demo de la tabla con fotos, «Restablecer datos de demo», fotos de avance y «reportar incidencia» del pintor, y el registro de emails anonimizado al suprimir una cuenta. H8b: PWA, repaso de escritorio D1–D3, accesibilidad, idiomas y estados vacío/carga/error, Lighthouse y los dos ensayos del guion.
 - **Decisiones de H8**: las fotos de avance y «reportar incidencia» entran (el cliente ve las fotos de avance mientras el trabajo está en curso; la incidencia, con texto y fotos, avisa a los admins y la ven en el trabajo, nunca el cliente); las rutas siguen iguales en los tres idiomas (sin `pathnames` traducidos); las fotos de demo son ilustraciones generadas en el repositorio. «Restablecer datos de demo» solo existe en Development: vacía las tablas de todos los módulos salvo los dos admins (así quien lo pulsa sigue con la sesión abierta), borra los archivos guardados y vuelve a sembrar con fechas relativas a hoy; Mailpit no se toca.
+- **Decisiones de H8b**: PT-2026-0106 pasa a Rui (en Oeiras, una de sus zonas) para que una sola pestaña de pintor cubra la parte P1–P2 del guion. Los dos ensayos los hace Claude en el navegador tras un restablecimiento y dejan `docs/demo-checklist.md` para la demo en vivo. PWA sin librerías: manifiesto de Next, iconos generados en la paleta B (`tools/pwa_icons.py`) y un service worker propio que solo funciona en el build de producción; cachea los estáticos de `/_next/static`, los iconos y las páginas visitadas como respaldo sin conexión, y nunca `/api/*`. La invitación a instalar aparece en la pantalla 8: botón donde el navegador lo permite (Chrome, Android) y una indicación en iOS; si se cierra, no vuelve.
 
 ## Definición de hecho
 
@@ -163,7 +164,7 @@ Uno por cada estado relevante, para poder enseñar cualquier pantalla sin prepar
 | PT-2026-0103 | Lisboa Rent | TC11 | `site_visit` | Premium; visita con Rui en D+2 |
 | PT-2026-0104 | Ana | TC04 | `quoted` | Precio confirmado en D−1, válido hasta D+14; para pagar la señal en vivo |
 | PT-2026-0105 | Miguel | TC07 | `deposit_paid` | Señal con MB WAY; pendiente de asignar |
-| PT-2026-0106 | Lisboa Rent | TC10 | `scheduled` | Asignado a Carla; empieza en D (para «Empezar trabajo» en vivo) |
+| PT-2026-0106 | Lisboa Rent | TC10 | `scheduled` | En Oeiras, asignado a Rui; empieza en D (para «Empezar trabajo» en vivo) |
 | PT-2026-0107 | Miguel | TC06 | `in_progress` | Rui, empezó en D−1, fotos de avance |
 | PT-2026-0108 | Ana | TC02 | `finished` | Rui, con fotos del resultado; saldo pendiente |
 | PT-2026-0091 | Lisboa Rent | TC08 | `closed` | Mes anterior; pagado |
@@ -189,13 +190,13 @@ Costes: alojamiento 25,00 + dominio y correo 6,00 + Stripe 32,93 (8,31 + 19,05 +
 
 ## Guion de la demo
 
-Unos 25 minutos para el socio, con el móvil del cliente (navegador en modo móvil o un teléfono en la misma red) y el portátil con el admin. Antes: restablecer los datos de demo, abrir Mailpit y la consola de Stripe en modo test, y tener tres pestañas con sesiones de cliente, admin y pintor.
+Unos 25 minutos para el socio, con el móvil del cliente (navegador en modo móvil o un teléfono en la misma red) y el portátil con el admin. Antes: restablecer los datos de demo, abrir Mailpit y la consola de Stripe en modo test, y tener tres pestañas con sesiones de cliente, admin y pintor (en un mismo navegador, cada rol en su propia dirección para no compartir cookies; detalle en `docs/demo-checklist.md`).
 
 | Min. | Quién y dónde | Qué se enseña | Mensaje clave |
 | --- | --- | --- | --- |
 | 0–2 | Cliente · pantalla 0 | Landing en portugués, cambio a español, comprobar el código postal de Sintra | Mobile-first y en tres idiomas |
 | 2–9 | Cliente · pantallas 1–4 | Vivienda con muebles: sala por talla, dormitorio con medidas, quitar una pared, baño con humedad. El rango se mueve en vivo | El constructor: cualquiera cotiza en dos minutos sin saber de m² |
-| 9–12 | Cliente · pantallas 5–8 | Fotos desde el móvil, dirección y fecha, cuenta nueva, código de solicitud y email en Mailpit | La solicitud llega completa: menos visitas y menos llamadas |
+| 9–12 | Cliente · pantallas 5–8 | Fotos desde el móvil, dirección y fecha (en Lisboa, zona de Rui, para poder asignársela), cuenta nueva, código de solicitud y email en Mailpit; confirmar el email desde Mailpit para que la solicitud pase a revisión | La solicitud llega completa: menos visitas y menos llamadas |
 | 12–16 | Admin · A2 | Abrir la solicitud recién enviada: fotos, desglose interno y margen. Añadir una partida extra, confirmar el precio | Revisión humana en minutos, con el margen siempre a la vista |
 | 16–18 | Admin · A1 | Subir la tarifa de techos, ver el simulador y volver a dejarla | Los precios son del negocio, no del código |
 | 18–20 | Cliente · pantallas 10–11 | Precio cerrado frente a estimación; pagar la señal con MB WAY de prueba y ver el estado cambiar | Cobramos antes de mover a nadie |

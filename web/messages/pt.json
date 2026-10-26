@@ -92,7 +92,16 @@
       "title": "Quanto custaria pintar a sua casa?",
       "body": "Descubra num minuto, sem compromisso."
     },
-    "footer": "Pintura de casas no distrito de Lisboa."
+    "footer": "Pintura de casas no distrito de Lisboa.",
+    "coverage": {
+      "title": "Chegamos à sua zona?",
+      "label": "Código postal",
+      "placeholder": "Código postal (ex.: 2710-405)",
+      "check": "Verificar",
+      "covered": "Sim, chegamos a {municipality}.",
+      "invalid": "Escreva o código postal no formato 1234-567.",
+      "error": "Não conseguimos verificar agora. Tente outra vez."
+    }
   },
   "emailBanner": {
     "title": "Confirme o seu email",
@@ -1790,6 +1799,42 @@
       "cancel": "Voltar",
       "sent": "Pedido enviado à equipa da Pinta.",
       "requested": "Pediu para apagar a conta a {date}. A equipa da Pinta está a tratar disso."
+    }
+  },
+  "pwa": {
+    "install": {
+      "title": "Instale a Pinta no telemóvel",
+      "body": "Abra os seus trabalhos com um toque, como uma app.",
+      "button": "Instalar",
+      "ios": "Toque em <share></share> «Partilhar» e depois em «Adicionar ao ecrã principal».",
+      "share": "Partilhar",
+      "dismiss": "Fechar"
+    }
+  },
+  "globalStates": {
+    "offline": {
+      "message": "Sem ligação. Pode continuar a ver e a preparar a cotação; para enviar, volte a ligar-se."
+    },
+    "sessionExpired": {
+      "title": "A sua sessão expirou",
+      "body": "Entre de novo para continuar. A cotação que estava a preparar continua guardada neste dispositivo.",
+      "signIn": "Entrar"
+    },
+    "cookies": {
+      "label": "Aviso de cookies",
+      "message": "A Pinta só usa cookies técnicos: a sessão, a segurança dos formulários e o idioma. Sem publicidade nem seguimento.",
+      "ok": "Entendido"
+    },
+    "notFound": {
+      "title": "Esta página não existe",
+      "body": "O endereço pode estar errado ou a página já não está disponível.",
+      "home": "Ir para o início"
+    },
+    "error": {
+      "title": "Algo correu mal",
+      "body": "Tivemos um problema a mostrar esta página. Tente de novo; se continuar, volte mais tarde.",
+      "retry": "Tentar de novo",
+      "home": "Ir para o início"
     }
   }
 }

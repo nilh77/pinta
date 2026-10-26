@@ -235,8 +235,7 @@ function Documents({ painter }: { painter: PainterDetail }) {
         ref={input}
         type="file"
         accept="application/pdf,image/jpeg,image/png,image/webp"
-        className="sr-only"
-        tabIndex={-1}
+        hidden
         onChange={(event) => {
           const file = event.target.files?.[0];
           event.target.value = "";

@@ -20,7 +20,6 @@ export function LocaleSwitcher() {
               locale={option}
               lang={option}
               hrefLang={option}
-              aria-label={t(`languages.${option}`)}
               aria-current={option === locale ? "true" : undefined}
               className={cn(
                 "flex size-11 items-center justify-center rounded-[10px] text-[13px] font-semibold uppercase",
@@ -28,6 +27,8 @@ export function LocaleSwitcher() {
               )}
             >
               {option}
+              {/* The name starts with the visible code, so voice control users can say what they see (WCAG 2.5.3). */}
+              <span className="sr-only"> {t(`languages.${option}`)}</span>
             </Link>
           </li>
         ))}

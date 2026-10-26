@@ -1,7 +1,13 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Pinta.Modules.Identity.Domain;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Notifications.Data;
 using Pinta.Modules.Notifications.Domain;
@@ -128,5 +134,35 @@ public class AccountTests(PintaApiFactory factory)
             Assert.Equal(($"deleted-{userId:N}@anonymous.invalid", "", job.Code), (a.To, a.Html, a.Subject));
             Assert.Equal(job.Email, b.To);
         }
+    }
+
+    [Fact]
+    public async Task C5_8_A4_2_a_session_ends_once_the_account_changes_under_it()
+    {
+        // The session cookie re-checks the security stamp every minute: anonymising, deactivating or deleting an account
+        // changes it, and the old session must stop working (it did not while the cookie events were replaced).
+        var job = await TestJobs.SendAsync(factory);
+        await using var scope = factory.Services.CreateAsyncScope();
+        var services = scope.ServiceProvider;
+        var users = services.GetRequiredService<UserManager<User>>();
+        var user = (await users.FindByEmailAsync(job.Email))!;
+        var principal = await services.GetRequiredService<SignInManager<User>>().CreateUserPrincipalAsync(user);
+
+        async Task<bool> SessionSurvivesAsync()
+        {
+            var options = services.GetRequiredService<IOptionsMonitor<CookieAuthenticationOptions>>().Get(IdentityConstants.ApplicationScheme);
+            var scheme = new AuthenticationScheme(IdentityConstants.ApplicationScheme, null, typeof(CookieAuthenticationHandler));
+            var ticket = new AuthenticationTicket(principal, new AuthenticationProperties { IssuedUtc = DateTimeOffset.UtcNow.AddMinutes(-2) }, scheme.Name);
+            var http = new DefaultHttpContext { RequestServices = services };
+            // A rejected session is also signed out, through the request's context.
+            services.GetRequiredService<IHttpContextAccessor>().HttpContext = http;
+            var context = new CookieValidatePrincipalContext(http, scheme, options, ticket);
+            await options.Events.ValidatePrincipal(context);
+            return context.Principal is not null;
+        }
+
+        Assert.True(await SessionSurvivesAsync());
+        await users.UpdateSecurityStampAsync(user);
+        Assert.False(await SessionSurvivesAsync());
     }
 }

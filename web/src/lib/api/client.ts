@@ -31,6 +31,36 @@ function antiforgeryToken(): Promise<string> {
   return xsrfToken;
 }
 
+let sessionSeen = false;
+const expiredListeners = new Set<() => void>();
+
+/**
+ * Global state «Sesión caducada» (docs/screens.md): a 401 only means the session expired when this page had one. A
+ * visitor who was never signed in, or who signed out, gets no dialog. Returns true when the dialog should open.
+ */
+export function trackSession(path: string, status: number) {
+  if (path === "/api/auth/logout") {
+    sessionSeen = false;
+    return false;
+  }
+  if (status === 401) {
+    const expired = sessionSeen;
+    sessionSeen = false;
+    return expired;
+  }
+  if (path === "/api/auth/me" || path === "/api/auth/login" || path === "/api/auth/register") {
+    sessionSeen = status >= 200 && status < 300;
+  }
+  return false;
+}
+
+export function onSessionExpired(listener: () => void) {
+  expiredListeners.add(listener);
+  return () => {
+    expiredListeners.delete(listener);
+  };
+}
+
 const headers: Middleware = {
   async onRequest({ request }) {
     request.headers.set("Accept-Language", language);
@@ -39,7 +69,10 @@ const headers: Middleware = {
     }
     return request;
   },
-  async onResponse({ response }) {
+  async onResponse({ request, response }) {
+    if (trackSession(new URL(request.url, "http://localhost").pathname, response.status)) {
+      expiredListeners.forEach((listener) => listener());
+    }
     if (response.status === 403) {
       // A stale token (e.g. the session expired) is replaced on the next attempt.
       const body = await response.clone().json().catch(() => null);

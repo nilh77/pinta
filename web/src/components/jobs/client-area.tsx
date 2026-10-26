@@ -22,7 +22,7 @@ export function ClientArea({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
       <SiteHeader />
-      <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 pt-2 pb-16 sm:px-6">
+      <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 pt-2 pb-16 sm:px-6 lg:max-w-5xl">
         {me.isPending || me.data === null ? (
           <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
             <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />

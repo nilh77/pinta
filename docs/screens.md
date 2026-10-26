@@ -27,11 +27,11 @@ Reglas comunes a todas las pantallas:
 ### 0 · Inicio
 
 - **Ruta y board**: `/{locale}` · Inicio.dc.html. Pública, sin sesión. \[C1.1\]
-- **Datos**: textos estáticos traducidos; desde-precio por m² tomado de `GET /api/catalog` (tarifa mínima de `interior_wall`); comprobador de cobertura.
+- **Datos**: textos estáticos traducidos; comprobador de cobertura. Sin «desde X €/m²»: el cliente nunca recibe tarifas (decisión de H8).
 - **Acciones**: «Calcular mi precio» → pantalla 1. Código postal → `GET /api/coverage/check?postalCode=`; si está fuera, formulario de lista de espera (`POST /api/coverage/waitlist`). Selector de idioma en la cabecera. «Entrar» para clientes con cuenta.
 - **Validaciones**: código postal `^\d{4}-\d{3}$`.
-- **Estados**: si el catálogo falla, se oculta el desde-precio y el resto funciona. Cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos».
-- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura ni el desde-precio; ambos llegan en H3 con C4.1. La comprobación es `GET /api/coverage/check?postalCode=` (docs/api.md).
+- **Estados**: cobertura: «Sí llegamos a {localidad}» o «Aún no llegamos» con la lista de espera; si la comprobación falla, un aviso para reintentar.
+- **Alcance por hitos**: H2 construye la landing sin el comprobador de cobertura, que llega en H8 (en H3 solo se hizo en la pantalla 6). La comprobación es `GET /api/coverage/check?postalCode=` (docs/api.md).
 
 ### 1 · Tipo de trabajo
 
@@ -277,8 +277,8 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### Estados globales
 
 - **Toasts**: éxito (3 s), error (hasta cerrarlo) y deshacer (5 s). Arriba en móvil y abajo a la derecha en escritorio.
-- **Sesión caducada**: un 401 en cualquier petición → diálogo «Tu sesión ha caducado» con «Entrar»; el borrador local se conserva.
+- **Sesión caducada**: un 401 en cualquier petición de una pantalla con sesión (no en entrar, registro ni recuperar) → diálogo «Tu sesión ha caducado» con «Entrar», que vuelve a la misma página; el borrador local se conserva.
 - **Sin conexión**: banda superior «Sin conexión». El constructor sigue funcionando (el área se calcula en el cliente; la estimación queda pendiente). Las acciones que escriben quedan desactivadas.
-- **PWA**: manifiesto con nombre, iconos y colores de la paleta B (`#0F766E` y `#F2B705`); el service worker cachea la estructura de la app y los textos, nunca las respuestas de la API con datos personales. Invitación a instalar tras enviar la primera solicitud.
+- **PWA**: manifiesto con nombre, iconos y colores de la paleta B (`#0F766E` y `#F2B705`); el service worker cachea la estructura de la app y los textos, nunca las respuestas de la API con datos personales. Invitación a instalar en la pantalla 8 tras enviar la solicitud: botón «Instalar» donde el navegador lo ofrece y, en iOS, la indicación «Compartir › Añadir a pantalla de inicio»; cerrada una vez, no vuelve. El service worker solo se registra en el build de producción.
 - **Errores 404 y 500**: páginas propias traducidas con enlace a inicio.
 - **Cookies**: solo técnicas en el MVP (sesión, antiforgery e idioma); banner informativo sin opciones de seguimiento.

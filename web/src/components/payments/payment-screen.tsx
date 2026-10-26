@@ -57,7 +57,7 @@ export function PaymentScreen({ id }: { id: string }) {
   }, [create, existing.isSuccess, returned, type, waiting]);
 
   if (!isPaymentType(type)) {
-    return <Problem title={t("invalid")} id={id} />;
+    return <Problem title={t("invalid")} id={id} pageTitle />;
   }
 
   return (
@@ -96,14 +96,16 @@ export function PaymentScreen({ id }: { id: string }) {
   );
 }
 
-function Problem({ title, id }: { title: string; id: string }) {
+/** pageTitle: shown instead of the whole screen, so the message is the page's heading. */
+function Problem({ title, id, pageTitle }: { title: string; id: string; pageTitle?: boolean }) {
   const t = useTranslations("payment");
+  const Title = pageTitle ? "h1" : "p";
   return (
     <div role="alert" className="flex flex-col items-start gap-4 rounded-[20px] border border-border bg-card p-5">
-      <p className="flex items-start gap-2 font-semibold text-destructive">
+      <Title className="flex items-start gap-2 font-semibold text-destructive">
         <CircleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
         {title}
-      </p>
+      </Title>
       <Button asChild variant="outline">
         <Link href={`/mis-trabajos/${id}`}>{t("back")}</Link>
       </Button>

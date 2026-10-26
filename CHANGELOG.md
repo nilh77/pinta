@@ -6,26 +6,54 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### H8a · Pulido para la demo: datos y pintor
+### H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos
 
 #### Añadido
+
+- PWA instalable: manifiesto con la paleta B, iconos generados (`tools/pwa_icons.py`) y un service worker propio, solo en el build de producción, que guarda los estáticos, los iconos y las páginas visitadas para abrir sin conexión y nunca `/api`. En la pantalla 8, invitación a instalar: botón donde el navegador lo ofrece y la indicación «Compartir › Añadir a pantalla de inicio» en iOS.
+- Estados globales: banda «Sin conexión», diálogo «Tu sesión ha caducado» que vuelve a la misma página tras entrar (el borrador local se conserva), páginas 404 y de error traducidas y aviso de cookies técnicas.
+- Pantalla 0: comprobador de cobertura por código postal (C1.1, C4.1) con la lista de espera si aún no llegamos, la misma que en la pantalla 6.
+- Escritorio D3: el detalle del trabajo en dos columnas a partir de 1024 px (estado e historial a la izquierda, desglose y pagos a la derecha); en el móvil, mismo orden que antes.
+- `docs/demo-checklist.md`: preparación de la demo, el guion paso a paso con lo que hay que comprobar y el plan B.
+
+#### Cambiado
+
+- PT-2026-0106 pasa a Rui, en Oeiras, para que una sola pestaña de pintor cubra la parte P1–P2 del guion.
+- El guion pide la dirección de la solicitud en una zona de Rui, confirmar el email desde Mailpit y una dirección por rol en el navegador (`docs/plan.md`).
+- Documentos: decisiones de H8b en `docs/plan.md`; PWA, sesión caducada y pantalla 0 sin «desde X €/m²» (el cliente nunca recibe tarifas) en `docs/screens.md`.
+- Accesibilidad (revisión con axe en todas las pantallas y con teclado): los grupos de opciones (pantalla 1, talla y pintura) y las pestañas (mis trabajos, pintor, cuenta, trabajo del admin) se manejan con las flechas; el selector de idioma se nombra empezando por el código visible; el trabajo del admin tiene su `h1` y cada pestaña su `h2`; listas de definición corregidas; los campos de archivo ocultos tras su botón.
+
+#### Corregido
+
+- Sesiones: la cookie de sesión había perdido la comprobación del sello de seguridad, así que un pintor desactivado (A4.2), un cliente anonimizado (C5.8) o una cuenta borrada al restablecer la demo seguían con la sesión abierta. Ahora se cierra en un minuto como máximo. En el ensayo, una foto subida con la sesión de una cuenta borrada no llegaba al trabajo.
+- En las tarjetas estrechas del esquema, la marca de «descrita» tapaba el nombre cuando aparecía «Humedad».
+- El pintor veía «Sintra, Sintra» u «Oeiras · Oeiras»: el municipio solo aparece si es distinto de la localidad.
+
+#### Verificado
+
+- Lighthouse móvil en la pantalla 2 (con un borrador): 100 de rendimiento y 100 de accesibilidad en tres pasadas (LCP 0,9–1,5 s, CLS ≈ 0), en local con la simulación de móvil de Lighthouse.
+- Guion de la demo: tres ensayos completos en el navegador tras restablecer, con cliente a 390 px en `127.0.0.1`, admin a 1440 px en `localhost` y pintor en `[::1]`, pago MB WAY real de Stripe en modo test y emails en Mailpit. El primero encontró lo corregido arriba; el segundo y el tercero, seguidos y tras restablecer, sin errores de la aplicación (criterio de salida de H8). Finanzas del mes anterior igual al cálculo a mano en los tres.
+
+## H8a · Pulido para la demo: datos y pintor — 2026-10-26, [PR #11](https://github.com/nilh77/pinta/pull/11)
+
+### Añadido
 
 - Datos de demo con un trabajo en cada estado relevante, construidos con los servicios reales (precios del motor, pagos, asignaciones y pagos a pintores) y fechas relativas a hoy: PT-…-0101 y 0102 en revisión (0102 con el semáforo ámbar), 0103 con visita técnica de Rui (Premium), 0104 con precio confirmado, 0105 con la señal pagada por MB WAY, 0106 programado hoy para Carla con un extra de catálogo, 0107 en curso con fotos de avance, 0108 terminado con fotos del resultado, 0094 caducado y 0095 rechazado. Las fotos son ilustraciones generadas (`tools/demo_images.py`) que se suben a MinIO.
 - Admin › Ajustes › «Restablecer datos de demo» (`POST /api/admin/demo/reset`, solo en Development, con confirmación): vacía los módulos y los ficheros, conserva a los dos socios (el admin sigue con la sesión iniciada) y vuelve a sembrar la demo con fechas relativas a hoy.
 - P2 · Fotos de avance: con el trabajo en curso, el pintor envía fotos de avance y el cliente las ve en la pantalla 10.
 - P2 · «Reportar incidencia» (programado o en curso): texto y fotos opcionales; los socios reciben un email y la ven en el detalle del trabajo en admin. El cliente no la ve.
 
-#### Cambiado
+### Cambiado
 
 - Documentos: reparto de H8 en dos PR y decisiones en `docs/plan.md`; las rutas son las mismas en los tres idiomas, fotos de avance, incidencias y el reinicio de la demo en `docs/screens.md`; contextos `progress` e `incident`, `/progress`, `/incidents` y `/api/admin/demo/reset` en `docs/api.md`.
 
-#### Corregido
+### Corregido
 
 - Un cuerpo JSON que no se puede leer (mal formado o con un valor de enumeración desconocido, p. ej. `"occupancy": "abandoned"`) responde 400 `bad_request` como ProblemDetails en lugar de 500, y ya no se registra como error del servidor. El frontend tiene texto para `bad_request` en los tres idiomas.
 - Al ejecutar la supresión de una cuenta (C5.8), el registro de emails enviados ya no conserva la dirección ni el contenido de los emails del cliente.
 - Tests: el test de reembolso automático (S4) fallaba a veces en CI porque esperaba 10 s a Hangfire, que revisa su cola cada 15 s; ahora espera hasta 30 s.
 
-#### Verificado
+### Verificado
 
 - En el navegador sobre un stack nuevo: el reinicio desde Ajustes deja los 13 trabajos de demo en sus estados; a 390 px Rui ve sus trabajos, añade una foto de avance a 0107 y reporta una incidencia; Miguel ve las 3 fotos de avance y nada de la incidencia; a 1440 px el admin ve la incidencia (pt, es, en) y los dos socios reciben el email. El mes cerrado de H7 sigue igual al cálculo a mano.
 
