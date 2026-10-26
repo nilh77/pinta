@@ -1791,5 +1791,15 @@
       "sent": "Solicitud enviada al equipo de Pinta.",
       "requested": "Pediste borrar la cuenta el {date}. El equipo de Pinta se está ocupando."
     }
+  },
+  "pwa": {
+    "install": {
+      "title": "Instala Pinta en el móvil",
+      "body": "Abre tus trabajos con un toque, como una app.",
+      "button": "Instalar",
+      "ios": "Toca en <share></share> «Compartir» y después en «Añadir a pantalla de inicio».",
+      "share": "Compartir",
+      "dismiss": "Cerrar"
+    }
   }
 }

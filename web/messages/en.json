@@ -1791,5 +1791,15 @@
       "sent": "Request sent to the Pinta team.",
       "requested": "You asked to delete your account on {date}. The Pinta team is handling it."
     }
+  },
+  "pwa": {
+    "install": {
+      "title": "Install Pinta on your phone",
+      "body": "Open your jobs with one tap, like an app.",
+      "button": "Install",
+      "ios": "Tap <share></share> «Share», then «Add to Home Screen».",
+      "share": "Share",
+      "dismiss": "Close"
+    }
   }
 }

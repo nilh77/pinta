@@ -30,6 +30,8 @@ export async function generateMetadata({ params }: Omit<Props, "children">): Pro
     title: { default: t("title"), template: "%s · Pinta" },
     description: t("description"),
     alternates: { languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}`])) },
+    icons: { icon: "/icons/favicon-32.png", apple: "/icons/apple-touch-icon.png" },
+    appleWebApp: { capable: true, title: "Pinta", statusBarStyle: "default" },
   };
 }
 

@@ -5,6 +5,7 @@ import { MailCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { InstallInvite } from "@/components/install-invite";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -111,6 +112,8 @@ export function SentStep({ code }: { code: string }) {
             />
           </dl>
         )}
+
+        <InstallInvite />
 
         <div className="fixed inset-x-0 bottom-0 bg-background px-5 pt-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:static lg:mt-6 lg:p-0">
           <div className="mx-auto flex max-w-2xl flex-col gap-2">

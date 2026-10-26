@@ -1791,5 +1791,15 @@
       "sent": "Pedido enviado à equipa da Pinta.",
       "requested": "Pediu para apagar a conta a {date}. A equipa da Pinta está a tratar disso."
     }
+  },
+  "pwa": {
+    "install": {
+      "title": "Instale a Pinta no telemóvel",
+      "body": "Abra os seus trabalhos com um toque, como uma app.",
+      "button": "Instalar",
+      "ios": "Toque em <share></share> «Partilhar» e depois em «Adicionar ao ecrã principal».",
+      "share": "Partilhar",
+      "dismiss": "Fechar"
+    }
   }
 }
