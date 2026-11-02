@@ -13,6 +13,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Entorno **Demo** en Railway: la demo accesible en internet con PostgreSQL, MinIO, la API privada y la web pública, Stripe en modo test y los emails en un buzón SMTP de pruebas. Guía paso a paso, variables y comprobación en `docs/deploy-railway.md`.
 - Dockerfiles de la API (`src/Pinta.Api/`), de la web (`web/`, `next build` + `next start`, con `API_URL` como argumento de build porque Next.js fija los rewrites al construir) y de MinIO (`deploy/minio/`).
 - `/alive` responde en todos los entornos (healthcheck de Railway); `/health`, también en Demo.
+- `appsettings.Demo.json`: en Demo cada log sale una sola vez (Serilog) y sin las consultas SQL de Npgsql, que superaban el límite de logs de Railway.
 
 #### Cambiado
 
