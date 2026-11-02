@@ -1,0 +1,11 @@
+# Context of src/Pinta.Api/Dockerfile: only what dotnet publish needs.
+**/bin/
+**/obj/
+**/node_modules/
+.git/
+.claude/
+web/
+tests/
+docs/
+tools/
+TestResults/

@@ -28,7 +28,7 @@ pinta/
 ├─ src/
 │  ├─ Pinta.AppHost/                 Aspire: orquesta todo en local
 │  ├─ Pinta.ServiceDefaults/         Logs, health checks, telemetría
-│  ├─ Pinta.Api/                     Host: Program.cs, auth, registro de módulos
+│  ├─ Pinta.Api/                     Host: Program.cs, auth, registro de módulos; Dockerfile y railway.json del entorno Demo
 │  ├─ Pinta.Pricing/                 Motor de precios (sin dependencias)
 │  ├─ Pinta.SharedKernel/            Money, IDs, eventos, Result, reloj
 │  └─ Modules/
@@ -41,7 +41,7 @@ pinta/
 │     ├─ Media/
 │     ├─ Notifications/
 │     └─ Finance/
-├─ web/                              Next.js (PWA)
+├─ web/                              Next.js (PWA); Dockerfile y railway.json del entorno Demo
 │  ├─ src/app/[locale]/(public)/     Landing con SSR
 │  ├─ src/app/[locale]/(cliente)/    Cotizar, mis trabajos, cuenta
 │  ├─ src/app/[locale]/pintor/
