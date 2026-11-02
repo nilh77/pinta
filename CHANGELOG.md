@@ -11,7 +11,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 #### Añadido
 
 - Entorno **Demo** en Railway: la demo accesible en internet con PostgreSQL, MinIO, la API privada y la web pública, Stripe en modo test y los emails en un buzón SMTP de pruebas. Guía paso a paso, variables y comprobación en `docs/deploy-railway.md`.
-- Dockerfiles y `railway.json` de la API (`src/Pinta.Api/`) y de la web (`web/`, `next build` + `next start`, con `API_URL` como argumento de build porque Next.js fija los rewrites al construir).
+- Dockerfiles de la API (`src/Pinta.Api/`), de la web (`web/`, `next build` + `next start`, con `API_URL` como argumento de build porque Next.js fija los rewrites al construir) y de MinIO (`deploy/minio/`).
 - `/alive` responde en todos los entornos (healthcheck de Railway); `/health`, también en Demo.
 
 #### Cambiado
