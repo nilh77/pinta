@@ -16,6 +16,8 @@ Navegador ──► web (Next.js, PWA) ──/api/*──► Pinta.Api (ASP.NET 
 
 El navegador solo habla con Next.js, que sirve las páginas y reenvía `/api/*` a la API. La API concentra toda la lógica y es la única que toca la base de datos y los servicios externos.
 
+**Entornos.** `Development` (local con Aspire), `Demo` (Railway, público, para enseñar la demo) y `Production` (aún no existe). En `Development` y `Demo` la API aplica las migraciones al arrancar, siembra los datos de demo si la base está vacía y ofrece «Restablecer datos de demo»; en `Production` no hace ninguna de las tres cosas. Fuera de `Development` las cookies son `Secure` y la API, que solo recibe tráfico de la web por la red privada, toma el esquema y el host de las cabeceras `X-Forwarded-*`. Despliegue de `Demo`: `docs/deploy-railway.md`.
+
 ## Módulos del backend
 
 Cada módulo tiene su propio esquema en PostgreSQL (nombre del código en inglés entre paréntesis).

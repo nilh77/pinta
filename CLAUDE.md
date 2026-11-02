@@ -1,6 +1,6 @@
 # Pinta — guidance for Claude Code
 
-Pinta is a mobile-first PWA for booking interior and exterior painting in the Lisbon district (Portugal). A client builds a quote with a simple visual schema of their home, a human admin reviews and confirms the price, the client pays a 30% deposit (card, MB WAY or Multibanco via Stripe), and a curated painter does the job. The software is owned by NHIT-DEV. Current goal: a complete MVP running **locally** for a demo to the business partner.
+Pinta is a mobile-first PWA for booking interior and exterior painting in the Lisbon district (Portugal). A client builds a quote with a simple visual schema of their home, a human admin reviews and confirms the price, the client pays a 30% deposit (card, MB WAY or Multibanco via Stripe), and a curated painter does the job. The software is owned by NHIT-DEV. Current goal: a complete MVP for a demo to the business partner, running **locally** with Aspire and as a public **Demo** environment on Railway (`docs/deploy-railway.md`).
 
 The full PRD lives in `docs/` (written in Spanish). Read the files a task names before writing code. If code and docs disagree, the docs win until they are updated. Never change a product rule silently: update the doc first, then the code.
 
@@ -16,6 +16,7 @@ The full PRD lives in `docs/` (written in Spanish). Read the files a task names 
 | `docs/glossary.md` | One name per concept: Spanish doc term ↔ code ↔ PT/EN UI; table names |
 | `docs/architecture.md`, `docs/structure.md`, `docs/stack.md`, `docs/integrations.md` | Architecture, repo layout, stack, Stripe/S3/email/auth details |
 | `docs/plan.md` | Milestones H0–H8 with exit criteria, definition of done, demo seed, demo script |
+| `docs/deploy-railway.md` | The Demo environment on Railway: services, variables, deploy steps |
 
 Visual reference for screens: design canvas at https://claude.ai/artifact/QXmJ1wZgXMpmRUHx6pHXKz (board names are given in `docs/screens.md`).
 
@@ -48,7 +49,7 @@ Visual reference for screens: design canvas at https://claude.ai/artifact/QXmJ1w
 - API: JSON camelCase, enums as `snake_case` strings, errors as ProblemDetails (RFC 9457) with a stable `code` from `docs/api.md`, pagination `{ items, page, pageSize, total }`, `Idempotency-Key` on job creation and payments, `X-XSRF-TOKEN` antiforgery header on mutations.
 - Optimistic concurrency token on `Job` and catalog entities → `409 concurrency_conflict`.
 - Sensitive data: painter IBAN encrypted with ASP.NET Core Data Protection and always masked in responses; no personal data or IBAN in logs.
-- Secrets (Stripe test keys, Google OAuth) only in `dotnet user-secrets`. Never commit secrets.
+- Secrets (Stripe test keys, Google OAuth, SMTP and storage credentials) only in `dotnet user-secrets` locally and in Railway variables for the Demo environment. Never commit secrets or paste them in chat. Stripe runs in test mode everywhere.
 - EF Core: one migration per change with a descriptive name; never edit a merged migration.
 
 ## Pricing engine
@@ -65,7 +66,7 @@ cd web && pnpm lint && pnpm typecheck && pnpm test
 cd web && pnpm api:generate                 # regenerate the typed client after API changes
 ```
 
-Local tools: Mailpit UI for emails, MinIO console for files, `/hangfire` (admin only) for jobs, Stripe CLI forwards webhooks to `/api/webhooks/stripe`. Demo data is seeded in Development on an empty DB; Admin → Ajustes → "Restablecer datos de demo" resets it with dates relative to today.
+Local tools: Mailpit UI for emails, MinIO console for files, `/hangfire` (admin only) for jobs, Stripe CLI forwards webhooks to `/api/webhooks/stripe`. Migrations run at startup and demo data is seeded on an empty DB in `Development` and `Demo` (never in `Production`); Admin → Ajustes → "Restablecer datos de demo" resets it with dates relative to today.
 
 ## How we work
 
