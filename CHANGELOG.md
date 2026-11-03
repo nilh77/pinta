@@ -15,6 +15,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - `/alive` responde en todos los entornos (healthcheck de Railway); `/health`, también en Demo.
 - `appsettings.Demo.json`: en Demo cada log sale una sola vez (Serilog) y sin las consultas SQL de Npgsql, que superaban el límite de logs de Railway.
 
+#### Corregido
+
+- Un webhook de Stripe sin cabecera `Stripe-Signature` respondía 500 en vez de 400 `bad_request` (S4); en Demo el endpoint es público.
+
 #### Cambiado
 
 - Migraciones al arrancar, datos de demo y «Restablecer datos de demo» (H8) funcionan en `Development` y en `Demo`, nunca en `Production`. En Demo la contraseña común de demo sale de `Seed__DemoPassword`, no de la del repositorio.

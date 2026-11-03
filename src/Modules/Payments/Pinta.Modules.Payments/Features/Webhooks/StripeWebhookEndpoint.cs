@@ -32,11 +32,18 @@ internal static class StripeWebhookEndpoint
     {
         using var reader = new StreamReader(request.Body);
         var json = await reader.ReadToEndAsync(cancellationToken);
+        // Stripe.net throws NullReferenceException, not StripeException, when the header is missing.
+        string? signature = request.Headers["Stripe-Signature"];
+        if (string.IsNullOrEmpty(signature))
+        {
+            logger.LogWarning("Rejected a Stripe webhook: no signature");
+            return ApiProblem.Create(StatusCodes.Status400BadRequest, ErrorCodes.BadRequest);
+        }
+
         Event stripeEvent;
         try
         {
-            stripeEvent = EventUtility.ConstructEvent(
-                json, request.Headers["Stripe-Signature"], options.WebhookSecret ?? "", throwOnApiVersionMismatch: false);
+            stripeEvent = EventUtility.ConstructEvent(json, signature, options.WebhookSecret ?? "", throwOnApiVersionMismatch: false);
         }
         catch (StripeException e)
         {
