@@ -6,7 +6,26 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-Nada todavía.
+### Despliegue en Railway (entorno Demo)
+
+#### Añadido
+
+- Entorno **Demo** en Railway: la demo accesible en internet con PostgreSQL, MinIO, la API privada y la web pública, Stripe en modo test y los emails en un buzón SMTP de pruebas. Guía paso a paso, variables y comprobación en `docs/deploy-railway.md`.
+- Dockerfiles de la API (`src/Pinta.Api/`), de la web (`web/`, `next build` + `next start`, con `API_URL` como argumento de build porque Next.js fija los rewrites al construir) y de MinIO (`deploy/minio/`).
+- `/alive` responde en todos los entornos (healthcheck de Railway); `/health`, también en Demo.
+- Emails por HTTPS a la API del Sandbox de Mailtrap (`Email__Provider=MailtrapApi`, con token e inbox), porque Railway bloquea el SMTP saliente y los envíos caducaban al conectar. Timeout de 30 s y un error de Mailtrap cuenta como fallo, así que el outbox y los reintentos de Hangfire funcionan igual. SMTP y Mailpit siguen en local.
+- `appsettings.Demo.json`: en Demo cada log sale una sola vez (Serilog) y sin las consultas SQL de Npgsql, que superaban el límite de logs de Railway.
+
+#### Corregido
+
+- Un webhook de Stripe sin cabecera `Stripe-Signature` respondía 500 en vez de 400 `bad_request` (S4); en Demo el endpoint es público.
+
+#### Cambiado
+
+- Migraciones al arrancar, datos de demo y «Restablecer datos de demo» (H8) funcionan en `Development` y en `Demo`, nunca en `Production`. En Demo la contraseña común de demo sale de `Seed__DemoPassword`, no de la del repositorio.
+- La API toma el esquema y el host de las cabeceras `X-Forwarded-*`: detrás del proxy de Railway, las cookies `Secure` y el antiforgery ven la petición como HTTPS.
+- Email: la cadena SMTP acepta `Username` y `Password` y usa STARTTLS si el servidor lo ofrece; Mailpit en local sigue igual.
+- Documentos: objetivo de la demo también en Railway (`CLAUDE.md`, `docs/prd-overview.md`), entornos (`docs/architecture.md`), seed y reset en Demo (`docs/plan.md`), SMTP, MinIO público y health checks (`docs/integrations.md`).
 
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 

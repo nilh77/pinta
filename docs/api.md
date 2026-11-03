@@ -125,7 +125,7 @@ Todas las rutas exigen rol Admin.
 | GET / POST / PUT / DELETE | `/api/admin/finance/costs[/{id}]` | Costes de operación; en un mes cerrado, 422 `period_closed` | A5.2 |
 | POST | `/api/admin/finance/closings` | `{ month }`: cierra un mes ya terminado y congela sus cifras (una vez) | A5.3 |
 | GET | `/api/admin/finance/export?month=AAAA-MM` | CSV (UTF-8) del mes: trabajos, costes y totales | A5.1 |
-| POST | `/api/admin/demo/reset` | Solo en Development: restablece los datos de demo con fechas relativas a hoy (los dos admins se conservan) | — |
+| POST | `/api/admin/demo/reset` | Solo en Development y Demo (en los demás entornos, 404): restablece los datos de demo con fechas relativas a hoy (los dos admins se conservan) | — |
 | GET | `/api/admin/deletion-requests` | Clientes que pidieron la supresión de su cuenta | C5.8 |
 | POST | `/api/admin/deletion-requests/{userId}/execute` | Anonimiza al cliente, cancela sus trabajos activos con la política y conserva la contabilidad | C5.8 |
 | GET | `/api/admin/payouts?painterId=&status=` | Pagos a pintores (solo lectura desde H6b) | A5.4 |

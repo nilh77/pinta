@@ -100,18 +100,17 @@ public static class Extensions
 
     public static WebApplication MapDefaultEndpoints(this WebApplication app)
     {
-        // Adding health checks endpoints to applications in non-development environments has security implications.
-        // See https://aka.ms/aspire/healthchecks for details before enabling these endpoints in non-development environments.
-        if (app.Environment.IsDevelopment())
+        // Liveness says nothing about dependencies, so it is safe everywhere; Railway waits for it before switching a deploy.
+        app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
         {
-            // All health checks must pass for app to be considered ready to accept traffic after starting
-            app.MapHealthChecks(HealthEndpointPath);
+            Predicate = r => r.Tags.Contains("live")
+        });
 
-            // Only health checks tagged with the "live" tag must pass for app to be considered alive
-            app.MapHealthChecks(AlivenessEndpointPath, new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live")
-            });
+        // All health checks must pass for app to be considered ready to accept traffic after starting. Not in
+        // Production: see https://aka.ms/aspire/healthchecks before exposing it there.
+        if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Demo"))
+        {
+            app.MapHealthChecks(HealthEndpointPath);
         }
 
         return app;

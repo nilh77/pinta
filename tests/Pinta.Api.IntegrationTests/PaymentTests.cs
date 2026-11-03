@@ -85,6 +85,15 @@ public class PaymentTests(PintaApiFactory factory)
     }
 
     [Fact]
+    public async Task S4_a_webhook_without_a_signature_is_rejected()
+    {
+        // The endpoint is public in the Demo environment: anyone can post to it.
+        var response = await factory.CreateClient().PostAsync("/api/webhooks/stripe", new StringContent("{}", System.Text.Encoding.UTF8, "application/json"));
+
+        await ProblemAssert.HasCodeAsync(response, HttpStatusCode.BadRequest, "bad_request");
+    }
+
+    [Fact]
     public async Task C5_3_going_back_reuses_the_same_payment_intent()
     {
         var job = await TestJobs.SendAsync(factory);
