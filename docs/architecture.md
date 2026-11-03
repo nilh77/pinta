@@ -11,7 +11,7 @@ Navegador ──► web (Next.js, PWA) ──/api/*──► Pinta.Api (ASP.NET 
                                               ├─ Modules: Identity · Catalog · Quoting · Jobs · Painters
                                               │           Payments · Media · Notifications · Finance
                                               ├─ Pinta.Pricing (librería pura)
-                                              └─► PostgreSQL (un esquema por módulo) · S3/MinIO · SMTP/Mailpit · Stripe
+                                              └─► PostgreSQL (un esquema por módulo) · S3/MinIO · Email (SMTP/Mailpit o API de Mailtrap) · Stripe
 ```
 
 El navegador solo habla con Next.js, que sirve las páginas y reenvía `/api/*` a la API. La API concentra toda la lógica y es la única que toca la base de datos y los servicios externos.

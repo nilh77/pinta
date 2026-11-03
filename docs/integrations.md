@@ -64,7 +64,12 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 
 ## Emails, idiomas y direcciones
 
-**Emails.** Se envían a través de una interfaz `IEmailSender`: por SMTP: en local hacia Mailpit (se ven todos sin enviar nada real), en el entorno Demo hacia un buzón SMTP de pruebas (Mailtrap Email Testing: tampoco entrega nada a nadie) y en producción hacia un proveedor transaccional. La cadena de conexión `mailpit` es `Endpoint=smtp://host:puerto` con `Username` y `Password` opcionales; si el servidor ofrece STARTTLS se usa, y si hay usuario se autentica. Las plantillas son componentes Razor renderizados a HTML, en el idioma del usuario, y todos los envíos pasan por Hangfire con reintentos.
+**Emails.** Se envían a través de un transporte que elige `Email:Provider`:
+
+- `Smtp` (por defecto): en local hacia Mailpit (se ven todos sin enviar nada real). La cadena de conexión `mailpit` es `Endpoint=smtp://host:puerto` con `Username` y `Password` opcionales; si el servidor ofrece STARTTLS se usa, y si hay usuario se autentica.
+- `MailtrapApi`: por HTTPS a la API de envío del Sandbox de Mailtrap (`POST https://sandbox.api.mailtrap.io/api/send/{inbox}` con token Bearer), que deja los emails en un buzón de pruebas sin entregarlos a nadie. Es el del entorno Demo, porque Railway bloquea el SMTP saliente en sus planes de entrada. Se configura con `Email:MailtrapApi:Token` y `Email:MailtrapApi:InboxId`; cada envío espera como máximo 30 s y una respuesta que no sea 2xx cuenta como fallo, así que Hangfire reintenta igual que con SMTP.
+
+En producción irá un proveedor transaccional. Las plantillas son componentes Razor renderizados a HTML, en el idioma del usuario, y todos los envíos pasan por Hangfire con reintentos.
 
 | Email | Destinatario | Cuándo |
 | --- | --- | --- |

@@ -4,7 +4,7 @@ El entorno **Demo** es la demo de `docs/plan.md` accesible en internet: la misma
 
 ## Servicios
 
-Un proyecto de Railway (`pinta`) con cuatro servicios en la red privada (`<servicio>.railway.internal`), todos en la región `europe-west4` (Países Bajos), y un buzón SMTP externo. El entorno de Railway se llama `production` porque es el que crea por defecto; lo que cuenta para la app es `ASPNETCORE_ENVIRONMENT=Demo`.
+Un proyecto de Railway (`pinta`) con cuatro servicios en la red privada (`<servicio>.railway.internal`), todos en la región `europe-west4` (Países Bajos), y un buzón de emails de pruebas externo. El entorno de Railway se llama `production` porque es el que crea por defecto; lo que cuenta para la app es `ASPNETCORE_ENVIRONMENT=Demo`.
 
 | Servicio | Origen | Dominio público | Para qué |
 | --- | --- | --- | --- |
@@ -12,12 +12,12 @@ Un proyecto de Railway (`pinta`) con cuatro servicios en la red privada (`<servi
 | `minio` | Repo, raíz `/deploy/minio` (Dockerfile sobre `cgr.dev/chainguard/minio`), volumen en `/data` | Sí, puerto 9000 | Fotos y vídeos. El navegador sube y lee con URLs firmadas, así que necesita dominio propio |
 | `api` | Repo, raíz `/`, Dockerfile `src/Pinta.Api/Dockerfile` | **No** | Toda la lógica. Solo la alcanza la web |
 | `web` | Repo, raíz `/web`, Dockerfile `Dockerfile` | Sí, puerto 3000 | Páginas y proxy de `/api` y `/hangfire` hacia la API |
-| Email | Mailtrap Email Testing (u otro buzón SMTP de pruebas) | — | Los emails se ven en el buzón; no llegan a ningún destinatario |
+| Email | Mailtrap Email Sandbox, por su API HTTPS | — | Los emails se ven en el buzón; no llegan a ningún destinatario. Railway bloquea el SMTP saliente en los planes Free, Trial y Hobby, así que no se usa SMTP |
 
 ```
 Navegador ──https──► web (Next.js) ──http, red privada──► api ──► postgres
     │                                                       ├────► minio (red privada)
-    └──https, URLs firmadas──► minio (dominio público)       └────► SMTP de pruebas · Stripe (test)
+    └──https, URLs firmadas──► minio (dominio público)       └────► API de Mailtrap (https) · Stripe (test)
 Stripe (test) ──webhook──► https://<web>/api/webhooks/stripe ──► api
 ```
 
@@ -65,7 +65,9 @@ Los valores secretos los pega el usuario en Railway (Variables del servicio); nu
 | `ConnectionStrings__pinta` | `Host=${{Postgres.PGHOST}};Port=${{Postgres.PGPORT}};Database=${{Postgres.PGDATABASE}};Username=${{Postgres.PGUSER}};Password=${{Postgres.PGPASSWORD}}` |
 | `ConnectionStrings__minio` | `Endpoint=http://${{minio.RAILWAY_PRIVATE_DOMAIN}}:9000;AccessKey=${{minio.MINIO_ROOT_USER}};SecretKey=${{minio.MINIO_ROOT_PASSWORD}}` |
 | `Storage__PublicEndpoint` | `https://${{minio.RAILWAY_PUBLIC_DOMAIN}}` |
-| `ConnectionStrings__mailpit` | `Endpoint=smtp://sandbox.smtp.mailtrap.io:2525;Username=…;Password=…` (credenciales SMTP del buzón de Mailtrap) |
+| `Email__Provider` | `MailtrapApi` |
+| `Email__MailtrapApi__InboxId` | El número del inbox (está en su URL de Mailtrap: `…/inboxes/<número>/messages`) |
+| `Email__MailtrapApi__Token` | Un API token de Mailtrap con acceso a ese inbox (Settings › API Tokens) |
 | `Web__BaseUrl` | `https://${{web.RAILWAY_PUBLIC_DOMAIN}}` (enlaces de los emails) |
 | `Seed__DemoPassword` | Contraseña común de las cuentas de demo; **no** la de local, porque la URL es pública |
 | `Stripe__SecretKey` | `sk_test_…` |
@@ -81,7 +83,7 @@ Los valores secretos los pega el usuario en Railway (Variables del servicio); nu
 
 ## Desplegar desde cero
 
-1. **Cuentas (usuario).** Railway, Mailtrap (Email Testing → un inbox → credenciales SMTP) y el Dashboard de Stripe en **modo test**. En la terminal: `railway login` (o `RAILWAY_TOKEN` en el entorno).
+1. **Cuentas (usuario).** Railway, Mailtrap (Email Sandbox → un inbox; Settings › API Tokens → un token con acceso a ese inbox) y el Dashboard de Stripe en **modo test**. En la terminal: `railway login` (o `RAILWAY_TOKEN` en el entorno).
 2. **Proyecto.** `railway init --name pinta`. Railway necesita acceso de su app de GitHub al repo `nilh77/pinta`.
 3. **Postgres y minio.** `railway add --database postgres`; `railway add --service minio --repo nilh77/pinta` con sus variables, un volumen en `/data` (`railway volume add --mount-path /data` con el servicio enlazado) y un dominio público al puerto 9000 (`railway domain -s minio -p 9000`).
 4. **api y web.** `railway add --service api --repo nilh77/pinta` y lo mismo para `web`, con las variables de arriba (sin `Stripe__WebhookSecret` aún) y los ajustes de la tabla. Dominio público solo para `web`, al puerto 3000. Primero `api` (espera a `/alive`), luego `web`. Los ajustes pueden ponerse en el panel o con un parche de entorno por la API (`railway api` → `environmentPatchCommit`), porque `railway environment edit` de la CLI 5.63 no los aplica.
@@ -102,7 +104,7 @@ Cada push a la rama conectada redespliega el servicio cuyos archivos cambian (wa
 
 | | Local (Aspire) | Demo (Railway) |
 | --- | --- | --- |
-| Emails | Mailpit | Buzón SMTP de pruebas con usuario y STARTTLS |
+| Emails | Mailpit por SMTP | Inbox del Sandbox de Mailtrap por su API HTTPS |
 | Webhooks de Stripe | Stripe CLI | Endpoint público con su propio `whsec_` |
 | Secretos | `dotnet user-secrets` | Variables de Railway |
 | Contraseña de demo | `Pinta-Demo-2026` | `Seed__DemoPassword` |
