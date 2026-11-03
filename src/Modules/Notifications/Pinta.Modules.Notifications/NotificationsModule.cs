@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Notifications.Data;
 using Pinta.Modules.Notifications.Features.Outbox;
@@ -19,7 +20,20 @@ public static class NotificationsModule
             .ValidateOnStart();
         builder.Services.AddScoped<EmailRenderer>();
         builder.Services.AddScoped<IEmailQueue, HangfireEmailQueue>();
-        builder.Services.AddTransient<IMailTransport, SmtpEmailSender>();
+        if (MailtrapApiOptions.IsSelected(builder.Configuration))
+        {
+            builder.Services.AddOptions<MailtrapApiOptions>()
+                .Bind(builder.Configuration.GetSection("Email:MailtrapApi"))
+                .Validate(o => !string.IsNullOrEmpty(o.Token) && o.InboxId > 0, "Email:MailtrapApi:Token and InboxId are required.")
+                .ValidateOnStart();
+            builder.Services.AddHttpClient<IMailTransport, MailtrapApiEmailSender>((services, http) =>
+                http.Timeout = services.GetRequiredService<IOptions<MailtrapApiOptions>>().Value.Timeout);
+        }
+        else
+        {
+            builder.Services.AddTransient<IMailTransport, SmtpEmailSender>();
+        }
+
         builder.Services.AddScoped<OutboxSender>();
         builder.Services.AddScoped<IEmailLog, EmailLog>();
         return builder;

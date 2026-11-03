@@ -6,7 +6,7 @@ using Pinta.Modules.Notifications.Domain;
 
 namespace Pinta.Modules.Notifications.Features.Outbox;
 
-/// <summary>Sends what transports an email (SMTP to Mailpit locally).</summary>
+/// <summary>Sends what transports an email: SMTP (Mailpit locally) or the Mailtrap sandbox API (Demo), by <c>Email:Provider</c>.</summary>
 public interface IMailTransport
 {
     Task SendAsync(string to, string subject, string html, CancellationToken cancellationToken);
