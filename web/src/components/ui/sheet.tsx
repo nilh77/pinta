@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useRef, type PointerEvent, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useReturnFocus } from "@/lib/use-return-focus";
 import { drawerMotion, drawerOverlayMotion, overlayStyle } from "./motion";
 
 /** Release faster than this (px/ms) or further than this fraction of the height and the sheet closes (docs/motion.md). */
@@ -26,6 +27,7 @@ type SheetProps = {
  * Escape and focus return. On phones the handle and title row drag the sheet down to close it.
  */
 export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, children }: SheetProps) {
+  const returnFocus = useReturnFocus();
   const content = useRef<HTMLDivElement>(null);
   const drag = useRef<{ y: number; time: number } | null>(null);
 
@@ -70,6 +72,7 @@ export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, 
       <Dialog.Portal>
         <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", drawerOverlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
+          {...returnFocus}
           ref={content}
           aria-describedby={undefined}
           className={cn(

@@ -26,6 +26,7 @@ import {
   type DraftElement,
 } from "@/lib/quote/draft";
 import { useEstimate, useIsDesktop } from "@/lib/quote/use-quote-data";
+import { useReturnFocus } from "@/lib/use-return-focus";
 import { cn } from "@/lib/utils";
 import { EstimateSummary } from "./estimate-bar";
 import { OccupancyPicker } from "./occupancy-picker";
@@ -327,6 +328,7 @@ function RenameButton({ onClick }: { onClick: () => void }) {
 }
 
 function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initial: string; onClose: () => void; onSave: (name: string) => void }) {
+  const returnFocus = useReturnFocus();
   const t = useTranslations("quote.rename");
   const [value, setValue] = useState(initial);
   return (
@@ -334,6 +336,7 @@ function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initi
       <Dialog.Portal>
         <Dialog.Overlay className={cn("fixed inset-0 z-50 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
+          {...returnFocus}
           aria-describedby={undefined}
           className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}
         >
@@ -347,8 +350,8 @@ function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initi
           >
             <label className="flex flex-col gap-1.5 text-sm font-semibold">
               {t("label")}
+              {/* No autoFocus: Radix focuses this first field itself, after noting where focus came from. */}
               <input
-                autoFocus
                 maxLength={80}
                 value={value}
                 onChange={(e) => setValue(e.target.value)}

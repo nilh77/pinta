@@ -5,11 +5,13 @@ import { useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import { useState } from "react";
 import type { Schemas } from "@/lib/jobs/api";
+import { useReturnFocus } from "@/lib/use-return-focus";
 
 type JobFile = Schemas["JobFile"];
 
 /** Photos and videos with a full-screen viewer (A2.2). URLs are signed for 15 minutes; the page refetches them. */
 export function JobFiles({ files, emptyText }: { files: JobFile[]; emptyText?: string }) {
+  const returnFocus = useReturnFocus();
   const t = useTranslations("admin.job.files");
   const [open, setOpen] = useState<number | null>(null);
   if (files.length === 0) return <p className="text-sm text-muted-foreground">{emptyText ?? t("empty")}</p>;
@@ -40,6 +42,7 @@ export function JobFiles({ files, emptyText }: { files: JobFile[]; emptyText?: s
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-40 bg-black/90 ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-layer-in)" />
           <Dialog.Content
+            {...returnFocus}
             aria-describedby={undefined}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-layer-in)"
             onKeyDown={(e) => {

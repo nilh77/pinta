@@ -6,6 +6,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Mejoras de interfaz
+
+#### Corregido
+
+- Al cerrar un diálogo o la hoja del editor, el foco vuelve a lo que lo abrió (el botón «Continuar», la tarjeta de la estancia, el botón ⋯ o el lápiz); antes caía al principio de la página y quien usa teclado o lector de pantalla perdía su sitio. Nuevo hook `useReturnFocus` para los diálogos de Radix controlados por estado.
+
 ### Despliegue en Railway (entorno Demo)
 
 #### Añadido
