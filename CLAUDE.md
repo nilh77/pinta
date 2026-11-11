@@ -10,6 +10,7 @@ The full PRD lives in `docs/` (written in Spanish). Read the files a task names 
 | `docs/functional-requirements.md` | User stories with acceptance criteria (IDs C*, A*, P*, S*) |
 | `docs/pricing-engine.md` + `docs/reference/pricing_reference.py` | Exact pricing algorithm and golden test cases TC01–TC13 |
 | `docs/screens.md` | Every screen: route, data, actions, validations, empty/loading/error states |
+| `docs/motion.md` | Motion system: principles, tokens, choreography per event, reduced motion, performance |
 | `docs/api.md` | HTTP contract, examples, enums, error codes |
 | `docs/states.md` | Job state machine — the only allowed transitions |
 | `docs/data-model.md` | Tables per module (Spanish names; see glossary for code names) |
@@ -41,6 +42,7 @@ Visual reference for screens: design canvas at https://claude.ai/artifact/QXmJ1w
 
 - All code, identifiers, comments, commits and DB names in **English**. UI text only via translation files (`web/messages/{pt,es,en}.json`), never hard-coded.
 - Names come from `docs/glossary.md` (e.g. `Job`, `QuoteVersion`, `Deposit`, `PainterPayout`). Do not invent synonyms.
+- Motion: only the tokens in `globals.css` and the classes in `web/src/components/ui/motion.ts`; follow `docs/motion.md`. No new animation dependencies.
 - Money: `decimal` in C#, `numeric(12,2)` in PostgreSQL, **integer cents** in the API (`...Cents`). Never `double`/`float`. Round each line to 2 decimals with `MidpointRounding.AwayFromZero`; totals are sums of rounded lines.
 - Time: store `timestamptz` in UTC; display and schedule in `Europe/Lisbon`. Inject a clock (`TimeProvider`) — never call `DateTime.Now` in domain code.
 - IDs: UUID v7. Public job code `PT-YYYY-NNNN` is a separate field.

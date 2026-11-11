@@ -26,7 +26,7 @@ Pinta vende confianza: un precio claro, una persona que revisa y un pintor elegi
 
 ## 3. Tokens
 
-Viven en `web/src/app/globals.css` (plan 001). Las curvas son tokens de tema de Tailwind: generan `ease-out`, `ease-in-out` y `ease-drawer`, que fijan `--tw-ease`, la variable que lee `tw-animate-css`. Las duraciones son variables de `:root` y se usan con `duration-(--duration-…)`.
+Viven en `web/src/app/globals.css` (plan 001). Las curvas son tokens de tema de Tailwind: generan `ease-out`, `ease-in-out`, `ease-drawer` y `ease-spring`, que fijan `--tw-ease`, la variable que lee `tw-animate-css`. Las duraciones son variables de `:root` y se usan con `duration-(--duration-…)`.
 
 ### Curvas
 
@@ -161,6 +161,7 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 - Sin `transition-all`, sin `will-change` global y sin animaciones de layout.
 - El arrastre escribe `translate` directamente en `ref.current.style` de un único elemento: sin `setState` por fotograma (React re-renderizaría 60–120 veces por segundo) y nunca una variable CSS en un padre (recalcularía estilos de todos los hijos).
 - Sin `filter: blur` en transiciones.
+- `ease-spring` usa `linear()` de CSS (Chrome 113+, Safari e iOS 17.2+, Firefox 112+). Sin soporte, la animación que lo usa queda inválida y la capa aparece sin animar: no se rompe nada.
 - En Tailwind v4, `scale-*` y `translate-*` usan las propiedades `scale` y `translate`, no `transform`. Cualquier `transition-[…]` que deba animarlas tiene que nombrarlas: `transition-[…,scale]`. Por no hacerlo, las paredes del editor saltan hoy al pulsar.
 
 ## 9. Cómo añadir movimiento nuevo (lista de comprobación)
@@ -177,7 +178,7 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
-| Resorte con `linear()` de CSS (`--ease-spring`) | Motion para springs | Da el carácter vivo sin dependencia; soportado en Chrome 113+, Safari 17.2+ y Firefox 112+. En un navegador sin soporte la regla se ignora y queda la curva por defecto de `tw-animate-css`: se ve más plano, no se rompe. |
+| Resorte con `linear()` de CSS (`--ease-spring`) | Motion para springs | Da el carácter vivo sin dependencia; soportado en Chrome 113+, Safari 17.2+ y Firefox 112+. En un navegador sin soporte (iOS < 17.2) la declaración de animación queda inválida y la capa aparece y desaparece sin animar: pierde el carácter, pero no se rompe nada. |
 | CSS + `tw-animate-css` + Radix, sin librería JS | Motion (Framer) o `vaul` para la hoja | Todo lo aprobado se expresa con keyframes y una transición; el arrastre son ~40 líneas. Añadir 30–60 kB no está justificado. |
 | Redefinir `--ease-out` de Tailwind | Un nombre nuevo (`--ease-pinta-out`) | La utilidad `ease-out` pasa a ser la curva fuerte en toda la app; solo la usan hoy dos líneas del editor, y les sienta mejor. |
 | Duraciones como variables de `:root` | Tokens de tema | Tailwind v4 no tiene espacio de tema para duraciones; `duration-(--x)` fija también `--tw-duration`, que lee `tw-animate-css`. Comprobado compilando con el Tailwind del proyecto. |

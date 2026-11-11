@@ -1,6 +1,6 @@
 # 001 — Crear la base de movimiento: tokens, clase de movimiento reducido y clases compartidas
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: LOW (es requisito de 003, 004, 005, 008 y 009)
 - **Category**: Cohesion & tokens

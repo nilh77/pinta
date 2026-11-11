@@ -9,7 +9,7 @@ Dirección: **preciso y vivo, con una pincelada** (revisión 2 del sistema: se n
 | # | Plan | Severidad | Depende de | Estado |
 |---|---|---|---|---|
 | 000 | [Sistema de movimiento (especificación)](000-motion-system.md) | — | — | APROBADO |
-| 001 | [Base de movimiento: tokens, `motion-fade-only`, `motion.ts`](001-motion-foundation.md) | LOW (requisito) | — | TODO |
+| 001 | [Base de movimiento: tokens, `motion-fade-only`, `motion.ts`](001-motion-foundation.md) | LOW (requisito) | — | DONE |
 | 002 | [Hoja del editor: se ve su salida](002-sheet-exit-animation.md) | HIGH | — | TODO |
 | 003 | [Hoja: un eje por breakpoint, curva de cajón, fundido reducido](003-sheet-axis-and-curve.md) | HIGH | 001 | TODO |
 | 004 | [Menús desde su botón, con salida](004-dropdown-menu-origin.md) | MEDIUM | 001 | TODO |
