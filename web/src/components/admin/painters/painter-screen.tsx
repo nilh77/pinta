@@ -3,7 +3,7 @@
 import { ArrowLeft, FileText, Loader2, Mail, Trash2, Upload } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";

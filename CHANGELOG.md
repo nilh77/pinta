@@ -17,6 +17,8 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Los menús ⋯ y «Añadir» del esquema crecen desde su botón con un pequeño rebote y se cierran con animación (antes aparecían desde su centro y desaparecían de golpe). Con movimiento reducido solo se desvanecen (C2.2).
 - Los diálogos (confirmar, formularios, renombrar y sesión caducada) entran desde el centro con un pequeño rebote y salen más rápido; mientras se van, el velo ya no bloquea los toques. El visor de fotos del admin aparece con un fundido. Con movimiento reducido solo se desvanecen.
 - Al elegir «Renomear» en el menú ⋯ de una estancia, el foco se queda en el campo del diálogo; la salida animada del menú lo devolvía al botón ⋯ (C2.2).
+- Los toasts siguen las duraciones de `docs/screens.md`: éxito 3 s, deshacer 5 s y error hasta que el usuario lo cierra, con su botón de cerrar (antes todos se iban a los 4 s).
+- Desarrollo: `toast` se importa de `@/lib/toast`; ESLint impide importarlo directamente de `sonner`.
 
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 

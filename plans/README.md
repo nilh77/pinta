@@ -14,7 +14,7 @@ Dirección: **preciso y vivo, con una pincelada** (revisión 2 del sistema: se n
 | 003 | [Hoja: un eje por breakpoint, curva de cajón, fundido reducido](003-sheet-axis-and-curve.md) | HIGH | 001 | DONE |
 | 004 | [Menús desde su botón, con salida](004-dropdown-menu-origin.md) | MEDIUM | 001 | DONE |
 | 005 | [Diálogos con entrada y salida](005-dialogs-enter-exit.md) | MEDIUM | 001 | DONE |
-| 006 | [Toasts con las duraciones del documento](006-toast-durations.md) | MEDIUM | — | TODO |
+| 006 | [Toasts con las duraciones del documento](006-toast-durations.md) | MEDIUM | — | DONE |
 | 007 | [Skeletons en área admin y listas](007-skeleton-loading.md) | MEDIUM | — (alcance confirmado: admin y listas) | TODO |
 | 008 | [Feedback de pulsación en botones y paredes](008-press-feedback.md) | MEDIUM | 001 | TODO |
 | 009 | [Arrastrar para cerrar la hoja](009-sheet-drag-to-dismiss.md) | MEDIUM | 001, 002, 003 | TODO |

@@ -3,7 +3,7 @@
 import { CalendarDays, Check, ChevronRight, Loader2, MapPin, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";

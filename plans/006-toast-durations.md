@@ -1,6 +1,6 @@
 # 006 — Toasts con las duraciones del documento: éxito 3 s, error hasta cerrarlo
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: MEDIUM
 - **Category**: Notificaciones (el documento manda sobre el código)

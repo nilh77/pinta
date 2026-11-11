@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { dialogMotion, overlayMotion, overlayStyle } from "@/components/ui/motion";
 import { Sheet } from "@/components/ui/sheet";
