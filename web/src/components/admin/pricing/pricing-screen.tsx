@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Loader2, RefreshCw } from "lucide-react";
+import { CheckCircle2, RefreshCw } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Tabs } from "radix-ui";
 import { useEffect, useState } from "react";
@@ -101,8 +101,7 @@ function PricingEditor({ catalog, catalogVersion, onReload }: { catalog: Pricing
                 {t("saved")}
               </span>
             )}
-            <Button type="submit" size="lg" disabled={!isDirty || save.isPending}>
-              {save.isPending && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+            <Button pending={save.isPending} type="submit" size="lg" disabled={!isDirty || save.isPending}>
               {t("save")}
             </Button>
           </div>

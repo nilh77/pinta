@@ -326,7 +326,7 @@ function Progress({ job }: { job: PainterJobDetail }) {
       </div>
       {job.progressFiles.length > 0 && <FileGrid files={job.progressFiles} />}
       <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress, "progress")} />
-      <Button
+      <Button pending={add.isPending}
         variant="outline"
         className="self-start"
         disabled={ready.length === 0 || uploading || add.isPending}
@@ -337,7 +337,6 @@ function Progress({ job }: { job: PainterJobDetail }) {
           )
         }
       >
-        {add.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
         {t("send", { count: ready.length })}
       </Button>
     </section>
@@ -433,8 +432,7 @@ function ResultPhotos({ job }: { job: PainterJobDetail }) {
       <p aria-live="polite" className="text-sm font-semibold tabular-nums">
         {t("count", { count: uploaded.length, min: job.minResultPhotos })}
       </p>
-      <Button size="lg" disabled={!enough || uploading || finish.isPending} onClick={() => setConfirming(true)}>
-        {finish.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={finish.isPending} size="lg" disabled={!enough || uploading || finish.isPending} onClick={() => setConfirming(true)}>
         {t("finish")}
       </Button>
       <ConfirmDialog

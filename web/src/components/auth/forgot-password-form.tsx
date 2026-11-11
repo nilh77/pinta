@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, MailCheck } from "lucide-react";
+import { MailCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { FormField } from "@/components/form-field";
@@ -41,8 +41,7 @@ export function ForgotPasswordForm() {
         error={form.formState.errors.email}
         {...form.register("email")}
       />
-      <Button type="submit" size="lg" disabled={forgot.isPending} className="mt-2 w-full">
-        {forgot.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={forgot.isPending} type="submit" size="lg" disabled={forgot.isPending} className="mt-2 w-full">
         {t("submit")}
       </Button>
       <BackToSignIn />

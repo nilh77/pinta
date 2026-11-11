@@ -1,6 +1,5 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { Dialog } from "radix-ui";
 import type { FormEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -69,8 +68,7 @@ export function FormDialog({
                   {cancelLabel}
                 </Button>
               </Dialog.Close>
-              <Button type="submit" variant={destructive ? "destructive" : "default"} disabled={pending || submitDisabled}>
-                {pending && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              <Button pending={pending} type="submit" variant={destructive ? "destructive" : "default"} disabled={pending || submitDisabled}>
                 {submitLabel}
               </Button>
             </div>

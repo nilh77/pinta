@@ -79,8 +79,7 @@ export function PainterOnboarding({ userId, token }: { userId?: string; token?: 
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
       />
-      <Button type="submit" size="lg" disabled={accept.isPending} className="mt-2 w-full">
-        {accept.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={accept.isPending} type="submit" size="lg" disabled={accept.isPending} className="mt-2 w-full">
         {t("continue")}
       </Button>
     </form>
@@ -205,8 +204,7 @@ function ProfileForm({ profile, password }: { profile: PainterProfile; password:
         error={errors.iban ?? serverError("iban")}
         {...form.register("iban")}
       />
-      <Button type="submit" size="lg" disabled={save.isPending} className="mt-2 w-full">
-        {save.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={save.isPending} type="submit" size="lg" disabled={save.isPending} className="mt-2 w-full">
         {t("finish")}
       </Button>
     </form>

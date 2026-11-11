@@ -504,7 +504,7 @@ function RequoteButton({ id }: { id: string }) {
   const errorText = useErrorText();
   const requote = useRequote(id);
   return (
-    <Button
+    <Button pending={requote.isPending}
       disabled={requote.isPending}
       onClick={() =>
         requote.mutate(undefined, {
@@ -513,7 +513,6 @@ function RequoteButton({ id }: { id: string }) {
         })
       }
     >
-      {requote.isPending && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
       {t("open")}
     </Button>
   );

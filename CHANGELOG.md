@@ -11,6 +11,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 #### Corregido
 
 - Al cerrar un diálogo o la hoja del editor, el foco vuelve a lo que lo abrió (el botón «Continuar», la tarjeta de la estancia, el botón ⋯ o el lápiz); antes caía al principio de la página y quien usa teclado o lector de pantalla perdía su sitio. Nuevo hook `useReturnFocus` para los diálogos de Radix controlados por estado.
+- Los botones que muestran que una acción está en curso (entrar, registrarse, guardar, pagar, enviar…) ya no cambian de tamaño: el texto se desvanece y el spinner aparece en su centro, en vez de empujar el texto. Nueva prop `pending` en `Button`, que además lo deshabilita y marca `aria-busy`; usada en 20 botones de 16 pantallas.
 
 ### Despliegue en Railway (entorno Demo)
 

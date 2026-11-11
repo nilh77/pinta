@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { Waitlist } from "@/components/quote/waitlist";
@@ -59,8 +59,7 @@ export function CoverageCheck() {
           }}
           className="h-11 min-w-0 flex-1 rounded-xl border-[1.5px] border-input bg-background px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
         />
-        <Button type="submit" variant="outline" disabled={result.status === "checking"}>
-          {result.status === "checking" && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+        <Button pending={result.status === "checking"} type="submit" variant="outline" disabled={result.status === "checking"}>
           {t("check")}
         </Button>
       </form>

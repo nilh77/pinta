@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { FormField } from "@/components/form-field";
@@ -46,8 +45,7 @@ export function SignInForm({ next }: { next?: string }) {
       <Link href="/recuperar" className="-mt-2 self-end text-sm font-semibold text-primary underline-offset-4 hover:underline">
         {t("forgot")}
       </Link>
-      <Button type="submit" size="lg" disabled={signIn.isPending} className="mt-2 w-full">
-        {signIn.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={signIn.isPending} type="submit" size="lg" disabled={signIn.isPending} className="mt-2 w-full">
         {t("submit")}
       </Button>
       <p className="text-center text-sm text-muted-foreground">

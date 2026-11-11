@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { FormField } from "@/components/form-field";
@@ -87,8 +86,7 @@ export function RegisterForm() {
       />
       <CheckboxField id="acceptTerms" label={t("register.acceptTerms")} control={form.control} name="acceptTerms" />
       <CheckboxField id="marketingConsent" label={t("register.marketing")} control={form.control} name="marketingConsent" />
-      <Button type="submit" size="lg" disabled={register.isPending} className="mt-2 w-full">
-        {register.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={register.isPending} type="submit" size="lg" disabled={register.isPending} className="mt-2 w-full">
         {t("register.submit")}
       </Button>
       <p className="text-center text-sm text-muted-foreground">

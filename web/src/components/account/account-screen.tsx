@@ -175,8 +175,7 @@ function ProfileForm({ profile }: { profile: AccountProfile }) {
         <input type="checkbox" className="mt-0.5 size-5 accent-[var(--primary)]" {...form.register("marketingConsent")} />
         {t("marketing")}
       </label>
-      <Button type="submit" disabled={save.isPending} className="self-start">
-        {save.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={save.isPending} type="submit" disabled={save.isPending} className="self-start">
         {t("save")}
       </Button>
     </form>
@@ -239,8 +238,7 @@ function PasswordForm() {
           errorValues={{ min: PASSWORD_MIN_LENGTH }}
         />
       </div>
-      <Button type="submit" variant="outline" disabled={change.isPending || !current || next.length < PASSWORD_MIN_LENGTH} className="self-start">
-        {change.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={change.isPending} type="submit" variant="outline" disabled={change.isPending || !current || next.length < PASSWORD_MIN_LENGTH} className="self-start">
         {t("submit")}
       </Button>
     </form>

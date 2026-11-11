@@ -1,5 +1,6 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Slot } from "radix-ui"
 
@@ -42,22 +43,56 @@ function Button({
   variant = "default",
   size = "default",
   asChild = false,
+  pending = false,
+  disabled,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    /**
+     * An action is in progress: the button keeps its size, its content stays readable by screen readers but turns
+     * transparent, and a spinner sits in the middle. Not for `asChild`.
+     */
+    pending?: boolean
   }) {
   const Comp = asChild ? Slot.Root : "button"
+  const showSpinner = pending && !asChild
 
   return (
     <Comp
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      aria-busy={showSpinner || undefined}
+      disabled={disabled || showSpinner}
+      // The content is not wrapped, so padding rules like has-[>svg] still see the same children: the size never changes.
+      className={cn(buttonVariants({ variant, size, className }), showSpinner && "relative text-transparent [&>svg]:invisible")}
       {...props}
-    />
+    >
+      {/* Only one child when not pending: `asChild` (Radix Slot) needs exactly one. */}
+      {showSpinner ? (
+        <>
+          {children}
+          <span aria-hidden="true" className={cn("absolute inset-0 flex items-center justify-center", spinnerColor[variant ?? "default"])}>
+            <Loader2 className="size-4 animate-spin motion-reduce:animate-[spin_2s_linear_infinite]" />
+          </span>
+        </>
+      ) : (
+        children
+      )}
+    </Comp>
   )
+}
+
+/** The text colour of each variant, for the spinner while the label is transparent. */
+const spinnerColor: Record<NonNullable<VariantProps<typeof buttonVariants>["variant"]>, string> = {
+  default: "text-primary-foreground",
+  destructive: "text-white",
+  outline: "text-foreground",
+  secondary: "text-secondary-foreground",
+  ghost: "text-primary",
+  link: "text-primary",
 }
 
 export { Button, buttonVariants }

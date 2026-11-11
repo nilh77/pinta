@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -205,8 +204,7 @@ export function PainterForm({
         />
       </div>
 
-      <Button type="submit" disabled={pending} className="self-start">
-        {pending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={pending} type="submit" disabled={pending} className="self-start">
         {submitLabel}
       </Button>
     </form>
