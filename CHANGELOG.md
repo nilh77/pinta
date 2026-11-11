@@ -6,6 +6,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Dependencias
+
+#### Cambiado
+
+- Aspire de 13.6.3 a 13.6.5 (SDK del AppHost, `Aspire.Hosting.PostgreSQL`, `Aspire.Hosting.JavaScript` y `Aspire.Npgsql`) por el aviso de seguridad grave GHSA-f7vh-h5g3-7jrh (CVE-2026-120006, elevación de privilegios en `Aspire.Hosting`); la build trata ese aviso como error y había dejado de compilar.
+
 ### Mejoras de interfaz
 
 #### Corregido

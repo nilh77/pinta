@@ -3,11 +3,11 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup Label="Aspire">
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.3" />
-    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.3" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.6.5" />
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.6.5" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.MinIO" Version="13.5.0" />
     <PackageVersion Include="CommunityToolkit.Aspire.Hosting.MailPit" Version="13.6.0" />
-    <PackageVersion Include="Aspire.Npgsql" Version="13.6.3" />
+    <PackageVersion Include="Aspire.Npgsql" Version="13.6.5" />
     <PackageVersion Include="QuestPDF" Version="2026.9.1" />
     <PackageVersion Include="Stripe.net" Version="53.0.0" />
   </ItemGroup>
