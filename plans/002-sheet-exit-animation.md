@@ -1,6 +1,6 @@
 # 002 — Mantener montada la hoja del editor mientras se cierra, para que se vea su salida
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: HIGH
 - **Category**: Interruptibility / continuidad espacial
@@ -106,7 +106,7 @@ y en la línea 253 cambia `open` (booleano implícito) por `open={open}`.
   - Elimina desde el menú ⋯ la estancia que está abierta (si es posible) o abre con `?el=` una que luego eliminas: no hay errores en consola.
   - En DevTools → Animations, a velocidad 10 %: la salida empieza en la posición abierta y termina fuera de la pantalla.
 - **Done when**:
-  - [ ] Guardar, Cancelar, la X, Escape y el velo muestran la salida de 220 ms.
+  - [ ] Guardar, Cancelar, la X, Escape y el velo muestran la salida de 240 ms (revisión 2).
   - [ ] Reabrir una estancia parte siempre del estado guardado; cambiar de estancia no deja restos.
   - [ ] `pnpm lint && pnpm typecheck && pnpm test` en verde, sin `eslint-disable` nuevos.
   - [ ] Entrada en `CHANGELOG.md` bajo **Sin publicar**: «La hoja del editor se cierra con animación (C2.3)».

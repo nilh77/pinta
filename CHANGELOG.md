@@ -10,6 +10,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 - Sistema de movimiento (`docs/motion.md`): principios, coreografía por evento, comportamiento responsive, accesibilidad y rendimiento. Tokens en `web/src/app/globals.css`: curvas `ease-out`, `ease-in-out`, `ease-drawer` y un resorte en CSS puro (`ease-spring`, con `linear()`), duraciones por tipo de capa y la clase `motion-fade-only`, que con movimiento reducido deja solo el fundido. Clases compartidas para velos, diálogos, menús y hojas en `web/src/components/ui/motion.ts`; todavía no las usa ningún componente.
 
+### Corregido
+
+- La hoja del editor de estancia (móvil y tableta) ya no desaparece de golpe al cerrarse con Guardar, Cancelar, la X, Escape o el velo: se ve su animación de salida, y al reabrir una estancia vuelve a partir de lo guardado (C2.3).
+
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 
 ### Añadido
