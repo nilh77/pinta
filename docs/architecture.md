@@ -11,10 +11,12 @@ Navegador ──► web (Next.js, PWA) ──/api/*──► Pinta.Api (ASP.NET 
                                               ├─ Modules: Identity · Catalog · Quoting · Jobs · Painters
                                               │           Payments · Media · Notifications · Finance
                                               ├─ Pinta.Pricing (librería pura)
-                                              └─► PostgreSQL (un esquema por módulo) · S3/MinIO · SMTP/Mailpit · Stripe
+                                              └─► PostgreSQL (un esquema por módulo) · S3/MinIO · Email (SMTP/Mailpit o API de Mailtrap) · Stripe
 ```
 
 El navegador solo habla con Next.js, que sirve las páginas y reenvía `/api/*` a la API. La API concentra toda la lógica y es la única que toca la base de datos y los servicios externos.
+
+**Entornos.** `Development` (local con Aspire), `Demo` (Railway, público, para enseñar la demo) y `Production` (aún no existe). En `Development` y `Demo` la API aplica las migraciones al arrancar, siembra los datos de demo si la base está vacía y ofrece «Restablecer datos de demo»; en `Production` no hace ninguna de las tres cosas. Fuera de `Development` las cookies son `Secure` y la API, que solo recibe tráfico de la web por la red privada, toma el esquema y el host de las cabeceras `X-Forwarded-*`. Despliegue de `Demo`: `docs/deploy-railway.md`.
 
 ## Módulos del backend
 

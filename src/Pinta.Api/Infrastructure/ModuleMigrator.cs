@@ -5,7 +5,7 @@ namespace Pinta.Api.Infrastructure;
 
 public static class ModuleMigrator
 {
-    /// <summary>Applies the pending migrations of every module DbContext (Development only; docs/structure.md).</summary>
+    /// <summary>Applies the pending migrations of every module DbContext (Development and Demo; docs/architecture.md).</summary>
     public static async Task MigrateModulesAsync(this IServiceProvider services)
     {
         await using var scope = services.CreateAsyncScope();

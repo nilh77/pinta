@@ -55,7 +55,7 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 
 | Pieza | Diseño |
 | --- | --- |
-| Almacenamiento | S3-compatible con el SDK de AWS para .NET. MinIO en local; proveedor de producción a elegir al desplegar (cambio por configuración) |
+| Almacenamiento | S3-compatible con el SDK de AWS para .NET. MinIO en local y en el entorno Demo (servicio de Railway con dominio público, porque el navegador sube y lee con URLs firmadas: `Storage:PublicEndpoint`); proveedor de producción a elegir al desplegar (cambio por configuración) |
 | Subida | Formulario POST firmado (política SigV4) válido 10 min: S3 rechaza otra clave, otro tipo o un archivo mayor del máximo; el móvil sube directo y luego confirma a la API |
 | Límites | Fotos comprimidas en el navegador a unos 2 MP; vídeos de hasta 100 MB (unos 60 s); 10 fotos y 2 vídeos por estancia |
 | Organización | Bucket privado. Las subidas del cliente van a `uploads/{borrador}/{uuid}.ext` y no se mueven al enviar: el trabajo se enlaza en la tabla de archivos. Visitas y resultados (H6) seguirán `jobs/{id}/{visita\|resultado}/{uuid}.ext` |
@@ -64,7 +64,12 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 
 ## Emails, idiomas y direcciones
 
-**Emails.** Se envían a través de una interfaz `IEmailSender`: en local hacia Mailpit (se ven todos sin enviar nada real) y en producción hacia un proveedor transaccional. Las plantillas son componentes Razor renderizados a HTML, en el idioma del usuario, y todos los envíos pasan por Hangfire con reintentos.
+**Emails.** Se envían a través de un transporte que elige `Email:Provider`:
+
+- `Smtp` (por defecto): en local hacia Mailpit (se ven todos sin enviar nada real). La cadena de conexión `mailpit` es `Endpoint=smtp://host:puerto` con `Username` y `Password` opcionales; si el servidor ofrece STARTTLS se usa, y si hay usuario se autentica.
+- `MailtrapApi`: por HTTPS a la API de envío del Sandbox de Mailtrap (`POST https://sandbox.api.mailtrap.io/api/send/{inbox}` con token Bearer), que deja los emails en un buzón de pruebas sin entregarlos a nadie. Es el del entorno Demo, porque Railway bloquea el SMTP saliente en sus planes de entrada. Se configura con `Email:MailtrapApi:Token` y `Email:MailtrapApi:InboxId`; cada envío espera como máximo 30 s y una respuesta que no sea 2xx cuenta como fallo, así que Hangfire reintenta igual que con SMTP.
+
+En producción irá un proveedor transaccional. Las plantillas son componentes Razor renderizados a HTML, en el idioma del usuario, y todos los envíos pasan por Hangfire con reintentos.
 
 | Email | Destinatario | Cuándo |
 | --- | --- | --- |
@@ -107,7 +112,7 @@ Los archivos van directamente del móvil al almacenamiento; la API solo firma lo
 **Observabilidad:**
 
 - Logs estructurados con Serilog.
-- *Health checks* de API, PostgreSQL y almacenamiento.
+- *Health checks* de API, PostgreSQL y almacenamiento: `/alive` (solo que el proceso responde) en todos los entornos, que Railway usa para dar por bueno un despliegue; `/health` (todas las comprobaciones) en `Development` y `Demo`.
 - Panel de Hangfire, solo para admin, para ver tareas fallidas.
 - En local, el panel de Aspire reúne logs y trazas. En producción se añade Sentry para errores y alertas (ver [Fase 5.1](https://claude.ai/artifact/RZqFKj34TBu1z85af6DUei)).
 

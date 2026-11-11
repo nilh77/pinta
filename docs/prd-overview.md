@@ -26,7 +26,7 @@ De la fase 5 se copian también: [5.1 Stack](https://claude.ai/artifact/RZqFKj34
 
 La demo debe convencer a los socios de que Pinta funciona de punta a punta: un cliente cotiza su casa en minutos, un experto confirma un precio rentable, el cliente paga y un pintor completa el trabajo, con las finanzas a la vista.
 
-**La demo está lista cuando se puede recorrer, en local y sin pasos manuales en la base de datos, este circuito:**
+**La demo está lista cuando se puede recorrer, en local y en el entorno Demo de Railway (`docs/deploy-railway.md`), sin pasos manuales en la base de datos, este circuito:**
 
 1. Un visitante cotiza una vivienda de 6 estancias con el esquema visual y ve un rango de precio en menos de 2 minutos.
 2. Sube fotos, indica dirección y fechas, crea su cuenta y envía la solicitud.
@@ -75,7 +75,7 @@ Los dos socios tienen el rol Admin con los mismos permisos. El modelo admite dif
 | Panel admin: revisión, trabajos, pintores, precios, finanzas simuladas | Facturación certificada por la AT |
 | Panel pintor mínimo | Calendario de disponibilidad de pintores |
 | Emails transaccionales (Mailpit en local) | SMS, WhatsApp y notificaciones push |
-| Datos de demo y reset | Despliegue en producción y Sentry |
+| Datos de demo y reset; entorno Demo público en Railway (Stripe en modo test, emails a un buzón de pruebas) | Despliegue en producción y Sentry |
 | — | Valoraciones, chat, cuentas B2B con varias propiedades |
 
 El detalle funcional de cada punto está en el documento 6.2.

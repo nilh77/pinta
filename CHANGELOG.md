@@ -6,22 +6,48 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
-### Añadido
+### Despliegue en Railway (entorno Demo)
 
-- Sistema de movimiento (`docs/motion.md`): principios, coreografía por evento, comportamiento responsive, accesibilidad y rendimiento. Tokens en `web/src/app/globals.css`: curvas `ease-out`, `ease-in-out`, `ease-drawer` y un resorte en CSS puro (`ease-spring`, con `linear()`), duraciones por tipo de capa y la clase `motion-fade-only`, que con movimiento reducido deja solo el fundido. Clases compartidas para velos, diálogos, menús y hojas en `web/src/components/ui/motion.ts`; todavía no las usa ningún componente.
+#### Añadido
 
-### Corregido
+- Entorno **Demo** en Railway: la demo accesible en internet con PostgreSQL, MinIO, la API privada y la web pública, Stripe en modo test y los emails en un buzón SMTP de pruebas. Guía paso a paso, variables y comprobación en `docs/deploy-railway.md`.
+- Dockerfiles de la API (`src/Pinta.Api/`), de la web (`web/`, `next build` + `next start`, con `API_URL` como argumento de build porque Next.js fija los rewrites al construir) y de MinIO (`deploy/minio/`).
+- `/alive` responde en todos los entornos (healthcheck de Railway); `/health`, también en Demo.
+- Emails por HTTPS a la API del Sandbox de Mailtrap (`Email__Provider=MailtrapApi`, con token e inbox), porque Railway bloquea el SMTP saliente y los envíos caducaban al conectar. Timeout de 30 s y un error de Mailtrap cuenta como fallo, así que el outbox y los reintentos de Hangfire funcionan igual. SMTP y Mailpit siguen en local.
+- `appsettings.Demo.json`: en Demo cada log sale una sola vez (Serilog) y sin las consultas SQL de Npgsql, que superaban el límite de logs de Railway.
 
-- La hoja del editor de estancia (móvil y tableta) ya no desaparece de golpe al cerrarse con Guardar, Cancelar, la X, Escape o el velo: se ve su animación de salida, y al reabrir una estancia vuelve a partir de lo guardado (C2.3).
-- La hoja del editor entra y sale por un solo eje: desde abajo en el móvil y desde la derecha en tableta (antes, entre 768 y 1023 px, se movía en diagonal). Usa la curva de cajón del sistema (380 ms al entrar, 240 ms al salir), con movimiento reducido solo se desvanece, y mientras se cierra el velo ya no se come los toques.
-- Los menús ⋯ y «Añadir» del esquema crecen desde su botón con un pequeño rebote y se cierran con animación (antes aparecían desde su centro y desaparecían de golpe). Con movimiento reducido solo se desvanecen (C2.2).
-- Los diálogos (confirmar, formularios, renombrar y sesión caducada) entran desde el centro con un pequeño rebote y salen más rápido; mientras se van, el velo ya no bloquea los toques. El visor de fotos del admin aparece con un fundido. Con movimiento reducido solo se desvanecen.
-- Al elegir «Renomear» en el menú ⋯ de una estancia, el foco se queda en el campo del diálogo; la salida animada del menú lo devolvía al botón ⋯ (C2.2).
-- Los toasts siguen las duraciones de `docs/screens.md`: éxito 3 s, deshacer 5 s y error hasta que el usuario lo cierra, con su botón de cerrar (antes todos se iban a los 4 s).
-- Desarrollo: `toast` se importa de `@/lib/toast`; ESLint impide importarlo directamente de `sonner`.
+#### Corregido
+
+- Un webhook de Stripe sin cabecera `Stripe-Signature` respondía 500 en vez de 400 `bad_request` (S4); en Demo el endpoint es público.
+
+#### Cambiado
+
+- Migraciones al arrancar, datos de demo y «Restablecer datos de demo» (H8) funcionan en `Development` y en `Demo`, nunca en `Production`. En Demo la contraseña común de demo sale de `Seed__DemoPassword`, no de la del repositorio.
+- La API toma el esquema y el host de las cabeceras `X-Forwarded-*`: detrás del proxy de Railway, las cookies `Secure` y el antiforgery ven la petición como HTTPS.
+- Email: la cadena SMTP acepta `Username` y `Password` y usa STARTTLS si el servidor lo ofrece; Mailpit en local sigue igual.
+- Documentos: objetivo de la demo también en Railway (`CLAUDE.md`, `docs/prd-overview.md`), entornos (`docs/architecture.md`), seed y reset en Demo (`docs/plan.md`), SMTP, MinIO público y health checks (`docs/integrations.md`).
+
+### Sistema de movimiento
+
+#### Añadido
+
+- Sistema de movimiento (`docs/motion.md`): principios, coreografía por evento, comportamiento responsive, accesibilidad y rendimiento. Tokens en `web/src/app/globals.css`: curvas `ease-out`, `ease-in-out`, `ease-drawer` y un resorte en CSS puro (`ease-spring`, con `linear()`), duraciones por tipo de capa y la clase `motion-fade-only`, que con movimiento reducido deja solo el fundido. Clases compartidas para velos, diálogos, menús y hojas en `web/src/components/ui/motion.ts`.
 - Carga con esqueletos, como pide `docs/screens.md`: el área admin muestra la silueta de su barra lateral y su contenido en lugar de un spinner a pantalla completa, y Mis trabajos, Trabajos del pintor, Tablero admin, Pintores, Revisión y Finanzas muestran tarjetas fantasma. Nuevo componente compartido `Skeleton` / `CardListSkeleton`.
 - Los botones responden al tocarlos: se hunden un poco y vuelven con un rebote ligero; las paredes del editor de estancia, que antes saltaban sin transición, hacen lo mismo con más profundidad. Con movimiento reducido no escalan. Nueva utilidad CSS `pressable` (`--press-scale`).
 - En el móvil, la hoja del editor se cierra arrastrándola hacia abajo desde el asa o el título: por velocidad o si se arrastra más de un cuarto de su altura; si no, vuelve a su sitio. Hacia arriba ofrece resistencia (C2.3).
+
+#### Cambiado
+
+- Los menús ⋯ y «Añadir» del esquema crecen desde su botón con un pequeño rebote y se cierran con animación (antes aparecían desde su centro y desaparecían de golpe). Con movimiento reducido solo se desvanecen (C2.2).
+- Los diálogos (confirmar, formularios, renombrar y sesión caducada) entran desde el centro con un pequeño rebote y salen más rápido; mientras se van, el velo ya no bloquea los toques. El visor de fotos del admin aparece con un fundido. Con movimiento reducido solo se desvanecen.
+- Los toasts siguen las duraciones de `docs/screens.md`: éxito 3 s, deshacer 5 s y error hasta que el usuario lo cierra, con su botón de cerrar (antes todos se iban a los 4 s).
+- Desarrollo: `toast` se importa de `@/lib/toast`; ESLint impide importarlo directamente de `sonner`.
+
+#### Corregido
+
+- La hoja del editor de estancia (móvil y tableta) ya no desaparece de golpe al cerrarse con Guardar, Cancelar, la X, Escape o el velo: se ve su animación de salida, y al reabrir una estancia vuelve a partir de lo guardado (C2.3).
+- La hoja del editor entra y sale por un solo eje: desde abajo en el móvil y desde la derecha en tableta (antes, entre 768 y 1023 px, se movía en diagonal). Usa la curva de cajón del sistema (380 ms al entrar, 240 ms al salir), con movimiento reducido solo se desvanece, y mientras se cierra el velo ya no se come los toques.
+- Al elegir «Renomear» en el menú ⋯ de una estancia, el foco se queda en el campo del diálogo; la salida animada del menú lo devolvía al botón ⋯ (C2.2).
 
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 

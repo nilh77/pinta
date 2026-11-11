@@ -18,8 +18,13 @@ public sealed class SmtpEmailSender(IOptions<SmtpOptions> options) : IMailTransp
         message.Body = new BodyBuilder { HtmlBody = html }.ToMessageBody();
 
         using var client = new SmtpClient();
-        // shortcut: no TLS or auth because Mailpit is local; add both when a production provider is chosen (Phase 8).
-        await client.ConnectAsync(smtp.Host, smtp.Port, SecureSocketOptions.None, cancellationToken);
+        // Mailpit offers no STARTTLS and needs no login; the test inbox of the Demo environment wants both.
+        await client.ConnectAsync(smtp.Host, smtp.Port, SecureSocketOptions.StartTlsWhenAvailable, cancellationToken);
+        if (!string.IsNullOrEmpty(smtp.Username))
+        {
+            await client.AuthenticateAsync(smtp.Username, smtp.Password ?? "", cancellationToken);
+        }
+
         await client.SendAsync(message, cancellationToken);
         await client.DisconnectAsync(true, cancellationToken);
     }

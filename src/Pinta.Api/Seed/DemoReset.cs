@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Pinta.Api.Infrastructure;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Media.Storage;
@@ -9,7 +10,7 @@ using Pinta.SharedKernel.Http;
 namespace Pinta.Api.Seed;
 
 /// <summary>
-/// «Restablecer datos de demo» (docs/plan.md, H8): only in Development. Empties every module's tables except the two
+/// «Restablecer datos de demo» (docs/plan.md, H8): only in Development and Demo. Empties every module's tables except the two
 /// admins (who stay signed in) and Hangfire, removes the stored files and seeds the demo again with dates from today.
 /// </summary>
 public static class DemoReset
@@ -29,7 +30,7 @@ public static class DemoReset
         """;
     private static readonly SemaphoreSlim Running = new(1, 1);
 
-    /// <summary>Always mapped, so the OpenAPI client knows it; outside Development it answers 404 and does nothing.</summary>
+    /// <summary>Always mapped, so the OpenAPI client knows it; elsewhere it answers 404 and does nothing.</summary>
     public static void Map(WebApplication app) =>
         app.MapPost("/api/admin/demo/reset", ResetAsync)
             .RequireAuthorization(policy => policy.RequireRole(RoleNames.Admin))
@@ -40,7 +41,7 @@ public static class DemoReset
     private static async Task<Results<NoContent, ProblemHttpResult>> ResetAsync(
         IServiceProvider services, IHostEnvironment environment, JobsDbContext db, ObjectStorage storage, CancellationToken cancellationToken)
     {
-        if (!environment.IsDevelopment())
+        if (!environment.HasDemoData())
         {
             return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);
         }

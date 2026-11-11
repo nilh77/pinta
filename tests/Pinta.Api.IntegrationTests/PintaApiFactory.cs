@@ -12,13 +12,18 @@ using Testcontainers.PostgreSql;
 
 namespace Pinta.Api.IntegrationTests;
 
-/// <summary>The real API on a real PostgreSQL (Testcontainers), in Development so migrations and the demo seed run.</summary>
+/// <summary>
+/// The real API on a real PostgreSQL (Testcontainers), in Development so migrations and the demo seed run, or in another
+/// environment for the tests that check what changes there (the Demo environment on Railway).
+/// </summary>
 public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:17-alpine").Build();
 
     // Same image as the AppHost: MinIO no longer publishes images on Docker Hub.
     private readonly MinioContainer _minio = new MinioBuilder("cgr.dev/chainguard/minio:latest").Build();
+
+    public string EnvironmentName { get; init; } = "Development";
 
     public InMemoryEmailQueue Emails { get; } = new();
 
@@ -34,7 +39,9 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Development");
+        builder.UseEnvironment(EnvironmentName);
+        // appsettings.Development.json is read only in Development; on Railway it is the Seed__DemoPassword variable.
+        builder.UseSetting("Seed:DemoPassword", TestData.DemoPassword);
         builder.UseSetting("ConnectionStrings:pinta", _postgres.GetConnectionString());
         builder.UseSetting("ConnectionStrings:minio", $"Endpoint={_minio.GetConnectionString()};AccessKey={_minio.GetAccessKey()};SecretKey={_minio.GetSecretKey()}");
         builder.UseSetting("RateLimits:AuthPerMinute", "1000");

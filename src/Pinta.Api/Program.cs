@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.HttpOverrides;
 using Pinta.Api.Infrastructure;
 using Pinta.Api.Seed;
 using Pinta.Modules.Catalog;
@@ -68,9 +69,19 @@ if (!OpenApiGeneration.IsRunning)
     dataProtection.PersistKeysToDbContext<IdentityModuleDbContext>();
 }
 
+// Only the web app reaches the API (Railway private network, docs/deploy-railway.md); it passes on the edge's
+// X-Forwarded-Proto, so the Secure cookies and antiforgery outside Development see the request as HTTPS.
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost;
+    options.KnownIPNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
 
-// First, so error responses written on the way out still see the request language.
+app.UseForwardedHeaders();
+// First after the proxy headers, so error responses written on the way out still see the request language.
 app.UseRequestLocalization();
 app.UseExceptionHandler(new ExceptionHandlerOptions
 {
@@ -100,7 +111,7 @@ app.MapNotificationsEndpoints();
 app.MapFinanceEndpoints();
 DemoReset.Map(app);
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.HasDemoData())
 {
     await app.Services.MigrateModulesAsync();
     await DemoSeeder.SeedAsync(app.Services);
