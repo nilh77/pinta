@@ -14,6 +14,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 - La hoja del editor de estancia (móvil y tableta) ya no desaparece de golpe al cerrarse con Guardar, Cancelar, la X, Escape o el velo: se ve su animación de salida, y al reabrir una estancia vuelve a partir de lo guardado (C2.3).
 - La hoja del editor entra y sale por un solo eje: desde abajo en el móvil y desde la derecha en tableta (antes, entre 768 y 1023 px, se movía en diagonal). Usa la curva de cajón del sistema (380 ms al entrar, 240 ms al salir), con movimiento reducido solo se desvanece, y mientras se cierra el velo ya no se come los toques.
+- Los menús ⋯ y «Añadir» del esquema crecen desde su botón con un pequeño rebote y se cierran con animación (antes aparecían desde su centro y desaparecían de golpe). Con movimiento reducido solo se desvanecen (C2.2).
 
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 

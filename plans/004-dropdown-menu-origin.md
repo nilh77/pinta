@@ -1,6 +1,6 @@
 # 004 — Menús ⋯ y «Añadir»: escalar desde su botón, curva fuerte y salida
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: MEDIUM
 - **Category**: Physicality & origin
@@ -31,9 +31,7 @@ Radix publica el origen correcto en `--radix-dropdown-menu-content-transform-ori
 const menuClass = cn("z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg", menuMotion);
 ```
 
-con `menuMotion` de `web/src/components/ui/motion.ts` (plan 001):
-`motion-fade-only ease-out origin-(--radix-dropdown-menu-content-transform-origin) data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-(--duration-menu-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-(--duration-menu-out)`
-(`--ease-out: cubic-bezier(0.23, 1, 0.32, 1)`, 180 ms al abrir y 120 ms al cerrar).
+con `menuMotion` de `web/src/components/ui/motion.ts` (plan 001, revisión 2 del sistema): origen en `--radix-dropdown-menu-content-transform-origin`; entrada con fundido, escala 0.9 y 8 px desde el lado del botón (`data-[side=…]:slide-in-from-*-2`), con `ease-spring` en 260 ms; salida con fundido y escala 0.95, `ease-out` en 140 ms; `motion-fade-only` para movimiento reducido.
 
 ## Repo conventions to follow
 
@@ -59,11 +57,11 @@ con `menuMotion` de `web/src/components/ui/motion.ts` (plan 001):
 - **Feel check**:
   - Abre el ⋯ de una tarjeta: el menú crece desde la esquina superior derecha, junto al botón, no desde su centro. Compruébalo al 10 % en DevTools → Animations.
   - Abre «Añadir» (centrado bajo el botón): crece desde el borde superior central.
-  - Cierra con Escape o tocando fuera: se encoge y desvanece en unos 120 ms, más rápido que la apertura.
+  - Cierra con Escape o tocando fuera: se encoge y desvanece en unos 140 ms, más rápido que la apertura.
   - Abre y cierra muy rápido varias veces: nunca se queda medio visible ni a mitad de opacidad.
   - Con `prefers-reduced-motion: reduce`: solo fundido, sin escala.
 - **Done when**:
-  - [ ] Los dos menús crecen desde su botón (180 ms) y se encogen hacia él (120 ms).
+  - [ ] Los dos menús crecen desde su botón con resorte (260 ms, llegan en ~100 ms) y se encogen hacia él (140 ms).
   - [ ] Las opciones no tienen entrada propia; el resaltado sigue siendo instantáneo.
   - [ ] Con movimiento reducido: solo fundido.
   - [ ] `pnpm lint && pnpm typecheck && pnpm test` en verde.

@@ -3,6 +3,7 @@
 import { Check, Copy, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { DropdownMenu } from "radix-ui";
+import { menuMotion } from "@/components/ui/motion";
 import { formatArea } from "@/lib/format";
 import { elementAreaOf, MAX_ELEMENTS, validateElement, type CatalogInfo, type DraftElement } from "@/lib/quote/draft";
 import type { PublicCatalog } from "@/lib/quote/use-quote-data";
@@ -186,7 +187,6 @@ function AddMenu({ catalog, onAddRoom, onAddSurface, disabled }: RoomSchemaProps
   );
 }
 
-const menuClass =
-  "z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 motion-reduce:animate-none";
+const menuClass = cn("z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg", menuMotion);
 const itemClass =
   "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-xl px-3 text-sm font-medium outline-none data-[highlighted]:bg-primary-soft";
