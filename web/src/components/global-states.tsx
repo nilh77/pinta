@@ -6,9 +6,11 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AlertDialog } from "radix-ui";
 import { Button } from "@/components/ui/button";
+import { dialogMotion, overlayMotion, overlayStyle } from "@/components/ui/motion";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { onSessionExpired } from "@/lib/api/client";
 import { meQueryKey } from "@/lib/auth/use-auth";
+import { cn } from "@/lib/utils";
 
 /** «Sin conexión»: a band at the top while the device is offline (docs/screens.md, global states). */
 export function OfflineBanner() {
@@ -57,8 +59,8 @@ export function SessionExpiredDialog() {
   return (
     <AlertDialog.Root open={from !== null} onOpenChange={(open) => !open && setFrom(null)}>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className="fixed inset-0 z-40 bg-foreground/40" />
-        <AlertDialog.Content className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl">
+        <AlertDialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(from !== null)} />
+        <AlertDialog.Content className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}>
           <AlertDialog.Title className="font-display text-xl font-bold">{t("title")}</AlertDialog.Title>
           <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">{t("body")}</AlertDialog.Description>
           <div className="mt-6 flex justify-end">

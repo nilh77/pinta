@@ -1,6 +1,6 @@
 # 005 — Diálogos: entrada y salida con fundido y zoom ligero, iguales en toda la app
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: MEDIUM
 - **Category**: Cohesion & tokens
@@ -43,8 +43,8 @@ Los diálogos centrados aparecen y desaparecen sin transición, mientras la hoja
 
 ## Target
 
-- Velo: fundido, 220 ms al entrar y 150 ms al salir (`overlayMotion`).
-- Contenido de los modales centrados: fundido + `scale(0.95)` desde el **centro**, con los mismos tiempos y curva `cubic-bezier(0.23, 1, 0.32, 1)` (`dialogMotion`). El origen centrado es correcto en modales.
+- Velo: fundido con `ease-out`, 340 ms al entrar y 180 ms al salir (`overlayMotion`, revisión 2), con `style={overlayStyle(open)}` para que no se coma los toques mientras se va (helper del plan 003).
+- Contenido de los modales centrados (`dialogMotion`, revisión 2): entra desde el **centro** con fundido, escala 0.9 y 16 px de subida, con `ease-spring` en 340 ms (llega en ~130 ms); sale con fundido y escala 0.95, `ease-out` en 180 ms. El origen centrado es correcto en modales.
 - Visor de fotos: solo fundido **al abrir** y cierre instantáneo. Al cerrar, `current` pasa a `null` y la imagen se vaciaría a mitad de la salida, así que una salida animada mostraría un fondo negro vacío desvaneciéndose.
 
 El centrado (`-translate-x-1/2 -translate-y-1/2`) usa la propiedad CSS `translate` en Tailwind v4 y el keyframe anima `transform`: no se pisan, el diálogo sigue centrado durante la animación.
@@ -55,6 +55,8 @@ El centrado (`-translate-x-1/2 -translate-y-1/2`) usa la propiedad CSS `translat
 - Constantes en `web/src/components/ui/motion.ts` (plan 001): `overlayMotion`, `dialogMotion`.
 
 ## Steps
+
+> Revisión 2: en los pasos 1–4, además de las clases, cada `Overlay` recibe `style={overlayStyle(<abierto>)}` (importado de `motion.ts`): `open` en ConfirmDialog, FormDialog y RenameDialog; `from !== null` en SessionExpiredDialog. El visor (paso 5) no lo necesita: cierra sin animación, así que su velo se desmonta al instante.
 
 1. `web/src/components/ui/confirm-dialog.tsx`: importa `cn` (`import { cn } from "@/lib/utils";`) y `import { dialogMotion, overlayMotion } from "./motion";`. Después:
    - Línea 22: `className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)}`
@@ -75,14 +77,14 @@ El centrado (`-translate-x-1/2 -translate-y-1/2`) usa la propiedad CSS `translat
 
 - **Mechanical**: `cd web && pnpm lint && pnpm typecheck && pnpm test`: todo en verde.
 - **Feel check**:
-  - Cotizar → cambia el tipo de trabajo con un borrador existente (`ConfirmDialog` de `type-step.tsx:155`): el diálogo aparece con fundido y un zoom mínimo desde el centro; al cancelar, sale más rápido de lo que entró.
+  - Cotizar → cambia el tipo de trabajo con un borrador existente (`ConfirmDialog` de `type-step.tsx:155`): el diálogo sube y se asienta desde el centro con un rebote ligero; al cancelar, sale más rápido de lo que entró.
   - Admin → un trabajo → «Rechazar» o «Cancelar» (`FormDialog`): igual, y el foco va al primer campo como antes.
   - Renombrar una estancia: entra animado.
   - Admin → Archivos de un trabajo → abre una foto: el visor aparece con fundido; al cerrar desaparece al instante y sin parpadeo de imagen vacía.
   - Al 10 % en DevTools → Animations: el diálogo permanece centrado todo el tiempo (sin deriva hacia abajo ni a la derecha).
   - Con `prefers-reduced-motion: reduce`: solo fundido, sin zoom.
 - **Done when**:
-  - [ ] Confirmar, formulario, renombrar y sesión caducada: fundido + escala 0.95, 220/150 ms, velo y diálogo juntos.
+  - [ ] Confirmar, formulario, renombrar y sesión caducada: entrada con resorte (escala 0.9 y 16 px, 340 ms) y salida de 180 ms; velo y diálogo juntos; el velo deja pasar los toques al salir.
   - [ ] El visor de fotos solo anima al abrir.
   - [ ] Ningún diálogo se descentra durante la animación; el foco va al mismo sitio que antes.
   - [ ] Con movimiento reducido: solo fundido.

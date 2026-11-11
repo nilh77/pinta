@@ -7,6 +7,7 @@ import { Dialog } from "radix-ui";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { dialogMotion, overlayMotion, overlayStyle } from "@/components/ui/motion";
 import { Sheet } from "@/components/ui/sheet";
 import { useRouter } from "@/i18n/navigation";
 import { formatArea } from "@/lib/format";
@@ -25,6 +26,7 @@ import {
   type DraftElement,
 } from "@/lib/quote/draft";
 import { useEstimate, useIsDesktop } from "@/lib/quote/use-quote-data";
+import { cn } from "@/lib/utils";
 import { EstimateSummary } from "./estimate-bar";
 import { OccupancyPicker } from "./occupancy-picker";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
@@ -330,10 +332,10 @@ function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initi
   return (
     <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/40" />
+        <Dialog.Overlay className={cn("fixed inset-0 z-50 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl"
+          className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}
         >
           <Dialog.Title className="font-display text-xl font-bold">{t("title")}</Dialog.Title>
           <form
