@@ -13,7 +13,8 @@
       "en": "English"
     },
     "loading": "Loading…",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "changeLanguage": "{code}, change language"
   },
   "nav": {
     "signIn": "Sign in",
@@ -22,7 +23,9 @@
     "myJobs": "My jobs",
     "admin": "Dashboard",
     "painterJobs": "Jobs",
-    "account": "Account"
+    "account": "Account",
+    "accountMenu": "{name}'s account",
+    "payouts": "Payouts"
   },
   "home": {
     "badge": "Lisbon district",

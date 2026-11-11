@@ -35,9 +35,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       <SiteHeader>
-        <nav aria-label={t("sectionsLabel")} className="hidden items-center gap-1 lg:flex">
+        <nav aria-label={t("sectionsLabel")} className="ml-3 hidden items-center gap-0.5 lg:flex">
           {(["como", "que", "garantias"] as const).map((id) => (
-            <a key={id} href={`#${id}`} className="flex h-11 items-center rounded-xl px-3 text-sm font-medium text-muted-foreground hover:text-foreground">
+            <a key={id} href={`#${id}`} className="flex h-8 items-center rounded-full px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-card hover:text-foreground">
               {t(`nav.${id}`)}
             </a>
           ))}

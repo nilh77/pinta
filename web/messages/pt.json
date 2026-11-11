@@ -13,7 +13,8 @@
       "en": "English"
     },
     "loading": "A carregar…",
-    "skipToContent": "Saltar para o conteúdo"
+    "skipToContent": "Saltar para o conteúdo",
+    "changeLanguage": "{code}, mudar o idioma"
   },
   "nav": {
     "signIn": "Entrar",
@@ -22,7 +23,9 @@
     "myJobs": "Os meus trabalhos",
     "admin": "Painel",
     "painterJobs": "Trabalhos",
-    "account": "Conta"
+    "account": "Conta",
+    "accountMenu": "Conta de {name}",
+    "payouts": "Pagamentos"
   },
   "home": {
     "badge": "Distrito de Lisboa",
