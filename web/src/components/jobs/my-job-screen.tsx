@@ -7,6 +7,7 @@ import { toast } from "@/lib/toast";
 import { PriceRange } from "@/components/quote/price-range";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -27,10 +28,7 @@ export function MyJobScreen({ id }: { id: string }) {
 
   if (job.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 

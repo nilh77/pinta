@@ -1,10 +1,10 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { signedOut, useMe } from "@/lib/auth/use-auth";
 import { homeFor } from "@/lib/painter/use-painter";
@@ -25,10 +25,7 @@ export function PainterArea({ children }: { children: ReactNode }) {
       <SiteHeader />
       <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 pt-2 pb-16 sm:px-6">
         {me.isPending || me.data === null ? (
-          <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-            <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-            {t("loading")}
-          </p>
+          <DetailSkeleton label={t("loading")} className="py-2" />
         ) : me.data?.role !== "painter" ? (
           <div className="flex flex-col items-start gap-4 py-16">
             <p className="text-muted-foreground">{t("notPainter")}</p>

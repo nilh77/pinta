@@ -8,6 +8,7 @@ import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import type { components } from "@/lib/api/schema";
 import { ApiError } from "@/lib/api/problem";
@@ -37,10 +38,7 @@ export function PainterJobScreen({ id }: { id: string }) {
 
   if (job.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 

@@ -121,8 +121,9 @@ Los gestiona Sonner por dentro (entrada, apilado, deslizar para descartar, `pref
 
 ### Carga
 
-- **Páginas y listas**: skeleton con la forma del contenido y `animate-pulse` (el de Tailwind, 2 s, el único bucle permitido además de los spinners). Nunca un spinner a pantalla completa (`docs/screens.md:18`).
-- **Acción en curso dentro de un botón**: spinner `animate-spin` (lineal).
+- **Páginas y listas**: skeleton con la forma del contenido y `animate-pulse` (el de Tailwind, 2 s, el único bucle permitido además de los spinners). Nunca un spinner a pantalla completa (`docs/screens.md:18`). Componentes en `web/src/components/ui/skeleton.tsx`: `CardListSkeleton` para listas y `DetailSkeleton` para páginas de detalle.
+- **Acción en curso dentro de un botón**: `<Button pending>`. El texto se vuelve transparente sin moverse y el spinner aparece en su centro, así que el botón no cambia de tamaño. Con movimiento reducido el spinner gira más despacio (2 s) en vez de pararse: un spinner quieto ya no dice «cargando».
+- **Procesos que no son una carga de página** (preparar o esperar la confirmación de un pago, confirmar el email, buscar pintores): spinner con texto que explica qué ocurre.
 - **Paso de skeleton a contenido**: sin animación de entrada. Se cargan pantallas a diario, y un fundido en cada carga se sentiría lento (principio 5).
 
 ### Pulsar

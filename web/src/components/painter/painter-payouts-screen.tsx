@@ -1,12 +1,12 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
 import { FormDialog } from "@/components/ui/form-dialog";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { formatCents, formatDate } from "@/lib/format";
@@ -42,10 +42,7 @@ export function PainterPayoutsScreen() {
       </header>
 
       {payouts.isPending ? (
-        <p role="status" className="flex items-center gap-2 py-10 text-muted-foreground">
-          <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-          {t("loading")}
-        </p>
+        <CardListSkeleton label={t("loading")} className="py-2" />
       ) : payouts.isError ? (
         <div role="alert" className="flex flex-col items-start gap-3 py-10">
           <p className="text-destructive">{t("error")}</p>

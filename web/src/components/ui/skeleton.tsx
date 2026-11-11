@@ -16,3 +16,22 @@ export function CardListSkeleton({ label, count = 3, className }: { label: strin
     </div>
   );
 }
+
+/**
+ * Loading state for a detail page (a job, an account, a painter): a title, a status line and the stacked cards those
+ * pages are made of. `label` is read by screen readers only.
+ */
+export function DetailSkeleton({ label, className }: { label: string; className?: string }) {
+  return (
+    <div role="status" className={cn("flex flex-col gap-4", className)}>
+      <span className="sr-only">{label}</span>
+      <div className="flex flex-col gap-2">
+        <Skeleton className="h-8 w-2/3 max-w-80" />
+        <Skeleton className="h-4 w-1/3 max-w-40 rounded-lg" />
+      </div>
+      <Skeleton className="h-24 rounded-[20px]" />
+      <Skeleton className="h-44 rounded-[20px]" />
+      <Skeleton className="h-24 rounded-[20px]" />
+    </div>
+  );
+}

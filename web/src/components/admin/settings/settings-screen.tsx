@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { useErrorText } from "@/lib/api/use-error-text";
 import { ApiError } from "@/lib/api/problem";
 import { useDeletionRequests, useExecuteDeletion, useResetDemo, type DeletionRequest } from "@/lib/finance/use-finance";
@@ -30,10 +31,7 @@ export function SettingsScreen() {
           <p className="text-sm text-muted-foreground">{t("deletion.body")}</p>
         </div>
         {requests.isPending ? (
-          <p role="status" className="flex items-center gap-2 text-muted-foreground">
-            <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-            {t("loading")}
-          </p>
+          <CardListSkeleton label={t("loading")} count={2} />
         ) : requests.isError ? (
           <div role="alert" className="flex flex-col items-start gap-3">
             <p className="text-destructive">{t("error")}</p>

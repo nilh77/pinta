@@ -7,6 +7,7 @@ import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -33,10 +34,7 @@ export function PainterScreen({ id }: { id: string }) {
 
   if (painter.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-12 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 

@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -96,10 +97,7 @@ export function CoverageScreen() {
 function Loading() {
   const t = useTranslations("admin.coverage");
   return (
-    <p role="status" className="flex items-center gap-2 text-muted-foreground">
-      <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-      {t("loading")}
-    </p>
+    <CardListSkeleton label={t("loading")} />
   );
 }
 

@@ -7,6 +7,7 @@ import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { RoomEditor } from "@/components/quote/room-editor";
 import { Button } from "@/components/ui/button";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link, useRouter } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -37,10 +38,7 @@ export function PainterVisitScreen({ id }: { id: string }) {
 
   if (visit.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 
@@ -181,10 +179,7 @@ function Report({ visit }: { visit: VisitDetail }) {
 
   if (!catalog.data || !info) {
     return (
-      <p role="status" className="flex items-center gap-2 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} />
     );
   }
 
