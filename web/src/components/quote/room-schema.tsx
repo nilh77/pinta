@@ -3,6 +3,7 @@
 import { Check, Copy, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { DropdownMenu } from "radix-ui";
+import { useRef } from "react";
 import { menuMotion } from "@/components/ui/motion";
 import { formatArea } from "@/lib/format";
 import { elementAreaOf, MAX_ELEMENTS, validateElement, type CatalogInfo, type DraftElement } from "@/lib/quote/draft";
@@ -73,6 +74,8 @@ function RoomCard({
 }: RoomSchemaProps & { element: DraftElement; name: string; wide: boolean }) {
   const t = useTranslations("quote.schema");
   const locale = useLocale();
+  // «Renomear» opens a dialog that takes focus; the menu must not hand it back to its trigger when its exit ends.
+  const opensDialog = useRef(false);
   const area = elementAreaOf(element, info);
   const invalid = element.described && (Object.keys(validateElement(element)).length > 0 || !area || area.total === 0);
   const paintIndex = Math.max(0, catalog.paints.findIndex((p) => p.id === element.paintId));
@@ -132,8 +135,22 @@ function RoomCard({
           <MoreHorizontal aria-hidden="true" className="size-5" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
-          <DropdownMenu.Content align="end" sideOffset={4} className={menuClass}>
-            <DropdownMenu.Item onSelect={() => onRename(element.id)} className={itemClass}>
+          <DropdownMenu.Content
+            align="end"
+            sideOffset={4}
+            className={menuClass}
+            onCloseAutoFocus={(event) => {
+              if (opensDialog.current) event.preventDefault();
+              opensDialog.current = false;
+            }}
+          >
+            <DropdownMenu.Item
+              onSelect={() => {
+                opensDialog.current = true;
+                onRename(element.id);
+              }}
+              className={itemClass}
+            >
               <Pencil aria-hidden="true" className="size-4" />
               {t("rename")}
             </DropdownMenu.Item>
