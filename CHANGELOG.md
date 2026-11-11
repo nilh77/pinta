@@ -14,6 +14,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ### Mejoras de interfaz
 
+#### Añadido
+
+- Cabecera nueva, la misma en todas las áreas (`docs/screens.md`, «Cabecera»): ya no es una barra, sino una píldora de cristal con el logo y, a la derecha, dos controles redondos. **Idioma** abre un panel con PT, ES y EN; **Cuenta** abre un panel por rol (cliente: Mis trabajos, Cuenta, Salir; pintor: Mis trabajos, Pagos, Salir; admin: Panel, Salir) o, sin sesión, lleva a «Entrar». Cada panel crece desde su control y vuelve a él al cerrarse; los vecinos se apartan con él y, en el móvil, lo que tapa se desvanece. En el admin, la navegación queda en una barra lateral de cristal (escritorio) o bajo la cabecera (móvil).
+- Material de cristal esmerilado (`docs/motion.md`): fondo fijo con dos brillos suaves de la marca, cabecera, barra lateral, menús, diálogos y hoja translúcidos con desenfoque. Con transparencia reducida pasan a casi opacos. Diálogos y hoja usan un relleno del 80 % para que el texto verde azulado siga en 4,5:1 sobre el velo. Tokens de modo oscuro preparados, aunque la app sigue solo en claro.
+
+#### Eliminado
+
+- El selector de idioma de tres botones (`LocaleSwitcher`): lo sustituye el control de idioma de la cabecera.
+
 #### Corregido
 
 - Al cerrar un diálogo o la hoja del editor, el foco vuelve a lo que lo abrió (el botón «Continuar», la tarjeta de la estancia, el botón ⋯ o el lápiz); antes caía al principio de la página y quien usa teclado o lector de pantalla perdía su sitio. Nuevo hook `useReturnFocus` para los diálogos de Radix controlados por estado.

@@ -1,6 +1,6 @@
 # 010 — Cabecera de cristal con controles que se transforman en su panel
 
-- **Status**: PROPUESTA (pendiente de revisión)
+- **Status**: DONE (2026-11-11), salvo lo marcado como sin verificar en «Verification»
 - **Commit**: 338c264 (`ui-improvements`)
 - **Severity**: — (rediseño pedido, no hallazgo)
 - **Category**: Material, cabecera y continuidad espacial (*morph*)
