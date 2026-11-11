@@ -38,10 +38,10 @@ export function JobFiles({ files, emptyText }: { files: JobFile[]; emptyText?: s
       </ul>
       <Dialog.Root open={current != null} onOpenChange={(next) => !next && setOpen(null)}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/90" />
+          <Dialog.Overlay className="fixed inset-0 z-40 bg-black/90 ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-layer-in)" />
           <Dialog.Content
             aria-describedby={undefined}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-layer-in)"
             onKeyDown={(e) => {
               if (open === null) return;
               if (e.key === "ArrowRight") setOpen((open + 1) % files.length);

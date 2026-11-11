@@ -60,6 +60,68 @@
   --radius-2xl: calc(var(--radius) + 4px);
 }
 
+/*
+ * Motion tokens (docs/motion.md). Enter with a spring that settles, leave with a strong ease-out,
+ * sheets with the drawer curve. --ease-spring: damping ratio 0.7 (bounce 0.3), reaches the target at 38 %.
+ */
+@theme {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: linear(0, 0.0337, 0.1179, 0.2308, 0.3562, 0.482, 0.6001, 0.7056, 0.7957, 0.8698, 0.9283, 0.9726, 1.0043, 1.0255, 1.0383, 1.0445, 1.046, 1.044, 1.0399, 1.0346, 1.0288, 1.023, 1.0177, 1.0129, 1.0089, 1.0056, 1.003, 1.001, 0.9996, 0.9987, 0.9982, 0.9979, 1);
+}
+
+/* Durations, used as duration-(--duration-…). Spring durations include the settle; exits are shorter. */
+:root {
+  --duration-press: 120ms;
+  --duration-release: 360ms;
+  --duration-menu-in: 260ms;
+  --duration-menu-out: 140ms;
+  --duration-layer-in: 340ms;
+  --duration-layer-out: 180ms;
+  --duration-drawer-in: 380ms;
+  --duration-drawer-out: 240ms;
+}
+
+/*
+ * Reduced motion keeps the fade and drops movement and scale (tw-animate-css variables).
+ * Unlayered on purpose: it must win over the utilities layer.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .motion-fade-only {
+    --tw-enter-translate-x: 0;
+    --tw-enter-translate-y: 0;
+    --tw-exit-translate-x: 0;
+    --tw-exit-translate-y: 0;
+    --tw-enter-scale: 1;
+    --tw-exit-scale: 1;
+    --tw-enter-opacity: 0;
+    --tw-exit-opacity: 0;
+  }
+}
+
+/*
+ * Press feedback (docs/motion.md, «Pulsar»): sink fast with ease-out, come back with the spring; colours keep their own
+ * short transition. --press-scale sets the depth (0.96 by default).
+ */
+@utility pressable {
+  transition-property: color, background-color, border-color, box-shadow, scale;
+  transition-duration: 150ms, 150ms, 150ms, 150ms, var(--duration-release);
+  transition-timing-function: var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--ease-spring);
+
+  &:active {
+    scale: var(--press-scale, 0.96);
+    transition-duration: 150ms, 150ms, 150ms, 150ms, var(--duration-press);
+    transition-timing-function: var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:active {
+      scale: none;
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

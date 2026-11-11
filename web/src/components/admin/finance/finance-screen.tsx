@@ -1,13 +1,14 @@
 "use client";
 
-import { CheckCircle2, Download, Loader2, Lock, Pencil, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, Download, Lock, Pencil, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormDialog } from "@/components/ui/form-dialog";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -65,10 +66,7 @@ export function FinanceScreen() {
       </header>
 
       {summary.isPending ? (
-        <p role="status" className="flex items-center gap-2 py-10 text-muted-foreground">
-          <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-          {t("loading")}
-        </p>
+        <CardListSkeleton label={t("loading")} className="py-2" />
       ) : summary.isError ? (
         <div role="alert" className="flex flex-col items-start gap-3 py-10">
           <p className="text-destructive">{t("error")}</p>

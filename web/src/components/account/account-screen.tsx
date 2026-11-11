@@ -5,7 +5,7 @@ import { CircleAlert, Loader2, LogOut } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { z } from "zod";
 import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";

@@ -6,7 +6,7 @@ import { ArrowLeft, CircleAlert, CircleCheck, Copy, Download, Loader2, Smartphon
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useErrorText } from "@/lib/api/use-error-text";

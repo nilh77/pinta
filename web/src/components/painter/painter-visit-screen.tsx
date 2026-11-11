@@ -3,7 +3,7 @@
 import { ArrowLeft, CircleCheck, Loader2, MapPin, Navigation, Pencil, Phone, Plus, Send, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { RoomEditor } from "@/components/quote/room-editor";
 import { Button } from "@/components/ui/button";

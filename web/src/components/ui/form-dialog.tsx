@@ -3,7 +3,9 @@
 import { Loader2 } from "lucide-react";
 import { Dialog } from "radix-ui";
 import type { FormEvent, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import { dialogMotion, overlayMotion, overlayStyle } from "./motion";
 
 type FormDialogProps = {
   open: boolean;
@@ -41,9 +43,12 @@ export function FormDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-foreground/40" />
+        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
-          className="fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-card p-6 shadow-xl"
+          className={cn(
+            "fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-card p-6 shadow-xl",
+            dialogMotion,
+          )}
         >
           <form onSubmit={submit} noValidate>
             <Dialog.Title className="font-display text-xl font-bold">{title}</Dialog.Title>
