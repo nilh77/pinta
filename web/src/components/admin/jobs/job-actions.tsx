@@ -3,7 +3,7 @@
 import { Ban, CalendarClock, Check, CircleCheck, Loader2, Shuffle, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { ApiError } from "@/lib/api/problem";

@@ -3,6 +3,8 @@
 import { Check, Copy, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { DropdownMenu } from "radix-ui";
+import { useRef } from "react";
+import { menuMotion } from "@/components/ui/motion";
 import { formatArea } from "@/lib/format";
 import { elementAreaOf, MAX_ELEMENTS, validateElement, type CatalogInfo, type DraftElement } from "@/lib/quote/draft";
 import type { PublicCatalog } from "@/lib/quote/use-quote-data";
@@ -72,6 +74,8 @@ function RoomCard({
 }: RoomSchemaProps & { element: DraftElement; name: string; wide: boolean }) {
   const t = useTranslations("quote.schema");
   const locale = useLocale();
+  // «Renomear» opens a dialog that takes focus; the menu must not hand it back to its trigger when its exit ends.
+  const opensDialog = useRef(false);
   const area = elementAreaOf(element, info);
   const invalid = element.described && (Object.keys(validateElement(element)).length > 0 || !area || area.total === 0);
   const paintIndex = Math.max(0, catalog.paints.findIndex((p) => p.id === element.paintId));
@@ -131,8 +135,22 @@ function RoomCard({
           <MoreHorizontal aria-hidden="true" className="size-5" />
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
-          <DropdownMenu.Content align="end" sideOffset={4} className={menuClass}>
-            <DropdownMenu.Item onSelect={() => onRename(element.id)} className={itemClass}>
+          <DropdownMenu.Content
+            align="end"
+            sideOffset={4}
+            className={menuClass}
+            onCloseAutoFocus={(event) => {
+              if (opensDialog.current) event.preventDefault();
+              opensDialog.current = false;
+            }}
+          >
+            <DropdownMenu.Item
+              onSelect={() => {
+                opensDialog.current = true;
+                onRename(element.id);
+              }}
+              className={itemClass}
+            >
               <Pencil aria-hidden="true" className="size-4" />
               {t("rename")}
             </DropdownMenu.Item>
@@ -186,7 +204,6 @@ function AddMenu({ catalog, onAddRoom, onAddSurface, disabled }: RoomSchemaProps
   );
 }
 
-const menuClass =
-  "z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 motion-reduce:animate-none";
+const menuClass = cn("z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg", menuMotion);
 const itemClass =
   "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-xl px-3 text-sm font-medium outline-none data-[highlighted]:bg-primary-soft";

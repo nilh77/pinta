@@ -5,8 +5,9 @@ import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { Dialog } from "radix-ui";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
+import { dialogMotion, overlayMotion, overlayStyle } from "@/components/ui/motion";
 import { Sheet } from "@/components/ui/sheet";
 import { useRouter } from "@/i18n/navigation";
 import { formatArea } from "@/lib/format";
@@ -25,6 +26,7 @@ import {
   type DraftElement,
 } from "@/lib/quote/draft";
 import { useEstimate, useIsDesktop } from "@/lib/quote/use-quote-data";
+import { cn } from "@/lib/utils";
 import { EstimateSummary } from "./estimate-bar";
 import { OccupancyPicker } from "./occupancy-picker";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
@@ -53,6 +55,8 @@ function SchemaBuilder(context: QuoteContext) {
   const [occupancyError, setOccupancyError] = useState(false);
   const [blocked, setBlocked] = useState<string | null>(null);
   const [renaming, setRenaming] = useState<string | null>(null);
+  // The sheet stays mounted while it closes so its exit animation plays; `session` remounts the editor on every opening.
+  const [sheet, setSheet] = useState<{ id: string; session: number; open: boolean } | null>(null);
 
   useEffect(() => {
     if (!draft) router.replace("/cotizar");
@@ -69,6 +73,12 @@ function SchemaBuilder(context: QuoteContext) {
   const selected = elements.find((e) => e.id === selectedParam);
   // The desktop editor always shows an element: the one in the URL or the first.
   const editing = desktop ? (selected ?? elements[0]) : selected;
+  if (selected && (!sheet?.open || sheet.id !== selected.id)) {
+    setSheet({ id: selected.id, session: (sheet?.session ?? 0) + 1, open: true });
+  } else if (!selected && sheet?.open) {
+    setSheet({ ...sheet, open: false });
+  }
+  const sheetElement = sheet ? elements.find((e) => e.id === sheet.id) : undefined;
 
   const open = (id: string) => router.replace(`${PATH}?el=${id}`, { scroll: false });
   const close = () => router.replace(PATH, { scroll: false });
@@ -212,8 +222,16 @@ function SchemaBuilder(context: QuoteContext) {
           {seePriceButton}
         </div>
       </div>
-      {selected && (
-        <SheetEditor key={selected.id} element={selected} name={names[elements.indexOf(selected)]} context={context} onClose={close} onRename={() => setRenaming(selected.id)} />
+      {sheet && sheetElement && (
+        <SheetEditor
+          key={`${sheet.id}-${sheet.session}`}
+          open={sheet.open}
+          element={sheetElement}
+          name={names[elements.indexOf(sheetElement)]}
+          context={context}
+          onClose={close}
+          onRename={() => setRenaming(sheetElement.id)}
+        />
       )}
       {renameDialog}
       <span className="sr-only" aria-live="polite">
@@ -236,7 +254,7 @@ function EmptySchema() {
 type EditorProps = { element: DraftElement; name: string; context: QuoteContext; onRename: () => void };
 
 /** Screen 3 on phones and tablets: changes apply on "Guardar" (C2.3: at least a wall or the ceiling). */
-function SheetEditor({ element, name, context, onClose, onRename }: EditorProps & { onClose: () => void }) {
+function SheetEditor({ element, name, context, open, onClose, onRename }: EditorProps & { open: boolean; onClose: () => void }) {
   const t = useTranslations("quote.editor");
   const [working, setWorking] = useState(element);
   const [showErrors, setShowErrors] = useState(false);
@@ -250,8 +268,8 @@ function SheetEditor({ element, name, context, onClose, onRename }: EditorProps 
 
   return (
     <Sheet
-      open
-      onOpenChange={(open) => !open && onClose()}
+      open={open}
+      onOpenChange={(next) => !next && onClose()}
       title={name}
       closeLabel={t("cancel")}
       actions={<RenameButton onClick={onRename} />}
@@ -314,10 +332,10 @@ function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initi
   return (
     <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-foreground/40" />
+        <Dialog.Overlay className={cn("fixed inset-0 z-50 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
           aria-describedby={undefined}
-          className="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl"
+          className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}
         >
           <Dialog.Title className="font-display text-xl font-bold">{t("title")}</Dialog.Title>
           <form

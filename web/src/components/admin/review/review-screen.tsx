@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
@@ -8,6 +8,7 @@ import { AdminJobView } from "@/components/admin/jobs/admin-job-view";
 import { ReviewLightBadge } from "@/components/admin/jobs/review-light";
 import { PriceRange } from "@/components/quote/price-range";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { ReviewItem } from "@/lib/jobs/api";
 import { useReviewQueue } from "@/lib/jobs/use-admin-jobs";
@@ -42,10 +43,7 @@ export function ReviewScreen() {
       </header>
 
       {queue.isPending ? (
-        <p role="status" className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-          {t("loading")}
-        </p>
+        <CardListSkeleton label={t("loading")} />
       ) : queue.isError ? (
         <div role="alert" className="flex flex-col items-start gap-3">
           <p className="text-destructive">{t("loadError")}</p>

@@ -3,7 +3,7 @@
 import { ImagePlus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { prepareImage } from "@/lib/quote/uploads";
 
 const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];

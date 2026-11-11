@@ -220,7 +220,7 @@ function TopView({ element, onChange, info, error }: { element: DraftElement; on
     return metres > 0 ? `${WALLS[index]} · ${formatMetres(locale, metres)}` : WALLS[index];
   };
   const wallClass =
-    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold transition-[background-color,color,transform] duration-200 ease-out active:scale-95 focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none motion-reduce:transition-none aria-pressed:bg-accent aria-pressed:text-accent-foreground bg-[#e3ebe8] text-muted-foreground";
+    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold pressable [--press-scale:0.92] focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none aria-pressed:bg-accent aria-pressed:text-accent-foreground bg-[#e3ebe8] text-muted-foreground";
 
   return (
     <section aria-labelledby={`${element.id}-walls`} className="flex flex-col gap-3">

@@ -1,11 +1,12 @@
 "use client";
 
-import { ClipboardCheck, LayoutList, Loader2, MapPinned, PaintRoller, Settings, Tags, Wallet } from "lucide-react";
+import { ClipboardCheck, LayoutList, MapPinned, PaintRoller, Settings, Tags, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { signedOut, useMe, useSignOut } from "@/lib/auth/use-auth";
 
@@ -33,9 +34,22 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
   if (me.isPending || me.data === null) {
     return (
-      <div role="status" className="flex min-h-dvh items-center justify-center gap-2 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
+      <div role="status" className="flex min-h-dvh flex-col lg:flex-row">
+        <span className="sr-only">{t("loading")}</span>
+        <div className="flex flex-col gap-3 border-b border-border bg-card px-4 py-3 lg:h-dvh lg:w-56 lg:shrink-0 lg:border-r lg:border-b-0 lg:px-3.5 lg:py-5">
+          <Skeleton className="h-8 w-32" />
+          <div className="flex gap-1 overflow-hidden lg:flex-col">
+            {Array.from({ length: 5 }, (_, i) => (
+              <Skeleton key={i} className="h-11 w-28 shrink-0 lg:w-full" />
+            ))}
+          </div>
+        </div>
+        <div className="flex min-w-0 flex-1 flex-col gap-4 px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
+          <Skeleton className="h-9 w-56" />
+          {Array.from({ length: 3 }, (_, i) => (
+            <Skeleton key={i} className="h-28 rounded-[20px]" />
+          ))}
+        </div>
       </div>
     );
   }

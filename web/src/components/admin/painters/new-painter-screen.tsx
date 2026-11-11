@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useCreatePainter } from "@/lib/painter/use-admin-painters";
 import { PainterForm } from "./painter-form";

@@ -3,7 +3,7 @@
 import { ArrowLeft, BadgeCheck, CalendarClock, CircleAlert, CircleCheck, Clock, Loader2, MessageCircleQuestion } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { PriceRange } from "@/components/quote/price-range";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
