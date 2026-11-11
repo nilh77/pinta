@@ -20,6 +20,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Los toasts siguen las duraciones de `docs/screens.md`: éxito 3 s, deshacer 5 s y error hasta que el usuario lo cierra, con su botón de cerrar (antes todos se iban a los 4 s).
 - Desarrollo: `toast` se importa de `@/lib/toast`; ESLint impide importarlo directamente de `sonner`.
 - Carga con esqueletos, como pide `docs/screens.md`: el área admin muestra la silueta de su barra lateral y su contenido en lugar de un spinner a pantalla completa, y Mis trabajos, Trabajos del pintor, Tablero admin, Pintores, Revisión y Finanzas muestran tarjetas fantasma. Nuevo componente compartido `Skeleton` / `CardListSkeleton`.
+- Los botones responden al tocarlos: se hunden un poco y vuelven con un rebote ligero; las paredes del editor de estancia, que antes saltaban sin transición, hacen lo mismo con más profundidad. Con movimiento reducido no escalan. Nueva utilidad CSS `pressable` (`--press-scale`).
 
 ## H8b · Pulido para la demo: PWA, escritorio, accesibilidad y ensayos — 2026-10-26, [PR #12](https://github.com/nilh77/pinta/pull/12)
 

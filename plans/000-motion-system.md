@@ -130,7 +130,7 @@ Los gestiona Sonner por dentro (entrada, apilado, deslizar para descartar, `pref
 
 ### Pulsar
 
-Tiempo asimétrico: se hunde a 0.96 en 120 ms `ease-out` al tocar y vuelve en 360 ms con `ease-spring` al soltar (un pequeño rebote por encima de 1). Solo en `Button` (todas las variantes menos `link`) y en las paredes del editor (0.92). El color sigue su propia transición (150 ms), sin resorte. Tarjetas, navegación y pestañas no se encogen: tienen hover y selección de color.
+Tiempo asimétrico: se hunde a 0.96 en 120 ms `ease-out` al tocar y vuelve en 360 ms con `ease-spring` al soltar (un pequeño rebote por encima de 1). Solo en `Button` (todas las variantes menos `link`) y en las paredes del editor (0.92). El color sigue su propia transición (150 ms), sin resorte. Se aplica con la utilidad CSS `pressable` de `globals.css`; la profundidad se ajusta con `--press-scale` (por defecto 0.96; `[--press-scale:0.92]` en las paredes, `[--press-scale:1]` en `link`). Con movimiento reducido no escala. Tarjetas, navegación y pestañas no se encogen: tienen hover y selección de color.
 
 ### Momentos raros (no aprobados aún; la regla queda fijada)
 

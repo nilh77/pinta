@@ -1,12 +1,12 @@
 # 008 — Feedback de pulsación en los botones (y arreglar el de las paredes)
 
-- **Status**: TODO
-- **Commit**: 02c3f9b
+- **Status**: DONE (2026-11-11)
+- **Commit**: 02c3f9b (rediseñado sobre la revisión 2 del sistema el 2026-11-11)
 - **Severity**: MEDIUM
 - **Category**: Physicality (press feedback)
-- **Estimated scope**: 2 archivos, 3 líneas
-- **Depends on**: 001 (`--duration-press` y la curva `ease-out` fuerte)
-- **Sistema**: `plans/000-motion-system.md` §3 `--duration-press`, §5 «Pulsar», §7 y §8 (propiedad `scale`).
+- **Estimated scope**: 3 archivos (`globals.css`, `button.tsx`, `room-editor.tsx`), unas 25 líneas
+- **Depends on**: 001 (tokens `--duration-press`, `--duration-release`, `--ease-out`, `--ease-spring`)
+- **Sistema**: `plans/000-motion-system.md` §3 (pulsación asimétrica), §5 «Pulsar», §7 y §8 (propiedad `scale`).
 
 ## Problem
 
@@ -21,53 +21,77 @@ Las paredes del editor de estancia sí tienen pulsación, pero la transición no
 
 ```tsx
 // web/src/components/quote/room-editor.tsx:223 — current (start of wallClass)
-    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold transition-[background-color,color,transform] duration-200 ease-out active:scale-95 …
+    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold transition-[background-color,color,transform] duration-200 ease-out active:scale-95 … motion-reduce:transition-none …
 ```
 
 ## Target
 
-- `Button`: `active:scale-[0.97]`, animado en 160 ms con `cubic-bezier(0.23, 1, 0.32, 1)` (`--duration-press`, `ease-out`). La variante `link` no se encoge. Con movimiento reducido no hay escala; el color sigue cambiando.
-- Paredes: la transición incluye `scale` en lugar de `transform` y usa `--duration-press`.
+La revisión 2 pide una pulsación **asimétrica**: hundirse rápido (120 ms, `ease-out`) y volver con resorte (360 ms, `ease-spring`). El color debe seguir su propia transición corta (150 ms, curva por defecto de Tailwind), sin resorte. Con utilidades de Tailwind una sola duración y una sola curva se aplican a todas las propiedades, así que esta mezcla no se puede expresar con clases sueltas sin repetir listas largas en cada componente.
+
+Por eso se añade **una utilidad compartida, `pressable`**, en `globals.css` junto a los tokens:
+
+- Transición por propiedad: colores y sombra en 150 ms con la curva por defecto; `scale` en `--duration-release` con `--ease-spring` (la vuelta).
+- En `:active`: escala `var(--press-scale, 0.96)` y la transición de `scale` pasa a `--duration-press` con `--ease-out` (el hundimiento).
+- Con `prefers-reduced-motion: reduce`: `:active` no escala; el color se mantiene.
+- Quien necesite otra profundidad fija `--press-scale` (las paredes, objetivo pequeño: 0.92; la variante `link`: 1).
 
 ## Repo conventions to follow
 
+- Tokens y piezas de movimiento compartidas viven en `web/src/app/globals.css` (plan 001); `docs/motion.md` las documenta.
 - `buttonVariants` con `cva` en `button.tsx:6-38`: la base es la primera cadena; las variantes van en `variants.variant`.
-- Tokens del plan 001: `duration-(--duration-press)`, `ease-out`.
 
 ## Steps
 
-1. En `web/src/components/ui/button.tsx:7`, dentro de la cadena base, sustituye
-   `transition-[color,background-color,border-color,box-shadow]`
-   por
-   `transition-[color,background-color,border-color,box-shadow,scale] duration-(--duration-press) ease-out active:scale-[0.97] motion-reduce:active:scale-100`.
-   El resto de la cadena no cambia.
-2. En la misma `cva`, variante `link` (línea 20), añade `active:scale-100`:
-   `link: "text-primary underline-offset-4 hover:underline active:scale-100",`
-3. En `web/src/components/quote/room-editor.tsx:223`, dentro de `wallClass`, sustituye
-   `transition-[background-color,color,transform] duration-200 ease-out`
-   por
-   `transition-[background-color,color,scale] duration-(--duration-press) ease-out`.
-   Deja igual `active:scale-95` y `motion-reduce:transition-none`.
+1. En `web/src/app/globals.css`, después del bloque `@media (prefers-reduced-motion: reduce) { .motion-fade-only { … } }`, añade:
+
+```css
+/*
+ * Press feedback (docs/motion.md, «Pulsar»): sink fast with ease-out, come back with the spring; colours keep their own
+ * short transition. --press-scale sets the depth (0.96 by default).
+ */
+@utility pressable {
+  transition-property: color, background-color, border-color, box-shadow, scale;
+  transition-duration: 150ms, 150ms, 150ms, 150ms, var(--duration-release);
+  transition-timing-function: var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--ease-spring);
+
+  &:active {
+    scale: var(--press-scale, 0.96);
+    transition-duration: 150ms, 150ms, 150ms, 150ms, var(--duration-press);
+    transition-timing-function: var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--default-transition-timing-function), var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &:active {
+      scale: none;
+    }
+  }
+}
+```
+
+2. En `web/src/components/ui/button.tsx:7`, en la cadena base, sustituye `transition-[color,background-color,border-color,box-shadow]` por `pressable`.
+3. En la variante `link` (línea 20): `link: "text-primary underline-offset-4 hover:underline [--press-scale:1]",`.
+4. En `web/src/components/quote/room-editor.tsx:223`, en `wallClass`, sustituye `transition-[background-color,color,transform] duration-200 ease-out active:scale-95` por `pressable [--press-scale:0.92]` y quita `motion-reduce:transition-none` (con movimiento reducido el color debe seguir cambiando; la escala ya la quita la utilidad).
+5. En `docs/motion.md` (§3 «Distancias y escalas» o §4) y en `plans/000-motion-system.md`, menciona la utilidad `pressable` y `--press-scale`.
 
 ## Boundaries
 
-- Solo esas tres ediciones. No añadas pulsación a tarjetas, enlaces de navegación, pestañas ni al selector de idioma: se pulsan muchas veces y el cambio de color basta.
-- No cambies colores ni tamaños.
-- No uses `transition-all`.
+- Solo esas ediciones. No añadas pulsación a tarjetas, enlaces de navegación, pestañas ni al selector de idioma.
+- No cambies colores ni tamaños. No uses `transition-all`.
 - Si el código no coincide, PARA e informa.
 
 ## Verification
 
-- **Mechanical**: `cd web && pnpm lint && pnpm typecheck && pnpm test`: todo en verde (si hay tests de snapshot de `Button`, actualízalos solo por este cambio de clases).
+- **Mechanical**: `cd web && pnpm lint && pnpm typecheck && pnpm test` en verde; el CSS compilado contiene `.pressable` y `.pressable:active` en la capa de utilidades, y la regla de movimiento reducido.
 - **Feel check** (teléfono real o emulación táctil):
-  - Mantén pulsado «Ver estimación» o «Entrar»: el botón se encoge apenas (3 %) al tocar y vuelve al soltar, sin rebote; se percibe como respuesta, no como animación.
-  - Un enlace con estilo `link` no se encoge.
-  - Un botón `disabled` no reacciona.
-  - En el editor de estancia, pulsa una pared: ahora la reducción es suave en lugar de saltar. Al 10 % en DevTools → Animations se ve la transición de `scale`.
-  - Con `prefers-reduced-motion: reduce`: no hay escala en los botones; el color sí cambia.
+  - Mantén pulsado «Ver o meu preço» o «Entrar»: se hunde enseguida un 4 %; al soltar vuelve con un rebote ligero.
+  - Un enlace con estilo `link` no se encoge. Un botón `disabled` no reacciona.
+  - En el editor de estancia, pulsa una pared: se hunde (0.92) de forma suave y vuelve con rebote; el cambio a amarillo sigue siendo rápido.
+  - El hover en escritorio cambia el color en 150 ms, sin rebote.
+  - Con `prefers-reduced-motion: reduce`: no hay escala; el color sí cambia.
 - **Done when**:
-  - [ ] Todos los `Button`, salvo `link`, se encogen a 0.97 en 160 ms al pulsar.
-  - [ ] Las paredes animan su escala en lugar de saltar.
+  - [ ] Todos los `Button`, salvo `link`, se hunden a 0.96 en 120 ms y vuelven con resorte en 360 ms.
+  - [ ] Las paredes se hunden a 0.92 con transición y vuelven con resorte.
+  - [ ] Los colores mantienen su transición de 150 ms sin resorte.
   - [ ] Con movimiento reducido no hay escala; el color sí cambia.
   - [ ] `pnpm lint && pnpm typecheck && pnpm test` en verde.
   - [ ] Entrada en `CHANGELOG.md` bajo **Sin publicar**.
