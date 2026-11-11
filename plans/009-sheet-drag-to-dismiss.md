@@ -1,12 +1,12 @@
 # 009 — Arrastrar hacia abajo para cerrar la hoja en móvil
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: MEDIUM
 - **Category**: Interruptibility (gesto)
-- **Estimated scope**: 1 archivo (`web/src/components/ui/sheet.tsx`), unas 50 líneas
+- **Estimated scope**: 1 archivo (`web/src/components/ui/sheet.tsx`), unas 45 líneas
 - **Depends on**: 001, 002 y 003 (la salida tiene que existir y ser vertical antes de añadir el gesto)
-- **Revisión pendiente (antes de ejecutar)**: `moveDrag` no debe llamar a `setOffset` en cada `pointermove` (un render de React por fotograma; ver `.agents/skills/animation-performance/SKILL.md`, «React: Don't Animate Through State»). Reescribir los pasos 2–3 para que el arrastre escriba `content.current.style.translate` directamente y solo el soltar toque el estado. Las duraciones pasan a 380/240 ms (sistema, revisión 2).
+- **Revisión aplicada (2026-11-11)**: el arrastre escribe en `content.current.style` (sin `setState` por fotograma, ver `.agents/skills/animation-performance/SKILL.md`); la vuelta usa la clase `transition-[translate]` con la curva y duración de `drawerMotion` (revisión 2: 380/240 ms).
 - **Sistema**: `plans/000-motion-system.md` §5 «Arrastrar la hoja», §6, §7 y §8.
 
 ## Problem
@@ -37,72 +37,14 @@ En una PWA móvil, arrastrar hacia abajo es la forma natural de cerrar una hoja.
 
 ## Steps
 
-1. En `web/src/components/ui/sheet.tsx`, cambia la importación de React a
-   `import { useRef, useState, type PointerEvent, type ReactNode } from "react";`
-   y añade bajo las importaciones:
-
-```tsx
-/** Release faster than this (px/ms) or further than this fraction of the height and the sheet closes. */
-const DISMISS_VELOCITY = 0.11;
-const DISMISS_FRACTION = 0.25;
-```
-
-2. Dentro de `Sheet`, antes del `return`, añade:
-
-```tsx
-  const content = useRef<HTMLDivElement>(null);
-  const drag = useRef<{ y: number; time: number } | null>(null);
-  const [offset, setOffset] = useState(0);
-  const [dragging, setDragging] = useState(false);
-
-  const startDrag = (event: PointerEvent<HTMLDivElement>) => {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
-    if ((event.target as Element).closest("button, a, input")) return;
-    drag.current = { y: event.clientY, time: event.timeStamp };
-    event.currentTarget.setPointerCapture(event.pointerId);
-    setDragging(true);
-  };
-  const moveDrag = (event: PointerEvent<HTMLDivElement>) => {
-    if (!drag.current) return;
-    const dy = event.clientY - drag.current.y;
-    // Downwards follows the finger; upwards resists more the further it goes.
-    setOffset(dy >= 0 ? dy : -Math.sqrt(-dy) * 2);
-  };
-  const endDrag = (event: PointerEvent<HTMLDivElement>) => {
-    const start = drag.current;
-    drag.current = null;
-    setDragging(false);
-    if (!start) return;
-    const dy = event.clientY - start.y;
-    const velocity = dy / Math.max(1, event.timeStamp - start.time);
-    const height = content.current?.offsetHeight ?? Infinity;
-    if (event.type === "pointerup" && dy > 0 && (velocity > DISMISS_VELOCITY || dy > height * DISMISS_FRACTION)) {
-      onOpenChange(false); // keep the offset: the exit animation starts from here
-      return;
-    }
-    setOffset(0);
-  };
-```
-
-3. En `Dialog.Content`, añade `ref={content}` y
-   `style={offset !== 0 ? { translate: \`0 ${offset}px\` } : undefined}`,
-   y añade a su `cn(…)` el elemento
-   `!dragging && "transition-[translate] motion-reduce:transition-none"`.
-   El `ease-drawer` y la duración ya los aporta `drawerMotion` (plan 003).
-
-4. Envuelve el asa y la fila del título (líneas 37-47 actuales: el `div` del asa y el `div` de la cabecera) en un único contenedor:
-
-```tsx
-          <div
-            onPointerDown={startDrag}
-            onPointerMove={moveDrag}
-            onPointerUp={endDrag}
-            onPointerCancel={endDrag}
-            className="max-md:touch-none max-md:cursor-grab"
-          >
-            {/* the existing handle div and header div, unchanged */}
-          </div>
-```
+1. En `web/src/components/ui/sheet.tsx`, importa `useRef` y el tipo `PointerEvent` de React y define a nivel de módulo `DISMISS_VELOCITY = 0.11` (px/ms) y `DISMISS_FRACTION = 0.25`.
+2. Dentro de `Sheet`: `content = useRef<HTMLDivElement>(null)` y `drag = useRef<{ y: number; time: number } | null>(null)`. Ningún estado de React para el arrastre.
+3. Un helper `place(offset, follow)` escribe en el elemento: `style.transition = follow ? "none" : ""` y `style.translate = offset === 0 ? "" : \`0 ${offset}px\``.
+4. `startDrag` (pointerdown): sale si no es `(max-width: 767px)` o si el objetivo está dentro de `button, a, input`; guarda `{ y, time }` y captura el puntero.
+5. `moveDrag` (pointermove): `place(dy >= 0 ? dy : -Math.sqrt(-dy) * 2, true)`.
+6. `endDrag` (pointerup y pointercancel): con `pointerup`, `dy > 0` y (`dy / ms > DISMISS_VELOCITY` o `dy > altura × DISMISS_FRACTION`) quita la transición en línea y llama a `onOpenChange(false)` **sin** borrar el desplazamiento, para que la salida parta de ahí; en cualquier otro caso `place(0, false)`.
+7. `Dialog.Content` recibe `ref={content}` y, después de `drawerMotion`, las clases `transition-[translate] motion-reduce:transition-none` (la vuelta usa `ease-drawer` y la duración del estado, ya fijadas por `drawerMotion`).
+8. Envuelve el asa y la fila del título en un `div` con los cuatro manejadores de puntero y `max-md:cursor-grab max-md:touch-none`.
 
 ## Boundaries
 

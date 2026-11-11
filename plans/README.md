@@ -17,7 +17,7 @@ Dirección: **preciso y vivo, con una pincelada** (revisión 2 del sistema: se n
 | 006 | [Toasts con las duraciones del documento](006-toast-durations.md) | MEDIUM | — | DONE |
 | 007 | [Skeletons en área admin y listas](007-skeleton-loading.md) | MEDIUM | — (alcance confirmado: admin y listas) | DONE |
 | 008 | [Feedback de pulsación en botones y paredes](008-press-feedback.md) | MEDIUM | 001 | DONE |
-| 009 | [Arrastrar para cerrar la hoja](009-sheet-drag-to-dismiss.md) | MEDIUM | 001, 002, 003 | TODO |
+| 009 | [Arrastrar para cerrar la hoja](009-sheet-drag-to-dismiss.md) | MEDIUM | 001, 002, 003 | DONE |
 
 > **Revisión 2 del sistema (2026-11-11, «vivo y funcional»)**: 000 y 001 ya están actualizados. Los valores citados en el texto de 002–009 (duraciones, escalas) se actualizan a la revisión 2 justo antes de ejecutar cada plan; el código usa siempre las constantes de `motion.ts` y los tokens, así que manda el sistema.
 
