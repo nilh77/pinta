@@ -81,6 +81,108 @@
   --duration-layer-out: 180ms;
   --duration-drawer-in: 380ms;
   --duration-drawer-out: 240ms;
+  --duration-morph-in: 380ms; /* header panel growing out of its control */
+  --duration-morph-settle: 640ms; /* its spring settle, scale 0.94 to 1 */
+  --duration-morph-out: 220ms; /* draining back into the control */
+  --duration-morph-shift-open: 240ms; /* neighbours: the clip looks done at ~180 ms, they arrive with it */
+  --duration-morph-shift-close: 220ms; /* neighbours return with the drain */
+}
+
+/*
+ * Header panels grow out of their own control and drain back into it (docs/motion.md, «Abrir un control de la
+ * cabecera»; lib/use-trigger-morph.ts sets the --morph-* variables). Unlayered on purpose: these rules must win over
+ * the utilities layer, including animate-in / animate-out.
+ */
+.morph-header:has([data-morph-trigger][data-state="open"], [data-morph-trigger][data-morph-closing]) {
+  z-index: 60;
+}
+.morph-header > * {
+  transition: opacity 200ms ease-out;
+}
+[data-morph-cluster] {
+  --morph-shift-time: var(--duration-morph-shift-close);
+}
+[data-morph-cluster]:has([data-morph-trigger][data-state="open"]) {
+  --morph-shift-time: var(--duration-morph-shift-open);
+}
+[data-morph-cluster] > * {
+  transition:
+    transform var(--morph-shift-time) var(--ease-out),
+    opacity 200ms ease-out,
+    background-color 200ms ease-out,
+    box-shadow 200ms ease-out,
+    backdrop-filter 200ms ease-out;
+}
+/* The open control becomes the panel's corner icon: it drops its own glass so it is not a circle on a circle. */
+[data-morph-trigger][data-state="open"] {
+  background-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+[data-morph-yield] {
+  opacity: 0;
+  pointer-events: none;
+}
+.morph-popover[data-state="open"] {
+  animation:
+    popover-morph-in var(--duration-morph-in) var(--ease-out) backwards,
+    popover-morph-settle var(--duration-morph-settle) var(--ease-spring) backwards;
+}
+.morph-popover[data-state="closed"] {
+  animation: popover-morph-out var(--duration-morph-out) var(--ease-out) forwards;
+}
+/* The open state reaches 2rem past the panel's edges so its shadow is not clipped. */
+@keyframes popover-morph-in {
+  from {
+    clip-path: inset(var(--morph-inset, 0px) round var(--morph-seed-r, 0px));
+    opacity: 0.5;
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(-2rem round calc(var(--morph-r, 0px) + 2rem));
+    opacity: 1;
+  }
+}
+@keyframes popover-morph-settle {
+  from {
+    transform: scale(0.94);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes popover-morph-out {
+  from {
+    clip-path: inset(-2rem round calc(var(--morph-r, 0px) + 2rem));
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(var(--morph-inset, 0px) round var(--morph-seed-r, 0px));
+    opacity: 0;
+  }
+}
+@keyframes morph-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .morph-popover[data-state="open"] {
+    animation: morph-fade 120ms ease-out backwards;
+  }
+  .morph-popover[data-state="closed"] {
+    animation: morph-fade 120ms ease-in reverse forwards;
+  }
+  [data-morph-cluster] > *,
+  .morph-header > * {
+    transition: none;
+  }
 }
 
 /*
