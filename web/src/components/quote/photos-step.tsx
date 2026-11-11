@@ -202,7 +202,7 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
   const done = list.some((f) => f.status === "done");
 
   return (
-    <section aria-labelledby={`${id}-title`} className={cn("rounded-2xl border bg-card p-3.5", list.length === 0 ? "border-dashed border-[#7c918b]" : "border-border")}>
+    <section aria-labelledby={`${id}-title`} className={cn("rounded-2xl border bg-card p-3.5", list.length === 0 ? "border-dashed border-line-dashed" : "border-border")}>
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -223,7 +223,7 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
       </div>
 
       {damage && (
-        <p className="mt-2.5 flex items-start gap-2 rounded-xl bg-[#fffbeb] px-3 py-2.5 text-xs text-[#4a3700]">
+        <p className="mt-2.5 flex items-start gap-2 rounded-xl bg-accent-wash px-3 py-2.5 text-xs text-accent-ink-strong">
           <Droplets aria-hidden="true" className="mt-px size-4 shrink-0 text-accent-ink" />
           {t("damageHint")}
         </p>
@@ -232,9 +232,9 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
       {list.length > 0 && (
         <ul className="mt-3 grid grid-cols-5 gap-1.5">
           {list.map((file) => (
-            <li key={file.id} className="relative aspect-square overflow-hidden rounded-[10px] bg-[#dce8e4]">
+            <li key={file.id} className="relative aspect-square overflow-hidden rounded-[10px] bg-surface-sunken">
               {file.kind === "video" ? (
-                <span className="flex size-full items-center justify-center bg-foreground text-white">
+                <span className="flex size-full items-center justify-center bg-foreground text-background">
                   <Play aria-hidden="true" className="size-5 fill-current" />
                 </span>
               ) : file.thumbnail ? (
@@ -252,7 +252,7 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
                 </span>
               )}
               {file.status === "error" && (
-                <button type="button" onClick={() => onRetry(fileKey, file)} aria-label={t("retry", { name: file.name })} className="absolute inset-0 flex items-center justify-center bg-destructive/80 text-white focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none">
+                <button type="button" onClick={() => onRetry(fileKey, file)} aria-label={t("retry", { name: file.name })} className="absolute inset-0 flex items-center justify-center bg-destructive/80 text-destructive-foreground focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none">
                   <RotateCcw aria-hidden="true" className="size-5" />
                 </button>
               )}
@@ -261,7 +261,7 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
                   type="button"
                   onClick={() => onRemove(fileKey, file)}
                   aria-label={t("remove", { name: file.name })}
-                  className="absolute top-0.5 right-0.5 flex size-6 items-center justify-center rounded-full bg-foreground/70 text-white focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none"
+                  className="absolute top-0.5 right-0.5 flex size-6 items-center justify-center rounded-full bg-foreground/70 text-background focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none"
                 >
                   <X aria-hidden="true" className="size-3.5" />
                 </button>

@@ -21,11 +21,11 @@ export const STATUS_TONE: Record<JobStatus, StatusTone> = {
 };
 
 export const TONE_CLASSES: Record<StatusTone, string> = {
-  waiting: "bg-primary-soft text-[#0b5f59]",
+  waiting: "bg-primary-soft text-primary-ink",
   action: "bg-accent-soft text-accent-ink",
-  progress: "bg-[#e0ecff] text-[#1d4ed8]",
+  progress: "bg-info-soft text-info",
   done: "bg-primary text-primary-foreground",
-  stopped: "bg-[#eef1f0] text-muted-foreground",
+  stopped: "bg-neutral-soft text-muted-foreground",
 };
 
 /** Every status in the order of docs/states.md, for filters and the admin board. */

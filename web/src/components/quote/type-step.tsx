@@ -113,7 +113,7 @@ function TypeChooser({ draft, info, update, reset }: QuoteContext) {
               aria-hidden="true"
               className={cn(
                 "flex size-[22px] shrink-0 items-center justify-center rounded-full border-2",
-                selected === type ? "border-primary bg-primary text-primary-foreground" : "border-[#b9c9c4]",
+                selected === type ? "border-primary bg-primary text-primary-foreground" : "border-line-soft",
               )}
             >
               {selected === type && <Check className="size-3" strokeWidth={3.2} />}

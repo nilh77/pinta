@@ -159,7 +159,7 @@ export function RoomEditor({ element, onChange, errors, catalog, info }: RoomEdi
                 aria-hidden="true"
                 className={cn(
                   "flex size-5 items-center justify-center rounded-full border-2",
-                  element.paintId === paint.id ? "border-primary bg-primary text-primary-foreground" : "border-[#b9c9c4]",
+                  element.paintId === paint.id ? "border-primary bg-primary text-primary-foreground" : "border-line-soft",
                 )}
               >
                 {element.paintId === paint.id && <Check className="size-3" strokeWidth={3.2} />}
@@ -220,7 +220,7 @@ function TopView({ element, onChange, info, error }: { element: DraftElement; on
     return metres > 0 ? `${WALLS[index]} · ${formatMetres(locale, metres)}` : WALLS[index];
   };
   const wallClass =
-    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold pressable [--press-scale:0.92] focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none aria-pressed:bg-accent aria-pressed:text-accent-foreground bg-[#e3ebe8] text-muted-foreground";
+    "absolute flex items-center justify-center rounded-md text-[11px] font-semibold pressable [--press-scale:0.92] focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none aria-pressed:bg-accent aria-pressed:text-accent-foreground bg-wall-off text-muted-foreground";
 
   return (
     <section aria-labelledby={`${element.id}-walls`} className="flex flex-col gap-3">
@@ -260,7 +260,7 @@ function TopView({ element, onChange, info, error }: { element: DraftElement; on
             type="button"
             aria-pressed={element.ceiling}
             onClick={toggleCeiling}
-            className="absolute inset-9 flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-[#b9c9c4] bg-card text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-out focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none motion-reduce:transition-none aria-pressed:border-solid aria-pressed:border-primary aria-pressed:bg-primary-soft aria-pressed:text-primary"
+            className="absolute inset-9 flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-line-soft bg-card text-muted-foreground transition-[background-color,border-color,color] duration-200 ease-out focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none motion-reduce:transition-none aria-pressed:border-solid aria-pressed:border-primary aria-pressed:bg-primary-soft aria-pressed:text-primary"
           >
             <span className="text-sm font-semibold">{t("ceiling")}</span>
             <span className="text-xs tabular-nums">{element.ceiling && area ? formatArea(locale, area.ceiling) : t("notPainted")}</span>

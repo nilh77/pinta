@@ -7,13 +7,13 @@ import { receiptUrl, type Payment } from "@/lib/payments/use-payments";
 import { cn } from "@/lib/utils";
 
 const STATUS_CLASSES: Record<Payment["status"], string> = {
-  pending: "bg-[#eef1f0] text-muted-foreground",
+  pending: "bg-neutral-soft text-muted-foreground",
   requires_action: "bg-accent-soft text-accent-ink",
-  succeeded: "bg-primary-soft text-[#0b5f59]",
+  succeeded: "bg-primary-soft text-primary-ink",
   failed: "bg-destructive/10 text-destructive",
-  cancelled: "bg-[#eef1f0] text-muted-foreground",
-  refunded: "bg-[#e0ecff] text-[#1d4ed8]",
-  partially_refunded: "bg-[#e0ecff] text-[#1d4ed8]",
+  cancelled: "bg-neutral-soft text-muted-foreground",
+  refunded: "bg-info-soft text-info",
+  partially_refunded: "bg-info-soft text-info",
 };
 
 /** Payments of a job with status, method, refunds and the receipt (client screen 10 and admin Pagos tab). */

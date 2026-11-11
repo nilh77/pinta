@@ -159,7 +159,7 @@ function EstimateView({ draft, catalog, info, update }: QuoteContext) {
 
 function Badge({ children, tone = "primary" }: { children: React.ReactNode; tone?: "primary" | "accent" }) {
   return (
-    <li className={cn("rounded-[10px] px-2.5 py-1 text-xs font-semibold", tone === "accent" ? "bg-accent-soft text-accent-ink" : "bg-primary-soft text-[#0b5f59]")}>
+    <li className={cn("rounded-[10px] px-2.5 py-1 text-xs font-semibold", tone === "accent" ? "bg-accent-soft text-accent-ink" : "bg-primary-soft text-primary-ink")}>
       {children}
     </li>
   );
@@ -167,7 +167,7 @@ function Badge({ children, tone = "primary" }: { children: React.ReactNode; tone
 
 function Note({ icon: Icon, tone = "primary", children }: { icon: typeof Clock; tone?: "primary" | "accent"; children: React.ReactNode }) {
   return (
-    <div className={cn("mt-2 flex items-start gap-3 rounded-2xl border p-3.5", tone === "accent" ? "border-[#f2d27a] bg-[#fffbeb] text-[#4a3700]" : "border-border bg-card")}>
+    <div className={cn("mt-2 flex items-start gap-3 rounded-2xl border p-3.5", tone === "accent" ? "border-accent-line bg-accent-wash text-accent-ink-strong" : "border-border bg-card")}>
       <Icon aria-hidden="true" className={cn("mt-px size-5 shrink-0", tone === "accent" ? "text-accent-ink" : "text-primary")} />
       <p className="text-[13px] leading-relaxed">{children}</p>
     </div>

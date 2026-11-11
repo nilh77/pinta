@@ -1,8 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Palette B (design canvas, boards Inicio and Cuenta). Light only in the MVP. */
+/* dark: follows the .dark class on <html> (the theme control), not only the system preference. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Palette B (design canvas, boards Inicio and Cuenta), light and dark (plans/011-dark-mode.md). Dark keeps the brand's
+ * teal hue in the neutrals; every text pair is measured at 4.5:1 or more.
+ */
 :root {
+  color-scheme: light;
   --background: #f5faf8;
   --foreground: #10201d;
   --card: #ffffff;
@@ -26,6 +33,61 @@
   --input: #d7e3df;
   --ring: #0f766e;
   --radius: 0.75rem;
+
+  /* Roles that used to be hard-coded in components. */
+  --destructive-foreground: #ffffff;
+  --primary-ink: #0b5f59; /* strong teal text on primary-soft */
+  --line-soft: #b9c9c4; /* outlines of options and swatches */
+  --line-dashed: #7c918b; /* dashed outlines of empty cards */
+  --wall-off: #e3ebe8; /* an unpainted wall in the room editor */
+  --surface-sunken: #dce8e4; /* photo placeholders */
+  --accent-wash: #fffbeb; /* yellow notices */
+  --accent-line: #f2d27a;
+  --accent-ink-strong: #4a3700;
+  --accent-foreground-soft: #3d3000; /* secondary text on the yellow band: the band is yellow in both modes */
+  --info-soft: #e0ecff;
+  --info: #1d4ed8;
+  --neutral-soft: #eef1f0;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #0d1715;
+  --foreground: #e4efec;
+  --card: #14211e;
+  --card-foreground: #e4efec;
+  --popover: #14211e;
+  --popover-foreground: #e4efec;
+  --primary: #3cbdb0;
+  --primary-hover: #5ccabf;
+  --primary-foreground: #062421;
+  --primary-soft: #123a35;
+  --secondary: #123a35;
+  --secondary-foreground: #8fe0d5;
+  --accent: #f2b705;
+  --accent-foreground: #10201d;
+  --accent-soft: #3b300b;
+  --accent-ink: #f5d36b;
+  --muted: #18302c;
+  --muted-foreground: #9fb3ae;
+  --destructive: #f07065;
+  --border: #263a35;
+  --input: #2c403b;
+  --ring: #3cbdb0;
+
+  --destructive-foreground: #0d1715;
+  --primary-ink: #8fe0d5;
+  --line-soft: #3d524c;
+  --line-dashed: #6f8681;
+  --wall-off: #22332f;
+  --surface-sunken: #1c2b27;
+  --accent-wash: #2a2208;
+  --accent-line: #7a6418;
+  --accent-ink-strong: #f8dd88;
+  --accent-foreground-soft: #3d3000;
+  --info-soft: #172a4a;
+  --info: #8fb4ff;
+  --neutral-soft: #1f2a28;
 }
 
 @theme inline {
@@ -51,6 +113,19 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-primary-ink: var(--primary-ink);
+  --color-line-soft: var(--line-soft);
+  --color-line-dashed: var(--line-dashed);
+  --color-wall-off: var(--wall-off);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-accent-wash: var(--accent-wash);
+  --color-accent-line: var(--accent-line);
+  --color-accent-ink-strong: var(--accent-ink-strong);
+  --color-accent-foreground-soft: var(--accent-foreground-soft);
+  --color-info-soft: var(--info-soft);
+  --color-info: var(--info);
+  --color-neutral-soft: var(--neutral-soft);
   --font-sans: var(--font-inter), system-ui, sans-serif;
   --font-display: var(--font-jakarta), system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
@@ -249,9 +324,9 @@
 }
 
 .dark {
-  --canvas: oklch(from var(--background) calc(l * 0.62) calc(c * 0.9) h);
-  --glow-a: oklch(from var(--primary) 0.74 c h);
-  --glow-b: oklch(from var(--glow-a) l c calc(h + 60));
+  --canvas: #0a1311; /* dark --background, darker: L x 0.9 */
+  --glow-a: oklch(0.74 0.0861 186.4); /* same glows as light, over a dark canvas */
+  --glow-b: oklch(0.74 0.0861 246.4);
   --backdrop-wash: 14%;
   --glass-hairline: color-mix(in oklab, var(--foreground) 9%, transparent);
   --glass-sheen: oklch(1 0 0 / 0.07);

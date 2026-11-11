@@ -90,7 +90,7 @@ function RoomCard({
     <div
       className={cn(
         "group relative flex rounded-2xl border-[1.5px] transition-colors motion-reduce:transition-none",
-        element.described && !invalid ? "border-primary bg-primary-soft" : "border-dashed border-[#7c918b] bg-card",
+        element.described && !invalid ? "border-primary bg-primary-soft" : "border-dashed border-line-dashed bg-card",
         invalid && "border-solid border-destructive bg-destructive/5",
         selectedId === element.id && "ring-[3px] ring-ring/40",
         wide ? "min-h-[72px] items-center" : "min-h-[104px]",
@@ -114,7 +114,7 @@ function RoomCard({
           </span>
           <span className={cn("mt-0.5 flex items-center gap-1.5 text-xs", invalid ? "font-medium text-destructive" : "text-muted-foreground")}>
             {element.described && !invalid && (
-              <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full border border-[#b9c9c4]" style={{ background: PAINT_COLOURS[paintIndex % PAINT_COLOURS.length] }} />
+              <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full border border-line-soft" style={{ background: PAINT_COLOURS[paintIndex % PAINT_COLOURS.length] }} />
             )}
             <span className="truncate">{summary}</span>
             {element.described && !invalid && <span className="sr-only">, {paintName}</span>}
@@ -181,7 +181,7 @@ function AddMenu({ catalog, onAddRoom, onAddSurface, disabled }: RoomSchemaProps
     <DropdownMenu.Root>
       <DropdownMenu.Trigger
         disabled={disabled}
-        className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-accent bg-[#fffbeb] text-sm font-semibold text-accent-ink hover:bg-accent-soft focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl border-[1.5px] border-dashed border-accent bg-accent-wash text-sm font-semibold text-accent-ink hover:bg-accent-soft focus-visible:ring-[3px] focus-visible:ring-ring/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Plus aria-hidden="true" className="size-[18px]" strokeWidth={2.2} />
         {t("add")}

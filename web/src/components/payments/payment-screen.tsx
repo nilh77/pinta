@@ -199,7 +199,7 @@ function MbWayCountdown() {
     return () => clearInterval(timer);
   }, []);
   return (
-    <div role="status" className="flex items-center gap-3 rounded-xl bg-primary-soft px-3.5 py-3 text-sm text-[#0b5f59]">
+    <div role="status" className="flex items-center gap-3 rounded-xl bg-primary-soft px-3.5 py-3 text-sm text-primary-ink">
       <Smartphone aria-hidden="true" className="size-6 shrink-0" />
       <span>
         <strong className="block">{t("mbWay.title")}</strong>

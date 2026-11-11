@@ -20,7 +20,7 @@ export function ForgotPasswordForm() {
   if (forgot.isSuccess) {
     return (
       <div role="status" className="flex flex-col gap-4">
-        <p className="flex items-start gap-2.5 rounded-xl bg-primary-soft px-3.5 py-3 text-sm text-[#0b5f59]">
+        <p className="flex items-start gap-2.5 rounded-xl bg-primary-soft px-3.5 py-3 text-sm text-primary-ink">
           <MailCheck aria-hidden="true" className="mt-0.5 size-[18px] shrink-0 text-primary" />
           {t("sent", { email: forgot.variables.email })}
         </p>
