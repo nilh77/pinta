@@ -73,6 +73,17 @@ Las cadenas de clases viven en `web/src/components/ui/motion.ts`. Es la única a
 
 Todas incluyen `motion-fade-only` (§7), salvo los velos, que ya solo hacen fundido.
 
+### Material de cristal
+
+La cabecera, la barra lateral del admin y las capas (menús, diálogos, hoja) son de cristal esmerilado sobre un fondo fijo con dos brillos suaves (`canvas-backdrop` en `body`: el verde azulado de la marca arriba a la izquierda y ese tono girado 60° abajo a la derecha). Sobre un fondo liso el cristal se vería gris; los brillos le dan algo que desenfocar.
+
+- `glass` (utilidad en `globals.css`): `backdrop-filter: blur() saturate()`, borde transparente y el filo como **sombras interiores** (un brillo arriba y un hilo tono sobre tono), compatibles con `shadow-*` y `ring-*`.
+- Siempre con un relleno translúcido de token: `bg-glass-chrome` (cabecera y barra lateral, 48 %), `bg-glass-control` (controles redondos con texto o icono, 55 %, nunca más transparente) y `bg-glass-fill` (capas, 64 %, con el blur de capa de 14 px). Sombra de la cabecera: `shadow-chrome`.
+- El cristal no añade color propio: el que se ve viene de lo que hay detrás.
+- Con `prefers-reduced-transparency: reduce` los rellenos suben al 92 % y el blur a 20 px: casi opacos.
+- Contraste: el texto sobre cualquier cristal cumple 4,5:1 medido sobre la parte más clara del fondo.
+- El proyecto solo tiene modo claro; los tokens de `.dark` están preparados para cuando exista.
+
 ## 5. Coreografía por evento
 
 Línea temporal de cada evento con varias piezas en movimiento (formato de `choreograph`). Lo que no aparece en una tabla no se mueve.
@@ -115,6 +126,22 @@ Solo fundido al abrir (340 ms, `ease-out`). El cierre es instantáneo a propósi
 
 Un solo elemento en movimiento: el menú (entra en 260 ms con resorte desde su botón; sale en 140 ms). Las opciones aparecen todas a la vez y el resaltado es instantáneo (se recorre con teclado). Al elegir «Eliminar», la tarjeta desaparece y el menú con ella: no hay salida que coordinar.
 
+### Abrir un control de la cabecera (idioma, cuenta)
+
+El panel no aparece como una caja aparte: **crece desde el círculo de su control** y, al cerrarse, **vuelve a él**. Los vecinos se apartan en el mismo movimiento (*continuity transition*).
+
+| Elemento | Rol | Empieza | Duración | Movimiento | Relación |
+|---|---|---|---|---|---|
+| Panel | Protagonista | 0 ms | 380 ms (`ease-out`) + 640 ms de asentamiento (`ease-spring`) | `clip-path` desde el rectángulo y radio exactos del control hasta el panel completo (2 rem más allá, para no cortar la sombra); escala 0.94 → 1 | — |
+| Control abierto | Apoyo | 0 ms | 200 ms | pierde su propia superficie (fondo, sombra y blur): queda como el icono de la esquina del panel | Juntos |
+| Controles anteriores | Apoyo | 0 ms | 240 ms (`ease-out`) | se deslizan juntos a la izquierda hasta quedar a 8 px del panel | Juntos: llegan cuando el recorte parece terminado (~180 ms) |
+| Controles posteriores | Apoyo | 0 ms | 240 ms | a la derecha si el panel los tapa y hay sitio | Juntos |
+| Piezas tapadas sin sitio (móvil) | Decoración | 0 ms | 200 ms | se desvanecen (`data-morph-yield`) | Juntos |
+
+Al cerrar, el panel vuelve en 220 ms y los vecinos regresan en esos mismos 220 ms. Pasar de un panel abierto a otro control abre el siguiente sin cerrar y reabrir (menús no modales); un control que aún vuelve a su sitio lleva el panel nuevo con él. Mientras un panel está abierto o volviendo, la cabecera sube por encima de las capas (`z-index: 60`).
+
+Implementación: `MorphMenuContent` (`components/ui/dropdown-menu.tsx`) con el hook `useTriggerMorph` (`lib/use-trigger-morph.ts`); el CSS de `.morph-popover` y `[data-morph-cluster]` está en `globals.css`, fuera de capas. Con movimiento reducido: fundidos de 120 ms y vecinos sin transición.
+
 ### Toasts
 
 Los gestiona Sonner por dentro (entrada, apilado, deslizar para descartar, `prefers-reduced-motion`). No se tocan sus animaciones; solo las duraciones de permanencia: éxito 3 s, deshacer 5 s, error hasta cerrarlo (`docs/screens.md`, estados globales).
@@ -150,6 +177,7 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 - La escala al pulsar desaparece con `motion-reduce:active:scale-100`; el cambio de color se mantiene.
 - Los skeletons dejan de latir (`motion-reduce:animate-none`), pero siguen visibles.
 - El arrastre sigue funcionando (lo controla el usuario); la vuelta a su sitio es instantánea.
+- Transparencia reducida: los cristales pasan a casi opacos (rellenos al 92 %).
 - Ninguna animación cambia el orden de foco ni lo retrasa; los textos de carga se anuncian una vez (`role="status"` + `sr-only`).
 - Fuera de esta tanda: el scroll suave (`scrollIntoView`) debe pasar a instantáneo con movimiento reducido, y los spinners deben seguir una sola regla.
 
@@ -158,7 +186,8 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 - Solo `opacity`, `transform`, `translate` y `scale`. La barra de subida (`width`) queda anotada para una tanda posterior.
 - Sin `transition-all`, sin `will-change` global y sin animaciones de layout.
 - El arrastre escribe `translate` directamente en `ref.current.style` de un único elemento: sin `setState` por fotograma (React re-renderizaría 60–120 veces por segundo) y nunca una variable CSS en un padre (recalcularía estilos de todos los hijos).
-- Sin `filter: blur` en transiciones.
+- Sin `filter: blur` en transiciones. El `backdrop-filter` del cristal es estático (no se anima) y solo está en la cabecera, la barra lateral y las capas abiertas.
+- El fondo con brillos es un pseudo-elemento fijo, no `background-attachment: fixed`, para que el scroll no lo repinte.
 - `ease-spring` usa `linear()` de CSS (Chrome 113+, Safari e iOS 17.2+, Firefox 112+). Sin soporte, la animación que lo usa queda inválida y la capa aparece sin animar: no se rompe nada.
 - En Tailwind v4, `scale-*` y `translate-*` usan las propiedades `scale` y `translate`, no `transform`. Cualquier `transition-[…]` que deba animarlas tiene que nombrarlas: `transition-[…,scale]`. Por no hacerlo, las paredes del editor saltan hoy al pulsar.
 
