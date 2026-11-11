@@ -33,7 +33,13 @@ export function AppHeader({
   plainLeading?: boolean;
 }) {
   return (
-    <header className={cn("morph-header pointer-events-none z-20 flex items-center gap-2 p-4", plainLeading ? "relative" : "sticky top-0")}>
+    <header
+      className={cn(
+        "morph-header pointer-events-none z-20 flex items-center gap-2",
+        // The landing header sits in the page column as before (max-w-6xl, px-4/6, py-3); the others float at 16 px.
+        plainLeading ? "relative mx-auto w-full max-w-6xl px-4 py-3 sm:px-6" : "sticky top-0 p-4",
+      )}
+    >
       <div
         className={cn(
           "pointer-events-auto flex min-w-0 items-center gap-1",

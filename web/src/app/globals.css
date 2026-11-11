@@ -232,15 +232,15 @@
   --canvas: oklch(0.955 0.0062 178.6); /* from --muted-foreground: L 0.955, C x 0.3 */
   --glow-a: oklch(0.74 0.0861 186.4); /* from --primary: L 0.74 */
   --glow-b: oklch(0.74 0.0861 246.4); /* --glow-a rotated 60deg in hue */
-  --backdrop-wash: 10%;
+  --backdrop-wash: 18%;
 
   --glass-blur: 7px; /* header and sidebar */
   --glass-overlay-blur: 14px; /* menus, dialogs, sheets: they carry text over the page */
   --glass-saturate: 1.8;
-  --glass-chrome: 48%; /* fill for the header pieces and the sidebar */
-  --glass-fill: 64%; /* fill for menus and other layers without a veil */
-  --glass-fill-veiled: 80%; /* dialogs and sheets sit on a dark veil: teal text needs 80% to keep 4.5:1 */
-  --glass-control: 55%; /* small chrome with text or an icon: never more see-through than this */
+  --glass-chrome: 28%; /* fill for the header pieces and the sidebar: dark text keeps 5.2:1 over a teal button */
+  --glass-fill: 52%; /* fill for menus and other layers without a veil: teal text keeps 5.2:1 */
+  --glass-fill-veiled: 64%; /* dialogs and sheets sit on a 20% veil: teal text keeps 4.6:1 */
+  --glass-control: 36%; /* round header controls with a code or initials: dark text keeps 6.1:1 */
   --glass-hairline: color-mix(in oklab, var(--foreground) 7%, transparent);
   --glass-sheen: oklch(1 0 0 / 0.7);
 

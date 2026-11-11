@@ -70,7 +70,7 @@ export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", drawerOverlayMotion)} style={overlayStyle(open)} />
+        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/20", drawerOverlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
           {...returnFocus}
           ref={content}

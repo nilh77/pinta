@@ -44,7 +44,7 @@ export function FormDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
+        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/20", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
           {...returnFocus}
           className={cn(

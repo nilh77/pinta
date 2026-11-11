@@ -17,7 +17,7 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 #### Añadido
 
 - Cabecera nueva, la misma en todas las áreas (`docs/screens.md`, «Cabecera»): ya no es una barra, sino una píldora de cristal con el logo (en la portada, el logo y los enlaces de sección se quedan como estaban, sin píldora) y, a la derecha, dos controles redondos. **Idioma** abre un panel con PT, ES y EN; **Cuenta** abre un panel por rol (cliente: Mis trabajos, Cuenta, Salir; pintor: Mis trabajos, Pagos, Salir; admin: Panel, Salir) o, sin sesión, lleva a «Entrar». Cada panel crece desde su control y vuelve a él al cerrarse; los vecinos se apartan con él y, en el móvil, lo que tapa se desvanece. En el admin, la navegación queda en una barra lateral de cristal (escritorio) o bajo la cabecera (móvil).
-- Material de cristal esmerilado (`docs/motion.md`): fondo fijo con dos brillos suaves de la marca, cabecera, barra lateral, menús, diálogos y hoja translúcidos con desenfoque. Con transparencia reducida pasan a casi opacos. Diálogos y hoja usan un relleno del 80 % para que el texto verde azulado siga en 4,5:1 sobre el velo. Tokens de modo oscuro preparados, aunque la app sigue solo en claro.
+- Material de cristal esmerilado (`docs/motion.md`): fondo fijo con dos brillos suaves de la marca, cabecera, barra lateral, menús, diálogos y hoja translúcidos con desenfoque. Con transparencia reducida pasan a casi opacos. Rellenos al 28 % (cabecera), 36 % (controles), 52 % (menús) y 64 % (diálogos y hoja, sobre un velo más suave del 20 %), con el texto siempre por encima de 4,5:1. Tokens de modo oscuro preparados, aunque la app sigue solo en claro.
 
 #### Eliminado
 

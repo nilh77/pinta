@@ -61,7 +61,7 @@ export function SessionExpiredDialog() {
   return (
     <AlertDialog.Root open={from !== null} onOpenChange={(open) => !open && setFrom(null)}>
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(from !== null)} />
+        <AlertDialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/20", overlayMotion)} style={overlayStyle(from !== null)} />
         <AlertDialog.Content {...returnFocus} className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl glass glass-overlay bg-glass-veiled p-6 shadow-xl", dialogMotion)}>
           <AlertDialog.Title className="font-display text-xl font-bold">{t("title")}</AlertDialog.Title>
           <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">{t("body")}</AlertDialog.Description>
