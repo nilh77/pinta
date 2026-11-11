@@ -82,7 +82,7 @@ La cabecera, la barra lateral del admin y las capas (menús, diálogos, hoja) so
 - El cristal no añade color propio: el que se ve viene de lo que hay detrás.
 - Con `prefers-reduced-transparency: reduce` los rellenos suben al 92 % y el blur a 20 px: casi opacos.
 - Contraste: el texto sobre cualquier cristal cumple 4,5:1 medido sobre la parte más clara del fondo.
-- El proyecto solo tiene modo claro; los tokens de `.dark` están preparados para cuando exista.
+- Claro y oscuro: cada token de cristal tiene su valor en los dos modos (`.dark` en `<html>`).
 
 ## 5. Coreografía por evento
 
@@ -141,6 +141,10 @@ El panel no aparece como una caja aparte: **crece desde el círculo de su contro
 Al cerrar, el panel vuelve en 220 ms y los vecinos regresan en esos mismos 220 ms. Pasar de un panel abierto a otro control abre el siguiente sin cerrar y reabrir (menús no modales); un control que aún vuelve a su sitio lleva el panel nuevo con él. Mientras un panel está abierto o volviendo, la cabecera sube por encima de las capas (`z-index: 60`).
 
 Implementación: `MorphMenuContent` (`components/ui/dropdown-menu.tsx`) con el hook `useTriggerMorph` (`lib/use-trigger-morph.ts`); el CSS de `.morph-popover` y `[data-morph-cluster]` está en `globals.css`, fuera de capas. Con movimiento reducido: fundidos de 120 ms y vecinos sin transición.
+
+### Cambiar de tema
+
+Sin animación: al elegir Claro, Oscuro o Sistema, las transiciones de color se desactivan durante un fotograma para que toda la página cambie de golpe en vez de repintarse a cámara lenta (cada botón y tarjeta tiene su propia transición de color). El panel del selector sí crece y vuelve como los demás.
 
 ### Toasts
 
