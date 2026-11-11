@@ -20,14 +20,24 @@ const panelHeadClass = "flex min-h-10 flex-col justify-center px-3 pr-12";
 /**
  * The shared header (docs/screens.md, «Cabecera»): no bar, two floating glass pieces. On the left a pill with
  * `leading` (the logo, plus «back» or section links); on the right the language and account controls, whose panels
- * grow out of them (docs/motion.md).
+ * grow out of them (docs/motion.md). `plainLeading` drops the pill: the landing keeps its logo and section links as
+ * they were, and its header scrolls away as before (without the pill the links would sit on top of the content).
  */
-export function AppHeader({ leading, leadingClassName }: { leading: ReactNode; leadingClassName?: string }) {
+export function AppHeader({
+  leading,
+  leadingClassName,
+  plainLeading = false,
+}: {
+  leading: ReactNode;
+  leadingClassName?: string;
+  plainLeading?: boolean;
+}) {
   return (
-    <header className="morph-header pointer-events-none sticky top-0 z-20 flex items-center gap-2 p-4">
+    <header className={cn("morph-header pointer-events-none z-20 flex items-center gap-2 p-4", plainLeading ? "relative" : "sticky top-0")}>
       <div
         className={cn(
-          "pointer-events-auto flex h-10 min-w-0 items-center gap-1 rounded-full glass bg-glass-chrome px-4 shadow-chrome",
+          "pointer-events-auto flex min-w-0 items-center gap-1",
+          !plainLeading && "h-10 rounded-full glass bg-glass-chrome px-4 shadow-chrome",
           leadingClassName,
         )}
       >

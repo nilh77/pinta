@@ -274,7 +274,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 - `QuoteBreakdown`: con variantes `client`, `painter` (solo su pago) y `admin` (desglose completo y margen). La variante se decide en el servidor por rol; el cliente nunca recibe campos que no le tocan.
 - `ConfirmDialog`, `EmptyState`, `ErrorState` y `Skeleton`.
 - **Cabecera** (`AppHeader`), la misma en todas las áreas (portada, entrar y registro, cliente, pintor, cotizador, admin, páginas de estado y «solicitud enviada»). No es una barra: dos piezas de cristal que flotan en una fila fija arriba (decisión de 2026-11-11, `plans/010-glass-header-morph.md`):
-  - **Izquierda**: una píldora con el logo. En el cotizador lleva también «volver»; en la portada de escritorio, los enlaces a las secciones.
+  - **Izquierda**: una píldora con el logo. En el cotizador lleva también «volver». En la portada, el logo y los enlaces a las secciones (escritorio) van sin píldora, con su estilo original, y esa cabecera se desplaza con la página en lugar de quedarse fija (decisión de 2026-11-11).
   - **Derecha**: controles redondos de 40 px. **Idioma**: abre un panel con PT, ES y EN (cambia el idioma de la interfaz; el de los emails sigue en «Cuenta»). **Cuenta**: sin sesión, enlace a «Entrar»; con sesión, sus iniciales y un panel por rol: cliente (Mis trabajos, Cuenta, Salir), pintor (Mis trabajos, Pagos, Salir) y admin (Panel, Salir).
   - El panel crece desde su control y vuelve a él al cerrarse; los controles vecinos se apartan con él y, si en el móvil no hay sitio, se desvanecen mientras está abierto (`docs/motion.md`). Al cerrar, el foco vuelve al control.
   - En el admin, la navegación sigue en la barra lateral (escritorio) o bajo la cabecera (móvil).
