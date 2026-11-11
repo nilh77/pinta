@@ -13,6 +13,7 @@ import { useErrorText } from "@/lib/api/use-error-text";
 import { formatCents, formatDateTime } from "@/lib/format";
 import { useMyJob } from "@/lib/jobs/use-client-jobs";
 import { newUuid } from "@/lib/quote/draft";
+import { useTheme } from "@/lib/theme";
 import {
   formatCountdown,
   isPaymentType,
@@ -116,6 +117,7 @@ function Problem({ title, id, pageTitle }: { title: string; id: string; pageTitl
 function Checkout({ jobId, payment }: { jobId: string; payment: CreatedPayment }) {
   const t = useTranslations("payment");
   const locale = useLocale();
+  const { theme } = useTheme();
   const stripe = useMemo(() => stripeFor(payment.publishableKey), [payment.publishableKey]);
 
   return (
@@ -132,7 +134,11 @@ function Checkout({ jobId, payment }: { jobId: string; payment: CreatedPayment }
         options={{
           clientSecret: payment.clientSecret,
           locale: locale as "pt" | "es" | "en",
-          appearance: { theme: "stripe", variables: { colorPrimary: "#0f766e", borderRadius: "12px", fontFamily: "Inter, system-ui, sans-serif" } },
+          appearance: {
+            // Stripe's own light or dark look, with our teal; read when the payment form mounts.
+            theme: theme === "dark" ? "night" : "stripe",
+            variables: { colorPrimary: theme === "dark" ? "#3cbdb0" : "#0f766e", borderRadius: "12px", fontFamily: "Inter, system-ui, sans-serif" },
+          },
         }}
       >
         <PayForm jobId={jobId} payment={payment} />

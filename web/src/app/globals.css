@@ -393,6 +393,12 @@
   }
 }
 
+/* Switching theme: no colour transitions for one frame, so the page changes at once (lib/theme.ts, applyTheme). */
+.theme-switching,
+.theme-switching * {
+  transition: none !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
