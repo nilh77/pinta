@@ -64,7 +64,7 @@ Con `ease-spring`, la duración CSS incluye el asentamiento: el elemento **llega
 
 ## 4. Capas compartidas
 
-Las cadenas de clases viven en `web/src/components/ui/motion.ts` (plan 001). Es la única abstracción: cinco constantes de texto, sin componente envoltorio ni hook.
+Las cadenas de clases viven en `web/src/components/ui/motion.ts` (plan 001). Es la única abstracción: cinco constantes de texto y un helper, `overlayStyle(open)`, que deja pasar los toques a través del velo mientras se desvanece (Radix fija `pointer-events: auto` en línea y solo cede ante el `style` recibido). Sin componente envoltorio ni hook.
 
 | Constante | Para | Relación entre velo y contenido |
 |---|---|---|

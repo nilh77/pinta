@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { Dialog } from "radix-ui";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { drawerMotion, drawerOverlayMotion, overlayStyle } from "./motion";
 
 type SheetProps = {
   open: boolean;
@@ -24,14 +25,14 @@ export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-foreground/40 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 motion-reduce:animate-none" />
+        <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", drawerOverlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
           aria-describedby={undefined}
           className={cn(
             "fixed z-50 flex flex-col bg-background shadow-xl outline-none",
-            "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-3xl data-[state=open]:animate-in data-[state=open]:slide-in-from-bottom data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom",
-            "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[440px] md:rounded-none md:rounded-l-3xl md:data-[state=open]:slide-in-from-right md:data-[state=closed]:slide-out-to-right",
-            "duration-200 motion-reduce:animate-none",
+            "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-3xl",
+            "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[440px] md:rounded-none md:rounded-l-3xl",
+            drawerMotion,
           )}
         >
           <div aria-hidden="true" className="mx-auto mt-2 h-1.5 w-10 rounded-full bg-border md:hidden" />

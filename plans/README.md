@@ -11,7 +11,7 @@ Dirección: **preciso y vivo, con una pincelada** (revisión 2 del sistema: se n
 | 000 | [Sistema de movimiento (especificación)](000-motion-system.md) | — | — | APROBADO |
 | 001 | [Base de movimiento: tokens, `motion-fade-only`, `motion.ts`](001-motion-foundation.md) | LOW (requisito) | — | DONE |
 | 002 | [Hoja del editor: se ve su salida](002-sheet-exit-animation.md) | HIGH | — | DONE |
-| 003 | [Hoja: un eje por breakpoint, curva de cajón, fundido reducido](003-sheet-axis-and-curve.md) | HIGH | 001 | TODO |
+| 003 | [Hoja: un eje por breakpoint, curva de cajón, fundido reducido](003-sheet-axis-and-curve.md) | HIGH | 001 | DONE |
 | 004 | [Menús desde su botón, con salida](004-dropdown-menu-origin.md) | MEDIUM | 001 | TODO |
 | 005 | [Diálogos con entrada y salida](005-dialogs-enter-exit.md) | MEDIUM | 001 | TODO |
 | 006 | [Toasts con las duraciones del documento](006-toast-durations.md) | MEDIUM | — | TODO |
