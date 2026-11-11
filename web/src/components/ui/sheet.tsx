@@ -76,7 +76,7 @@ export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, 
           ref={content}
           aria-describedby={undefined}
           className={cn(
-            "fixed z-50 flex flex-col bg-background shadow-xl outline-none",
+            "fixed z-50 flex flex-col glass glass-overlay bg-glass-veiled shadow-xl outline-none",
             "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-3xl",
             "md:inset-y-0 md:right-0 md:left-auto md:max-h-none md:w-[440px] md:rounded-none md:rounded-l-3xl",
             drawerMotion,
@@ -103,7 +103,7 @@ export function Sheet({ open, onOpenChange, title, closeLabel, actions, footer, 
             </div>
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4">{children}</div>
-          {footer && <div className="border-t border-border bg-card px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">{footer}</div>}
+          {footer && <div className="border-t border-glass-hairline px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))]">{footer}</div>}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

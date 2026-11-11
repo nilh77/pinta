@@ -24,7 +24,7 @@ export function ConfirmDialog({ open, onOpenChange, title, description, confirmL
     <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
       <AlertDialog.Portal>
         <AlertDialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
-        <AlertDialog.Content {...returnFocus} className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}>
+        <AlertDialog.Content {...returnFocus} className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-3xl glass glass-overlay bg-glass-veiled p-6 shadow-xl", dialogMotion)}>
           <AlertDialog.Title className="font-display text-xl font-bold">{title}</AlertDialog.Title>
           {description && <AlertDialog.Description className="mt-2 text-sm text-muted-foreground">{description}</AlertDialog.Description>}
           <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

@@ -338,7 +338,7 @@ function RenameDialog({ open, initial, onClose, onSave }: { open: boolean; initi
         <Dialog.Content
           {...returnFocus}
           aria-describedby={undefined}
-          className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl bg-card p-6 shadow-xl", dialogMotion)}
+          className={cn("fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-3xl glass glass-overlay bg-glass-veiled p-6 shadow-xl", dialogMotion)}
         >
           <Dialog.Title className="font-display text-xl font-bold">{t("title")}</Dialog.Title>
           <form

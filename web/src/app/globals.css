@@ -122,6 +122,100 @@
   }
 }
 
+/*
+ * Frosted glass (docs/motion.md, «Material de cristal»). Light values are fixed because palette B is fixed; each
+ * comment shows how it derives from the palette. The .dark block derives them live, for when a dark palette exists.
+ */
+:root {
+  --canvas: oklch(0.955 0.0062 178.6); /* from --muted-foreground: L 0.955, C x 0.3 */
+  --glow-a: oklch(0.74 0.0861 186.4); /* from --primary: L 0.74 */
+  --glow-b: oklch(0.74 0.0861 246.4); /* --glow-a rotated 60deg in hue */
+  --backdrop-wash: 10%;
+
+  --glass-blur: 7px; /* header and sidebar */
+  --glass-overlay-blur: 14px; /* menus, dialogs, sheets: they carry text over the page */
+  --glass-saturate: 1.8;
+  --glass-chrome: 48%; /* fill for the header pieces and the sidebar */
+  --glass-fill: 64%; /* fill for menus and other layers without a veil */
+  --glass-fill-veiled: 80%; /* dialogs and sheets sit on a dark veil: teal text needs 80% to keep 4.5:1 */
+  --glass-control: 55%; /* small chrome with text or an icon: never more see-through than this */
+  --glass-hairline: color-mix(in oklab, var(--foreground) 7%, transparent);
+  --glass-sheen: oklch(1 0 0 / 0.7);
+
+  --chrome-contact: oklch(0 0 0 / 0.04);
+  --chrome-ambient: oklch(0 0 0 / 0.09);
+}
+
+.dark {
+  --canvas: oklch(from var(--background) calc(l * 0.62) calc(c * 0.9) h);
+  --glow-a: oklch(from var(--primary) 0.74 c h);
+  --glow-b: oklch(from var(--glow-a) l c calc(h + 60));
+  --backdrop-wash: 14%;
+  --glass-hairline: color-mix(in oklab, var(--foreground) 9%, transparent);
+  --glass-sheen: oklch(1 0 0 / 0.07);
+  --chrome-contact: oklch(0 0 0 / 0.25);
+  --chrome-ambient: oklch(0 0 0 / 0.35);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-blur: 20px;
+    --glass-overlay-blur: 20px;
+    --glass-saturate: 1.3;
+    --glass-chrome: 92%;
+    --glass-fill: 92%;
+    --glass-fill-veiled: 92%;
+    --glass-control: 92%;
+  }
+}
+
+@theme inline {
+  --color-glass-chrome: color-mix(in oklab, var(--card) var(--glass-chrome), transparent);
+  --color-glass-control: color-mix(in oklab, var(--card) var(--glass-control), transparent);
+  --color-glass-fill: color-mix(in oklab, var(--popover) var(--glass-fill), transparent);
+  --color-glass-veiled: color-mix(in oklab, var(--popover) var(--glass-fill-veiled), transparent);
+  --color-glass-hairline: var(--glass-hairline);
+  --shadow-chrome: 0 2px 6px 0 var(--chrome-contact), 0 16px 40px -14px var(--chrome-ambient);
+}
+
+/*
+ * The edge is not a border: a sheen along the top and a tone-on-tone hairline, drawn as inset shadows through
+ * Tailwind's inset slots so shadow-* and ring-* still compose. An existing border turns transparent but keeps its width.
+ */
+@utility glass {
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border-color: transparent;
+  --tw-inset-shadow: inset 0 1px 0 0 var(--glass-sheen);
+  --tw-inset-ring-shadow: inset 0 0 0 1px var(--glass-hairline);
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000),
+    var(--tw-shadow, 0 0 #0000);
+}
+
+/* Layers carry text over the page: a stronger blur. Use with glass and bg-glass-fill (or bg-glass-veiled over a veil). */
+@utility glass-overlay {
+  --glass-blur: var(--glass-overlay-blur);
+}
+
+/*
+ * Something for the glass to blur: a fixed layer with two soft glows behind everything. A pseudo-element, not
+ * background-attachment: fixed, so scrolling never repaints it; it creates no stacking context on the app shell.
+ */
+@utility canvas-backdrop {
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--canvas);
+    background-image:
+      radial-gradient(70% 60% at 0% 0%, color-mix(in oklab, var(--glow-a) var(--backdrop-wash), transparent), transparent 72%),
+      radial-gradient(60% 55% at 100% 100%, color-mix(in oklab, var(--glow-b) var(--backdrop-wash), transparent), transparent 72%);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

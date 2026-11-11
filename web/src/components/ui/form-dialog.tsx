@@ -48,7 +48,7 @@ export function FormDialog({
         <Dialog.Content
           {...returnFocus}
           className={cn(
-            "fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-card p-6 shadow-xl",
+            "fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl glass glass-overlay bg-glass-veiled p-6 shadow-xl",
             dialogMotion,
           )}
         >

@@ -204,6 +204,6 @@ function AddMenu({ catalog, onAddRoom, onAddSurface, disabled }: RoomSchemaProps
   );
 }
 
-const menuClass = cn("z-50 min-w-52 rounded-2xl border border-border bg-card p-1.5 shadow-lg", menuMotion);
+const menuClass = cn("z-50 min-w-52 rounded-2xl glass glass-overlay bg-glass-fill p-1.5 shadow-lg", menuMotion);
 const itemClass =
   "flex min-h-11 cursor-pointer items-center gap-2.5 rounded-xl px-3 text-sm font-medium outline-none data-[highlighted]:bg-primary-soft";
