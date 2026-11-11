@@ -1,8 +1,9 @@
 "use client";
 
-import { Loader2, Plus, Star } from "lucide-react";
+import { Plus, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { useAdminPainters, type PainterListItem } from "@/lib/painter/use-admin-painters";
 import { PainterStatusBadge } from "./painter-status-badge";
@@ -28,10 +29,7 @@ export function PaintersScreen() {
       </header>
 
       {painters.isPending ? (
-        <p role="status" className="flex items-center gap-2 py-10 text-muted-foreground">
-          <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-          {t("loading")}
-        </p>
+        <CardListSkeleton label={t("loading")} className="py-2" />
       ) : painters.isError ? (
         <div role="alert" className="flex flex-col items-start gap-3 py-10">
           <p className="text-destructive">{t("loadError")}</p>

@@ -7,6 +7,7 @@ import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -54,10 +55,7 @@ export function PainterJobsScreen() {
 
       <div role="tabpanel" aria-busy={jobs.isFetching}>
         {jobs.isPending ? (
-          <p role="status" className="flex items-center gap-2 py-10 text-muted-foreground">
-            <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-            {t("loading")}
-          </p>
+          <CardListSkeleton label={t("loading")} className="py-2" />
         ) : jobs.isError ? (
           <div role="alert" className="flex flex-col items-start gap-3 py-10">
             <p className="text-destructive">{t("error")}</p>

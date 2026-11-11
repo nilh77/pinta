@@ -1,11 +1,12 @@
 "use client";
 
-import { Download, LayoutGrid, List, Loader2, Search } from "lucide-react";
+import { Download, LayoutGrid, List, Search } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { useDeferredValue, useState } from "react";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { api } from "@/lib/api/client";
 import type { AdminJobListItem } from "@/lib/jobs/api";
@@ -127,10 +128,7 @@ export function JobsBoard() {
 
       <div aria-busy={jobs.isFetching} aria-live="polite">
         {jobs.isPending ? (
-          <p role="status" className="flex items-center gap-2 text-muted-foreground">
-            <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-            {t("loading")}
-          </p>
+          <CardListSkeleton label={t("loading")} />
         ) : jobs.isError ? (
           <div role="alert" className="flex flex-col items-start gap-3">
             <p className="text-destructive">{t("loadError")}</p>

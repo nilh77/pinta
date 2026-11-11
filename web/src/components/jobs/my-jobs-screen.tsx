@@ -1,9 +1,10 @@
 "use client";
 
-import { ChevronRight, Loader2, Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import type { ClientJobListItem } from "@/lib/jobs/api";
 import { useMyJobs } from "@/lib/jobs/use-client-jobs";
@@ -51,10 +52,7 @@ export function MyJobsScreen() {
 
       <div role="tabpanel" aria-busy={jobs.isFetching}>
         {jobs.isPending ? (
-          <p role="status" className="flex items-center gap-2 py-10 text-muted-foreground">
-            <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-            {t("loading")}
-          </p>
+          <CardListSkeleton label={t("loading")} className="py-2" />
         ) : jobs.isError ? (
           <div role="alert" className="flex flex-col items-start gap-3 py-10">
             <p className="text-destructive">{t("error")}</p>

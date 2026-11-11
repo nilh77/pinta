@@ -1,6 +1,6 @@
 # 007 — Skeletons compartidos en lugar de spinners (área admin y listas)
 
-- **Status**: TODO
+- **Status**: DONE (2026-11-11)
 - **Commit**: 02c3f9b
 - **Severity**: MEDIUM
 - **Category**: Loading states (el documento manda sobre el código)
