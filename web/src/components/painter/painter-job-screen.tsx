@@ -8,6 +8,7 @@ import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import type { components } from "@/lib/api/schema";
 import { ApiError } from "@/lib/api/problem";
@@ -37,10 +38,7 @@ export function PainterJobScreen({ id }: { id: string }) {
 
   if (job.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 
@@ -326,7 +324,7 @@ function Progress({ job }: { job: PainterJobDetail }) {
       </div>
       {job.progressFiles.length > 0 && <FileGrid files={job.progressFiles} />}
       <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress, "progress")} />
-      <Button
+      <Button pending={add.isPending}
         variant="outline"
         className="self-start"
         disabled={ready.length === 0 || uploading || add.isPending}
@@ -337,7 +335,6 @@ function Progress({ job }: { job: PainterJobDetail }) {
           )
         }
       >
-        {add.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
         {t("send", { count: ready.length })}
       </Button>
     </section>
@@ -433,8 +430,7 @@ function ResultPhotos({ job }: { job: PainterJobDetail }) {
       <p aria-live="polite" className="text-sm font-semibold tabular-nums">
         {t("count", { count: uploaded.length, min: job.minResultPhotos })}
       </p>
-      <Button size="lg" disabled={!enough || uploading || finish.isPending} onClick={() => setConfirming(true)}>
-        {finish.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={finish.isPending} size="lg" disabled={!enough || uploading || finish.isPending} onClick={() => setConfirming(true)}>
         {t("finish")}
       </Button>
       <ConfirmDialog

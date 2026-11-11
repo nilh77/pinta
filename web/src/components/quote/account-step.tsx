@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -138,8 +137,7 @@ function AccountForm({ draft, info, update }: QuoteContext) {
               <p className="text-sm text-muted-foreground">{signedIn.email}</p>
             </div>
             {billing}
-            <Button size="lg" className="w-full" disabled={busy} onClick={() => billingValid() && send()}>
-              {busy && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+            <Button pending={busy} size="lg" className="w-full" disabled={busy} onClick={() => billingValid() && send()}>
               {t("send")}
             </Button>
           </div>
@@ -219,8 +217,7 @@ function AccountForm({ draft, info, update }: QuoteContext) {
                   )}
                 />
               ))}
-              <Button type="submit" size="lg" className="w-full" disabled={busy}>
-                {busy && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              <Button pending={busy} type="submit" size="lg" className="w-full" disabled={busy}>
                 {t("send")}
               </Button>
             </form>
@@ -235,8 +232,7 @@ function AccountForm({ draft, info, update }: QuoteContext) {
               <FormField id="login-email" type="email" spellCheck={false} autoComplete="email" label={tRoot("signIn.email")} error={loginForm.formState.errors.email} {...loginForm.register("email")} />
               <FormField id="login-password" type="password" autoComplete="current-password" label={tRoot("signIn.password")} error={loginForm.formState.errors.password} {...loginForm.register("password")} />
               {billing}
-              <Button type="submit" size="lg" className="w-full" disabled={busy}>
-                {busy && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              <Button pending={busy} type="submit" size="lg" className="w-full" disabled={busy}>
                 {t("signInAndSend")}
               </Button>
             </form>

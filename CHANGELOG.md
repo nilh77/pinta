@@ -6,6 +6,20 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Dependencias
+
+#### Cambiado
+
+- Aspire de 13.6.3 a 13.6.5 (SDK del AppHost, `Aspire.Hosting.PostgreSQL`, `Aspire.Hosting.JavaScript` y `Aspire.Npgsql`) por el aviso de seguridad grave GHSA-f7vh-h5g3-7jrh (CVE-2026-120006, elevación de privilegios en `Aspire.Hosting`); la build trata ese aviso como error y había dejado de compilar.
+
+### Mejoras de interfaz
+
+#### Corregido
+
+- Al cerrar un diálogo o la hoja del editor, el foco vuelve a lo que lo abrió (el botón «Continuar», la tarjeta de la estancia, el botón ⋯ o el lápiz); antes caía al principio de la página y quien usa teclado o lector de pantalla perdía su sitio. Nuevo hook `useReturnFocus` para los diálogos de Radix controlados por estado.
+- Los botones que muestran que una acción está en curso (entrar, registrarse, guardar, pagar, enviar…) ya no cambian de tamaño: el texto se desvanece y el spinner aparece en su centro, en vez de empujar el texto. Nueva prop `pending` en `Button`, que además lo deshabilita y marca `aria-busy`; usada en 20 botones de 16 pantallas.
+- Carga con esqueletos en el resto de pantallas, como pide `docs/screens.md`: áreas del cliente y del pintor, detalle del trabajo (cliente, pintor y admin), visita técnica, cuenta, ficha del pintor, alta del pintor, pagos al pintor, pagos del trabajo en el admin, solicitudes de borrado y cobertura. Nuevo `DetailSkeleton`. Los procesos (preparar o esperar un pago, confirmar el email, buscar pintores) siguen con spinner y texto.
+
 ### Despliegue en Railway (entorno Demo)
 
 #### Añadido

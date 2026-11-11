@@ -1,10 +1,11 @@
 "use client";
 
-import { ArrowLeft, Loader2, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowLeft, Mail, MapPin, Phone } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { Button } from "@/components/ui/button";
+import { CardListSkeleton, DetailSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import type { AdminJobDetail } from "@/lib/jobs/api";
@@ -33,10 +34,7 @@ export function AdminJobView({ id, layout }: { id: string; layout: "review" | "t
 
   if (job.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-12 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 
@@ -115,10 +113,7 @@ function PaymentsTab({ jobId }: { jobId: string }) {
   const payments = useAdminJobPayments(jobId);
   if (payments.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <CardListSkeleton label={t("loading")} />
     );
   }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleAlert, Loader2, LogOut } from "lucide-react";
+import { CircleAlert, LogOut } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,7 @@ import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { useAccount, useChangePassword, useRequestDeletion, useUpdateAccount, type AccountProfile } from "@/lib/account/use-account";
 import { ApiError } from "@/lib/api/problem";
@@ -46,10 +47,7 @@ export function AccountScreen() {
 
   if (account.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-16 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 
@@ -175,8 +173,7 @@ function ProfileForm({ profile }: { profile: AccountProfile }) {
         <input type="checkbox" className="mt-0.5 size-5 accent-[var(--primary)]" {...form.register("marketingConsent")} />
         {t("marketing")}
       </label>
-      <Button type="submit" disabled={save.isPending} className="self-start">
-        {save.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={save.isPending} type="submit" disabled={save.isPending} className="self-start">
         {t("save")}
       </Button>
     </form>
@@ -239,8 +236,7 @@ function PasswordForm() {
           errorValues={{ min: PASSWORD_MIN_LENGTH }}
         />
       </div>
-      <Button type="submit" variant="outline" disabled={change.isPending || !current || next.length < PASSWORD_MIN_LENGTH} className="self-start">
-        {change.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={change.isPending} type="submit" variant="outline" disabled={change.isPending || !current || next.length < PASSWORD_MIN_LENGTH} className="self-start">
         {t("submit")}
       </Button>
     </form>

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleAlert, Loader2 } from "lucide-react";
+import { CircleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import { z } from "zod";
 import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
+import { DetailSkeleton } from "@/components/ui/skeleton";
 import { useRouter } from "@/i18n/navigation";
 import { ApiError } from "@/lib/api/problem";
 import { PASSWORD_MIN_LENGTH, resetPasswordSchema, type ResetPasswordValues } from "@/lib/auth/schemas";
@@ -79,8 +80,7 @@ export function PainterOnboarding({ userId, token }: { userId?: string; token?: 
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
       />
-      <Button type="submit" size="lg" disabled={accept.isPending} className="mt-2 w-full">
-        {accept.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={accept.isPending} type="submit" size="lg" disabled={accept.isPending} className="mt-2 w-full">
         {t("continue")}
       </Button>
     </form>
@@ -93,10 +93,7 @@ function ProfileStep({ password }: { password: string }) {
 
   if (profile.isPending) {
     return (
-      <p role="status" className="flex items-center gap-2 py-8 text-muted-foreground">
-        <Loader2 aria-hidden="true" className="size-5 animate-spin motion-reduce:animate-none" />
-        {t("loading")}
-      </p>
+      <DetailSkeleton label={t("loading")} className="py-2" />
     );
   }
 
@@ -205,8 +202,7 @@ function ProfileForm({ profile, password }: { profile: PainterProfile; password:
         error={errors.iban ?? serverError("iban")}
         {...form.register("iban")}
       />
-      <Button type="submit" size="lg" disabled={save.isPending} className="mt-2 w-full">
-        {save.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={save.isPending} type="submit" size="lg" disabled={save.isPending} className="mt-2 w-full">
         {t("finish")}
       </Button>
     </form>

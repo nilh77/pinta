@@ -58,8 +58,7 @@ export function ConfirmEmail({ userId, token }: { userId?: string; token?: strin
       <p className="text-muted-foreground">{t("confirmEmail.errorBody")}</p>
       {canResend ? (
         <>
-          <Button size="lg" className="w-full" disabled={resend.isPending || resend.isSuccess} onClick={() => resend.mutate()}>
-            {resend.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+          <Button pending={resend.isPending} size="lg" className="w-full" disabled={resend.isPending || resend.isSuccess} onClick={() => resend.mutate()}>
             {t("confirmEmail.resend")}
           </Button>
           <p role="status" className="text-sm">

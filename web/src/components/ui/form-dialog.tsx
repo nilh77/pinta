@@ -1,9 +1,9 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
 import { Dialog } from "radix-ui";
 import type { FormEvent, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useReturnFocus } from "@/lib/use-return-focus";
 import { Button } from "./button";
 import { dialogMotion, overlayMotion, overlayStyle } from "./motion";
 
@@ -35,6 +35,7 @@ export function FormDialog({
   submitDisabled = false,
   destructive = false,
 }: FormDialogProps) {
+  const returnFocus = useReturnFocus();
   const submit = (event: FormEvent) => {
     event.preventDefault();
     if (!pending && !submitDisabled) onSubmit();
@@ -45,6 +46,7 @@ export function FormDialog({
       <Dialog.Portal>
         <Dialog.Overlay className={cn("fixed inset-0 z-40 bg-foreground/40", overlayMotion)} style={overlayStyle(open)} />
         <Dialog.Content
+          {...returnFocus}
           className={cn(
             "fixed top-1/2 left-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-card p-6 shadow-xl",
             dialogMotion,
@@ -66,8 +68,7 @@ export function FormDialog({
                   {cancelLabel}
                 </Button>
               </Dialog.Close>
-              <Button type="submit" variant={destructive ? "destructive" : "default"} disabled={pending || submitDisabled}>
-                {pending && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+              <Button pending={pending} type="submit" variant={destructive ? "destructive" : "default"} disabled={pending || submitDisabled}>
                 {submitLabel}
               </Button>
             </div>

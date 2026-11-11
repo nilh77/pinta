@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CircleAlert, CircleCheck, Loader2 } from "lucide-react";
+import { CircleAlert, CircleCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { FormField } from "@/components/form-field";
@@ -67,8 +67,7 @@ export function ResetPasswordForm({ userId, token }: { userId?: string; token?: 
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
       />
-      <Button type="submit" size="lg" disabled={reset.isPending} className="mt-2 w-full">
-        {reset.isPending && <Loader2 aria-hidden="true" className="animate-spin" />}
+      <Button pending={reset.isPending} type="submit" size="lg" disabled={reset.isPending} className="mt-2 w-full">
         {t("submit")}
       </Button>
     </form>

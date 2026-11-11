@@ -182,8 +182,7 @@ function PayForm({ jobId, payment }: { jobId: string; payment: CreatedPayment })
         </p>
       )}
       {phase === "submitting" && method === "mb_way" && <MbWayCountdown />}
-      <Button type="submit" size="lg" disabled={!stripe || !elements || phase === "submitting"} className="w-full">
-        {phase === "submitting" && <Loader2 aria-hidden="true" className="animate-spin motion-reduce:animate-none" />}
+      <Button pending={phase === "submitting"} type="submit" size="lg" disabled={!stripe || !elements || phase === "submitting"} className="w-full">
         {t("pay", { amount: formatCents(locale, payment.amountCents) })}
       </Button>
       <p className="text-center text-xs text-muted-foreground">{t("secure")}</p>
