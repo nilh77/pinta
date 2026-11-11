@@ -6,6 +6,7 @@
 - **Category**: Interruptibility (gesto)
 - **Estimated scope**: 1 archivo (`web/src/components/ui/sheet.tsx`), unas 50 líneas
 - **Depends on**: 001, 002 y 003 (la salida tiene que existir y ser vertical antes de añadir el gesto)
+- **Revisión pendiente (antes de ejecutar)**: `moveDrag` no debe llamar a `setOffset` en cada `pointermove` (un render de React por fotograma; ver `.agents/skills/animation-performance/SKILL.md`, «React: Don't Animate Through State»). Reescribir los pasos 2–3 para que el arrastre escriba `content.current.style.translate` directamente y solo el soltar toque el estado. Las duraciones pasan a 380/240 ms (sistema, revisión 2).
 - **Sistema**: `plans/000-motion-system.md` §5 «Arrastrar la hoja», §6, §7 y §8.
 
 ## Problem

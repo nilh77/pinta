@@ -4,7 +4,7 @@ Salen de la auditoría `improve-animations` (modo `deep`) del 2026-11-11, sobre 
 
 **Empieza por [000 — Sistema de movimiento](000-motion-system.md)**: principios, tokens, capas compartidas, coreografía por evento, comportamiento responsive, accesibilidad, rendimiento y las decisiones técnicas que hay que aprobar. Los planes 001–009 lo implementan y no pueden contradecirlo. El plan 001 lo publica como `docs/motion.md`.
 
-Dirección: **preciso y tranquilo, con una pincelada**.
+Dirección: **preciso y vivo, con una pincelada** (revisión 2 del sistema: se nota, pero nunca estorba).
 
 | # | Plan | Severidad | Depende de | Estado |
 |---|---|---|---|---|
@@ -18,6 +18,8 @@ Dirección: **preciso y tranquilo, con una pincelada**.
 | 007 | [Skeletons en área admin y listas](007-skeleton-loading.md) | MEDIUM | — (alcance confirmado: admin y listas) | TODO |
 | 008 | [Feedback de pulsación en botones y paredes](008-press-feedback.md) | MEDIUM | 001 | TODO |
 | 009 | [Arrastrar para cerrar la hoja](009-sheet-drag-to-dismiss.md) | MEDIUM | 001, 002, 003 | TODO |
+
+> **Revisión 2 del sistema (2026-11-11, «vivo y funcional»)**: 000 y 001 ya están actualizados. Los valores citados en el texto de 002–009 (duraciones, escalas) se actualizan a la revisión 2 justo antes de ejecutar cada plan; el código usa siempre las constantes de `motion.ts` y los tokens, así que manda el sistema.
 
 ## Orden recomendado
 

@@ -1,21 +1,21 @@
 # 000 — Sistema de movimiento de Pinta
 
-- **Status**: APROBADO (2026-11-11)
+- **Status**: APROBADO (2026-11-11). Revisión 2 (2026-11-11): objetivo «vivo y funcional» pedido por el usuario: resorte en entradas y al soltar, escalas y distancias más visibles.
 - **Commit**: 02c3f9b
 - **Qué es**: la especificación común de los planes 001–009. Ningún plan puede contradecirla. Al aprobarse, el plan 001 la copia a `docs/motion.md` y la añade a la tabla de documentos de `CLAUDE.md`. A partir de ahí, `docs/motion.md` es la fuente: si un plan y el documento discrepan, gana el documento.
 - **Base**: `.agents/skills/improve-animations/AUDIT.md` (valores), `.agents/skills/choreograph/SKILL.md` (relaciones entre elementos) y `.agents/skills/animation-vocabulary/SKILL.md` (términos).
 
 ## 1. Personalidad
 
-Pinta vende confianza: un precio claro, una persona que revisa y un pintor elegido con cuidado. El movimiento tiene que ser **preciso y tranquilo, con una pincelada**:
+Pinta vende confianza: un precio claro, una persona que revisa y un pintor elegido con cuidado. El movimiento tiene que ser **preciso y vivo, con una pincelada**: se nota, pero nunca estorba.
 
-- **Preciso**: responde enseguida, sin exhibirse. Es una herramienta que el cliente usa para describir su casa y el admin para trabajar todo el día.
-- **Tranquilo**: nada rebota ni da vueltas, ni hay cascadas en la interfaz de trabajo. Los cambios de estado se cuentan con color y opacidad.
+- **Preciso**: responde enseguida y nunca hace esperar. Es una herramienta que el cliente usa para describir su casa y el admin para trabajar todo el día.
+- **Vivo**: las capas llegan con un resorte que se asienta (rebote 0.3) y los botones responden con cuerpo: se hunden al tocarlos y vuelven con un pequeño rebote al soltar. Nada oscila en bucle, gira ni cae en cascada dentro de la interfaz de trabajo; los cambios de estado se siguen contando con color y opacidad.
 - **Una pincelada**: el amarillo #F2B705 marca el gesto de «pintar» (paredes que se activan, el check de «solicitud enviada» y de «señal pagada»). Es el único sitio con margen para algo de deleite, y por eso se reserva a momentos raros.
 
 ## 2. Principios
 
-1. **Primero la respuesta.** Todo lo que el usuario toca responde en ≤ 160 ms. Ninguna animación retrasa la acción ni el foco. Radix mueve el foco al montar, sin esperar a la animación.
+1. **Primero la respuesta.** Todo lo que el usuario toca responde en ≤ 120 ms. Ninguna animación retrasa la acción ni el foco. Radix mueve el foco al montar, sin esperar a la animación.
 2. **Cada capa viene de un sitio y vuelve a él** (*origin-aware animation*). Un menú crece desde su botón, una hoja sale del borde del que vino y vuelve a él, y un diálogo aparece en el centro. La salida es la inversa de la entrada, más corta.
 3. **Una entrada por contenedor.** Si la capa se mueve, su contenido viaja con ella (*carry*). Nunca hay escalonado dentro de hojas, diálogos, menús, listas ni pestañas.
 4. **Estado con color y opacidad, no con movimiento.** Seleccionar, activar o marcar un valor desactualizado cambia color u opacidad (`transition-colors`, opacidad 50–60 %). Así se hace ya hoy y se mantiene.
@@ -32,9 +32,10 @@ Viven en `web/src/app/globals.css` (plan 001). Las curvas son tokens de tema de 
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--ease-out` | `cubic-bezier(0.23, 1, 0.32, 1)` | Todo lo que entra o sale y la respuesta a pulsar. Curva por defecto. |
+| `--ease-out` | `cubic-bezier(0.23, 1, 0.32, 1)` | Salidas, velos, el hundimiento al pulsar. Curva por defecto. |
+| `--ease-spring` | `linear(0, 0.0337, 0.1179, 0.2308, 0.3562, 0.482, 0.6001, 0.7056, 0.7957, 0.8698, 0.9283, 0.9726, 1.0043, 1.0255, 1.0383, 1.0445, 1.046, 1.044, 1.0399, 1.0346, 1.0288, 1.023, 1.0177, 1.0129, 1.0089, 1.0056, 1.003, 1.001, 0.9996, 0.9987, 0.9982, 0.9979, 1)` | Entradas de menús y diálogos, y la vuelta al soltar un botón. Resorte críticamente amortiguado al 70 % (rebote 0.3): alcanza el destino al 38 % de la duración, se pasa un 4,6 % y se asienta. Es CSS puro (`linear()`), sin librería. |
 | `--ease-in-out` | `cubic-bezier(0.77, 0, 0.175, 1)` | Algo que ya está en pantalla y se desplaza de A a B (p. ej. una futura píldora deslizante en pestañas). |
-| `--ease-drawer` | `cubic-bezier(0.32, 0.72, 0, 1)` | Hojas: entrada, salida y vuelta tras arrastrar. |
+| `--ease-drawer` | `cubic-bezier(0.32, 0.72, 0, 1)` | Hojas: entrada, salida y vuelta tras arrastrar. Sin resorte: un panel de altura completa que rebota dejaría un hueco en el borde. |
 | Tailwind por defecto | `cubic-bezier(0.4, 0, 0.2, 1)`, 150 ms | Cambios de color (`transition-colors`). Se mantiene: ya está en ~20 sitios y es correcto para color. |
 | `linear` | — | Solo spinners y progreso continuo. |
 
@@ -44,20 +45,21 @@ Viven en `web/src/app/globals.css` (plan 001). Las curvas son tokens de tema de 
 
 | Token | Valor | Uso |
 |---|---|---|
-| `--duration-press` | 160 ms | Respuesta al pulsar (escala). |
-| `--duration-menu-in` / `-out` | 180 / 120 ms | Menús desplegables. |
-| `--duration-layer-in` / `-out` | 220 / 150 ms | Diálogos centrados y su velo. |
-| `--duration-drawer-in` / `-out` | 320 / 220 ms | Hojas y su velo. |
+| `--duration-press` / `--duration-release` | 120 / 360 ms | Hundirse al pulsar (`ease-out`) / volver al soltar (`ease-spring`). |
+| `--duration-menu-in` / `-out` | 260 / 140 ms | Menús desplegables. |
+| `--duration-layer-in` / `-out` | 340 / 180 ms | Diálogos centrados y su velo. |
+| `--duration-drawer-in` / `-out` | 380 / 240 ms | Hojas y su velo. |
 | (local) | 600 ms | Momentos raros (check dibujado). Se define en su plan, no como token. |
 
-Toda la interfaz de trabajo queda por debajo de 300 ms, salvo la entrada de la hoja (320 ms). La hoja es un panel de altura completa, y el catálogo admite 200–500 ms para cajones. Las salidas son siempre más cortas que las entradas: el usuario ya decidió irse.
+Con `ease-spring`, la duración CSS incluye el asentamiento: el elemento **llega** al 38 % (menú ≈ 100 ms, diálogo ≈ 130 ms, soltar ≈ 140 ms) y el resto es el pequeño rebote, que no bloquea nada. Por eso esas duraciones superan los 300 ms sin hacer esperar. La hoja (380 ms) está dentro de los 200–500 ms que el catálogo admite para cajones. Las salidas son siempre más cortas y con `ease-out`: el usuario ya decidió irse.
 
 ### Distancias y escalas
 
 | Qué | Valor |
 |---|---|
-| Escala de entrada de menús y diálogos | 0.95 (`zoom-in-95` / `zoom-out-95`). Nunca `scale(0)`. |
-| Escala al pulsar | 0.97 en botones, 0.95 en las paredes (objetivo pequeño). |
+| Entrada de menús | escala 0.9 + 8 px desde el lado del botón (`zoom-in-90`, `slide-in-from-*-2` según `data-side`). Salida: escala 0.95 + fundido. |
+| Entrada de diálogos | escala 0.9 + 16 px de subida (`zoom-in-90`, `slide-in-from-bottom-4`). Salida: escala 0.95 + fundido, sin desplazamiento. |
+| Escala al pulsar | 0.96 en botones, 0.92 en las paredes (objetivo pequeño). Nunca `scale(0)`. |
 | Desplazamiento de hojas | 100 % de su propio tamaño (`slide-*`): nunca píxeles fijos. |
 
 ## 4. Capas compartidas
@@ -67,8 +69,8 @@ Las cadenas de clases viven en `web/src/components/ui/motion.ts` (plan 001). Es 
 | Constante | Para | Relación entre velo y contenido |
 |---|---|---|
 | `overlayMotion` | Velo de los diálogos | Juntos (*together*): mismo inicio y duración que `dialogMotion`. |
-| `dialogMotion` | Contenido de diálogos centrados | Fundido + escala 0.95 desde el centro (el centro es el origen correcto en un modal). |
-| `menuMotion` | `DropdownMenu.Content` | Fundido + escala 0.95 desde `--radix-dropdown-menu-content-transform-origin`. |
+| `dialogMotion` | Contenido de diálogos centrados | Fundido + escala 0.9 + subida de 16 px con resorte, desde el centro (el centro es el origen correcto en un modal). |
+| `menuMotion` | `DropdownMenu.Content` | Fundido + escala 0.9 + 8 px desde el lado del botón, con resorte, origen en `--radix-dropdown-menu-content-transform-origin`. |
 | `drawerOverlayMotion` | Velo de la hoja | Juntos con `drawerMotion`: misma curva y duración. |
 | `drawerMotion` | Contenido de la hoja | Desliza en un solo eje por anchura (ver §6). |
 
@@ -82,8 +84,8 @@ Línea temporal de cada evento con varias piezas en movimiento (formato de `chor
 
 | Elemento | Rol | Empieza | Duración | Movimiento | Relación |
 |---|---|---|---|---|---|
-| Panel de la hoja | Protagonista | 0 ms | 320 ms | desliza desde el borde (abajo < 768; derecha 768–1023) | — |
-| Velo | Decoración | 0 ms | 320 ms | fundido | Juntos con el panel |
+| Panel de la hoja | Protagonista | 0 ms | 380 ms | desliza desde el borde (abajo < 768; derecha 768–1023) | — |
+| Velo | Decoración | 0 ms | 380 ms | fundido | Juntos con el panel |
 | Contenido (paredes, medidas, pinturas) | Estático | — | — | viaja con el panel | *Carry*: una entrada por contenedor |
 | Tarjeta tocada en el esquema | Estático | — | — | anillo de selección inmediato (`ring`) | — |
 
@@ -91,8 +93,8 @@ Línea temporal de cada evento con varias piezas en movimiento (formato de `chor
 
 | Elemento | Rol | Empieza | Duración | Movimiento | Relación |
 |---|---|---|---|---|---|
-| Panel | Protagonista | 0 ms (o desde donde quedó tras arrastrar) | 220 ms | vuelve al borde por el que entró | Inversa de la entrada |
-| Velo | Decoración | 0 ms | 220 ms | fundido | Juntos |
+| Panel | Protagonista | 0 ms (o desde donde quedó tras arrastrar) | 240 ms | vuelve al borde por el que entró | Inversa de la entrada |
+| Velo | Decoración | 0 ms | 240 ms | fundido | Juntos |
 | Tarjeta guardada | Apoyo | 0 ms | 150 ms | color (borde, fondo, check) | Juntos: la casa se «pinta» mientras la hoja se va |
 
 ### Arrastrar la hoja (< 768 px)
@@ -103,18 +105,18 @@ Durante el arrastre, el panel sigue al dedo 1:1 sin transición; hacia arriba ti
 
 | Elemento | Rol | Empieza | Duración | Movimiento | Relación |
 |---|---|---|---|---|---|
-| Diálogo | Protagonista | 0 ms | 220 / 150 ms | fundido + escala 0.95 → 1 | — |
-| Velo | Decoración | 0 ms | 220 / 150 ms | fundido | Juntos |
+| Diálogo | Protagonista | 0 ms | 340 ms (`ease-spring`) / 180 ms (`ease-out`) | entra: fundido + escala 0.9 → 1 + sube 16 px; sale: fundido + escala → 0.95 | — |
+| Velo | Decoración | 0 ms | 340 / 180 ms (`ease-out`) | fundido | Juntos |
 | Campos y botones | Estático | — | — | viajan con el diálogo | *Carry* |
 | Hoja de debajo (renombrar desde la hoja) | Estático | — | — | — | No retrocede ni se oscurece aparte |
 
 ### Visor de fotos (admin)
 
-Solo fundido al abrir (220 ms). El cierre es instantáneo a propósito: el contenido se vacía al cerrar y una salida animada mostraría un fondo negro vacío.
+Solo fundido al abrir (340 ms, `ease-out`). El cierre es instantáneo a propósito: el contenido se vacía al cerrar y una salida animada mostraría un fondo negro vacío.
 
 ### Menú ⋯ y menú «Añadir»
 
-Un solo elemento en movimiento: el menú (180 / 120 ms, desde su botón). Las opciones aparecen todas a la vez y el resaltado es instantáneo (se recorre con teclado). Al elegir «Eliminar», la tarjeta desaparece y el menú con ella: no hay salida que coordinar.
+Un solo elemento en movimiento: el menú (entra en 260 ms con resorte desde su botón; sale en 140 ms). Las opciones aparecen todas a la vez y el resaltado es instantáneo (se recorre con teclado). Al elegir «Eliminar», la tarjeta desaparece y el menú con ella: no hay salida que coordinar.
 
 ### Toasts
 
@@ -128,7 +130,7 @@ Los gestiona Sonner por dentro (entrada, apilado, deslizar para descartar, `pref
 
 ### Pulsar
 
-Escala a 0.97 en 160 ms `ease-out`, y vuelta con la misma curva. Solo en `Button` (todas las variantes menos `link`) y en las paredes del editor (0.95). Tarjetas, navegación y pestañas no se encogen: tienen hover y selección de color.
+Tiempo asimétrico: se hunde a 0.96 en 120 ms `ease-out` al tocar y vuelve en 360 ms con `ease-spring` al soltar (un pequeño rebote por encima de 1). Solo en `Button` (todas las variantes menos `link`) y en las paredes del editor (0.92). El color sigue su propia transición (150 ms), sin resorte. Tarjetas, navegación y pestañas no se encogen: tienen hover y selección de color.
 
 ### Momentos raros (no aprobados aún; la regla queda fijada)
 
@@ -157,7 +159,7 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 
 - Solo `opacity`, `transform`, `translate` y `scale`. La barra de subida (`width`) queda anotada para una tanda posterior.
 - Sin `transition-all`, sin `will-change` global y sin animaciones de layout.
-- El arrastre escribe `translate` en línea sobre un único elemento, nunca una variable CSS en un padre (recalcularía estilos de todos los hijos).
+- El arrastre escribe `translate` directamente en `ref.current.style` de un único elemento: sin `setState` por fotograma (React re-renderizaría 60–120 veces por segundo) y nunca una variable CSS en un padre (recalcularía estilos de todos los hijos).
 - Sin `filter: blur` en transiciones.
 - En Tailwind v4, `scale-*` y `translate-*` usan las propiedades `scale` y `translate`, no `transform`. Cualquier `transition-[…]` que deba animarlas tiene que nombrarlas: `transition-[…,scale]`. Por no hacerlo, las paredes del editor saltan hoy al pulsar.
 
@@ -175,6 +177,7 @@ Cada eje de la hoja solo se activa en su rango (`max-md:` / `md:`). Mezclarlos e
 
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
+| Resorte con `linear()` de CSS (`--ease-spring`) | Motion para springs | Da el carácter vivo sin dependencia; soportado en Chrome 113+, Safari 17.2+ y Firefox 112+. En un navegador sin soporte la regla se ignora y queda la curva por defecto de `tw-animate-css`: se ve más plano, no se rompe. |
 | CSS + `tw-animate-css` + Radix, sin librería JS | Motion (Framer) o `vaul` para la hoja | Todo lo aprobado se expresa con keyframes y una transición; el arrastre son ~40 líneas. Añadir 30–60 kB no está justificado. |
 | Redefinir `--ease-out` de Tailwind | Un nombre nuevo (`--ease-pinta-out`) | La utilidad `ease-out` pasa a ser la curva fuerte en toda la app; solo la usan hoy dos líneas del editor, y les sienta mejor. |
 | Duraciones como variables de `:root` | Tokens de tema | Tailwind v4 no tiene espacio de tema para duraciones; `duration-(--x)` fija también `--tw-duration`, que lee `tw-animate-css`. Comprobado compilando con el Tailwind del proyecto. |

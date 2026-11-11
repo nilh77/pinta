@@ -4,8 +4,8 @@
 - **Commit**: 02c3f9b
 - **Severity**: LOW (es requisito de 003, 004, 005, 008 y 009)
 - **Category**: Cohesion & tokens
-- **Estimated scope**: 4 archivos (`globals.css`, `motion.ts` nuevo, `docs/motion.md` nuevo, `CLAUDE.md`), unas 50 líneas de código más el documento
-- **Sistema**: implementa §3, §4 y §7 de `plans/000-motion-system.md` y publica ese documento como `docs/motion.md`.
+- **Estimated scope**: 4 archivos (`globals.css`, `motion.ts` nuevo, `docs/motion.md` nuevo, `CLAUDE.md`), unas 60 líneas de código más el documento
+- **Sistema**: implementa §3, §4 y §7 de `plans/000-motion-system.md` (revisión 2, «vivo y funcional») y publica ese documento como `docs/motion.md`.
 
 ## Problem
 
@@ -19,33 +19,11 @@
 
 ## Target
 
-1. Curvas como tokens de tema de Tailwind (generan las utilidades `ease-out`, `ease-in-out` y `ease-drawer`, que también fijan `--tw-ease`, la variable que lee `tw-animate-css`):
-
-```css
-@theme {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-}
-```
-
-2. Duraciones como variables CSS (Tailwind v4 no tiene espacio de tema para duraciones; se usan con `duration-(--duration-…)`):
-
-```css
-:root {
-  --duration-press: 160ms;
-  --duration-menu-in: 180ms;
-  --duration-menu-out: 120ms;
-  --duration-layer-in: 220ms;
-  --duration-layer-out: 150ms;
-  --duration-drawer-in: 320ms;
-  --duration-drawer-out: 220ms;
-}
-```
-
-3. Clase `motion-fade-only`: con `prefers-reduced-motion: reduce` anula el desplazamiento y la escala de `tw-animate-css` y fuerza el fundido. Debe quedar **fuera de cualquier `@layer`**: así gana a las utilidades, que viven en `@layer utilities`.
-
+1. Curvas como tokens de tema de Tailwind. Generan las utilidades `ease-out`, `ease-in-out`, `ease-drawer` y `ease-spring`, que también fijan `--tw-ease`, la variable que lee `tw-animate-css`. `--ease-spring` es un resorte con rebote 0.3 expresado con `linear()` de CSS, sin librería.
+2. Duraciones como variables de `:root`. Tailwind v4 no tiene espacio de tema para duraciones; se usan con `duration-(--duration-…)`.
+3. La clase `motion-fade-only`: con `prefers-reduced-motion: reduce` anula el desplazamiento y la escala de `tw-animate-css` y fuerza el fundido. Va **fuera de cualquier `@layer`** para ganar a las utilidades.
 4. Un módulo con las cadenas de clases compartidas: `web/src/components/ui/motion.ts`.
+5. El sistema publicado en `docs/motion.md` y enlazado desde `CLAUDE.md`.
 
 ## Repo conventions to follow
 
@@ -58,22 +36,27 @@
 1. En `web/src/app/globals.css`, justo después del bloque `@theme inline { … }` (que termina en la línea 61), añade:
 
 ```css
-/* Motion tokens (plans/001). Strong curves: enter/exit with ease-out, on-screen movement with ease-in-out, sheets with the drawer curve. */
+/*
+ * Motion tokens (docs/motion.md). Enter with a spring that settles, leave with a strong ease-out,
+ * sheets with the drawer curve. --ease-spring: damping ratio 0.7 (bounce 0.3), reaches the target at 38 %.
+ */
 @theme {
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: linear(0, 0.0337, 0.1179, 0.2308, 0.3562, 0.482, 0.6001, 0.7056, 0.7957, 0.8698, 0.9283, 0.9726, 1.0043, 1.0255, 1.0383, 1.0445, 1.046, 1.044, 1.0399, 1.0346, 1.0288, 1.023, 1.0177, 1.0129, 1.0089, 1.0056, 1.003, 1.001, 0.9996, 0.9987, 0.9982, 0.9979, 1);
 }
 
-/* Durations: layers leave faster than they enter. Used as duration-(--duration-…). */
+/* Durations, used as duration-(--duration-…). Spring durations include the settle; exits are shorter. */
 :root {
-  --duration-press: 160ms;
-  --duration-menu-in: 180ms;
-  --duration-menu-out: 120ms;
-  --duration-layer-in: 220ms;
-  --duration-layer-out: 150ms;
-  --duration-drawer-in: 320ms;
-  --duration-drawer-out: 220ms;
+  --duration-press: 120ms;
+  --duration-release: 360ms;
+  --duration-menu-in: 260ms;
+  --duration-menu-out: 140ms;
+  --duration-layer-in: 340ms;
+  --duration-layer-out: 180ms;
+  --duration-drawer-in: 380ms;
+  --duration-drawer-out: 240ms;
 }
 
 /*
@@ -94,29 +77,29 @@
 }
 ```
 
-   El bloque `@layer base { … }` de las líneas 63-74 se queda como está y después de lo nuevo.
+   El bloque `@layer base { … }` de las líneas 63-74 se queda como está, después de lo nuevo.
 
 2. Crea `web/src/components/ui/motion.ts` con exactamente este contenido:
 
 ```ts
 /**
- * Shared motion classes for Radix layers (tw-animate-css + the tokens in globals.css, plans/001).
- * Layers enter with a strong ease-out and leave faster. `motion-fade-only` keeps only the fade with reduced motion.
+ * Shared motion classes for Radix layers (docs/motion.md). Layers enter with a settling spring from where they
+ * come from and leave faster with a strong ease-out. `motion-fade-only` keeps only the fade with reduced motion.
  */
 
-/** Dim backdrop behind dialogs. */
+/** Dim backdrop behind dialogs: fades with the dialog. */
 export const overlayMotion =
   "ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-layer-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-(--duration-layer-out)";
 
-/** Centred dialogs: fade and a slight zoom from the centre (correct for modals). */
+/** Centred dialogs: rise and settle from the centre (correct for modals), shrink slightly on the way out. */
 export const dialogMotion =
-  "motion-fade-only ease-out data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-(--duration-layer-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-(--duration-layer-out)";
+  "motion-fade-only data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-90 data-[state=open]:slide-in-from-bottom-4 data-[state=open]:ease-spring data-[state=open]:duration-(--duration-layer-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-out data-[state=closed]:duration-(--duration-layer-out)";
 
-/** Dropdown menus: scale from the trigger, never from the centre. */
+/** Dropdown menus: grow out of the trigger, nudged from its side, never from the centre. */
 export const menuMotion =
-  "motion-fade-only ease-out origin-(--radix-dropdown-menu-content-transform-origin) data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-(--duration-menu-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-(--duration-menu-out)";
+  "motion-fade-only origin-(--radix-dropdown-menu-content-transform-origin) data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-90 data-[state=open]:ease-spring data-[state=open]:duration-(--duration-menu-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:ease-out data-[state=closed]:duration-(--duration-menu-out)";
 
-/** Backdrop behind a sheet: same timing as the sheet. */
+/** Backdrop behind a sheet: same curve and timing as the sheet. */
 export const drawerOverlayMotion =
   "ease-drawer data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:duration-(--duration-drawer-in) data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:duration-(--duration-drawer-out)";
 
@@ -127,7 +110,7 @@ export const drawerMotion =
 
 3. No uses todavía estas constantes en ningún componente: eso lo hacen los planes 003, 004, 005 y 009.
 
-4. Crea `docs/motion.md` copiando `plans/000-motion-system.md` desde «## 1. Personalidad» hasta el final de «## 9», sin la cabecera de estado ni la §10 (decisiones para aprobar). Ponle como título `# Sistema de movimiento` y una línea inicial: «Reglas de movimiento del frontend. Los tokens viven en `web/src/app/globals.css` y las clases compartidas en `web/src/components/ui/motion.ts`.» Está en español, como el resto de `docs/`.
+4. Crea `docs/motion.md` copiando `plans/000-motion-system.md` desde «## 1. Personalidad» hasta el final de «## 9», sin la cabecera de estado ni la §10 (decisiones para aprobar). Título: `# Sistema de movimiento`, con una línea inicial: «Reglas de movimiento del frontend. Los tokens viven en `web/src/app/globals.css` y las clases compartidas en `web/src/components/ui/motion.ts`.» En español, como el resto de `docs/`.
 
 5. En `CLAUDE.md`, en la tabla de documentos (tras la fila de `docs/screens.md`), añade:
    `| \`docs/motion.md\` | Motion system: principles, tokens, choreography per event, reduced motion, performance |`
@@ -137,18 +120,18 @@ export const drawerMotion =
 ## Boundaries
 
 - No toques la paleta (`globals.css:4-61`) ni `@layer base`.
-- No crees otros tokens ni cambies los valores: vienen del catálogo de la auditoría (`.agents/skills/improve-animations/AUDIT.md`, secciones 2 y 6).
-- Ten en cuenta que redefinir `--ease-out` cambia la utilidad `ease-out` que ya usan `web/src/components/quote/room-editor.tsx:223` y `:263` (transiciones de color de 200 ms). Es intencionado: deja esas líneas como están.
+- No cambies los valores: vienen de `plans/000-motion-system.md` (revisión 2) y del catálogo de la auditoría.
+- Redefinir `--ease-out` cambia la utilidad `ease-out` que ya usan `web/src/components/quote/room-editor.tsx:223` y `:263` (transiciones de color de 200 ms). Es intencionado: deja esas líneas como están.
 - No añadas dependencias.
 - Si el código no coincide con lo descrito (cambios desde el commit 02c3f9b), PARA e informa en lugar de improvisar.
 
 ## Verification
 
-- **Mechanical**: `cd web && pnpm lint && pnpm typecheck && pnpm test`: todo en verde. `pnpm build` (sin efectos fuera de `.next/`) compila; en el CSS generado (`.next/static/css/*.css`) aparecen `--ease-drawer`, `--duration-drawer-in` y `.motion-fade-only` **fuera** de `@layer`.
-- **Feel check**: este plan no cambia nada visible, salvo las paredes del editor de estancia: con la nueva curva, el cambio a amarillo debe sentirse algo más inmediato, sin saltos.
+- **Mechanical**: `cd web && pnpm lint && pnpm typecheck && pnpm test`: todo en verde. `pnpm build` compila; en el CSS generado (`.next/static/css/*.css`) aparecen `--ease-spring`, `--duration-drawer-in` y `.motion-fade-only` **fuera** de `@layer`, y las cinco cadenas de `motion.ts` producen sus reglas (comprobar `zoom-in-90`, `ease-spring`, `origin-(--radix-dropdown-menu-content-transform-origin)` y `max-md:data-[state=open]:slide-in-from-bottom`).
+- **Feel check**: este plan no cambia nada visible, salvo las paredes del editor de estancia: con la nueva curva, el cambio a amarillo debe sentirse algo más inmediato.
 - **Done when**:
   - [ ] Los tres bloques están en `globals.css` y `.motion-fade-only` queda fuera de `@layer` en el CSS compilado.
-  - [ ] `motion.ts` existe con las cinco constantes, sin usos todavía.
+  - [ ] `motion.ts` existe con las cinco constantes, sin usos todavía, y sus clases aparecen en el CSS compilado.
   - [ ] `docs/motion.md` existe y `CLAUDE.md` lo enlaza.
-  - [ ] `pnpm lint && pnpm typecheck && pnpm test` en verde.
+  - [ ] `pnpm lint && pnpm typecheck && pnpm test` en verde y `pnpm build` compila.
   - [ ] Entrada en `CHANGELOG.md` bajo **Sin publicar** (en español): «Sistema de movimiento: tokens, clases compartidas y `docs/motion.md`».
