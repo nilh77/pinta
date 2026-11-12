@@ -14,7 +14,14 @@
     },
     "loading": "A carregar…",
     "skipToContent": "Saltar para o conteúdo",
-    "changeLanguage": "{code}, mudar o idioma"
+    "changeLanguage": "{code}, mudar o idioma",
+    "theme": "Tema",
+    "changeTheme": "Tema: {current}",
+    "themes": {
+      "system": "Sistema",
+      "light": "Claro",
+      "dark": "Escuro"
+    }
   },
   "nav": {
     "signIn": "Entrar",

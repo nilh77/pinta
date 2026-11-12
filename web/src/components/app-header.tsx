@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, UserRound } from "lucide-react";
+import { Check, Monitor, Moon, Sun, UserRound } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { DropdownMenu } from "radix-ui";
 import type { ReactNode } from "react";
@@ -8,6 +8,7 @@ import { MorphMenuContent, morphMenuItemClass } from "@/components/ui/dropdown-m
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useMe, useSignOut } from "@/lib/auth/use-auth";
+import { useTheme, type ThemeChoice } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 /** A round 40 px glass control of the header cluster. */
@@ -51,9 +52,45 @@ export function AppHeader({
       </div>
       <div data-morph-cluster className="pointer-events-auto ml-auto flex items-center gap-2">
         <LanguageMenu />
+        <ThemeMenu />
         <AccountMenu />
       </div>
     </header>
+  );
+}
+
+const THEME_OPTIONS = [
+  ["system", Monitor],
+  ["light", Sun],
+  ["dark", Moon],
+] as const;
+
+/** Light, dark or the system's (docs/screens.md, «Tema»). The icon shows the theme in use. */
+function ThemeMenu() {
+  const t = useTranslations("common");
+  const { choice, theme, setChoice } = useTheme();
+  const Icon = theme === "dark" ? Moon : Sun;
+
+  return (
+    <DropdownMenu.Root modal={false}>
+      <DropdownMenu.Trigger data-morph-trigger aria-label={t("changeTheme", { current: t(`themes.${choice}`) })} className={controlClass}>
+        <Icon aria-hidden="true" className="size-4" />
+      </DropdownMenu.Trigger>
+      <MorphMenuContent>
+        <DropdownMenu.Label className={cn(panelHeadClass, "text-xs font-semibold text-muted-foreground")}>{t("theme")}</DropdownMenu.Label>
+        <DropdownMenu.RadioGroup value={choice} onValueChange={(value) => setChoice(value as ThemeChoice)}>
+          {THEME_OPTIONS.map(([option, OptionIcon]) => (
+            <DropdownMenu.RadioItem key={option} value={option} className={morphMenuItemClass}>
+              <OptionIcon aria-hidden="true" className="size-4 text-muted-foreground" />
+              <span className="flex-1">{t(`themes.${option}`)}</span>
+              <DropdownMenu.ItemIndicator>
+                <Check aria-hidden="true" className="size-4 text-primary" />
+              </DropdownMenu.ItemIndicator>
+            </DropdownMenu.RadioItem>
+          ))}
+        </DropdownMenu.RadioGroup>
+      </MorphMenuContent>
+    </DropdownMenu.Root>
   );
 }
 

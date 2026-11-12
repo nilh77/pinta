@@ -330,6 +330,14 @@
   --backdrop-wash: 14%;
   --glass-hairline: color-mix(in oklab, var(--foreground) 9%, transparent);
   --glass-sheen: oklch(1 0 0 / 0.07);
+  /*
+   * In dark the text on glass is light, so the worst case is bright content behind it (the yellow accent, a teal
+   * button): light text needs a 52% fill there, muted and teal text 79%. The admin sidebar never sits over content.
+   */
+  --glass-chrome: 52%;
+  --glass-control: 52%;
+  --glass-fill: 80%;
+  --glass-fill-veiled: 80%;
   --chrome-contact: oklch(0 0 0 / 0.25);
   --chrome-ambient: oklch(0 0 0 / 0.35);
 }

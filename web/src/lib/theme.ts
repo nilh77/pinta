@@ -41,9 +41,10 @@ export function applyTheme(theme: Theme, root: HTMLElement = document.documentEl
   root.classList.add("theme-switching");
   root.classList.toggle("dark", theme === "dark");
   document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((meta) => (meta.content = THEME_COLOR[theme]));
-  // Force a style pass with transitions off, then let them back on.
-  void root.offsetHeight;
-  requestAnimationFrame(() => root.classList.remove("theme-switching"));
+  // Force a style pass with transitions off, then let them back on. A timer, not requestAnimationFrame: rAF never
+  // fires in a hidden tab, which would leave transitions off for good.
+  void getComputedStyle(root).transition;
+  window.setTimeout(() => root.classList.remove("theme-switching"), 1);
 }
 
 function subscribe(onChange: () => void) {
