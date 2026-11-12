@@ -19,6 +19,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 - Cabecera nueva, la misma en todas las áreas (`docs/screens.md`, «Cabecera»): ya no es una barra, sino una píldora de cristal con el logo (en la portada, el logo y los enlaces de sección se quedan como estaban, sin píldora) y, a la derecha, dos controles redondos. **Idioma** abre un panel con PT, ES y EN; **Cuenta** abre un panel por rol (cliente: Mis trabajos, Cuenta, Salir; pintor: Mis trabajos, Pagos, Salir; admin: Panel, Salir) o, sin sesión, lleva a «Entrar». Cada panel crece desde su control y vuelve a él al cerrarse; los vecinos se apartan con él y, en el móvil, lo que tapa se desvanece. En el admin, la navegación queda en una barra lateral de cristal (escritorio) o bajo la cabecera (móvil).
 - Material de cristal esmerilado (`docs/motion.md`): fondo fijo con dos brillos suaves de la marca, cabecera, barra lateral, menús, diálogos y hoja translúcidos con desenfoque. Con transparencia reducida pasan a casi opacos. Rellenos al 28 % (cabecera), 36 % (controles), 52 % (menús) y 64 % (diálogos y hoja, sobre un velo más suave del 20 %), con el texto siempre por encima de 4,5:1. Tokens de modo oscuro preparados, aunque la app sigue solo en claro.
 
+- **Modo oscuro** (`plans/011-dark-mode.md`): paleta oscura con el mismo matiz verde azulado de la marca y todo el texto por encima de 4,5:1. Se elige en la cabecera con un tercer control (sol o luna) cuyo panel ofrece Sistema, Claro y Oscuro; por defecto sigue al sistema. La elección se guarda en el navegador y la página se pinta ya en el tema elegido, sin destello. El pago con Stripe usa también su tema oscuro.
+
+#### Cambiado
+
+- Los colores que estaban escritos a mano en los componentes pasan a tokens con versión clara y oscura (texto verde intenso, líneas del esquema, paredes sin pintar, avisos amarillos, insignias de estado); el botón destructivo tiene su propio color de texto. Las muestras de pintura, el visor de fotos y la página de error global conservan sus colores a propósito.
+
 #### Eliminado
 
 - El selector de idioma de tres botones (`LocaleSwitcher`): lo sustituye el control de idioma de la cabecera.

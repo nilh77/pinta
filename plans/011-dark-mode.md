@@ -1,6 +1,6 @@
 # 011 — Modo oscuro con selector en la cabecera
 
-- **Status**: PROPUESTA (pendiente de revisión)
+- **Status**: DONE (2026-11-12), salvo lo marcado como sin verificar en «Verification»
 - **Commit**: 27bb8c5 (`ui-improvements`)
 - **Category**: Tema, tokens y accesibilidad
 - **Estimated scope**: ~25 archivos (la mayoría, cambiar un color fijo por un token), 2 documentos, 3 traducciones; 5 commits
