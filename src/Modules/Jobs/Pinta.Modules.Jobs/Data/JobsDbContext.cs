@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Domain;
 using Pinta.SharedKernel.Data;
 
@@ -93,6 +94,35 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             """).ToListAsync(cancellationToken);
         var number = numbers.Single();
         return $"PT-{year}-{number:0000}";
+    }
+
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        await WithdrawStaleOffersAsync(cancellationToken);
+        return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    /// <summary>
+    /// P1.2: an offer can only be accepted while the job has its deposit paid. When the job leaves that state by any path
+    /// (scheduled by hand, cancelled, refunded), its open offers are withdrawn so the painter no longer sees them.
+    /// </summary>
+    private async Task WithdrawStaleOffersAsync(CancellationToken cancellationToken)
+    {
+        var left = ChangeTracker.Entries<Job>()
+            .Where(e => e.State == EntityState.Modified
+                && e.Property(j => j.Status).OriginalValue == JobStatus.DepositPaid
+                && e.Entity.Status != JobStatus.DepositPaid)
+            .Select(e => e.Entity)
+            .ToList();
+        foreach (var job in left)
+        {
+            var open = await Assignments.Where(a => a.JobId == job.Id && a.Status == AssignmentStatus.Offered).ToListAsync(cancellationToken);
+            foreach (var offer in open.Where(o => o.Status == AssignmentStatus.Offered))
+            {
+                offer.Status = AssignmentStatus.Withdrawn;
+                offer.RespondedAt = job.UpdatedAt;
+            }
+        }
     }
 }
 

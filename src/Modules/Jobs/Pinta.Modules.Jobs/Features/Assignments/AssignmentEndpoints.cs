@@ -165,7 +165,8 @@ internal static class AssignmentEndpoints
         }
 
         return TypedResults.Ok(new PainterJobs(
-            [.. items.Where(i => i.Status == AssignmentStatus.Offered)],
+            // Only offers the painter can still accept (P1.2).
+            [.. items.Where(i => i.Status == AssignmentStatus.Offered && i.JobStatus == JobStatus.DepositPaid)],
             [.. items.Where(i => i.Status == AssignmentStatus.Accepted && i.JobStatus == JobStatus.Scheduled)],
             [.. items.Where(i => i.Status == AssignmentStatus.Accepted && i.JobStatus == JobStatus.InProgress)],
             [.. items.Where(i => i.Status == AssignmentStatus.Completed || i.JobStatus is JobStatus.Finished or JobStatus.Closed).OrderByDescending(i => i.ScheduledOn)],
@@ -268,7 +269,8 @@ public sealed class OfferReminders(JobsDbContext db, IPainterDirectory painters,
     {
         var now = clock.GetUtcNow();
         var cutoff = now.AddHours(-48);
-        var stale = await db.Assignments.Where(a => a.Status == AssignmentStatus.Offered && a.ReminderSentAt == null && a.OfferedAt < cutoff).ToListAsync();
+        var stale = await db.Assignments.Where(a => a.Status == AssignmentStatus.Offered && a.ReminderSentAt == null && a.OfferedAt < cutoff
+            && db.Jobs.Any(j => j.Id == a.JobId && j.Status == JobStatus.DepositPaid)).ToListAsync();
         var admins = stale.Count == 0 ? [] : await users.ListAdminsAsync();
         foreach (var assignment in stale)
         {
