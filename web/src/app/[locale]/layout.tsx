@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 import { Providers } from "@/components/providers";
+import { themeScript } from "@/lib/theme-script";
 import { pageLocale } from "@/i18n/page-locale";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
@@ -18,6 +19,7 @@ const jakarta = Plus_Jakarta_Sans({
 
 type Props = { children: ReactNode; params: Promise<{ locale: string }> };
 
+// The inline theme script and applyTheme keep this in step with the chosen theme.
 export const viewport: Viewport = { themeColor: "#f5faf8" };
 
 export function generateStaticParams() {
@@ -40,8 +42,12 @@ export default async function LocaleLayout({ children, params }: Props) {
   const t = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <html lang={locale} className={`${inter.variable} ${jakarta.variable}`}>
-      <body className="min-h-dvh">
+    // The theme script adds .dark before React hydrates: the class on <html> may differ from the server render.
+    <html lang={locale} className={`${inter.variable} ${jakarta.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className="canvas-backdrop min-h-dvh">
         <a
           href="#main"
           className="sr-only rounded-xl bg-primary font-semibold text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-3"

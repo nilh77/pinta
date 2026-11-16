@@ -13,7 +13,7 @@ export function Waitlist({ postalCode, locale }: { postalCode: string; locale: s
   const [state, setState] = useState<"idle" | "sending" | "done" | "error">("idle");
 
   return (
-    <div role="alert" className="flex flex-col gap-3 rounded-2xl border border-[#f2d27a] bg-[#fffbeb] p-4 text-[#4a3700]">
+    <div role="alert" className="flex flex-col gap-3 rounded-2xl border border-accent-line bg-accent-wash p-4 text-accent-ink-strong">
       <p className="flex items-start gap-2.5 text-sm">
         <MapPinOff aria-hidden="true" className="mt-0.5 size-[18px] shrink-0" />
         {t("outside")}

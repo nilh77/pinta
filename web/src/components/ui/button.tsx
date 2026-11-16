@@ -11,7 +11,7 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary-hover",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+          "bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline:
           "border-[1.5px] border-border bg-card hover:bg-primary-soft",
         secondary:
@@ -88,7 +88,7 @@ function Button({
 /** The text colour of each variant, for the spinner while the label is transparent. */
 const spinnerColor: Record<NonNullable<VariantProps<typeof buttonVariants>["variant"]>, string> = {
   default: "text-primary-foreground",
-  destructive: "text-white",
+  destructive: "text-destructive-foreground",
   outline: "text-foreground",
   secondary: "text-secondary-foreground",
   ghost: "text-primary",

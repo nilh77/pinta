@@ -23,12 +23,12 @@ export function HouseIllustration() {
             {room}
           </span>
         ))}
-        <span className="flex h-11 items-center rounded-[10px] border-[1.5px] border-dashed border-[#7c918b] bg-card px-2.5 text-xs font-semibold text-muted-foreground">
+        <span className="flex h-11 items-center rounded-[10px] border-[1.5px] border-dashed border-line-dashed bg-card px-2.5 text-xs font-semibold text-muted-foreground">
           + {t("add")}
         </span>
       </div>
-      <figcaption className="absolute right-3.5 -bottom-5 rounded-[14px] bg-foreground px-3.5 py-2.5 text-white">
-        <span className="block text-[11px] text-[#c9d6d2]">{t("estimate")}</span>
+      <figcaption className="absolute right-3.5 -bottom-5 rounded-[14px] bg-foreground px-3.5 py-2.5 text-background">
+        <span className="block text-[11px] text-background/75">{t("estimate")}</span>
         <span className="font-display text-[17px] font-bold">
           {money(1270)} – {money(1620)}
         </span>

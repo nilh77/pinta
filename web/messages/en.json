@@ -13,7 +13,15 @@
       "en": "English"
     },
     "loading": "Loading…",
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "changeLanguage": "{code}, change language",
+    "theme": "Theme",
+    "changeTheme": "Theme: {current}",
+    "themes": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    }
   },
   "nav": {
     "signIn": "Sign in",
@@ -22,7 +30,9 @@
     "myJobs": "My jobs",
     "admin": "Dashboard",
     "painterJobs": "Jobs",
-    "account": "Account"
+    "account": "Account",
+    "accountMenu": "{name}'s account",
+    "payouts": "Payouts"
   },
   "home": {
     "badge": "Lisbon district",

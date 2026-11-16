@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 type Light = NonNullable<Schemas["ReviewLight"]>;
 
 const CLASSES: Record<Light, string> = {
-  green: "bg-primary-soft text-[#0b5f59] before:bg-primary",
+  green: "bg-primary-soft text-primary-ink before:bg-primary",
   amber: "bg-accent-soft text-accent-ink before:bg-accent",
   red: "bg-destructive/10 text-destructive before:bg-destructive",
 };

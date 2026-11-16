@@ -69,7 +69,7 @@ function Row({ label, value, strong, big, tone, separated }: { label: string; va
 
 function Flag({ children, tone }: { children: React.ReactNode; tone?: "accent" }) {
   return (
-    <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", tone === "accent" ? "bg-accent-soft text-accent-ink" : "bg-primary-soft text-[#0b5f59]")}>
+    <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", tone === "accent" ? "bg-accent-soft text-accent-ink" : "bg-primary-soft text-primary-ink")}>
       {children}
     </span>
   );

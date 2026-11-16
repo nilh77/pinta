@@ -13,7 +13,15 @@
       "en": "English"
     },
     "loading": "Cargando…",
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "changeLanguage": "{code}, cambiar el idioma",
+    "theme": "Tema",
+    "changeTheme": "Tema: {current}",
+    "themes": {
+      "system": "Sistema",
+      "light": "Claro",
+      "dark": "Oscuro"
+    }
   },
   "nav": {
     "signIn": "Entrar",
@@ -22,7 +30,9 @@
     "myJobs": "Mis trabajos",
     "admin": "Panel",
     "painterJobs": "Trabajos",
-    "account": "Cuenta"
+    "account": "Cuenta",
+    "accountMenu": "Cuenta de {name}",
+    "payouts": "Pagos"
   },
   "home": {
     "badge": "Distrito de Lisboa",

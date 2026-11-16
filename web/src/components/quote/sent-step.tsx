@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MailCheck } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { AppHeader } from "@/components/app-header";
 import { InstallInvite } from "@/components/install-invite";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
@@ -41,16 +41,13 @@ export function SentStep({ code }: { code: string }) {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="mx-auto flex w-full max-w-2xl items-center justify-between px-4 pt-3 sm:px-6">
-        <Logo className="text-[22px]" />
-        <LocaleSwitcher />
-      </header>
+      <AppHeader leading={<Logo className="min-h-0 text-xl" />} />
       <main id="main" className="mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 pt-6 pb-36 sm:px-6 lg:pb-12">
         <div className="flex flex-col items-center text-center">
           <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true">
             <circle cx="56" cy="56" r="54" fill="var(--accent-soft)" />
             <circle cx="56" cy="56" r="36" fill="var(--primary)" />
-            <path d="M40 57l11 11 22-24" fill="none" stroke="#fff" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M40 57l11 11 22-24" fill="none" stroke="var(--primary-foreground)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
             <circle cx="98" cy="22" r="6" fill="var(--accent)" />
           </svg>
           <h1 className="mt-5 text-[28px] font-extrabold tracking-tight">{t("title")}</h1>
@@ -74,7 +71,7 @@ export function SentStep({ code }: { code: string }) {
                       i === 0
                         ? "flex size-7 items-center justify-center rounded-full bg-primary text-[13px] font-bold text-primary-foreground"
                         : i === 1
-                          ? "flex size-7 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-[#0b5f59]"
+                          ? "flex size-7 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-primary-ink"
                           : "flex size-7 items-center justify-center rounded-full bg-accent-soft text-[13px] font-bold text-accent-ink"
                     }
                   >

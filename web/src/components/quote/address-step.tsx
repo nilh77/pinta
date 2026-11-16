@@ -115,7 +115,7 @@ function AddressForm({ draft, catalog, info, update }: QuoteContext) {
             </p>
           )}
           {coverage.status === "covered" && (
-            <p className="flex items-center gap-2.5 rounded-xl bg-primary-soft px-3.5 py-3 text-[13px] font-medium text-[#0b5f59]">
+            <p className="flex items-center gap-2.5 rounded-xl bg-primary-soft px-3.5 py-3 text-[13px] font-medium text-primary-ink">
               <CheckCircle2 aria-hidden="true" className="size-[18px] shrink-0 text-primary" />
               {t("covered", { municipality: coverage.municipality ?? "" })}
             </p>

@@ -3,12 +3,12 @@
 import { ClipboardCheck, LayoutList, MapPinned, PaintRoller, Settings, Tags, Wallet } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, type ReactNode } from "react";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { AppHeader } from "@/components/app-header";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
-import { signedOut, useMe, useSignOut } from "@/lib/auth/use-auth";
+import { signedOut, useMe } from "@/lib/auth/use-auth";
 
 const SECTIONS = [
   { href: "/admin/trabajos", key: "jobs", icon: LayoutList },
@@ -26,7 +26,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const me = useMe();
   const router = useRouter();
   const pathname = usePathname();
-  const signOut = useSignOut();
 
   useEffect(() => {
     if (me.data === null) router.replace(signedOut() ? "/" : `/entrar?next=${encodeURIComponent(pathname)}`);
@@ -66,67 +65,46 @@ export function AdminShell({ children }: { children: ReactNode }) {
     );
   }
 
-  const initials = me.data.name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
+  const nav = (className: string) => (
+    <nav aria-label={t("nav.label")} className={className}>
+      {SECTIONS.map(({ href, key, icon: Icon }) => {
+        const current = pathname === href || pathname.startsWith(`${href}/`);
+        return (
+          <Link
+            key={href}
+            href={href}
+            aria-current={current ? "page" : undefined}
+            className="flex min-h-11 shrink-0 items-center gap-2.5 rounded-xl px-3 text-sm font-semibold text-muted-foreground hover:bg-primary-soft hover:text-foreground aria-[current=page]:bg-primary-soft aria-[current=page]:text-primary"
+          >
+            <Icon aria-hidden="true" className="size-4" />
+            {t(`nav.${key}`)}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+  const brand = (
+    <div className="flex items-center gap-2">
+      <Logo className="min-h-0 text-xl" />
+      <span className="rounded-md bg-primary-soft px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-primary">{t("badge")}</span>
+    </div>
+  );
 
+  // Language and account live in the shared header; the sections stay in a floating glass sidebar on desktop and
+  // in a scrolling row under the header on phones (docs/screens.md, «Cabecera»).
   return (
     <div className="flex min-h-dvh flex-col lg:flex-row">
-      <aside className="flex flex-col gap-3 border-b border-border bg-card px-4 py-3 lg:sticky lg:top-0 lg:h-dvh lg:w-56 lg:shrink-0 lg:border-r lg:border-b-0 lg:px-3.5 lg:py-5">
-        <div className="flex items-center justify-between gap-2 lg:px-1.5">
-          <div className="flex items-center gap-2">
-            <Logo />
-            <span className="rounded-md bg-primary-soft px-1.5 py-0.5 text-[11px] font-bold tracking-wide text-primary">
-              {t("badge")}
-            </span>
-          </div>
-          <div className="lg:hidden">
-            <LocaleSwitcher />
-          </div>
-        </div>
-        <nav aria-label={t("nav.label")} className="flex gap-1 overflow-x-auto lg:flex-col">
-          {SECTIONS.map(({ href, key, icon: Icon }) => {
-            const current = pathname === href || pathname.startsWith(`${href}/`);
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={current ? "page" : undefined}
-                className="flex min-h-11 items-center gap-2.5 rounded-xl px-3 text-sm font-semibold text-muted-foreground hover:bg-primary-soft hover:text-foreground aria-[current=page]:bg-primary-soft aria-[current=page]:text-primary"
-              >
-                <Icon aria-hidden="true" className="size-4" />
-                {t(`nav.${key}`)}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="mt-auto hidden flex-col gap-3 lg:flex">
-          <LocaleSwitcher />
-          <div className="flex items-center gap-2.5 px-1.5">
-            <span aria-hidden="true" className="flex size-9 items-center justify-center rounded-full bg-primary-soft text-sm font-bold text-primary">
-              {initials}
-            </span>
-            <div className="min-w-0">
-              <div className="truncate text-sm font-semibold">{me.data.name}</div>
-              <div className="text-xs text-muted-foreground">{t("role")}</div>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            disabled={signOut.isPending}
-            onClick={() => signOut.mutate(undefined, { onSuccess: () => router.push("/") })}
-          >
-            {t("signOut")}
-          </Button>
-        </div>
+      <aside className="hidden lg:sticky lg:top-4 lg:m-4 lg:mr-0 lg:flex lg:h-[calc(100dvh-2rem)] lg:w-56 lg:shrink-0 lg:flex-col lg:gap-4 lg:rounded-3xl lg:glass lg:bg-glass-chrome lg:px-3.5 lg:py-5 lg:shadow-chrome">
+        <div className="px-1.5">{brand}</div>
+        {nav("flex flex-col gap-1")}
       </aside>
-      <main id="main" className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-7">
-        {children}
-      </main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <AppHeader leading={brand} leadingClassName="lg:hidden" />
+        {nav("flex gap-1 overflow-x-auto px-4 pb-2 sm:px-6 lg:hidden")}
+        <main id="main" className="min-w-0 flex-1 px-4 pt-2 pb-6 sm:px-6 lg:px-8 lg:pb-7">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

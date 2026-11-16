@@ -35,7 +35,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   return (
     <>
       <SiteHeader>
-        <nav aria-label={t("sectionsLabel")} className="hidden items-center gap-1 lg:flex">
+        <nav aria-label={t("sectionsLabel")} className="ml-2 hidden items-center gap-1 lg:flex">
           {(["como", "que", "garantias"] as const).map((id) => (
             <a key={id} href={`#${id}`} className="flex h-11 items-center rounded-xl px-3 text-sm font-medium text-muted-foreground hover:text-foreground">
               {t(`nav.${id}`)}
@@ -125,7 +125,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <h2 id="cta-title" className="text-2xl leading-tight font-extrabold tracking-tight text-accent-foreground lg:text-3xl">
               {t("ctaBand.title")}
             </h2>
-            <p className="mt-2 text-sm text-[#3d3000]">{t("ctaBand.body")}</p>
+            <p className="mt-2 text-sm text-accent-foreground-soft">{t("ctaBand.body")}</p>
           </div>
           <div className="mt-4 lg:mt-0 lg:shrink-0">{quoteButton("dark")}</div>
         </section>

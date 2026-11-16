@@ -3,7 +3,7 @@
 import { ChevronLeft, RefreshCw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState, type ReactNode } from "react";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { AppHeader } from "@/components/app-header";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -61,22 +61,25 @@ export function QuoteShell({ step, back, wide, children }: ShellProps) {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className={cn("mx-auto w-full px-4 pt-3 sm:px-6", wide ? "max-w-[1400px]" : "max-w-2xl")}>
-        <div className="flex items-center justify-between gap-2">
-          <Link
-            href={back.href}
-            aria-label={back.label}
-            className="flex size-11 items-center justify-center rounded-xl text-foreground hover:bg-primary-soft focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-          >
-            <ChevronLeft aria-hidden="true" className="size-6" />
-          </Link>
-          <Logo className="text-[22px]" />
-          <LocaleSwitcher />
-        </div>
-        <div className="mt-2 lg:mx-auto lg:max-w-xl">
+      <AppHeader
+        leading={
+          <>
+            <Link
+              href={back.href}
+              aria-label={back.label}
+              className="-ml-2.5 flex size-8 items-center justify-center rounded-full text-foreground hover:bg-card focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+            >
+              <ChevronLeft aria-hidden="true" className="size-5" />
+            </Link>
+            <Logo className="min-h-0 text-xl" />
+          </>
+        }
+      />
+      <div className={cn("mx-auto w-full px-4 sm:px-6", wide ? "max-w-[1400px]" : "max-w-2xl")}>
+        <div className="lg:mx-auto lg:max-w-xl">
           <QuoteProgress current={step} />
         </div>
-      </header>
+      </div>
       <main id="main" className={cn("mx-auto flex w-full flex-1 flex-col px-4 pt-5 sm:px-6", wide ? "max-w-[1400px]" : "max-w-2xl")}>
         {ready ? (
           children({ catalog: catalog.data!, info: catalog.info!, draft, update, reset })
