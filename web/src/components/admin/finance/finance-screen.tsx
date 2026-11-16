@@ -16,6 +16,7 @@ import {
   COST_CATEGORIES,
   currentMonth,
   exportFinanceUrl,
+  recentMonths,
   todayInLisbon,
   useAddCost,
   useCloseMonth,
@@ -41,7 +42,8 @@ export function FinanceScreen() {
   const locale = useLocale();
   const [month, setMonth] = useState(currentMonth);
   const summary = useFinanceSummary(month);
-  const monthName = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${month}-01T00:00:00Z`));
+  const monthFormat = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" });
+  const monthName = monthFormat.format(new Date(`${month}-01T00:00:00Z`));
 
   return (
     <div className="flex flex-col gap-6">
@@ -53,7 +55,14 @@ export function FinanceScreen() {
         <div className="flex flex-wrap items-end gap-2">
           <label className="flex flex-col gap-1 text-[13px] font-semibold">
             {t("month")}
-            <input type="month" value={month} max={currentMonth()} onChange={(e) => e.target.value && setMonth(e.target.value)} className={fieldClass} />
+            {/* A list, not a month input: Safari shows that as free text and a half-typed month broke the page. */}
+            <select value={month} onChange={(e) => setMonth(e.target.value)} className={cn(fieldClass, "capitalize")}>
+              {recentMonths(currentMonth()).map((m) => (
+                <option key={m} value={m}>
+                  {monthFormat.format(new Date(`${m}-01T00:00:00Z`))}
+                </option>
+              ))}
+            </select>
           </label>
           <Button asChild variant="outline" className="h-11">
             <a href={exportFinanceUrl(month)} download>

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { applyTheme, parseChoice, resolveTheme, themeScript, THEME_KEY } from "./theme";
+import { applyTheme, oppositeTheme, parseChoice, resolveTheme, themeScript, THEME_KEY } from "./theme";
 
 const media = (dark: boolean) =>
   vi.fn().mockReturnValue({ matches: dark, addEventListener: () => {}, removeEventListener: () => {} }) as unknown as typeof window.matchMedia;
@@ -23,6 +23,12 @@ describe("parseChoice and resolveTheme", () => {
     expect(resolveTheme("system", false)).toBe("light");
     expect(resolveTheme("light", true)).toBe("light");
     expect(resolveTheme("dark", false)).toBe("dark");
+  });
+
+  it("one tap goes to the other theme of the one on screen", () => {
+    expect(oppositeTheme(resolveTheme("system", true))).toBe("light");
+    expect(oppositeTheme(resolveTheme("system", false))).toBe("dark");
+    expect(oppositeTheme("dark")).toBe("light");
   });
 });
 

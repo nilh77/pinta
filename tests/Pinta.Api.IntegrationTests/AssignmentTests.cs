@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Jobs.Features.Assignments;
 using Pinta.Modules.Notifications.Contracts;
@@ -112,6 +113,39 @@ public class AssignmentTests(PintaApiFactory factory)
         Assert.Equal(HttpStatusCode.NoContent, declined.StatusCode);
         Assert.Contains(factory.Emails.To<AssignmentDeclinedEmail>(TestData.AdminEmail), e => e.Code == s.Job.Code && e.Reason == "Estou de férias.");
         Assert.Equal("deposit_paid", (await (await s.Job.Client.GetAsync($"/api/jobs/{s.Job.JobId}")).ReadJsonAsync()).GetProperty("status").GetString());
+    }
+
+    [Fact]
+    public async Task P1_2_A3_3_scheduling_by_hand_withdraws_the_open_offer()
+    {
+        var s = await TestAssignments.ReadyAsync(factory);
+        await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, s.PainterId, 2);
+        var offerId = await TestAssignments.OfferIdAsync(s.Painter);
+
+        var manual = await s.Admin.PostAsJsonAsync($"/api/admin/jobs/{s.Job.JobId}/transition",
+            new { to = "scheduled", reason = "Combinado por telefone", scheduledOn = DateOnly.FromDateTime(DateTime.UtcNow).AddDays(3) }, ApiClient.Json);
+
+        Assert.Equal(HttpStatusCode.NoContent, manual.StatusCode);
+        var jobs = await (await s.Painter.GetAsync("/api/painter/jobs")).ReadJsonAsync();
+        Assert.Empty(jobs.GetProperty("offers").EnumerateArray());
+        await using var scope = factory.Services.CreateAsyncScope();
+        var db = scope.ServiceProvider.GetRequiredService<JobsDbContext>();
+        Assert.Equal(AssignmentStatus.Withdrawn, (await db.Assignments.SingleAsync(a => a.Id == offerId)).Status);
+    }
+
+    [Fact]
+    public async Task P1_2_cancelling_the_job_withdraws_the_open_offer()
+    {
+        var s = await TestAssignments.ReadyAsync(factory);
+        await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, s.PainterId, 10);
+        var offerId = await TestAssignments.OfferIdAsync(s.Painter);
+
+        Assert.Equal(HttpStatusCode.NoContent, (await s.Job.Client.PostAsJsonAsync($"/api/jobs/{s.Job.JobId}/cancel", new { reason = "Mudança." }, ApiClient.Json)).StatusCode);
+
+        var jobs = await (await s.Painter.GetAsync("/api/painter/jobs")).ReadJsonAsync();
+        Assert.Empty(jobs.GetProperty("offers").EnumerateArray());
+        var late = await s.Painter.PostAsJsonAsync($"/api/painter/assignments/{offerId}/accept", new { }, ApiClient.Json);
+        await ProblemAssert.HasCodeAsync(late, HttpStatusCode.Conflict, "assignment_taken");
     }
 
     [Fact]

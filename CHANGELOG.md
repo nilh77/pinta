@@ -6,6 +6,21 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Arreglos del recorrido en Railway
+
+#### Cambiado
+
+- El control de tema de la cabecera es ahora un botón: cada toque pasa al tema contrario del que se ve (claro ↔ oscuro). Hasta el primer toque se sigue el tema del sistema. Ya no hay panel con Sistema, Claro y Oscuro (`docs/screens.md`, «Cabecera» y «Tema»).
+- En la portada, con sesión iniciada, el menú de usuario se sustituye por un enlace con texto al área de cada rol: «Mis trabajos» para cliente y pintor, «Panel» para el admin (`docs/screens.md`, «Cabecera»).
+- Los avisos de error se cierran solos a los 8 s, en lugar de quedarse hasta pulsar la ×, que se mantiene (`docs/screens.md`, «Estados globales»).
+- Finanças: el mes se elige en una lista con los últimos 24 meses, con el nombre del mes en el idioma del admin (A5.1).
+
+#### Corregido
+
+- Cuando un trabajo deja «Señal pagada» (se programa a mano, se cancela, etc.), sus ofertas abiertas se retiran. El pintor ya no ve en «Ofertas» un trabajo que no puede aceptar, ni el aviso «Esta oferta ya no está disponible», y el aviso de 48 h sin respuesta lo ignora (P1.2, A3.3).
+- Finanças: en Safari para Mac, el campo de mes era texto libre, y un mes escrito a medias rompía la página con un error 500 (A5.1).
+- Las medidas exactas del constructor y las del borrador del admin solo admiten números y un separador decimal: las letras escritas o pegadas se descartan, y «4,2 m» queda en 4,2 (C2.4).
+
 ### Dependencias
 
 #### Cambiado

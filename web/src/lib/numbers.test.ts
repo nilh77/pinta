@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { centsFromInput, centsToInput, decimalPlaces, formatDecimalInput, parseDecimal } from "./numbers";
+import { centsFromInput, centsToInput, decimalPlaces, formatDecimalInput, measureTyping, parseDecimal } from "./numbers";
+
+describe("measureTyping (C2.4)", () => {
+  it.each([
+    ["4,2", "4,2"],
+    ["abc", ""],
+    ["4a,2b", "4,2"],
+    [" 3.5 m ", "3.5"],
+    ["1,2,3", "1,23"],
+    ["-2", "2"],
+  ])("%j keeps %j", (typed, kept) => expect(measureTyping(typed)).toBe(kept));
+});
 
 describe("parseDecimal", () => {
   it.each([
