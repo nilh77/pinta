@@ -18,6 +18,15 @@ const summaryKey = (month: string) => ["admin", "finance", month] as const;
 /** The current month in Lisbon as YYYY-MM. */
 export const currentMonth = () => new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" }).slice(0, 7);
 
+/** A5.1: the months the admin can pick, newest first: `count` months ending at `latest` (YYYY-MM). */
+export function recentMonths(latest: string, count = 24): string[] {
+  const [year, month] = latest.split("-").map(Number);
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date(Date.UTC(year, month - 1 - i, 1));
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+  });
+}
+
 /** Today in Lisbon as YYYY-MM-DD. */
 export const todayInLisbon = () => new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
 
