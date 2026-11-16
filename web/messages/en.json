@@ -15,13 +15,7 @@
     "loading": "Loading…",
     "skipToContent": "Skip to content",
     "changeLanguage": "{code}, change language",
-    "theme": "Theme",
-    "changeTheme": "Theme: {current}",
-    "themes": {
-      "system": "System",
-      "light": "Light",
-      "dark": "Dark"
-    }
+    "darkTheme": "Dark theme"
   },
   "nav": {
     "signIn": "Sign in",

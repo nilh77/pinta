@@ -23,6 +23,9 @@ export function resolveTheme(choice: ThemeChoice, systemDark: boolean): Theme {
   return choice === "system" ? (systemDark ? "dark" : "light") : choice;
 }
 
+/** The header button's tap: the other theme from the one on screen, whether it came from the system or a choice. */
+export const oppositeTheme = (theme: Theme): Theme => (theme === "dark" ? "light" : "dark");
+
 function readChoice(): ThemeChoice {
   try {
     return parseChoice(localStorage.getItem(THEME_KEY));

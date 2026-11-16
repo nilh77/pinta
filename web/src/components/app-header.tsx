@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Monitor, Moon, Sun, UserRound } from "lucide-react";
+import { Check, Moon, Sun, UserRound } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { DropdownMenu } from "radix-ui";
 import type { ReactNode } from "react";
@@ -8,7 +8,7 @@ import { MorphMenuContent, morphMenuItemClass } from "@/components/ui/dropdown-m
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useMe, useSignOut } from "@/lib/auth/use-auth";
-import { useTheme, type ThemeChoice } from "@/lib/theme";
+import { oppositeTheme, useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 /** A round 40 px glass control of the header cluster. */
@@ -52,45 +52,32 @@ export function AppHeader({
       </div>
       <div data-morph-cluster className="pointer-events-auto ml-auto flex items-center gap-2">
         <LanguageMenu />
-        <ThemeMenu />
-        <AccountMenu />
+        <ThemeToggle />
+        {plainLeading ? <AreaLink /> : <AccountMenu />}
       </div>
     </header>
   );
 }
 
-const THEME_OPTIONS = [
-  ["system", Monitor],
-  ["light", Sun],
-  ["dark", Moon],
-] as const;
-
-/** Light, dark or the system's (docs/screens.md, «Tema»). The icon shows the theme in use. */
-function ThemeMenu() {
+/**
+ * One tap switches to the other theme (docs/screens.md, «Tema»): until the first tap the page follows the system.
+ * The icon shows the theme in use; the button is pressed while dark is on.
+ */
+function ThemeToggle() {
   const t = useTranslations("common");
-  const { choice, theme, setChoice } = useTheme();
+  const { theme, setChoice } = useTheme();
   const Icon = theme === "dark" ? Moon : Sun;
 
   return (
-    <DropdownMenu.Root modal={false}>
-      <DropdownMenu.Trigger data-morph-trigger aria-label={t("changeTheme", { current: t(`themes.${choice}`) })} className={controlClass}>
-        <Icon aria-hidden="true" className="size-4" />
-      </DropdownMenu.Trigger>
-      <MorphMenuContent>
-        <DropdownMenu.Label className={cn(panelHeadClass, "text-xs font-semibold text-muted-foreground")}>{t("theme")}</DropdownMenu.Label>
-        <DropdownMenu.RadioGroup value={choice} onValueChange={(value) => setChoice(value as ThemeChoice)}>
-          {THEME_OPTIONS.map(([option, OptionIcon]) => (
-            <DropdownMenu.RadioItem key={option} value={option} className={morphMenuItemClass}>
-              <OptionIcon aria-hidden="true" className="size-4 text-muted-foreground" />
-              <span className="flex-1">{t(`themes.${option}`)}</span>
-              <DropdownMenu.ItemIndicator>
-                <Check aria-hidden="true" className="size-4 text-primary" />
-              </DropdownMenu.ItemIndicator>
-            </DropdownMenu.RadioItem>
-          ))}
-        </DropdownMenu.RadioGroup>
-      </MorphMenuContent>
-    </DropdownMenu.Root>
+    <button
+      type="button"
+      aria-label={t("darkTheme")}
+      aria-pressed={theme === "dark"}
+      onClick={() => setChoice(oppositeTheme(theme))}
+      className={controlClass}
+    >
+      <Icon aria-hidden="true" className="size-4" />
+    </button>
   );
 }
 
@@ -134,22 +121,43 @@ const ROLE_LINKS = {
   admin: [["/admin/revision", "admin"]],
 } as const;
 
+function AccountPlaceholder() {
+  return <span aria-hidden="true" className="size-10 shrink-0 animate-pulse rounded-full bg-primary-soft motion-reduce:animate-none" />;
+}
+
+function SignInLink() {
+  const t = useTranslations("nav");
+  return (
+    <Link href="/entrar" aria-label={t("signIn")} className={controlClass}>
+      <UserRound aria-hidden="true" className="size-4" />
+    </Link>
+  );
+}
+
+/** On the landing a signed-in person gets a plain link to their area instead of the account menu (docs/screens.md, «Cabecera»). */
+function AreaLink() {
+  const t = useTranslations("nav");
+  const me = useMe();
+
+  if (me.isPending) return <AccountPlaceholder />;
+  if (!me.data) return <SignInLink />;
+
+  const [href, key] = ROLE_LINKS[me.data.role][0];
+  return (
+    <Link href={href} className={cn(controlClass, "w-auto px-4 text-sm")}>
+      {t(key)}
+    </Link>
+  );
+}
+
 function AccountMenu() {
   const t = useTranslations("nav");
   const me = useMe();
   const signOut = useSignOut();
   const router = useRouter();
 
-  if (me.isPending) {
-    return <span aria-hidden="true" className="size-10 shrink-0 animate-pulse rounded-full bg-primary-soft motion-reduce:animate-none" />;
-  }
-  if (!me.data) {
-    return (
-      <Link href="/entrar" aria-label={t("signIn")} className={controlClass}>
-        <UserRound aria-hidden="true" className="size-4" />
-      </Link>
-    );
-  }
+  if (me.isPending) return <AccountPlaceholder />;
+  if (!me.data) return <SignInLink />;
 
   const { name, email, role } = me.data;
   const initials = name
