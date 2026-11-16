@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useId, useState, type ReactNode } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatArea, formatMetres } from "@/lib/format";
-import { parseDecimal } from "@/lib/numbers";
+import { measureTyping, parseDecimal } from "@/lib/numbers";
 import {
   elementAreaOf,
   setMeasureMode,
@@ -327,7 +327,7 @@ function MeasureInput({
         placeholder={placeholder}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(measureTyping(e.target.value))}
         className="h-12 w-full min-w-0 rounded-xl border-[1.5px] border-input bg-card px-3 text-base tabular-nums outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive"
       />
       {error && (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ComponentProps } from "react";
+import { measureTyping } from "@/lib/numbers";
 import { cn } from "@/lib/utils";
 
 const parse = (text: string): number | null => {
@@ -26,8 +27,9 @@ export function DecimalInput({ value, onChange, invalid, className, ...input }: 
       value={text}
       aria-invalid={invalid || (text !== "" && parse(text) === null) ? true : undefined}
       onChange={(e) => {
-        setText(e.target.value);
-        const parsed = parse(e.target.value);
+        const typed = measureTyping(e.target.value);
+        setText(typed);
+        const parsed = parse(typed);
         setLast(parsed);
         onChange(parsed);
       }}

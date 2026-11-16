@@ -17,6 +17,13 @@ export function parseDecimal(text: string): number | null {
   return Number(normalised);
 }
 
+/** What a measure field keeps while typing or pasting: digits and one decimal separator ("4,2 m" → "4,2", "abc" → ""). */
+export function measureTyping(text: string): string {
+  const kept = text.replace(/[^\d.,]/g, "");
+  const separator = kept.search(/[.,]/);
+  return separator < 0 ? kept : kept.slice(0, separator + 1) + kept.slice(separator + 1).replace(/[.,]/g, "");
+}
+
 /** Decimal places of what was typed, e.g. "8,125" → 3. */
 export function decimalPlaces(text: string): number {
   const value = text.trim();
