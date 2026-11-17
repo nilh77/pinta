@@ -10,8 +10,13 @@ export const kindKey = (kind: NotificationKind) => kind.replace(/_(\w)/g, (_, c:
 /** The values a notice's text uses: its job code plus its data (name, count…). */
 export const textValues = (n: NotificationDto) => ({ code: n.jobCode ?? "", name: "", count: "", ...n.data });
 
+const PAINTER_LIST_KINDS: NotificationKind[] = ["offer_received", "offer_withdrawn", "job_cancelled"];
+
 /** Where a notice leads (docs/screens.md, «Avisos»): its job in the user's area, or the screen its kind belongs to. */
 export function notificationHref(n: NotificationDto, role: Role): string {
+  // An offer is not the painter's job yet (its detail answers «not found»), and a withdrawn or cancelled one no longer
+  // is: they open the painter's jobs, which start on the Ofertas tab when there are offers.
+  if (role === "painter" && PAINTER_LIST_KINDS.includes(n.kind)) return "/pintor";
   if (n.jobId) {
     if (role === "admin") return `/admin/trabajos/${n.jobId}`;
     if (role === "painter") return n.kind === "site_visit_assigned" ? `/pintor/visitas/${n.jobId}` : `/pintor/trabajos/${n.jobId}`;

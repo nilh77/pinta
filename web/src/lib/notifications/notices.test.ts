@@ -32,6 +32,10 @@ describe("notices (docs/screens.md, «Avisos»)", () => {
     expect(notificationHref(notice(), "client")).toBe("/mis-trabajos/job-1");
     expect(notificationHref(notice(), "admin")).toBe("/admin/trabajos/job-1");
     expect(notificationHref(notice({ kind: "site_visit_assigned" }), "painter")).toBe("/pintor/visitas/job-1");
+    expect(notificationHref(notice({ kind: "progress_photos" }), "painter")).toBe("/pintor/trabajos/job-1");
+    // An offer is not the painter's job yet: it opens the offers list.
+    expect(notificationHref(notice({ kind: "offer_received" }), "painter")).toBe("/pintor");
+    expect(notificationHref(notice({ kind: "job_cancelled" }), "painter")).toBe("/pintor");
     expect(notificationHref(notice({ kind: "reviews_overdue", jobId: null }), "admin")).toBe("/admin/revision");
     expect(notificationHref(notice({ kind: "account_deletion_requested", jobId: null }), "admin")).toBe("/admin/ajustes");
   });

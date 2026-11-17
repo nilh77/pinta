@@ -6,6 +6,7 @@ import { setApiLanguage } from "@/lib/api/client";
 import { startPwa } from "@/lib/pwa/install";
 import { useThemeSync } from "@/lib/theme";
 import { CookieNotice, OfflineBanner, SessionExpiredDialog } from "./global-states";
+import { PushInvite } from "./notifications/push-invite";
 import { Toaster } from "./toaster";
 
 export function Providers({ locale, children }: { locale: string; children: ReactNode }) {
@@ -21,6 +22,7 @@ export function Providers({ locale, children }: { locale: string; children: Reac
       <Toaster />
       <SessionExpiredDialog />
       <CookieNotice />
+      <PushInvite />
     </QueryClientProvider>
   );
 }

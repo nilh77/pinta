@@ -289,8 +289,9 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
   - La página `/avisos` muestra lo mismo, paginado, con «Marcar todo como leído».
   - El texto lo compone la web en el idioma de la interfaz a partir del tipo de aviso y sus datos.
 - **Acciones**:
-  - Pulsar un aviso lo marca como leído y lleva a su trabajo: el admin a `/admin/trabajos/{id}`, el pintor a `/pintor/trabajos/{id}` y el cliente a `/mis-trabajos/{id}`. Los avisos sin trabajo llevan a la pantalla que les corresponde (Ajustes, Pintores).
+  - Pulsar un aviso lo marca como leído y lleva a su trabajo: el admin a `/admin/trabajos/{id}`, el pintor a `/pintor/trabajos/{id}` y el cliente a `/mis-trabajos/{id}`. Excepciones del pintor: las ofertas nuevas o retiradas y los trabajos cancelados llevan a sus trabajos (`/pintor`), que abren en la pestaña Ofertas cuando hay alguna, porque una oferta aún no es su trabajo. Los avisos sin trabajo llevan a la pantalla que les corresponde (Ajustes, Pintores).
   - El interruptor pide permiso al navegador solo al activarlo, nunca al cargar la página, y registra el dispositivo para el push. Desactivarlo lo da de baja.
+  - **Invitación** (decisión de 2026-11-17): en pantallas táctiles, con sesión, si el push se puede activar en ese dispositivo y aún no está activado, aparece una vez una tarjeta inferior «¿Te avisamos en este móvil?» con «Activar avisos» y «Ahora no». «Activar avisos» lanza el permiso del sistema, que el navegador solo enseña tras un toque. «Ahora no» la oculta 14 días en ese dispositivo (`localStorage`); no aparece si el permiso está bloqueado, si el navegador no admite push o si el iPhone no tiene la app instalada.
 - **Estados**:
   - Sin avisos: «No tienes avisos».
   - Carga con esqueleto; error con «Reintentar».

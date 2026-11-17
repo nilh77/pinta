@@ -1872,6 +1872,17 @@
     "retry": "Tentar de novo",
     "unread": "Por ler",
     "loading": "A carregar os avisos…",
+    "invite": {
+      "title": "Avisamos neste telemóvel?",
+      "body": {
+        "client": "Avisamos quando o preço estiver pronto, o trabalho for marcado ou houver fotos novas.",
+        "painter": "Avisamos logo de ofertas novas, visitas e mudanças nos seus trabalhos.",
+        "admin": "Avisamos de pedidos novos, pagamentos, ofertas e incidências."
+      },
+      "enable": "Ativar avisos",
+      "later": "Agora não",
+      "error": "Não foi possível ativar os avisos. Tente de novo."
+    },
     "push": "Avisos neste dispositivo",
     "pushOn": "Ativos neste dispositivo.",
     "pushOff": "Receba avisos mesmo com a Pinta fechada.",

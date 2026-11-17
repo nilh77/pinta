@@ -22,8 +22,31 @@ public sealed record PushOptions(string? PublicKey, string? PrivateKey, string S
 {
     public bool Enabled => !string.IsNullOrWhiteSpace(PublicKey) && !string.IsNullOrWhiteSpace(PrivateKey);
 
+    public const string DefaultSubject = "mailto:hello@pinta.pt";
+
     public static PushOptions From(IConfiguration configuration) => new(
-        configuration["Push:PublicKey"], configuration["Push:PrivateKey"], configuration["Push:Subject"] ?? "mailto:hello@pinta.pt");
+        configuration["Push:PublicKey"]?.Trim(), configuration["Push:PrivateKey"]?.Trim(), NormalizeSubject(configuration["Push:Subject"]));
+
+    /// <summary>
+    /// The push services want a <c>mailto:</c> or <c>https:</c> contact; a bare email (the usual way to fill the
+    /// variable) gets its <c>mailto:</c>, and anything else falls back to Pinta's.
+    /// </summary>
+    public static string NormalizeSubject(string? subject)
+    {
+        var value = subject?.Trim().Trim('"', '\'') ?? "";
+        if (value.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+        {
+            value = "mailto:" + value["mailto:".Length..].Trim();
+            return value.Contains('@') ? value : DefaultSubject;
+        }
+
+        if (value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            return value;
+        }
+
+        return value.Contains('@') && !value.Contains(' ') ? $"mailto:{value}" : DefaultSubject;
+    }
 }
 
 /// <summary>What a push service answered: delivered, or the subscription no longer exists (404/410).</summary>
@@ -126,6 +149,9 @@ public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, 
         var path = (notification.Audience, notification.JobId) switch
         {
             (NoticeAudience.Admin, { } job) => $"/admin/trabajos/{job}",
+            // An offer is not the painter's job yet, and a withdrawn or cancelled one no longer is: the jobs list.
+            (NoticeAudience.Painter, _) when notification.Kind is NotificationKind.OfferReceived or NotificationKind.OfferWithdrawn
+                or NotificationKind.JobCancelled => "/pintor",
             (NoticeAudience.Painter, { } job) => notification.Kind == NotificationKind.SiteVisitAssigned ? $"/pintor/visitas/{job}" : $"/pintor/trabajos/{job}",
             (NoticeAudience.Client, { } job) => $"/mis-trabajos/{job}",
             (NoticeAudience.Admin, null) => notification.Kind switch
