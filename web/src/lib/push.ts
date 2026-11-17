@@ -54,7 +54,18 @@ async function readStatus(): Promise<PushStatus> {
   if (!key) return "unavailable";
   if (!reg) return "unsupported";
   if (Notification.permission === "denied") return "blocked";
-  return (await reg.pushManager.getSubscription()) ? "on" : "off";
+  const subscription = await reg.pushManager.getSubscription();
+  if (!subscription) return "off";
+  // The browser keeps its subscription even when the server lost it (a demo reset empties the table, or another
+  // account signed in on this device): register it again, which is idempotent. Without permission it is useless.
+  if (Notification.permission !== "granted") return "off";
+  await saveSubscription(subscription).catch(() => undefined);
+  return "on";
+}
+
+async function saveSubscription(subscription: PushSubscription) {
+  const { endpoint, keys } = subscription.toJSON();
+  orThrow(await api.POST("/api/push/subscriptions", { body: { endpoint: endpoint!, p256dh: keys!.p256dh, auth: keys!.auth } }));
 }
 
 const PUSH_KEY = ["push-status"] as const;
@@ -77,8 +88,7 @@ export function usePush() {
       const subscription =
         (await reg.pushManager.getSubscription()) ??
         (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(key) }));
-      const { endpoint, keys } = subscription.toJSON();
-      orThrow(await api.POST("/api/push/subscriptions", { body: { endpoint: endpoint!, p256dh: keys!.p256dh, auth: keys!.auth } }));
+      await saveSubscription(subscription);
       setStatus("on");
     } catch {
       setFailed(true);
