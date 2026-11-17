@@ -126,7 +126,8 @@ Todas las rutas exigen rol Admin.
 | GET | `/api/admin/jobs/{id}/site-visit-assignees` | Socios y pintores activos que cubren el concelho | A2.6 |
 | POST | `/api/admin/jobs/{id}/site-visit` | Pide visita: asignado (socio o pintor, por su id de usuario) y fecha | A2.6 |
 | POST | `/api/admin/jobs/{id}/site-visit/complete` | Visita hecha: vuelve a revisión; el siguiente borrador tiene origen `site_visit` | A2.6 |
-| POST | `/api/admin/jobs/{id}/assignments` | Ofrece el trabajo a un pintor activo que cubre el concelho, con fecha `scheduledOn`; retira la oferta abierta anterior | A3.2 |
+| POST | `/api/admin/jobs/{id}/assignments` | Ofrece el trabajo a un pintor activo que cubre el concelho, con fecha `scheduledOn`. Con una oferta abierta responde 409 `offer_open` | A3.2 |
+| POST | `/api/admin/jobs/{id}/assignments/{assignmentId}/withdraw` | Retira la oferta abierta antes de que el pintor responda (204); si ya respondió, 409 `assignment_taken` | A3.2 |
 | POST | `/api/admin/jobs/{id}/transition` | Cambio de estado manual con motivo. `quoted` y `site_visit` usan su propia acción (422); `scheduled` exige `scheduledOn` (hoy o después) | A3.3 |
 | GET | `/api/admin/jobs/{id}/payments` | Pagos, reembolsos y referencias Multibanco del trabajo | A3.5 |
 | GET | `/api/admin/jobs/{id}/cancellation-preview` | Reembolso calculado | A3.4 |
@@ -286,6 +287,7 @@ Toda respuesta de error es ProblemDetails con un `code` estable. El frontend tra
 | 409 | `idempotency_conflict` | Misma `Idempotency-Key` con un cuerpo distinto |
 | 409 | `email_taken` | Email ya registrado |
 | 409 | `assignment_taken` | La asignación ya fue aceptada o retirada |
+| 409 | `offer_open` | El trabajo ya tiene una oferta abierta: hay que retirarla antes de enviar otra |
 | 410 | `quote_expired` | Precio confirmado fuera de su validez (15 días por defecto) |
 | 413 | `file_too_large` | Imagen > 10 MB o vídeo > 100 MB |
 | 415 | `unsupported_media_type` | Tipo de archivo no permitido |
