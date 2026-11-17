@@ -71,7 +71,7 @@ Reglas comunes a todas las pantallas:
 
 - **Ruta y board**: `/{locale}/cotizar/fotos` · Fotos.dc.html. \[C3.1, C3.2\]
 - **Datos**: un bloque por elemento con miniaturas y contador («3/10 fotos · 0/2 vídeos»), un bloque de fotos generales y una descripción libre (máx. 2.000 caracteres, como C3.2).
-- **Acciones**: añadir desde cámara o galería. Cada archivo pide `POST /api/media/upload-url`, sube directo a S3 con barra de progreso y confirma con `POST /api/media/confirm`. Se puede quitar un archivo antes de enviar. «Continuar» → pantalla 6. Las fotos son recomendadas, no obligatorias.
+- **Acciones**: añadir con dos botones, «Hacer foto» (abre la cámara del móvil) y «Elegir archivos» (galería o archivos); en escritorio solo el segundo. Cada archivo pide `POST /api/media/upload-url`, sube directo a S3 con barra de progreso y confirma con `POST /api/media/confirm`. Se puede quitar un archivo antes de enviar. «Continuar» → pantalla 6. Las fotos son recomendadas, no obligatorias.
 - **Validaciones**: imágenes JPEG, PNG, HEIC o WebP de hasta 10 MB; vídeos MP4 o MOV de hasta 100 MB; 10 fotos y 2 vídeos por estancia. Se rechazan en el cliente antes de subir. JPEG, PNG y WebP se comprimen a unos 2 MP en el dispositivo; HEIC se sube tal cual porque la mayoría de navegadores no lo pueden decodificar. Las subidas anónimas se asocian a un identificador aleatorio del borrador y se unen al trabajo al enviarlo.
 - **Estados**: subida fallida → miniatura con icono de reintentar. «Continuar» espera a que terminen las subidas en curso y lo indica. Sin fotos, un aviso suave: «Con fotos el precio final se parece más a la estimación».
 
@@ -88,7 +88,7 @@ Reglas comunes a todas las pantallas:
 - **Ruta y board**: `/{locale}/cotizar/cuenta` · Cuenta.dc.html. \[C4.3\]
 - **Datos**: pestañas «Crear cuenta» y «Ya tengo cuenta». Campos: nombre, email, teléfono (+351 por defecto), contraseña, NIF y razón social opcionales («Necesito factura con NIF»), aceptación de términos y privacidad y consentimiento opcional de marketing.
 - **Acciones**: `POST /api/auth/register` o `POST /api/auth/login`, y a continuación `POST /api/jobs` con `Idempotency-Key` generada al entrar en la pantalla. Google OAuth aparece solo si está configurado.
-- **Validaciones**: email válido; contraseña de 10 o más caracteres; teléfono E.164; NIF portugués de 9 dígitos con dígito de control; términos obligatorios.
+- **Validaciones**: email válido; contraseña de 10 o más caracteres, repetida en «Repetir contraseña» (solo en la web; la API no la recibe); teléfono E.164; NIF portugués de 9 dígitos con dígito de control; términos obligatorios. Ver «Formularios» en Estados globales.
 - **Estados**: `email_taken` → enlace a «Ya tengo cuenta» con el email precargado. Si el registro funciona pero el envío falla, se reintenta con la misma clave sin duplicar.
 
 ### 8 · Confirmación
@@ -100,7 +100,7 @@ Reglas comunes a todas las pantallas:
 
 ## Acceso (sin board)
 
-Formularios sencillos con el estilo de la pantalla 7. Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` traducidos).
+Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` traducidos). Entrar, crear cuenta, recuperar y nueva contraseña comparten una presentación propia (decisión de 2026-11-17): en escritorio, a la izquierda un panel de marca con la ilustración de la casa y tres frases de lo que ofrece Pinta (precio al momento, pintores verificados, material incluido), y a la derecha el formulario; en el móvil, la ilustración pequeña sobre el formulario.
 
 ### Entrar
 
@@ -143,7 +143,7 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
   - `finished`: fotos del resultado y pago del saldo.
   - `expired`, `rejected` y `cancelled`: motivo y reembolso si lo hay.
 - **Acciones**: «Pagar señal» → pantalla 11 (llega en H5); «Tengo dudas» (mensaje al admin por email, sin cambiar el estado, como C5.2; no hay «Pedir cambios» porque `docs/states.md` no permite volver de «Precio confirmado» a «En revisión»); «Rechazar precio» con motivo opcional (pasa a «Cancelado»); «Cancelar» con diálogo que muestra el reembolso exacto según la política (100% hasta 7 días antes, 50% después); descargar el justificante. Las valoraciones del cliente quedan fuera del MVP (`docs/prd-overview.md`).
-- **Validaciones**: la cancelación exige confirmación escribiendo el código o marcando una casilla;
+- **Validaciones**: la cancelación exige confirmación escribiendo el código o marcando una casilla. En el diálogo, el importe que se devuelve es lo primero y lo más grande (cifra destacada sobre fondo de color), con la regla aplicada debajo;
 - **Estados**: `quote_expired` → «El precio caducó» con «Pedir revisión de nuevo». Se refresca cada 30 s mientras esté en primer plano en estados que esperan al admin.
 
 ### 11 · Pago
@@ -184,7 +184,7 @@ Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente,
 
 - **Ruta y board**: `/{locale}/pintor/trabajos/{id}` · PintorDetalle.dc.html. \[P2.1, P2.2\]
 - **Datos**: dirección con enlace a mapas, notas de acceso, nombre y teléfono del cliente (botón de llamar), fecha, lista de elementos con medidas, paredes, pintura y litros previstos, fotos del cliente y notas del revisor. Material: lo entrega Pinta, con la cantidad por pintura.
-- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos del resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`). Desde H8, mientras está en curso, «Fotos de avance» (`POST …/progress`; el cliente las ve en la pantalla 10) y, programado o en curso, «Reportar incidencia» con texto y fotos (`POST …/incidents`), que avisa a los admins por email y se ve en el trabajo del admin.
+- **Acciones**: «Empezar trabajo» (solo desde el día programado; `POST /api/painter/jobs/{id}/start`); subir fotos del resultado; «Marcar como terminado» con un mínimo de 3 fotos de resultado (`/finish`). Desde H8, mientras está en curso, «Fotos de avance» (`POST …/progress`; el cliente las ve en la pantalla 10) y, programado o en curso, «Reportar incidencia» con texto y fotos (`POST …/incidents`), que avisa a los admins por email y se ve en el trabajo del admin. Orden en pantalla (decisión de 2026-11-17): fotos de avance e incidencias primero y el bloque «Fotos del resultado» con «Marcar como terminado» al final, para no confundirlos. Los botones de enviar fotos son primarios (color de la marca). Cada bloque de fotos ofrece «Hacer foto» (cámara) y «Elegir archivos».
 - **Validaciones**: terminar exige las fotos de resultado; no se puede empezar antes de la fecha.
 - **Estados**: tras terminar queda en solo lectura con «Pendiente de cierre por Pinta».
 
@@ -274,7 +274,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 - `QuoteBreakdown`: con variantes `client`, `painter` (solo su pago) y `admin` (desglose completo y margen). La variante se decide en el servidor por rol; el cliente nunca recibe campos que no le tocan.
 - `ConfirmDialog`, `EmptyState`, `ErrorState` y `Skeleton`.
 - **Cabecera** (`AppHeader`), la misma en todas las áreas (portada, entrar y registro, cliente, pintor, cotizador, admin, páginas de estado y «solicitud enviada»). No es una barra: dos piezas de cristal que flotan en una fila fija arriba (decisión de 2026-11-11, `plans/010-glass-header-morph.md`):
-  - **Izquierda**: una píldora con el logo. En el cotizador lleva también «volver». En la portada, el logo y los enlaces a las secciones (escritorio) van sin píldora, con su estilo original, y esa cabecera se desplaza con la página en lugar de quedarse fija (decisión de 2026-11-11).
+  - **Izquierda**: una píldora con el logo. El logo lleva al inicio de cada rol cuando hay sesión (cliente: Mis trabajos; pintor: Mis trabajos del pintor; admin: Revisión) y a la portada sin sesión (decisión de 2026-11-17); a la portada se vuelve también al cerrar sesión. En el cotizador lleva también «volver». En la portada, el logo y los enlaces a las secciones (escritorio) van sin píldora, con su estilo original, y esa cabecera se desplaza con la página en lugar de quedarse fija (decisión de 2026-11-11).
   - **Derecha**: controles redondos de 40 px. **Tema** (sol o luna): un botón que alterna entre claro y oscuro con cada toque, sin panel (decisión de 2026-11-16). **Idioma**: abre un panel con PT, ES y EN (cambia el idioma de la interfaz; el de los emails sigue en «Cuenta»). **Cuenta**: sin sesión, enlace a «Entrar»; con sesión, sus iniciales y un panel por rol: cliente (Mis trabajos, Cuenta, Salir), pintor (Mis trabajos, Pagos, Salir) y admin (Panel, Salir). En la portada, con sesión, en lugar de las iniciales hay un enlace con texto al área de su rol: «Mis trabajos» (cliente y pintor) o «Panel» (admin) (decisión de 2026-11-16).
   - El panel crece desde su control y vuelve a él al cerrarse; los controles vecinos se apartan con él y, si en el móvil no hay sitio, se desvanecen mientras está abierto (`docs/motion.md`). Al cerrar, el foco vuelve al control.
   - En el admin, la navegación sigue en la barra lateral (escritorio) o bajo la cabecera (móvil).
@@ -286,6 +286,11 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 - **Sesión caducada**: un 401 en cualquier petición de una pantalla con sesión (no en entrar, registro ni recuperar) → diálogo «Tu sesión ha caducado» con «Entrar», que vuelve a la misma página; el borrador local se conserva.
 - **Sin conexión**: banda superior «Sin conexión». El constructor sigue funcionando (el área se calcula en el cliente; la estimación queda pendiente). Las acciones que escriben quedan desactivadas.
 - **PWA**: manifiesto con nombre, iconos y colores de la paleta B (`#0F766E` y `#F2B705`); el service worker cachea la estructura de la app y los textos, nunca las respuestas de la API con datos personales. Invitación a instalar en la pantalla 8 tras enviar la solicitud: botón «Instalar» donde el navegador lo ofrece y, en iOS, la indicación «Compartir › Añadir a pantalla de inicio»; cerrada una vez, no vuelve. El service worker solo se registra en el build de producción.
-- **Errores 404 y 500**: páginas propias traducidas con enlace a inicio.
+- **Errores 404 y 500**: páginas propias traducidas con enlace a inicio y una ilustración: una brocha triste (404, caída junto a una gota) o con la pintura derramada (500), en los colores de la marca y adaptada al tema oscuro.
+- **Formularios** (decisión de 2026-11-17):
+  - Contraseñas con un botón de ojo para mostrarlas u ocultarlas; al crear o cambiar una contraseña, un segundo campo «Repetir contraseña» que debe coincidir.
+  - NIF con máscara `123 456 789` mientras se escribe; se envía solo con los 9 dígitos.
+  - Los textos se envían sin espacios al principio ni al final (email, nombre, teléfono, NIF, dirección, referencias…), y la API los recorta también. Las descripciones largas conservan sus saltos de línea interiores.
+  - Fechas con un calendario propio con el estilo de Pinta (en lugar del selector nativo del navegador): campo con la fecha escrita en el idioma, y un panel con el mes, flechas y días; respeta mínimo y máximo, y se maneja con teclado (flechas, Re Pág/Av Pág, Inicio/Fin, Escape).
 - **Tema**: el del sistema por defecto. El botón de la cabecera pasa al contrario del que se ve (claro ↔ oscuro) y esa elección se guarda en el navegador de ese dispositivo (`localStorage`, no es una cookie). La página se pinta ya en el tema elegido, sin destello. El manifiesto PWA y los emails siguen en claro. Paleta y contrastes en `plans/011-dark-mode.md` y `web/src/app/globals.css`.
 - **Cookies**: solo técnicas en el MVP (sesión, antiforgery e idioma); banner informativo sin opciones de seguimiento.
