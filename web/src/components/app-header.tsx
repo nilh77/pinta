@@ -10,13 +10,8 @@ import { routing } from "@/i18n/routing";
 import { useMe, useSignOut } from "@/lib/auth/use-auth";
 import { oppositeTheme, useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
-
-/** A round 40 px glass control of the header cluster. */
-const controlClass =
-  "flex size-10 shrink-0 items-center justify-center rounded-full glass bg-glass-control text-[13px] font-semibold text-foreground shadow-chrome outline-none hover:bg-card focus-visible:ring-[3px] focus-visible:ring-ring/50";
-
-/** First row of a header panel: clear of the top-right corner, where the open control stays visible. */
-const panelHeadClass = "flex min-h-10 flex-col justify-center px-3 pr-12";
+import { controlClass, panelHeadClass } from "./header-controls";
+import { NotificationBell } from "./notifications/notification-bell";
 
 /**
  * The shared header (docs/screens.md, «Cabecera»): no bar, two floating glass pieces. On the left a pill with
@@ -53,6 +48,7 @@ export function AppHeader({
       <div data-morph-cluster className="pointer-events-auto ml-auto flex items-center gap-2">
         <LanguageMenu />
         <ThemeToggle />
+        <NotificationBell />
         {plainLeading ? <AreaLink /> : <AccountMenu />}
       </div>
     </header>
