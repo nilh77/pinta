@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Check, Droplets, Loader2, Play, RotateCcw, Video, X } from "lucide-react";
+import { Camera, Check, Droplets, ImagePlus, Loader2, Play, RotateCcw, Video, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useMemo, useRef } from "react";
 import { toast } from "@/lib/toast";
@@ -11,6 +11,7 @@ import { displayNames, newUuid, toEstimateRequest, type Draft, type DraftFile } 
 import { MAX_DESCRIPTION, photoCoverage } from "@/lib/quote/request";
 import { ACCEPT, classifyFile, deleteUpload, MAX_PHOTOS, MAX_VIDEOS, prepareImage, uploadFile, type UploadKind } from "@/lib/quote/uploads";
 import { setDraft } from "@/lib/quote/use-quote-draft";
+import { useCoarsePointer } from "@/lib/use-coarse-pointer";
 import { cn } from "@/lib/utils";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
 
@@ -195,6 +196,9 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
   const t = useTranslations("quote.photos");
   const photoInput = useRef<HTMLInputElement>(null);
   const videoInput = useRef<HTMLInputElement>(null);
+  const cameraInput = useRef<HTMLInputElement>(null);
+  const touch = useCoarsePointer();
+  const tCommon = useTranslations("common");
   const id = useId();
   const list = files[fileKey] ?? [];
   const photos = list.filter((f) => f.kind === "image").length;
@@ -272,16 +276,33 @@ function MediaBlock({ fileKey, title, subtitle, damage, files, onAdd, onRetry, o
       )}
 
       <div className="mt-3 grid grid-cols-2 gap-2">
+        {touch && (
+          <Button type="button" className="col-span-2" disabled={photos >= MAX_PHOTOS} onClick={() => cameraInput.current?.click()}>
+            <Camera aria-hidden="true" />
+            {tCommon("takePhoto")}
+          </Button>
+        )}
         <Button type="button" variant="outline" disabled={photos >= MAX_PHOTOS} onClick={() => photoInput.current?.click()}>
-          <Camera aria-hidden="true" />
-          {t("addPhoto")}
+          {touch ? <ImagePlus aria-hidden="true" /> : <Camera aria-hidden="true" />}
+          {touch ? tCommon("chooseFiles") : t("addPhoto")}
         </Button>
         <Button type="button" variant="outline" disabled={videos >= MAX_VIDEOS} onClick={() => videoInput.current?.click()}>
           <Video aria-hidden="true" />
           {t("addVideo")}
         </Button>
       </div>
-      {/* No `capture`: phones offer camera or gallery (docs/screens.md, screen 5). */}
+      {/* «Hacer foto» opens the camera straight away; the other input offers gallery or files (docs/screens.md, screen 5). */}
+      <input
+        ref={cameraInput}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden
+        onChange={(e) => {
+          onAdd(fileKey, e.target.files);
+          e.target.value = "";
+        }}
+      />
       <input
         ref={photoInput}
         type="file"
