@@ -20,6 +20,14 @@ function orThrow<T>(result: { data?: T; error?: unknown }): T {
 }
 
 /** The signed-in user, or null without a session (GET /api/auth/me). */
+/** Where each role starts (docs/screens.md, «Cabecera»): the logo and the landing's area link go there. */
+export const ROLE_HOME = { client: "/mis-trabajos", painter: "/pintor", admin: "/admin/revision" } as const;
+
+/** The logo's destination: the role's start page with a session, the landing without one. */
+export function homeFor(me: Pick<Me, "role"> | null | undefined): string {
+  return me ? ROLE_HOME[me.role] : "/";
+}
+
 export function useMe() {
   return useQuery({
     queryKey: meQueryKey,
