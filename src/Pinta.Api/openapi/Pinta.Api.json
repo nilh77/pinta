@@ -5661,7 +5661,9 @@
           "painterName",
           "scheduledOn",
           "createdAt",
-          "updatedAt"
+          "updatedAt",
+          "painterOffered",
+          "lastActivityAt"
         ],
         "type": "object",
         "properties": {
@@ -5716,6 +5718,13 @@
             "format": "date-time"
           },
           "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "painterOffered": {
+            "type": "boolean"
+          },
+          "lastActivityAt": {
             "type": "string",
             "format": "date-time"
           }

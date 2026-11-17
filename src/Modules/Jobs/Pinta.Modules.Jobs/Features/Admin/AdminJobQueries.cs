@@ -62,7 +62,11 @@ public sealed record AdminJobListItem(
     string? PainterName,
     DateOnly? ScheduledOn,
     DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt);
+    DateTimeOffset UpdatedAt,
+    /// <summary>True when <c>PainterName</c> is an open offer, not yet accepted (A3.1).</summary>
+    bool PainterOffered,
+    /// <summary>The last time anything was done with the job; the list is ordered by it (docs/data-model.md).</summary>
+    DateTimeOffset LastActivityAt);
 
 /// <summary>Filters of A3.1. <see cref="Status"/> takes the snake_case values and may repeat.</summary>
 public sealed record AdminJobsQuery(
@@ -177,7 +181,7 @@ internal static class AdminJobQueries
 
         var (page, pageSize) = Paged<AdminJobListItem>.Normalize(query.Page, query.PageSize);
         var total = await filtered!.CountAsync(cancellationToken);
-        var jobs = await filtered!.OrderByDescending(j => j.UpdatedAt).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var jobs = await ByLatestActivity(filtered!, db).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync(cancellationToken);
         return TypedResults.Ok(new Paged<AdminJobListItem>(await ToListItemsAsync(jobs, db, quotes, users, painters, cancellationToken), page, pageSize, total));
     }
 
@@ -191,15 +195,15 @@ internal static class AdminJobQueries
             return problem;
         }
 
-        var jobs = await filtered!.OrderByDescending(j => j.UpdatedAt).Take(10_000).ToListAsync(cancellationToken);
-        var csv = new StringBuilder("code,status,client,email,locality,municipality,total_eur,margin_eur,premium,created_at,updated_at\n");
+        var jobs = await ByLatestActivity(filtered!, db).Take(10_000).ToListAsync(cancellationToken);
+        var csv = new StringBuilder("code,status,client,email,locality,municipality,total_eur,margin_eur,premium,painter,created_at,last_activity_at\n");
         foreach (var j in await ToListItemsAsync(jobs, db, quotes, users, painters, cancellationToken))
         {
             csv.AppendJoin(',',
                 j.Code, JsonNamingPolicy.SnakeCaseLower.ConvertName(j.Status.ToString()), Csv.Field(j.ClientName), Csv.Field(j.ClientEmail), Csv.Field(j.Locality),
                 Csv.Field(j.Municipality), (j.TotalCents / 100m).ToString("0.00", CultureInfo.InvariantCulture),
-                (j.MarginCents / 100m).ToString("0.00", CultureInfo.InvariantCulture), j.Premium ? "yes" : "no",
-                j.CreatedAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture), j.UpdatedAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture));
+                (j.MarginCents / 100m).ToString("0.00", CultureInfo.InvariantCulture), j.Premium ? "yes" : "no", Csv.Field(j.PainterName ?? ""),
+                j.CreatedAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture), j.LastActivityAt.UtcDateTime.ToString("O", CultureInfo.InvariantCulture));
             csv.Append('\n');
         }
 
@@ -260,23 +264,38 @@ internal static class AdminJobQueries
         return (jobs, null);
     }
 
+    /// <summary>Most recently worked on first (A3.1); jobs without recorded activity count from their last state change.</summary>
+    private static IQueryable<Job> ByLatestActivity(IQueryable<Job> jobs, JobsDbContext db) =>
+        from j in jobs
+        join a in db.Activity on j.Id equals a.JobId into activity
+        from a in activity.DefaultIfEmpty()
+        orderby (a != null && a.LastActivityAt > j.UpdatedAt ? a.LastActivityAt : j.UpdatedAt) descending, j.CreatedAt descending
+        select j;
+
     private static async Task<IReadOnlyList<AdminJobListItem>> ToListItemsAsync(
         List<Job> jobs, JobsDbContext db, IQuoteVersions quotes, IUserDirectory users, IPainterDirectory painters, CancellationToken cancellationToken)
     {
         var jobIds = jobs.Select(j => j.Id).ToList();
-        var accepted = await db.Assignments.AsNoTracking()
-            .Where(a => jobIds.Contains(a.JobId) && (a.Status == AssignmentStatus.Accepted || a.Status == AssignmentStatus.Completed))
+        // The painter who has the job, or else the one with the open offer (A3.1).
+        var assignments = await db.Assignments.AsNoTracking()
+            .Where(a => jobIds.Contains(a.JobId)
+                && (a.Status == AssignmentStatus.Accepted || a.Status == AssignmentStatus.Completed || a.Status == AssignmentStatus.Offered))
             .ToListAsync(cancellationToken);
-        var painterNames = (await painters.FindManyAsync([.. accepted.Select(a => a.PainterId).Distinct()], cancellationToken)).ToDictionary(p => p.Id, p => p.Name);
-        var painterOf = accepted.GroupBy(a => a.JobId).ToDictionary(g => g.Key, g => painterNames.GetValueOrDefault(g.First().PainterId));
+        var painterNames = (await painters.FindManyAsync([.. assignments.Select(a => a.PainterId).Distinct()], cancellationToken)).ToDictionary(p => p.Id, p => p.Name);
+        var painterOf = assignments.GroupBy(a => a.JobId).ToDictionary(g => g.Key, g =>
+            g.OrderBy(a => a.Status == AssignmentStatus.Offered).ThenByDescending(a => a.OfferedAt).First());
+        var activity = await db.Activity.AsNoTracking().Where(a => jobIds.Contains(a.JobId)).ToDictionaryAsync(a => a.JobId, a => a.LastActivityAt, cancellationToken);
         var clients = (await users.FindManyAsync([.. jobs.Select(j => j.ClientId).Distinct()], cancellationToken)).ToDictionary(u => u.Id);
         var totals = (await quotes.GetTotalsAsync([.. jobs.Select(j => j.CurrentQuoteVersionId)], cancellationToken)).ToDictionary(t => t.VersionId);
+        string? PainterName(Guid jobId) => painterOf.GetValueOrDefault(jobId) is { } a ? painterNames.GetValueOrDefault(a.PainterId) : null;
+        DateTimeOffset LastActivity(Job job) => activity.TryGetValue(job.Id, out var at) && at > job.UpdatedAt ? at : job.UpdatedAt;
         return jobs.Select(j =>
         {
             var client = clients.GetValueOrDefault(j.ClientId);
             var total = totals.GetValueOrDefault(j.CurrentQuoteVersionId);
             return new AdminJobListItem(j.Id, j.Code, j.Status, client?.Name ?? "", client?.Email ?? "", j.Locality, j.Municipality,
-                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, painterOf.GetValueOrDefault(j.Id), j.ScheduledOn, j.CreatedAt, j.UpdatedAt);
+                total?.TotalCents ?? 0, total?.MarginCents ?? 0, j.IsPremium, PainterName(j.Id), j.ScheduledOn, j.CreatedAt, j.UpdatedAt,
+                painterOf.GetValueOrDefault(j.Id)?.Status == AssignmentStatus.Offered, LastActivity(j));
         }).ToList();
     }
 

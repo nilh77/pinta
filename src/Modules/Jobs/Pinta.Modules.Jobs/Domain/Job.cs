@@ -182,3 +182,14 @@ public sealed class JobStatusChange
 
     public DateTimeOffset ChangedAt { get; init; }
 }
+
+/// <summary>
+/// When something was last done with a job (docs/data-model.md, «Actividad del trabajo»), to order the admin's list
+/// (A3.1). Its own table, so recording activity never conflicts with the job's concurrency token.
+/// </summary>
+public sealed class JobActivity
+{
+    public Guid JobId { get; init; }
+
+    public DateTimeOffset LastActivityAt { get; set; }
+}

@@ -233,7 +233,7 @@ internal static class ClientJobEndpoints
 
     private static async Task<Results<NoContent, ProblemHttpResult>> QuestionAsync(
         Guid id, QuestionRequest request, HttpContext http, JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links,
-        CancellationToken cancellationToken)
+        TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await FindAsync(db, http, id, tracked: false, cancellationToken);
         if (job is null)
@@ -255,6 +255,7 @@ internal static class ClientJobEndpoints
             { JobId = job.Id }, cancellationToken);
         }
 
+        await db.RecordActivityAsync(job.Id, clock.GetUtcNow(), cancellationToken);
         return TypedResults.NoContent();
     }
 
