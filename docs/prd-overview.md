@@ -74,7 +74,8 @@ Los dos socios tienen el rol Admin con los mismos permisos. El modelo admite dif
 | Reembolsos según política de cancelación | Gestión de disputas desde la app |
 | Panel admin: revisión, trabajos, pintores, precios, finanzas simuladas | Facturación certificada por la AT |
 | Panel pintor mínimo | Calendario de disponibilidad de pintores |
-| Emails transaccionales (Mailpit en local) | SMS, WhatsApp y notificaciones push |
+| Emails transaccionales (Mailpit en local) | SMS y WhatsApp |
+| Avisos en la app (campanita) y notificaciones push del navegador para admin, pintor y cliente (decisión de 2026-11-17) | Preferencias de avisos por tipo; push nativo fuera de la PWA |
 | Datos de demo y reset; entorno Demo público en Railway (Stripe en modo test, emails a un buzón de pruebas) | Despliegue en producción y Sentry |
 | — | Valoraciones, chat, cuentas B2B con varias propiedades |
 

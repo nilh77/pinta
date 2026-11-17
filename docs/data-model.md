@@ -287,7 +287,12 @@ erDiagram
 - **Coste de operación.categoría** usa la lista cerrada del acuerdo de socios: infraestructura, comisiones de pago (incluidas las de Stripe), facturación y contabilista, seguro, marketing.
 - **Cifras del mes (H7):** un trabajo cuenta en el mes en que se cerró (Lisboa): ingreso = subtotal sin IVA de su versión confirmada; material de esa versión; pago al pintor = el importe del pago al pintor si existe. Una cancelación con señal retenida cuenta en su mes como ingreso sin IVA, sin material ni pintor. Margen bruto = ingresos − material − pintores; beneficio = margen − costes; cada socio = beneficio ÷ 2 (redondeo a céntimos alejándose de cero).
 - **Cierre mensual:** el reparto 50/50 se calcula en vivo, pero al cerrar un mes queda congelado. Un coste registrado tarde no cambia lo ya repartido.
-- **Notificaciones** solo tiene una tabla de registro de emails enviados: destinatario, plantilla, idioma, estado y fecha.
+- **Notificaciones** tiene tres tablas:
+  - el registro de emails enviados: destinatario, plantilla, idioma, estado y fecha;
+  - desde 2026-11-17, los **avisos**: `notifications.notifications`, con `id`, `usuario_id`, `tipo` (`NotificationKind`), `trabajo_id`, `codigo_trabajo`, `datos` jsonb para el texto (nombre, importe, motivo…), `creado_en` y `leido_en`. Los leídos se borran a los 90 días;
+  - las **suscripciones push**: `notifications.push_subscriptions`, con `id`, `usuario_id`, `endpoint` (único), `p256dh`, `auth`, `user_agent` y `creado_en`. Una por dispositivo y navegador, y se borra cuando el servicio de push la da por caducada.
+
+  Referencian usuario y trabajo por id, sin claves foráneas entre esquemas.
 
 ## Estados del trabajo y transiciones
 

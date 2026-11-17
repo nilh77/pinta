@@ -73,6 +73,9 @@ Los valores secretos los pega el usuario en Railway (Variables del servicio); nu
 | `Stripe__SecretKey` | `sk_test_…` |
 | `Stripe__PublishableKey` | `pk_test_…` |
 | `Stripe__WebhookSecret` | `whsec_…` del endpoint del paso 5 |
+| `Push__PublicKey` | Clave pública VAPID para las notificaciones push (`docs/integrations.md`, «Avisos y notificaciones push») |
+| `Push__PrivateKey` | Su clave privada. Sin estas dos variables, el push queda desactivado y la campanita funciona igual |
+| `Push__Subject` | `mailto:` de contacto para los servicios de push |
 
 **web**
 
