@@ -6,6 +6,34 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Avisos: campanita y notificaciones push
+
+#### Añadido
+
+- **Campanita** en la cabecera para admin, pintor y cliente, con el número de avisos sin leer, que se actualiza cada 30 s y al volver a la pestaña.
+  - Su panel muestra los 20 últimos avisos, en el idioma de la interfaz y con hace cuánto llegaron, y ofrece «Marcar todo como leído», «Ver todos» y el interruptor de push.
+  - Pulsar un aviso lo marca como leído y abre el trabajo en el área de cada rol.
+  - La página `/avisos` muestra la lista completa (`docs/screens.md`, «Avisos»).
+- **Qué recibe cada rol** (`docs/integrations.md`, «Avisos y notificaciones push»):
+  - El admin, todo lo que pasa: solicitudes, preguntas, rechazos, pagos, ofertas aceptadas, rechazadas o sin respuesta, trabajos empezados y terminados, fotos de avance, incidencias, informes de visita, reembolsos, disputas, supresiones y alertas.
+  - El pintor: ofertas nuevas y retiradas, visitas asignadas, trabajos cancelados y pagos transferidos.
+  - El cliente: precio confirmado, a punto de caducar o caducado, pagos y referencia Multibanco, trabajo programado, fotos de avance, trabajo terminado, reembolsos, rechazo y visita programada.
+  - Los datos de demo se siembran sin avisos.
+- **Notificaciones push del navegador** con «Avisos en este dispositivo»: llegan aunque Pinta esté cerrada.
+  - El permiso se pide solo al activar el interruptor.
+  - En iPhone, solo con la app instalada en la pantalla de inicio.
+  - El texto va en el idioma del usuario y, al pulsarla, se abre su pantalla.
+  - Necesita las claves VAPID (`Push__PublicKey`, `Push__PrivateKey`, `Push__Subject`). Sin ellas, la campanita funciona igual y el interruptor no aparece.
+- API: `GET /api/notifications`, `unread-count`, `read` y `read-all`; `GET /api/push/public-key`, `POST` y `DELETE /api/push/subscriptions`. El enum `NotificationKind` tiene 33 tipos (`docs/api.md`).
+- Tablas `notifications.notifications` y `notifications.push_subscriptions`.
+  - Los avisos leídos se borran a los 90 días.
+  - El push se envía desde Hangfire con 5 reintentos, solo a usuarios con algún dispositivo suscrito, y las suscripciones caducadas se borran.
+  - Paquete nuevo: `Lib.Net.Http.WebPush`.
+
+#### Cambiado
+
+- El PRD incluye ahora en el alcance los avisos en la app y las notificaciones push (`docs/prd-overview.md`).
+
 ### Actividad de los trabajos y entrada directa
 
 #### Añadido
