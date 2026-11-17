@@ -6,6 +6,17 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Actividad de los trabajos y entrada directa
+
+#### Añadido
+
+- La lista de trabajos del admin, el tablero y la exportación CSV se ordenan por la **última actividad**: cualquier cosa hecha con el trabajo lo sube arriba. Cuentan los cambios de estado, las ofertas y las respuestas del pintor, las incidencias, las fotos de avance, el borrador de precio y las preguntas del cliente. Se guarda en la nueva tabla `jobs.job_activity`, que la migración rellena con los trabajos existentes (A3.1, `docs/data-model.md`).
+- Las tarjetas del tablero y las del móvil muestran el pintor y la última actividad. Si el trabajo solo tiene una oferta abierta, aparece ese pintor con la marca «oferta», también en la tabla y en el CSV.
+
+#### Cambiado
+
+- Al entrar sin una página de destino, cada rol va directamente a su inicio: el cliente a Mis trabajos, el pintor a sus trabajos y el admin a Revisión. Antes, el cliente y el admin iban a la portada (`docs/screens.md`, «Entrar»).
+
 ### Mejoras de la revisión
 
 #### Añadido
