@@ -1872,6 +1872,17 @@
     "retry": "Reintentar",
     "unread": "Sin leer",
     "loading": "Cargando avisos…",
+    "invite": {
+      "title": "¿Te avisamos en este móvil?",
+      "body": {
+        "client": "Te avisamos cuando tu precio esté listo, se programe el trabajo o haya fotos nuevas.",
+        "painter": "Te avisamos al momento de ofertas nuevas, visitas y cambios en tus trabajos.",
+        "admin": "Te avisamos de solicitudes nuevas, pagos, ofertas e incidencias."
+      },
+      "enable": "Activar avisos",
+      "later": "Ahora no",
+      "error": "No hemos podido activar los avisos. Inténtalo de nuevo."
+    },
     "push": "Avisos en este dispositivo",
     "pushOn": "Activados en este dispositivo.",
     "pushOff": "Recibe avisos aunque Pinta esté cerrada.",

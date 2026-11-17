@@ -1872,6 +1872,17 @@
     "retry": "Try again",
     "unread": "Unread",
     "loading": "Loading notifications…",
+    "invite": {
+      "title": "Get notified on this phone?",
+      "body": {
+        "client": "We'll let you know when your price is ready, your job is scheduled or there are new photos.",
+        "painter": "We'll tell you right away about new offers, site visits and changes to your jobs.",
+        "admin": "We'll tell you about new requests, payments, offers and incidents."
+      },
+      "enable": "Turn on notifications",
+      "later": "Not now",
+      "error": "We couldn't turn on notifications. Try again."
+    },
     "push": "Notifications on this device",
     "pushOn": "On for this device.",
     "pushOff": "Get notified even when Pinta is closed.",
