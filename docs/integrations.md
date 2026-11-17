@@ -108,7 +108,7 @@ Desde 2026-11-17, además de los emails, cada evento importante crea un **aviso*
   - El push se envía después, en Hangfire, con 5 reintentos. Un fallo nunca deshace la operación.
   - Las suscripciones que el servicio de push da por caducadas (404 o 410) se borran.
 - **Web Push estándar.**
-  - Con claves VAPID: `Push__PublicKey`, `Push__PrivateKey` y `Push__Subject` (un `mailto:` de contacto). En local van en `dotnet user-secrets`; en el entorno Demo, en las variables de Railway.
+  - Con claves VAPID: `Push__PublicKey`, `Push__PrivateKey` y `Push__Subject` (un `mailto:` o `https:` de contacto; un email sin `mailto:` se completa solo, y un valor no válido se cambia por `mailto:hello@pinta.pt`). En local van en `dotnet user-secrets`; en el entorno Demo, en las variables de Railway.
   - Sin claves, el push queda desactivado y la campanita funciona igual.
   - El texto del push va en el idioma del usuario.
 - **Dónde funciona.**
