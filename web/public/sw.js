@@ -1,6 +1,6 @@
 // Pinta service worker (docs/screens.md, PWA): caches the app shell and its texts, never the API.
 // Static build files and icons are cache-first; pages are network-first with the cached copy as the offline fallback.
-const VERSION = "pinta-v1";
+const VERSION = "pinta-v2";
 const LANDINGS = ["/pt", "/es", "/en"];
 
 self.addEventListener("install", (event) => {
@@ -54,3 +54,38 @@ async function networkFirst(request, url) {
     return (await caches.match(request)) ?? (await caches.match(locale)) ?? Response.error();
   }
 }
+
+// Web push (docs/integrations.md, «Avisos y notificaciones push»): the API sends { title, body, url, tag }.
+self.addEventListener("push", (event) => {
+  let message = { title: "Pinta", body: "", url: "/pt/avisos" };
+  try {
+    message = { ...message, ...event.data.json() };
+  } catch {
+    // An empty or unreadable message still shows Pinta's notice.
+  }
+  event.waitUntil(
+    self.registration.showNotification(message.title, {
+      body: message.body,
+      icon: "/icons/icon-192.png",
+      badge: "/icons/icon-192.png",
+      tag: message.tag,
+      data: { url: message.url },
+    }),
+  );
+});
+
+// Tapping it focuses an open Pinta tab on the notice's page, or opens one.
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url ?? "/pt/avisos", self.location.origin).href;
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(async (windows) => {
+      const open = windows.find((w) => new URL(w.url).origin === self.location.origin);
+      if (open) {
+        await open.focus();
+        return open.navigate(target);
+      }
+      return self.clients.openWindow(target);
+    }),
+  );
+});

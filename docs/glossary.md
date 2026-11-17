@@ -41,6 +41,8 @@ En la interfaz del cliente, «Rechazado» se muestra con una palabra suave («N�
 | Trabajo / solicitud | `Job` | Trabalho / pedido | Job / request | Lo que pide un cliente, desde el envío hasta el cierre |
 | Código de solicitud | `Job.Code` | Código do pedido | Request code | `PT-AAAA-NNNN`, correlativo por año |
 | Cotización / presupuesto | `Quote` | Orçamento | Quote | Precio calculado de un trabajo |
+| Aviso | `Notification` | Aviso | Notification | Lo que aparece en la campanita (y, si está activado, como push) cuando pasa algo que afecta al usuario |
+| Suscripción push | `PushSubscription` | — | — | Un dispositivo y navegador registrado para recibir notificaciones push |
 | Versión de cotización | `QuoteVersion` | Versão do orçamento | Quote version | Cada cálculo guardado con su foto de precios |
 | Foto de precios | `PriceSnapshot` | — | — | Tarifas congeladas en una versión (`snapshot_precios`) |
 | Estimación | `Estimate` | Estimativa | Estimate | Rango orientativo mostrado al cliente antes de la revisión |
@@ -121,6 +123,9 @@ Los diagramas del documento 5.3 usan nombres descriptivos en español; esta es s
 | EVENTO\_STRIPE | `payments.stripe_events` | `StripeEvent` | Payments |
 | (idempotencia) | `shared.idempotency_keys` | `IdempotencyRecord` | SharedKernel |
 | (emails enviados) | `notifications.outbox` | `OutgoingEmail` | Notifications |
+| (avisos) | `notifications.notifications` | `Notification` | Notifications |
+| (suscripciones push) | `notifications.push_subscriptions` | `PushSubscription` | Notifications |
+| (actividad del trabajo) | `jobs.job_activity` | `JobActivity` | Jobs |
 | PAGO\_PINTOR | `finance.painter_payouts` | `PainterPayout` | Finance |
 | COSTE\_OPERACION | `finance.operating_costs` | `OperatingCost` | Finance |
 | CIERRE\_MENSUAL | `finance.monthly_closes` | `MonthlyClose` | Finance |

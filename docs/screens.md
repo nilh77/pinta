@@ -278,7 +278,24 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
   - **Derecha**: controles redondos de 40 px. **Tema** (sol o luna): un botón que alterna entre claro y oscuro con cada toque, sin panel (decisión de 2026-11-16). **Idioma**: abre un panel con PT, ES y EN (cambia el idioma de la interfaz; el de los emails sigue en «Cuenta»). **Cuenta**: sin sesión, enlace a «Entrar»; con sesión, sus iniciales y un panel por rol: cliente (Mis trabajos, Cuenta, Salir), pintor (Mis trabajos, Pagos, Salir) y admin (Panel, Salir). En la portada, con sesión, en lugar de las iniciales hay un enlace con texto al área de su rol: «Mis trabajos» (cliente y pintor) o «Panel» (admin) (decisión de 2026-11-16).
   - El panel crece desde su control y vuelve a él al cerrarse; los controles vecinos se apartan con él y, si en el móvil no hay sitio, se desvanecen mientras está abierto (`docs/motion.md`). Al cerrar, el foco vuelve al control.
   - En el admin, la navegación sigue en la barra lateral (escritorio) o bajo la cabecera (móvil).
-  - Sin notificaciones: no hay notificaciones en la web en el MVP (`docs/prd-overview.md`).
+  - **Avisos** (campanita), con sesión, entre tema y cuenta (decisión de 2026-11-17). Ver «Avisos» abajo.
+
+### Avisos
+
+- **Ruta**: el panel de la campanita en la cabecera y la página `/{locale}/avisos` con la lista completa. Para los tres roles, cada uno solo con los suyos. Qué recibe cada rol: `docs/integrations.md`, «Avisos y notificaciones push».
+- **Datos**:
+  - La campanita muestra un punto con el número de avisos no leídos (9+ a partir de 10).
+  - El panel lista los 20 últimos con icono, texto, código del trabajo y hace cuánto; los no leídos van marcados. Abajo, «Ver todos» y el interruptor «Avisos en este dispositivo».
+  - La página `/avisos` muestra lo mismo, paginado, con «Marcar todo como leído».
+  - El texto lo compone la web en el idioma de la interfaz a partir del tipo de aviso y sus datos.
+- **Acciones**:
+  - Pulsar un aviso lo marca como leído y lleva a su trabajo: el admin a `/admin/trabajos/{id}`, el pintor a `/pintor/trabajos/{id}` y el cliente a `/mis-trabajos/{id}`. Los avisos sin trabajo llevan a la pantalla que les corresponde (Ajustes, Pintores).
+  - El interruptor pide permiso al navegador solo al activarlo, nunca al cargar la página, y registra el dispositivo para el push. Desactivarlo lo da de baja.
+- **Estados**:
+  - Sin avisos: «No tienes avisos».
+  - Carga con esqueleto; error con «Reintentar».
+  - El contador se refresca cada 30 s y al volver a la pestaña.
+  - El interruptor explica, según el caso: el navegador no admite push; el permiso está bloqueado (con cómo reactivarlo en el navegador); en iPhone hace falta instalar la app en la pantalla de inicio (enlace a la invitación de instalar); o el servidor no tiene el push configurado (sin claves VAPID), y entonces el interruptor no aparece.
 
 ### Estados globales
 

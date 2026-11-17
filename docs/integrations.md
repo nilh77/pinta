@@ -99,6 +99,60 @@ En producción irá un proveedor transaccional. Las plantillas son componentes R
 - Fuera de cobertura: aviso y opción de dejar el email.
 - Sin Google Maps en el MVP: el pintor tiene un enlace "Abrir en el mapa" con la dirección.
 
+## Avisos y notificaciones push
+
+Desde 2026-11-17, además de los emails, cada evento importante crea un **aviso** para quien le afecta. Se ve en la campanita de la app y, si el usuario lo activó en ese dispositivo, llega también como notificación push del navegador, aunque Pinta esté cerrada (`docs/screens.md`, «Avisos»).
+
+- **Guardado y envío.**
+  - El aviso se guarda en la misma operación que lo origina (`notifications.notifications`).
+  - El push se envía después, en Hangfire, con 5 reintentos. Un fallo nunca deshace la operación.
+  - Las suscripciones que el servicio de push da por caducadas (404 o 410) se borran.
+- **Web Push estándar.**
+  - Con claves VAPID: `Push__PublicKey`, `Push__PrivateKey` y `Push__Subject` (un `mailto:` de contacto). En local van en `dotnet user-secrets`; en el entorno Demo, en las variables de Railway.
+  - Sin claves, el push queda desactivado y la campanita funciona igual.
+  - El texto del push va en el idioma del usuario.
+- **Dónde funciona.**
+  - Chrome, Edge y Firefox en escritorio y Android, y Safari en macOS.
+  - En iPhone y iPad solo con la PWA instalada en la pantalla de inicio (iOS 16.4 o posterior).
+  - El service worker solo se registra en el build de producción, así que en `pnpm dev` no hay push.
+- **Sin filtros por tipo** en el MVP: cada usuario activa o desactiva el push por dispositivo.
+
+| Tipo (`NotificationKind`) | Admin | Pintor | Cliente | Cuándo |
+| --- | --- | --- | --- | --- |
+| `request_received` | ✓ | | | Una solicitud pasa a «En revisión» |
+| `client_question` | ✓ | | | El cliente pulsa «Tengo dudas» |
+| `quote_confirmed` | | | ✓ | El admin confirma el precio |
+| `quote_rejected` | ✓ | | | El cliente rechaza el precio |
+| `quote_expiring` | | | ✓ | Faltan 3 días para que caduque el precio |
+| `quote_expired` | | | ✓ | El precio caduca |
+| `request_rejected` | | | ✓ | El admin rechaza la solicitud |
+| `site_visit_scheduled` | | | ✓ | Se programa la visita técnica |
+| `site_visit_assigned` | | ✓ | | Se le asigna una visita técnica |
+| `site_visit_reported` | ✓ | | | El pintor envía el informe de la visita |
+| `multibanco_reference` | | | ✓ | Se genera una referencia Multibanco |
+| `payment_received` | | | ✓ | Un pago se confirma (señal, resto o visita) |
+| `deposit_paid` | ✓ | | | Se paga la señal |
+| `balance_paid` | ✓ | | | Se paga el resto y el trabajo se cierra |
+| `offer_received` | | ✓ | | Le ofrecen un trabajo |
+| `offer_withdrawn` | | ✓ | | Se retira su oferta |
+| `offer_accepted` | ✓ | | | El pintor acepta |
+| `offer_declined` | ✓ | | | El pintor rechaza, con el motivo |
+| `offer_unanswered` | ✓ | | | Una oferta lleva 48 h sin respuesta |
+| `job_scheduled` | | | ✓ | Fecha y pintor fijados |
+| `job_started` | ✓ | | | El pintor empieza el trabajo |
+| `progress_photos` | ✓ | | ✓ | El pintor envía fotos de avance |
+| `incident_reported` | ✓ | | | El pintor reporta una incidencia |
+| `job_finished` | ✓ | | | El pintor marca el trabajo como terminado |
+| `balance_due` | | | ✓ | Trabajo terminado: falta pagar el resto |
+| `job_cancelled` | ✓ | ✓ | | El cliente cancela (admin), o se cancela un trabajo asignado (pintor) |
+| `refund_issued` | | | ✓ | Se lanza un reembolso |
+| `refund_completed` | ✓ | | | Stripe confirma el reembolso |
+| `payment_dispute` | ✓ | | | Stripe abre una disputa |
+| `payout_paid` | | ✓ | | El admin marca su pago como pagado |
+| `account_deletion_requested` | ✓ | | | Un cliente pide la supresión de su cuenta |
+| `reviews_overdue` | ✓ | | | Hay solicitudes con el plazo de revisión vencido |
+| `painter_documents_expiring` | ✓ | | | Documentos de pintor que caducan en 30 días |
+
 ## Tareas programadas y observabilidad
 
 | Tarea (Hangfire) | Frecuencia |
@@ -108,6 +162,8 @@ En producción irá un proveedor transaccional. Las plantillas son componentes R
 | Avisos de documentos de pintor a punto de caducar | Semanal |
 | Limpieza de subidas sin confirmar | Diaria |
 | Envío de emails con reintentos | Bajo demanda |
+| Envío de cada notificación push con reintentos (5) | Bajo demanda |
+| Borrado de avisos leídos de más de 90 días | Diaria |
 
 **Observabilidad:**
 

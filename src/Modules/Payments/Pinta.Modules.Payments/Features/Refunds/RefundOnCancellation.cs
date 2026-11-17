@@ -24,6 +24,7 @@ internal sealed class RefundOnCancellation(
     IPayableJobs jobs,
     IUserDirectory users,
     IEmailQueue emails,
+    INotifier notifier,
     WebLinks links,
     TimeProvider clock,
     ILogger<RefundOnCancellation> logger) : IIntegrationEventHandler<JobCancelled>
@@ -67,6 +68,7 @@ internal sealed class RefundOnCancellation(
             await emails.EnqueueAsync(new RefundEmail(
                 client.Email, client.Locale, client.Name, job!.Code, refunded, links.ClientJob(job.JobId, client.Locale)) { JobId = job.JobId },
                 cancellationToken);
+            await notifier.NotifyAsync([client.Id], new Notice(NotificationKind.RefundIssued, NoticeAudience.Client, job.JobId, job.Code), cancellationToken);
         }
     }
 }

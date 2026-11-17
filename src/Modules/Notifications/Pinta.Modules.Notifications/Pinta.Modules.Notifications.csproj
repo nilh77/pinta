@@ -2,8 +2,10 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="Lib.Net.Http.WebPush" />
     <PackageReference Include="MailKit" />
     <ProjectReference Include="..\Pinta.Modules.Notifications.Contracts\Pinta.Modules.Notifications.Contracts.csproj" />
+    <ProjectReference Include="..\..\Identity\Pinta.Modules.Identity.Contracts\Pinta.Modules.Identity.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Pinta.SharedKernel\Pinta.SharedKernel.csproj" />
   </ItemGroup>
 </Project>

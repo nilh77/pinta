@@ -5,6 +5,7 @@ using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Media.Features.Uploads;
+using Pinta.Modules.Notifications.Features.Notices;
 using Pinta.Modules.Painters.Features;
 using Pinta.SharedKernel.Time;
 
@@ -43,6 +44,7 @@ public static class HangfireSetup
         var jobs = services.GetRequiredService<IRecurringJobManager>();
         var lisbon = new RecurringJobOptions { TimeZone = BusinessDays.Lisbon };
         jobs.AddOrUpdate<MediaCleanup>(MediaCleanup.JobId, cleanup => cleanup.RunAsync(), Cron.Daily(3), lisbon);
+        jobs.AddOrUpdate<NotificationCleanup>(NotificationCleanup.JobId, cleanup => cleanup.RunAsync(), Cron.Daily(4), lisbon);
         jobs.AddOrUpdate<ExpireQuotes>(ExpireQuotes.JobId, expiry => expiry.RunAsync(), Cron.Daily(3), lisbon);
         jobs.AddOrUpdate<OfferReminders>(OfferReminders.JobId, reminders => reminders.RunAsync(), Cron.Hourly(), lisbon);
         jobs.AddOrUpdate<QuoteExpiryReminders>(QuoteExpiryReminders.JobId, reminders => reminders.RunAsync(), Cron.Daily(9), lisbon);

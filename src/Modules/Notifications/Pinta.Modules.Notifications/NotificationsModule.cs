@@ -1,4 +1,7 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Routing;
+using Pinta.Modules.Notifications.Features.Notices;
+using Pinta.Modules.Notifications.Features.Push;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -36,8 +39,21 @@ public static class NotificationsModule
 
         builder.Services.AddScoped<OutboxSender>();
         builder.Services.AddScoped<IEmailLog, EmailLog>();
+
+        // The bell and web push (docs/integrations.md, «Avisos y notificaciones push").
+        var push = PushOptions.From(builder.Configuration);
+        builder.Services.AddSingleton(push);
+        builder.Services.AddScoped<INotifier, Notifier>();
+        builder.Services.AddScoped<PushSender>();
+        builder.Services.AddScoped<NotificationCleanup>();
+        builder.Services.AddHttpClient<IPushTransport, WebPushTransport>();
+        builder.Services.AddValidatorsFromAssemblyContaining<PushSubscriptionRequest>(includeInternalTypes: true);
         return builder;
     }
 
-    public static IEndpointRouteBuilder MapNotificationsEndpoints(this IEndpointRouteBuilder app) => app;
+    public static IEndpointRouteBuilder MapNotificationsEndpoints(this IEndpointRouteBuilder app)
+    {
+        NotificationEndpoints.Map(app);
+        return app;
+    }
 }

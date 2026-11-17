@@ -42,7 +42,7 @@ public sealed class QuoteExpiryReminders(
 }
 
 /// <summary>Daily at 09:00 Lisbon (S3): one email to the admins with the requests past their review deadline.</summary>
-public sealed class OverdueReviewAlerts(JobsDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock)
+public sealed class OverdueReviewAlerts(JobsDbContext db, IUserDirectory users, IEmailQueue emails, INotifier notifier, WebLinks links, TimeProvider clock)
 {
     public const string JobId = "overdue-review-alerts";
 
@@ -58,6 +58,9 @@ public sealed class OverdueReviewAlerts(JobsDbContext db, IUserDirectory users, 
             {
                 await emails.EnqueueAsync(new OverdueReviewsEmail(admin.Email, admin.Locale, codes, links.AdminReviews(admin.Locale)));
             }
+
+            await notifier.NotifyAdminsAsync(new Notice(NotificationKind.ReviewsOverdue, NoticeAudience.Admin,
+                Data: new Dictionary<string, string> { ["count"] = codes.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) }));
         }
 
         return codes.Count;

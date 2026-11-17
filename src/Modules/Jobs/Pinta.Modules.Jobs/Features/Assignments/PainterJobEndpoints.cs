@@ -260,7 +260,7 @@ internal static class PainterJobEndpoints
     /// <summary>P2: progress photos while the job runs; the client sees them on screen 10.</summary>
     private static async Task<Results<NoContent, ProblemHttpResult>> ProgressAsync(
         Guid id, ProgressRequest request, HttpContext http, JobsDbContext db, IPainterDirectory painters, IMediaService media,
-        TimeProvider clock, CancellationToken cancellationToken)
+        TimeProvider clock, JobNotices notices, CancellationToken cancellationToken)
     {
         var (job, _) = await FindOwnAsync(id, http, db, painters, tracked: false, cancellationToken);
         if (job is null)
@@ -281,6 +281,7 @@ internal static class PainterJobEndpoints
         }
 
         await db.RecordActivityAsync(job.Id, clock.GetUtcNow(), cancellationToken);
+        await notices.NotifyAsync(job, NotificationKind.ProgressPhotos, db, cancellationToken);
         return TypedResults.NoContent();
     }
 

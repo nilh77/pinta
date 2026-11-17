@@ -11,6 +11,7 @@ using Pinta.Modules.Finance.Domain;
 using Pinta.Modules.Finance.Resources;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
+using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Painters.Contracts;
 using Pinta.SharedKernel;
 using Pinta.SharedKernel.Events;
@@ -102,7 +103,8 @@ internal static class PayoutEndpoints
     /// mark is <c>invalid_transition</c>.
     /// </summary>
     private static async Task<Results<Ok<PayoutDto>, ProblemHttpResult>> MarkPaidAsync(
-        Guid id, MarkPaidRequest request, FinanceDbContext db, TimeProvider clock, CancellationToken cancellationToken)
+        Guid id, MarkPaidRequest request, FinanceDbContext db, IPainterDirectory painters, INotifier notifier, TimeProvider clock,
+        CancellationToken cancellationToken)
     {
         var payout = await db.PainterPayouts.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
         if (payout is null)
@@ -132,6 +134,11 @@ internal static class PayoutEndpoints
         catch (DbUpdateConcurrencyException)
         {
             return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.InvalidTransition);
+        }
+
+        if (await painters.FindAsync(payout.PainterId, cancellationToken) is { } painter)
+        {
+            await notifier.NotifyAsync([painter.UserId], new Notice(NotificationKind.PayoutPaid, NoticeAudience.Painter, payout.JobId, payout.JobCode), cancellationToken);
         }
 
         return TypedResults.Ok(ToDto(payout));

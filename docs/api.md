@@ -86,6 +86,20 @@ Todas las rutas exigen rol Pintor y devuelven solo recursos asignados a él. Las
 | POST | `/api/painter/jobs/{id}/progress` | `{ fileIds }`: fotos de avance mientras está en curso; el cliente las ve | P2 |
 | POST | `/api/painter/jobs/{id}/incidents` | `{ text, fileIds }`: incidencia con fotos, programado o en curso; avisa a los admins | P2 |
 
+## Avisos (todos los roles)
+
+Exigen sesión; cada usuario ve y marca solo sus avisos (otro id responde 404). Ver `docs/integrations.md`, «Avisos y notificaciones push».
+
+| Método | Ruta | Uso |
+| --- | --- | --- |
+| GET | `/api/notifications?page=&pageSize=` | Avisos paginados, del más nuevo al más antiguo: `{ id, kind, jobId?, jobCode?, data, createdAt, readAt? }` |
+| GET | `/api/notifications/unread-count` | `{ count }` |
+| POST | `/api/notifications/{id}/read` | Marca uno como leído (204) |
+| POST | `/api/notifications/read-all` | Marca todos como leídos (204) |
+| GET | `/api/push/public-key` | `{ publicKey }`, o 404 si el push no está configurado |
+| POST | `/api/push/subscriptions` | `{ endpoint, p256dh, auth }`: registra este dispositivo (idempotente por `endpoint`) |
+| DELETE | `/api/push/subscriptions?endpoint=` | Da de baja este dispositivo (204) |
+
 ## Admin
 
 Todas las rutas exigen rol Admin.
@@ -251,6 +265,7 @@ Las enumeraciones viajan en JSON como cadenas en `snake_case`; en C# son `enum` 
 | `OperatingCostCategory` | `infrastructure`, `payment_fees`, `accounting`, `insurance`, `marketing` (la lista cerrada del acuerdo de socios) |
 | `PayoutStatus` | `pending`, `paid` |
 | `Locale` | `pt`, `es`, `en` |
+| `NotificationKind` | `request_received`, `client_question`, `quote_confirmed`, `quote_rejected`, `quote_expiring`, `quote_expired`, `request_rejected`, `site_visit_scheduled`, `site_visit_assigned`, `site_visit_reported`, `multibanco_reference`, `payment_received`, `deposit_paid`, `balance_paid`, `offer_received`, `offer_withdrawn`, `offer_accepted`, `offer_declined`, `offer_unanswered`, `job_scheduled`, `job_started`, `progress_photos`, `incident_reported`, `job_finished`, `balance_due`, `job_cancelled`, `refund_issued`, `refund_completed`, `payment_dispute`, `payout_paid`, `account_deletion_requested`, `reviews_overdue`, `painter_documents_expiring` |
 
 ### Códigos de error
 
