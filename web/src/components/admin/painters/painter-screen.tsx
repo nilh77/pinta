@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { DetailSkeleton } from "@/components/ui/skeleton";
@@ -222,7 +223,7 @@ function Documents({ painter }: { painter: PainterDetail }) {
         </label>
         <label className="flex flex-col gap-1 text-[13px] font-semibold">
           {t("expiresOn")}
-          <input type="date" value={expiresOn} onChange={(e) => setExpiresOn(e.target.value)} className={fieldClass} />
+          <DateInput value={expiresOn} onChange={setExpiresOn} className={fieldClass} />
         </label>
       </div>
       <Button variant="outline" className="mt-2 w-full" disabled={add.isPending} onClick={() => input.current?.click()}>

@@ -18,6 +18,11 @@
     "confirmPassword": "Repetir la contraseña",
     "takePhoto": "Hacer foto",
     "chooseFiles": "Elegir archivos",
+    "calendar": {
+      "choose": "Elegir fecha",
+      "previous": "Mes anterior",
+      "next": "Mes siguiente"
+    },
     "changeLanguage": "{code}, cambiar el idioma",
     "darkTheme": "Tema oscuro"
   },

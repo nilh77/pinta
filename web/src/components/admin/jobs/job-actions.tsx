@@ -4,6 +4,7 @@ import { Ban, CalendarClock, Check, CircleCheck, Loader2, Shuffle, X } from "luc
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "@/lib/toast";
+import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { ApiError } from "@/lib/api/problem";
@@ -280,7 +281,7 @@ function TransitionButton({ job, targets }: { job: AdminJobDetail; targets: JobS
             <label htmlFor={`${id}-date`} className="text-[13px] font-semibold">
               {t("scheduledOn")}
             </label>
-            <input id={`${id}-date`} type="date" min={today} className={inputClass} value={scheduledOn} onChange={(e) => setScheduledOn(e.target.value)} />
+            <DateInput id={`${id}-date`} min={today} className={inputClass} value={scheduledOn} onChange={setScheduledOn} />
           </>
         )}
         <TextAreaField id={`${id}-reason`} label={t("reason")} value={reason} onChange={setReason} max={500} required />

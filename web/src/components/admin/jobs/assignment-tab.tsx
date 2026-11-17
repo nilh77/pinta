@@ -4,6 +4,7 @@ import { Loader2, Send } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
+import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
@@ -115,14 +116,7 @@ function OfferForm({ job }: { job: AdminJobDetail }) {
           </label>
           <label className="flex flex-col gap-1 text-[13px] font-semibold">
             {t("date")}
-            <input
-              type="date"
-              min={today}
-              value={scheduledOn}
-              onChange={(e) => setScheduledOn(e.target.value)}
-              className={fieldClass}
-              aria-invalid={!!server?.scheduledOn}
-            />
+            <DateInput min={today} value={scheduledOn} onChange={setScheduledOn} className={fieldClass} invalid={!!server?.scheduledOn} />
             {server?.scheduledOn && <span className="text-sm font-normal text-destructive">{server.scheduledOn[0]}</span>}
           </label>
           {open && <p className="text-xs text-accent-ink">{t("replaces")}</p>}

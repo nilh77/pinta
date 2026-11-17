@@ -8,6 +8,7 @@ import { useRouter } from "@/i18n/navigation";
 import { api } from "@/lib/api/client";
 import { toEstimateRequest, type DraftDetails } from "@/lib/quote/draft";
 import { addBusinessDays, addDays, lisbonToday, MAX_RANGE_DAYS, POSTAL_CODE, validateAddress, validateDates, type DetailsErrors } from "@/lib/quote/request";
+import { DateInput } from "@/components/ui/date-input";
 import { cn } from "@/lib/utils";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
 import { Waitlist } from "./waitlist";
@@ -149,8 +150,8 @@ function AddressForm({ draft, catalog, info, update }: QuoteContext) {
         )}
         {dates.asap === false && (
           <div className="mt-3 grid grid-cols-2 gap-2.5">
-            <TextField type="date" label={t("from")} min={earliest} value={dates.from} error={error("from")} onChange={(from) => setDates({ from, ...(dates.to && dates.to < from ? { to: from } : {}) })} />
-            <TextField type="date" label={t("to")} min={dates.from || earliest} max={dates.from ? addDays(dates.from, MAX_RANGE_DAYS) : undefined} value={dates.to} error={error("to")} onChange={(to) => setDates({ to })} />
+            <DateField label={t("from")} min={earliest} value={dates.from} error={error("from")} onChange={(from) => setDates({ from, ...(dates.to && dates.to < from ? { to: from } : {}) })} />
+            <DateField label={t("to")} min={dates.from || earliest} max={dates.from ? addDays(dates.from, MAX_RANGE_DAYS) : undefined} value={dates.to} error={error("to")} onChange={(to) => setDates({ to })} />
           </div>
         )}
         <p className="mt-2.5 text-xs leading-relaxed text-muted-foreground">
@@ -165,6 +166,24 @@ function AddressForm({ draft, catalog, info, update }: QuoteContext) {
           </Button>
         </div>
       </div>
+    </div>
+  );
+}
+
+/** A labelled date with Pinta's calendar (docs/screens.md, «Formularios»); values are ISO dates. */
+function DateField({ label, value, error, min, max, onChange }: { label: string; value: string; error?: string; min?: string; max?: string; onChange: (value: string) => void }) {
+  const id = useId();
+  return (
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <label htmlFor={id} className="text-[13px] font-semibold">
+        {label}
+      </label>
+      <DateInput id={id} value={value} min={min} max={max} invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} onChange={onChange} />
+      {error && (
+        <p id={`${id}-error`} className="text-xs font-medium text-destructive">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
