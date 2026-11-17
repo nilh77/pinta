@@ -178,10 +178,11 @@ function JobsTable({ items }: { items: AdminJobListItem[] }) {
               <span>
                 {job.clientName} · {job.locality}
               </span>
-              <span className="flex justify-between text-muted-foreground">
+              <span className="flex justify-between gap-2 text-muted-foreground">
+                <PainterLabel job={job} />
                 <span>{formatCents(locale, job.totalCents)}</span>
-                <span>{formatDateTime(locale, job.updatedAt)}</span>
               </span>
+              <span className="text-xs text-muted-foreground">{t("activity")}: {formatDateTime(locale, job.lastActivityAt)}</span>
             </Link>
           </li>
         ))}
@@ -216,9 +217,11 @@ function JobsTable({ items }: { items: AdminJobListItem[] }) {
                 </td>
                 <td className="px-3 py-2.5 whitespace-nowrap">{formatCents(locale, job.totalCents)}</td>
                 <td className="px-3 py-2.5 whitespace-nowrap">{formatCents(locale, job.marginCents)}</td>
-                <td className="px-3 py-2.5 text-muted-foreground">{job.painterName ?? "—"}</td>
+                <td className="px-3 py-2.5 text-muted-foreground">
+                  <PainterLabel job={job} />
+                </td>
                 <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{job.scheduledOn ? formatDate(locale, job.scheduledOn, true) : "—"}</td>
-                <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{formatDateTime(locale, job.updatedAt)}</td>
+                <td className="px-3 py-2.5 whitespace-nowrap text-muted-foreground">{formatDateTime(locale, job.lastActivityAt)}</td>
               </tr>
             ))}
           </tbody>
@@ -253,6 +256,10 @@ function Board({ items, statuses, truncated }: { items: AdminJobListItem[]; stat
                     <span>{job.locality}</span>
                     <span>{formatCents(locale, job.totalCents)}</span>
                   </span>
+                  <span className="flex justify-between gap-2 text-xs text-muted-foreground">
+                    <PainterLabel job={job} />
+                    <time dateTime={job.lastActivityAt}>{formatDateTime(locale, job.lastActivityAt)}</time>
+                  </span>
                 </Link>
               ))}
             </section>
@@ -261,4 +268,11 @@ function Board({ items, statuses, truncated }: { items: AdminJobListItem[]; stat
       </div>
     </>
   );
+}
+
+/** The painter who has the job, or the one with the open offer marked as such (docs/screens.md, A3.1). */
+function PainterLabel({ job }: { job: AdminJobListItem }) {
+  const t = useTranslations("admin.jobs");
+  if (!job.painterName) return <span>{t("noPainter")}</span>;
+  return <span className="truncate">{job.painterOffered ? t("offeredTo", { name: job.painterName }) : job.painterName}</span>;
 }

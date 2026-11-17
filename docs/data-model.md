@@ -112,6 +112,7 @@ El trabajo guarda su estado actual y un historial de cada cambio. La asignación
 erDiagram
   USUARIO ||..o{ TRABAJO : cliente
   TRABAJO ||--o{ HISTORIAL_ESTADO : registra
+  TRABAJO ||--o| ACTIVIDAD_TRABAJO : ultima_actividad
   TRABAJO ||--o{ ASIGNACION : ofrece
   TRABAJO ||--o{ VISITA_TECNICA : puede_tener
   TRABAJO ||..o{ ARCHIVO : fotos_y_videos
@@ -134,6 +135,10 @@ erDiagram
     text nif_factura
     text empresa_factura
     uuid cotizacion_vigente_id
+  }
+  ACTIVIDAD_TRABAJO {
+    uuid trabajo_id PK
+    timestamptz ultima_actividad
   }
   HISTORIAL_ESTADO {
     uuid id PK
@@ -204,6 +209,7 @@ erDiagram
 - **Usuario** es el usuario de ASP.NET Core Identity, ampliado con nombre, teléfono e idioma. Las tablas internas de Identity (roles, logins externos, tokens) no se muestran.
 - **Archivo.contexto** distingue fotos del cliente, de la visita técnica y del resultado final.
 - **Trabajo.estado** solo cambia a través de la máquina de estados, que escribe cada cambio en el historial.
+- **Actividad del trabajo** guarda cuándo se hizo algo por última vez con el trabajo, para ordenar la lista del admin (A3.1). Cuenta como actividad un cambio de estado, una oferta o la respuesta del pintor, una incidencia, las fotos de avance, el borrador de precio guardado, una pregunta del cliente y los pagos que cambian el estado. Va en una tabla aparte para que esas escrituras no choquen con el control de concurrencia del trabajo.
 
 ## Pagos, finanzas y notificaciones
 

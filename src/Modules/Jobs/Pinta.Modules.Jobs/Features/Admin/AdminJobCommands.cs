@@ -93,7 +93,7 @@ internal static class AdminJobCommands
 
     private static async Task<Results<Ok<AdminQuote>, ProblemHttpResult>> SaveDraftAsync(
         Guid id, DraftQuoteRequest request, HttpContext http, JobsDbContext db, IQuoteVersions quotes, IJobPayments payments,
-        IRequestSettings settings, CancellationToken cancellationToken)
+        IRequestSettings settings, TimeProvider clock, CancellationToken cancellationToken)
     {
         var job = await db.Jobs.AsNoTracking().SingleOrDefaultAsync(j => j.Id == id, cancellationToken);
         if (job is null)
@@ -110,7 +110,13 @@ internal static class AdminJobCommands
         var credit = await JobRules.SiteVisitCreditCentsAsync(job, payments, settings, cancellationToken);
         var (draft, errors) = await quotes.SaveDraftAsync(
             job.Id, JobRules.DraftOrigin(job), http.User.GetUserId()!.Value, request, credit, cancellationToken);
-        return errors is not null ? ApiProblem.Validation(errors.Errors) : TypedResults.Ok(draft!);
+        if (errors is not null)
+        {
+            return ApiProblem.Validation(errors.Errors);
+        }
+
+        await db.RecordActivityAsync(job.Id, clock.GetUtcNow(), cancellationToken);
+        return TypedResults.Ok(draft!);
     }
 
     private static async Task<Results<NoContent, ProblemHttpResult>> ConfirmAsync(

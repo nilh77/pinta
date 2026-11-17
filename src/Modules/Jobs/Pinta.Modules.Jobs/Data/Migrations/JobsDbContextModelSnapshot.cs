@@ -269,6 +269,25 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                     b.ToTable("jobs", "jobs");
                 });
 
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobActivity", b =>
+                {
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.Property<DateTimeOffset>("LastActivityAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_activity_at");
+
+                    b.HasKey("JobId")
+                        .HasName("pk_job_activity");
+
+                    b.HasIndex("LastActivityAt")
+                        .HasDatabaseName("ix_job_activity_last_activity_at");
+
+                    b.ToTable("job_activity", "jobs");
+                });
+
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobIncident", b =>
                 {
                     b.Property<Guid>("Id")
@@ -364,6 +383,16 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_assignments_jobs_job_id");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobActivity", b =>
+                {
+                    b.HasOne("Pinta.Modules.Jobs.Domain.Job", null)
+                        .WithOne()
+                        .HasForeignKey("Pinta.Modules.Jobs.Domain.JobActivity", "JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_job_activity_jobs_job_id");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobIncident", b =>

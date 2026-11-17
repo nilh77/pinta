@@ -260,7 +260,7 @@ internal static class PainterJobEndpoints
     /// <summary>P2: progress photos while the job runs; the client sees them on screen 10.</summary>
     private static async Task<Results<NoContent, ProblemHttpResult>> ProgressAsync(
         Guid id, ProgressRequest request, HttpContext http, JobsDbContext db, IPainterDirectory painters, IMediaService media,
-        CancellationToken cancellationToken)
+        TimeProvider clock, CancellationToken cancellationToken)
     {
         var (job, _) = await FindOwnAsync(id, http, db, painters, tracked: false, cancellationToken);
         if (job is null)
@@ -275,9 +275,13 @@ internal static class PainterJobEndpoints
 
         var photos = await media.ConfirmOwnedAsync([.. request.FileIds.Distinct()], http.User.GetUserId()!.Value, job.Id, null, MediaContext.Progress,
             cancellationToken);
-        return photos.Count == 0
-            ? ApiProblem.Validation(new Dictionary<string, string[]> { ["fileIds"] = [JobsMessages.Get("progress_photos")] })
-            : TypedResults.NoContent();
+        if (photos.Count == 0)
+        {
+            return ApiProblem.Validation(new Dictionary<string, string[]> { ["fileIds"] = [JobsMessages.Get("progress_photos")] });
+        }
+
+        await db.RecordActivityAsync(job.Id, clock.GetUtcNow(), cancellationToken);
+        return TypedResults.NoContent();
     }
 
     /// <summary>P2: an incident with text and photos, scheduled or in progress; the admins get an email.</summary>

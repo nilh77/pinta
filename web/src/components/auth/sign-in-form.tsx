@@ -7,7 +7,7 @@ import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
 import { Link, useRouter } from "@/i18n/navigation";
 import { safeNextPath, signInSchema, type SignInValues } from "@/lib/auth/schemas";
-import { useSignIn } from "@/lib/auth/use-auth";
+import { homeFor, useSignIn } from "@/lib/auth/use-auth";
 import { FormError } from "./form-error";
 
 export function SignInForm({ next }: { next?: string }) {
@@ -18,8 +18,8 @@ export function SignInForm({ next }: { next?: string }) {
   const { errors } = form.formState;
 
   const onSubmit = form.handleSubmit((values) =>
-    // A painter without a target lands on their jobs (P1).
-    signIn.mutate(values, { onSuccess: (me) => router.push(!next && me.role === "painter" ? "/pintor" : safeNextPath(next)) }),
+    // Without a target, straight to the role's start page (docs/screens.md, «Entrar»); replace, so Back does not return here.
+    signIn.mutate(values, { onSuccess: (me) => router.replace(next ? safeNextPath(next) : homeFor(me)) }),
   );
 
   return (

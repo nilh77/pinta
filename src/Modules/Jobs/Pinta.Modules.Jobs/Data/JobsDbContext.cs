@@ -15,9 +15,19 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
 
     public DbSet<JobIncident> Incidents => Set<JobIncident>();
 
+    public DbSet<JobActivity> Activity => Set<JobActivity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
+        modelBuilder.Entity<JobActivity>(activity =>
+        {
+            activity.ToTable("job_activity");
+            activity.HasKey(a => a.JobId);
+            activity.Property(a => a.JobId).ValueGeneratedNever();
+            activity.HasIndex(a => a.LastActivityAt);
+            activity.HasOne<Job>().WithOne().HasForeignKey<JobActivity>(a => a.JobId);
+        });
         modelBuilder.Entity<JobIncident>(incident =>
         {
             incident.ToTable("incidents");
@@ -99,7 +109,61 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
     public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         await WithdrawStaleOffersAsync(cancellationToken);
-        return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        var activity = PendingActivity();
+        var saved = await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        foreach (var (jobId, at) in activity)
+        {
+            await RecordActivityAsync(jobId, at, cancellationToken);
+        }
+
+        return saved;
+    }
+
+    /// <summary>
+    /// Marks the job as just worked on (docs/data-model.md, «Actividad del trabajo»). Saving a job, an offer, an
+    /// answer or an incident records it by itself; call this for activity that changes nothing in this module
+    /// (progress photos, the price draft, a client's question).
+    /// </summary>
+    public Task RecordActivityAsync(Guid jobId, DateTimeOffset at, CancellationToken cancellationToken) =>
+        Database.ExecuteSqlInterpolatedAsync($"""
+            INSERT INTO jobs.job_activity (job_id, last_activity_at) VALUES ({jobId}, {at})
+            ON CONFLICT (job_id) DO UPDATE SET last_activity_at = GREATEST(job_activity.last_activity_at, EXCLUDED.last_activity_at)
+            """, cancellationToken);
+
+    /// <summary>The jobs touched by the pending changes, with the moment of each change.</summary>
+    private Dictionary<Guid, DateTimeOffset> PendingActivity()
+    {
+        var touched = new Dictionary<Guid, DateTimeOffset>();
+        void Touch(Guid jobId, DateTimeOffset? at)
+        {
+            if (at is { } moment && (!touched.TryGetValue(jobId, out var known) || moment > known))
+            {
+                touched[jobId] = moment;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries())
+        {
+            if (entry.State is not (EntityState.Added or EntityState.Modified))
+            {
+                continue;
+            }
+
+            switch (entry.Entity)
+            {
+                case Job job:
+                    Touch(job.Id, entry.State == EntityState.Added ? job.CreatedAt : job.UpdatedAt);
+                    break;
+                case Assignment assignment:
+                    Touch(assignment.JobId, assignment.RespondedAt ?? assignment.OfferedAt);
+                    break;
+                case JobIncident incident:
+                    Touch(incident.JobId, incident.CreatedAt);
+                    break;
+            }
+        }
+
+        return touched;
     }
 
     /// <summary>
