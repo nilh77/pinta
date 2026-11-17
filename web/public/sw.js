@@ -1,6 +1,6 @@
 // Pinta service worker (docs/screens.md, PWA): caches the app shell and its texts, never the API.
 // Static build files and icons are cache-first; pages are network-first with the cached copy as the offline fallback.
-const VERSION = "pinta-v2";
+const VERSION = "pinta-v3";
 const LANDINGS = ["/pt", "/es", "/en"];
 
 self.addEventListener("install", (event) => {
@@ -67,7 +67,9 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(message.title, {
       body: message.body,
       icon: "/icons/icon-192.png",
-      badge: "/icons/icon-192.png",
+      // Android keeps only the badge's shape and paints it white: a full-colour icon shows as a white square.
+      badge: "/icons/badge-96.png",
+      vibrate: [120, 60, 120],
       tag: message.tag,
       data: { url: message.url },
     }),

@@ -6,6 +6,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Icono de las notificaciones
+
+#### Corregido
+
+- En Android, la notificación push mostraba un recuadro blanco en la barra de estado: el icono pequeño era el logo a color, y Android solo usa su silueta. Ahora es un icono monocromo con la «p» y el punto de Pinta, en blanco sobre fondo transparente (`badge-96.png`, generado con `tools/pwa_icons.py`). La notificación vibra dos veces, y la caché del service worker pasa a `pinta-v3`.
+
 ### Una oferta abierta por trabajo
 
 #### Cambiado
