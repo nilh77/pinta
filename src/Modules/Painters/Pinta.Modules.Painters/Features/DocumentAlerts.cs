@@ -8,7 +8,7 @@ using Pinta.SharedKernel.Time;
 namespace Pinta.Modules.Painters.Features;
 
 /// <summary>Mondays at 09:00 Lisbon (S3): one email to the admins with the painter documents expiring within 30 days.</summary>
-public sealed class PainterDocumentAlerts(PaintersDbContext db, IUserDirectory users, IEmailQueue emails, WebLinks links, TimeProvider clock)
+public sealed class PainterDocumentAlerts(PaintersDbContext db, IUserDirectory users, IEmailQueue emails, INotifier notifier, WebLinks links, TimeProvider clock)
 {
     public const string JobId = "painter-document-alerts";
 
@@ -28,6 +28,9 @@ public sealed class PainterDocumentAlerts(PaintersDbContext db, IUserDirectory u
             {
                 await emails.EnqueueAsync(new PainterDocumentsExpiringEmail(admin.Email, admin.Locale, lines, links.AdminPainters(admin.Locale)));
             }
+
+            await notifier.NotifyAdminsAsync(new Notice(NotificationKind.PainterDocumentsExpiring, NoticeAudience.Admin,
+                Data: new Dictionary<string, string> { ["count"] = expiring.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) }));
         }
 
         return expiring.Count;

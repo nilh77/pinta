@@ -145,7 +145,7 @@ internal static class AccountEndpoints
 
     /// <summary>C5.8: the request reaches the admins once; they execute it from Ajustes.</summary>
     private static async Task<Results<NoContent, ProblemHttpResult>> RequestDeletionAsync(
-        HttpContext http, UserManager<User> users, IUserDirectory directory, IEmailQueue emails, WebLinks links, TimeProvider clock,
+        HttpContext http, UserManager<User> users, IUserDirectory directory, IEmailQueue emails, INotifier notifier, WebLinks links, TimeProvider clock,
         CancellationToken cancellationToken)
     {
         var user = await users.GetUserAsync(http.User);
@@ -163,6 +163,9 @@ internal static class AccountEndpoints
                 await emails.EnqueueAsync(new AccountDeletionRequestedEmail(admin.Email, admin.Locale, user.Name, user.Email!, links.AdminSettings(admin.Locale)),
                     cancellationToken);
             }
+
+            await notifier.NotifyAdminsAsync(new Notice(NotificationKind.AccountDeletionRequested, NoticeAudience.Admin,
+                Data: new Dictionary<string, string> { ["name"] = user.Name }), cancellationToken);
         }
 
         return TypedResults.NoContent();

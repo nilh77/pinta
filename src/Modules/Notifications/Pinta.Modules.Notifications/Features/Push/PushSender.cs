@@ -80,7 +80,7 @@ public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, 
             return;
         }
 
-        var subscriptions = await db.PushSubscriptions.Where(s => s.UserId == notification.UserId).ToListAsync();
+        var subscriptions = await db.PushSubscriptions.AsNoTracking().Where(s => s.UserId == notification.UserId).ToListAsync();
         if (subscriptions.Count == 0)
         {
             return;
@@ -99,11 +99,10 @@ public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, 
         {
             if (await transport.SendAsync(subscription, payload, CancellationToken.None) == PushOutcome.Gone)
             {
-                db.PushSubscriptions.Remove(subscription);
+                // Idempotent: a retry, or another job for the same user, may already have removed it.
+                await db.PushSubscriptions.Where(s => s.Id == subscription.Id).ExecuteDeleteAsync();
             }
         }
-
-        await db.SaveChangesAsync();
     }
 
     /// <summary>The notice's sentence in <paramref name="locale"/>, with its code and data filled in.</summary>

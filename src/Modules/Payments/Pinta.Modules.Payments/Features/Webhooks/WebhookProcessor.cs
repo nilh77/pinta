@@ -28,6 +28,7 @@ internal sealed class WebhookProcessor(
     IPayableJobs jobs,
     IUserDirectory users,
     IEmailQueue emails,
+    INotifier notifier,
     IEventPublisher events,
     IBackgroundJobClient background,
     WebLinks links,
@@ -88,6 +89,7 @@ internal sealed class WebhookProcessor(
             await emails.EnqueueAsync(new PaymentReceivedEmail(
                 client.Email, client.Locale, client.Name, job.Code, Kind(payment.Type), Money.ToCents(payment.Amount),
                 payment.Method == PaymentMethod.MbWay, links.ClientJob(job.JobId, client.Locale)) { JobId = job.JobId }, cancellationToken);
+            await notifier.NotifyAsync([client.Id], new Notice(NotificationKind.PaymentReceived, NoticeAudience.Client, job.JobId, job.Code), cancellationToken);
         }
     }
 
@@ -140,6 +142,7 @@ internal sealed class WebhookProcessor(
             await emails.EnqueueAsync(new MultibancoReferenceEmail(
                 client.Email, client.Locale, client.Name, job.Code, details.Entity ?? "", details.Reference ?? "", Money.ToCents(payment.Amount),
                 details.ExpiresAt, links.ClientJob(job.JobId, client.Locale)) { JobId = job.JobId }, cancellationToken);
+            await notifier.NotifyAsync([client.Id], new Notice(NotificationKind.MultibancoReference, NoticeAudience.Client, job.JobId, job.Code), cancellationToken);
         }
     }
 
@@ -153,6 +156,7 @@ internal sealed class WebhookProcessor(
         }
 
         var refunded = Money.FromCents(charge.AmountRefunded);
+        var completed = false;
         var done = payment.Refunds.Where(r => r.Status == RefundStatus.Succeeded).Sum(r => r.Amount);
         foreach (var refund in payment.Refunds.Where(r => r.Status == RefundStatus.Pending).OrderBy(r => r.CreatedAt))
         {
@@ -163,10 +167,15 @@ internal sealed class WebhookProcessor(
 
             Complete(refund);
             done += refund.Amount;
+            completed = true;
         }
 
         UpdateStatus(payment);
         await db.SaveChangesAsync(cancellationToken);
+        if (completed)
+        {
+            await RefundCompletedAsync(payment.JobId, cancellationToken);
+        }
     }
 
     private async Task RefundUpdatedAsync(StripeRefund stripeRefund, CancellationToken cancellationToken)
@@ -191,6 +200,16 @@ internal sealed class WebhookProcessor(
         var payment = await db.Payments.Include(p => p.Refunds).SingleAsync(p => p.Id == refund.PaymentId, cancellationToken);
         UpdateStatus(payment);
         await db.SaveChangesAsync(cancellationToken);
+        if (refund.Status == RefundStatus.Succeeded)
+        {
+            await RefundCompletedAsync(payment.JobId, cancellationToken);
+        }
+    }
+
+    private async Task RefundCompletedAsync(Guid jobId, CancellationToken cancellationToken)
+    {
+        var job = await jobs.FindAsync(jobId, cancellationToken);
+        await notifier.NotifyAdminsAsync(new Notice(NotificationKind.RefundCompleted, NoticeAudience.Admin, jobId, job?.Code), cancellationToken);
     }
 
     private void Complete(DomainRefund refund)
@@ -218,6 +237,8 @@ internal sealed class WebhookProcessor(
                 admin.Email, admin.Locale, job?.Code ?? dispute.PaymentIntentId ?? dispute.Id, dispute.Amount,
                 payment is null ? null : links.AdminJob(payment.JobId, admin.Locale)) { JobId = payment?.JobId }, cancellationToken);
         }
+
+        await notifier.NotifyAdminsAsync(new Notice(NotificationKind.PaymentDispute, NoticeAudience.Admin, payment?.JobId, job?.Code), cancellationToken);
     }
 
     internal static string Kind(PaymentType type) => type switch

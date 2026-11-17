@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Pinta.Modules.Catalog.Data;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Identity.Domain;
+using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Painters.Contracts;
 using Pinta.Modules.Painters.Data;
 using Pinta.Modules.Painters.Domain;
@@ -93,7 +94,11 @@ public static class DemoSeeder
         }
 
         await painters.SaveChangesAsync();
-        await DemoJobsSeeder.SeedAsync(scope.ServiceProvider, users, password, now);
+        // The demo history is built without notices: nobody is woken up by a reset.
+        using (JobNotices.Mute())
+        {
+            await DemoJobsSeeder.SeedAsync(scope.ServiceProvider, users, password, now);
+        }
     }
 
     private static void Ensure(IdentityResult result)

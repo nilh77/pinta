@@ -1,4 +1,5 @@
 using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Notifications.Contracts;
@@ -41,7 +42,10 @@ internal sealed class Notifier(
 
             if (push.Enabled)
             {
-                foreach (var notification in created)
+                // Only users with a device signed up get a push job: no empty jobs crowding Hangfire's queue.
+                var subscribed = await db.PushSubscriptions.Where(s => recipients.Contains(s.UserId)).Select(s => s.UserId).Distinct()
+                    .ToListAsync(cancellationToken);
+                foreach (var notification in created.Where(n => subscribed.Contains(n.UserId)))
                 {
                     jobs.Enqueue<PushSender>(sender => sender.SendAsync(notification.Id));
                 }
@@ -50,6 +54,7 @@ internal sealed class Notifier(
         catch (Exception e) when (e is not OperationCanceledException)
         {
             // A notice is a courtesy: the operation that raised it has already happened.
+            db.ChangeTracker.Clear();
             logger.LogError(e, "Could not record the {Kind} notice", notice.Kind);
         }
     }

@@ -27,7 +27,9 @@ public static class JobsModule
 {
     public static IHostApplicationBuilder AddJobsModule(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddModuleDbContext<JobsDbContext>(JobsDbContext.Schema);
+        // Notices for every state change, offer, answer and incident saved here (docs/integrations.md).
+        builder.Services.AddScoped<JobNotices>();
+        builder.Services.AddModuleDbContext<JobsDbContext>(JobsDbContext.Schema, sp => [sp.GetRequiredService<JobNotices>()]);
         builder.Services.AddValidatorsFromAssemblyContaining<SubmitJobRequest>(includeInternalTypes: true);
         builder.Services.AddEventHandler<EmailConfirmed, MoveToReviewWhenEmailConfirmed>();
         builder.Services.AddScoped<IJobAccess, JobAccess>();
