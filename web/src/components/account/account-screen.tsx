@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "@/lib/toast";
 import { z } from "zod";
+import { formatTaxId, maskTaxId, optionalTaxId } from "@/lib/tax-id";
 import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
@@ -16,22 +17,19 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { useAccount, useChangePassword, useRequestDeletion, useUpdateAccount, type AccountProfile } from "@/lib/account/use-account";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
-import { PASSWORD_MIN_LENGTH } from "@/lib/auth/schemas";
+import { emailField, passwordsDiffer, PASSWORD_MIN_LENGTH } from "@/lib/auth/schemas";
 import { useSignOut } from "@/lib/auth/use-auth";
 import { formatDateTime } from "@/lib/format";
 
 const profileSchema = z.object({
   name: z.string().trim().min(1, "validation.required").max(200, "validation.tooLong"),
-  email: z.email("validation.email").max(256, "validation.tooLong"),
+  email: emailField(),
   phone: z
     .string()
     .trim()
     .refine((v) => /^\+[1-9]\d{7,14}$/.test(v.replace(/\s/g, "")), "validation.phone"),
   locale: z.enum(["pt", "es", "en"]),
-  taxId: z
-    .string()
-    .trim()
-    .refine((v) => v === "" || /^\d{9}$/.test(v), "account.errors.taxId"),
+  taxId: optionalTaxId("account.errors.taxId"),
   companyName: z.string().trim().max(200, "validation.tooLong"),
   marketingConsent: z.boolean(),
 });
@@ -104,7 +102,7 @@ function ProfileForm({ profile }: { profile: AccountProfile }) {
       email: profile.email,
       phone: profile.phone ?? "",
       locale: profile.locale,
-      taxId: profile.taxId ?? "",
+      taxId: formatTaxId(profile.taxId ?? ""),
       companyName: profile.companyName ?? "",
       marketingConsent: profile.marketingConsent,
     },
@@ -120,7 +118,7 @@ function ProfileForm({ profile }: { profile: AccountProfile }) {
         email: v.email.trim(),
         phone: v.phone.replace(/\s/g, ""),
         locale: v.locale,
-        taxId: v.taxId.trim() || null,
+        taxId: v.taxId || null,
         companyName: v.companyName.trim() || null,
         marketingConsent: v.marketingConsent,
       },
@@ -166,7 +164,7 @@ function ProfileForm({ profile }: { profile: AccountProfile }) {
           </select>
           <p className="text-xs text-muted-foreground">{t("localeHint")}</p>
         </div>
-        <FormField id="taxId" inputMode="numeric" label={t("taxId")} error={errors.taxId ?? serverError("taxId")} {...form.register("taxId")} />
+        <FormField id="taxId" inputMode="numeric" label={t("taxId")} error={errors.taxId ?? serverError("taxId")} {...maskTaxId(form.register("taxId"))} />
         <FormField id="companyName" label={t("company")} error={errors.companyName ?? serverError("companyName")} {...form.register("companyName")} />
       </div>
       <label className="flex items-start gap-3 text-sm">
@@ -185,21 +183,27 @@ function PasswordForm() {
   const change = useChangePassword();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
+  const [repeat, setRepeat] = useState("");
+  const tCommon = useTranslations("common");
   const errors = change.error instanceof ApiError ? change.error.problem?.errors : undefined;
   const tooShort = next.length > 0 && next.length < PASSWORD_MIN_LENGTH;
+  // Shown once something is typed in the second field, so it does not shout while the first is still being written.
+  const mismatch = repeat.length > 0 && passwordsDiffer(next, repeat);
+  const ready = !!current && next.length >= PASSWORD_MIN_LENGTH && !passwordsDiffer(next, repeat);
 
   return (
     <form
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        if (!current || next.length < PASSWORD_MIN_LENGTH) return;
+        if (!ready) return;
         change.mutate(
           { currentPassword: current, newPassword: next },
           {
             onSuccess: () => {
               setCurrent("");
               setNext("");
+              setRepeat("");
               toast.success(t("done"));
             },
           },
@@ -235,8 +239,17 @@ function PasswordForm() {
           }
           errorValues={{ min: PASSWORD_MIN_LENGTH }}
         />
+        <FormField
+          id="repeat-password"
+          type="password"
+          autoComplete="new-password"
+          label={tCommon("confirmPassword")}
+          value={repeat}
+          onChange={(e) => setRepeat(e.target.value)}
+          error={mismatch ? { type: "match", message: "validation.passwordMismatch" } : undefined}
+        />
       </div>
-      <Button pending={change.isPending} type="submit" variant="outline" disabled={change.isPending || !current || next.length < PASSWORD_MIN_LENGTH} className="self-start">
+      <Button pending={change.isPending} type="submit" variant="outline" disabled={change.isPending || !ready} className="self-start">
         {t("submit")}
       </Button>
     </form>

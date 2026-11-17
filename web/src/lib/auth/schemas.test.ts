@@ -6,6 +6,7 @@ const valid = {
   email: "ana@example.pt",
   phone: "+351 912 345 678",
   password: "very-long-password",
+  confirmPassword: "very-long-password",
   acceptTerms: true,
   marketingConsent: false,
 };
@@ -20,8 +21,18 @@ describe("C4.3 register schema", () => {
     expect(registerSchema.parse(valid).phone).toBe("+351912345678");
   });
 
+  it("trims the pasted email and never sends the repeated password", () => {
+    const values = registerSchema.parse({ ...valid, email: "  ana@example.pt " });
+    expect(values.email).toBe("ana@example.pt");
+    expect(values).not.toHaveProperty("confirmPassword");
+  });
+
+  it("asks for the same password twice", () => {
+    expect(errorsOf({ ...valid, confirmPassword: "very-long-passwort" })).toEqual({ confirmPassword: "validation.passwordMismatch" });
+  });
+
   it("rejects what the API rejects, with translation keys", () => {
-    expect(errorsOf({ ...valid, name: " ", email: "nope", phone: "912345678", password: "short", acceptTerms: false })).toEqual({
+    expect(errorsOf({ ...valid, name: " ", email: "nope", phone: "912345678", password: "short", confirmPassword: "short", acceptTerms: false })).toEqual({
       name: "validation.required",
       email: "validation.email",
       phone: "validation.phone",
@@ -54,7 +65,8 @@ describe("password recovery schemas (S1)", () => {
   });
 
   it("asks for a new password of at least 10 characters", () => {
-    expect(resetPasswordSchema.safeParse({ password: "0123456789" }).success).toBe(true);
-    expect(resetPasswordSchema.safeParse({ password: "short" }).error?.issues[0]?.message).toBe("validation.passwordLength");
+    expect(resetPasswordSchema.safeParse({ password: "0123456789", confirmPassword: "0123456789" }).success).toBe(true);
+    expect(resetPasswordSchema.safeParse({ password: "short", confirmPassword: "short" }).error?.issues[0]?.message).toBe("validation.passwordLength");
+    expect(resetPasswordSchema.safeParse({ password: "0123456789", confirmPassword: "012345678" }).error?.issues[0]?.path).toEqual(["confirmPassword"]);
   });
 });

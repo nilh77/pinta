@@ -5,6 +5,7 @@ import type { ComponentProps, ReactNode } from "react";
 import type { FieldError } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 
 type Props = ComponentProps<typeof Input> & {
   id: string;
@@ -27,12 +28,21 @@ export function FormField({ id, label, hint, error, errorValues, ...input }: Pro
       <Label htmlFor={id} className="text-[13px] font-semibold">
         {label}
       </Label>
-      <Input
-        id={id}
-        aria-invalid={error ? true : undefined}
-        aria-describedby={[hintId, errorId].filter(Boolean).join(" ") || undefined}
-        {...input}
-      />
+      {input.type === "password" ? (
+        <PasswordInput
+          id={id}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={[hintId, errorId].filter(Boolean).join(" ") || undefined}
+          {...input}
+        />
+      ) : (
+        <Input
+          id={id}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={[hintId, errorId].filter(Boolean).join(" ") || undefined}
+          {...input}
+        />
+      )}
       {hint && (
         <p id={hintId} className="text-[13px] text-muted-foreground">
           {hint}

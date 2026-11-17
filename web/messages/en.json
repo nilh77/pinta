@@ -14,6 +14,10 @@
     },
     "loading": "Loading…",
     "skipToContent": "Skip to content",
+    "showPassword": "Show password",
+    "confirmPassword": "Repeat the password",
+    "takePhoto": "Take a photo",
+    "chooseFiles": "Choose files",
     "changeLanguage": "{code}, change language",
     "darkTheme": "Dark theme"
   },
@@ -176,6 +180,7 @@
     "email": "Enter a valid email.",
     "phone": "Enter the number with its country code, for example +351 912 345 678.",
     "passwordLength": "Use at least {min} characters.",
+    "passwordMismatch": "The passwords don't match.",
     "acceptTerms": "You need to accept the Terms and the Privacy policy.",
     "tooLong": "Too long."
   },

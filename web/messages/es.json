@@ -14,6 +14,10 @@
     },
     "loading": "Cargando…",
     "skipToContent": "Saltar al contenido",
+    "showPassword": "Mostrar la contraseña",
+    "confirmPassword": "Repetir la contraseña",
+    "takePhoto": "Hacer foto",
+    "chooseFiles": "Elegir archivos",
     "changeLanguage": "{code}, cambiar el idioma",
     "darkTheme": "Tema oscuro"
   },
@@ -176,6 +180,7 @@
     "email": "Introduce un email válido.",
     "phone": "Introduce el número con prefijo, por ejemplo +351 912 345 678.",
     "passwordLength": "Usa al menos {min} caracteres.",
+    "passwordMismatch": "Las contraseñas no coinciden.",
     "acceptTerms": "Debes aceptar los Términos y la Política de privacidad.",
     "tooLong": "Texto demasiado largo."
   },

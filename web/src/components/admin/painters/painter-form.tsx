@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { formatTaxId, maskTaxId, optionalTaxId } from "@/lib/tax-id";
 import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
@@ -20,14 +21,11 @@ const schema = z.object({
     .string()
     .trim()
     .refine((v) => v === "" || /^\+[1-9]\d{7,14}$/.test(v.replace(/\s/g, "")), "validation.phone"),
-  taxId: z
-    .string()
-    .trim()
-    .refine((v) => v === "" || /^\d{9}$/.test(v), "painter.onboarding.errors.taxId"),
+  taxId: optionalTaxId("painter.onboarding.errors.taxId"),
   specialties: z.array(z.string()),
   municipalities: z.array(z.string()),
   iban: z.string().refine((v) => v.trim() === "" || /^PT50\d{21}$/.test(compact(v)), "painter.onboarding.errors.iban"),
-  notes: z.string().max(2000, "validation.tooLong"),
+  notes: z.string().trim().max(2000, "validation.tooLong"),
   rating: z
     .string()
     .trim()
@@ -79,7 +77,7 @@ export function PainterForm({
       email: painter?.email ?? "",
       locale: "pt",
       phone: painter?.phone ?? "",
-      taxId: painter?.taxId ?? "",
+      taxId: formatTaxId(painter?.taxId ?? ""),
       specialties: [...(painter?.specialties ?? [])],
       municipalities: [...(painter?.municipalities ?? [])],
       iban: "",
@@ -100,7 +98,7 @@ export function PainterForm({
       email: v.email.trim(),
       locale: v.locale,
       phone: v.phone.trim() ? v.phone.replace(/\s/g, "") : null,
-      taxId: v.taxId.trim() || null,
+      taxId: v.taxId || null,
       specialties: v.specialties,
       municipalities: v.municipalities,
       iban: v.iban.trim() ? compact(v.iban) : null,
@@ -143,7 +141,7 @@ export function PainterForm({
           </div>
         )}
         <FormField id="phone" type="tel" label={t("phone")} hint={t("phoneHint")} error={errors.phone ?? serverError("phone")} {...form.register("phone")} />
-        <FormField id="taxId" inputMode="numeric" label={t("taxId")} error={errors.taxId ?? serverError("taxId")} {...form.register("taxId")} />
+        <FormField id="taxId" inputMode="numeric" label={t("taxId")} error={errors.taxId ?? serverError("taxId")} {...maskTaxId(form.register("taxId"))} />
         <FormField
           id="iban"
           autoComplete="off"

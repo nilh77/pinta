@@ -14,6 +14,10 @@
     },
     "loading": "A carregar…",
     "skipToContent": "Saltar para o conteúdo",
+    "showPassword": "Mostrar a palavra-passe",
+    "confirmPassword": "Repetir a palavra-passe",
+    "takePhoto": "Tirar foto",
+    "chooseFiles": "Escolher ficheiros",
     "changeLanguage": "{code}, mudar o idioma",
     "darkTheme": "Tema escuro"
   },
@@ -176,6 +180,7 @@
     "email": "Introduza um email válido.",
     "phone": "Introduza o número com indicativo, por exemplo +351 912 345 678.",
     "passwordLength": "Use pelo menos {min} caracteres.",
+    "passwordMismatch": "As palavras-passe não coincidem.",
     "acceptTerms": "Tem de aceitar os Termos e a Política de privacidade.",
     "tooLong": "Texto demasiado longo."
   },
