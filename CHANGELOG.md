@@ -6,6 +6,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Una oferta abierta por trabajo
+
+#### Cambiado
+
+- Solo puede haber una oferta abierta por trabajo (A3.2). Antes, enviar otra retiraba la anterior sin avisar. Mientras el pintor no responde, la pestaña Asignación muestra a quién se envió, para qué fecha y desde cuándo, y en lugar del formulario aparece «Retirar oferta». Tras retirarla, o si el pintor la rechaza, se puede enviar otra.
+
+#### Añadido
+
+- «Retirar oferta», con confirmación: el pintor recibe el aviso «oferta retirada» y deja de verla. En la API, `POST /api/admin/jobs/{id}/assignments/{assignmentId}/withdraw`; enviar una segunda oferta responde 409 `offer_open` (`docs/api.md`).
+
 ### Avisos: arreglos tras probarlos en Railway
 
 #### Corregido (segunda tanda)

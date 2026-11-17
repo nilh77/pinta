@@ -211,7 +211,8 @@
     "quote_expired": "O prazo deste preço terminou. Peça um preço novo.",
     "payment_already_made": "Este pagamento já está feito.",
     "payment_provider_error": "Os pagamentos não estão disponíveis de momento. Tente mais tarde.",
-    "assignment_taken": "Esta oferta já não está disponível."
+    "assignment_taken": "Esta oferta já não está disponível.",
+    "offer_open": "Já há uma oferta aberta para este trabalho. Retire-a antes de enviar outra."
   },
   "admin": {
     "loading": "A carregar o painel…",
@@ -660,7 +661,14 @@
         "painter": "Pintor",
         "choose": "Escolha um pintor",
         "date": "Data de início",
-        "replaces": "Há uma oferta à espera: a nova retira-a.",
+        "waiting": "Oferta à espera de resposta",
+        "waitingBody": "Enviada a {name} para {date} ({offered}).",
+        "oneAtATime": "Só pode haver uma oferta aberta. Para oferecer a outro pintor, retire esta primeiro.",
+        "withdraw": "Retirar oferta",
+        "withdrawTitle": "Retirar a oferta a {name}?",
+        "withdrawBody": "O pintor recebe um aviso e deixa de a ver. Depois pode enviar uma nova.",
+        "keep": "Manter",
+        "withdrawn": "Oferta a {name} retirada.",
         "submit": "Enviar oferta",
         "sent": "Oferta enviada a {name}."
       },

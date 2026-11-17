@@ -181,7 +181,7 @@ La numeración de C3–C4 se ha revisado respecto a la Fase 3, porque la estimac
 
 - Entonces puede alternar entre lista paginada y tablero por estado, filtrar por estado, fechas, concelho, pintor y Premium, y buscar por código, nombre o email del cliente.
 
-**A3.2 · Asignar y programar.** Dado un trabajo "Señal pagada", cuando elige un pintor activo cuya zona incluye el concelho y una fecha, entonces se crea una asignación "pendiente" y el pintor recibe el email. Cuando el pintor acepta, el trabajo pasa a "Programado" y el cliente recibe el email. Si rechaza, el admin recibe aviso y puede asignar a otro.
+**A3.2 · Asignar y programar.** Dado un trabajo "Señal pagada", cuando elige un pintor activo cuya zona incluye el concelho y una fecha, entonces se crea una asignación "pendiente" y el pintor recibe el email. Cuando el pintor acepta, el trabajo pasa a "Programado" y el cliente recibe el email. Si rechaza, el admin recibe aviso y puede asignar a otro. Solo puede haber una oferta abierta por trabajo: mientras el pintor no responda, el admin no puede enviar otra, pero puede retirarla (el pintor recibe el aviso y deja de verla) y entonces ofrecerlo de nuevo (decisión de 2026-11-17).
 
 **A3.3 · Cambio de estado manual.** Cuando fuerza una transición permitida (tabla de 5.3) con motivo obligatorio, entonces se aplica con sus efectos y queda en el historial. Las transiciones no permitidas no se ofrecen.
 

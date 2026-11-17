@@ -59,6 +59,7 @@ public class JobNoticeTests(PintaApiFactory factory)
         var otherUser = await UserIdAsync(other);
 
         await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, s.PainterId, 2);
+        await s.Admin.PostAsJsonAsync($"/api/admin/jobs/{s.Job.JobId}/assignments/{await TestAssignments.OfferIdAsync(s.Painter)}/withdraw", new { }, ApiClient.Json);
         await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, otherId, 2);
         await other.PostAsJsonAsync($"/api/painter/assignments/{await TestAssignments.OfferIdAsync(other)}/decline", new { reason = "Estou de férias." }, ApiClient.Json);
 
