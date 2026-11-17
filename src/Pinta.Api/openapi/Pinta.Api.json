@@ -4705,6 +4705,195 @@
         }
       }
     },
+    "/api/notifications": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ListNotifications",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedOfNotificationDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/unread-count": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "UnreadNotifications",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnreadCount"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ReadNotification",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/notifications/read-all": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "ReadAllNotifications",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/push/public-key": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "PushPublicKey",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushPublicKey"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/push/subscriptions": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "SubscribePush",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSubscriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Notifications"
+        ],
+        "operationId": "UnsubscribePush",
+        "parameters": [
+          {
+            "name": "endpoint",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
     "/api/painter/payouts": {
       "get": {
         "tags": [
@@ -7979,6 +8168,94 @@
           }
         }
       },
+      "NotificationDto": {
+        "required": [
+          "id",
+          "kind",
+          "jobId",
+          "jobCode",
+          "data",
+          "createdAt",
+          "readAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/NotificationKind"
+          },
+          "jobId": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "uuid"
+          },
+          "jobCode": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "readAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          }
+        }
+      },
+      "NotificationKind": {
+        "enum": [
+          "request_received",
+          "client_question",
+          "quote_confirmed",
+          "quote_rejected",
+          "quote_expiring",
+          "quote_expired",
+          "request_rejected",
+          "site_visit_scheduled",
+          "site_visit_assigned",
+          "site_visit_reported",
+          "multibanco_reference",
+          "payment_received",
+          "deposit_paid",
+          "balance_paid",
+          "offer_received",
+          "offer_withdrawn",
+          "offer_accepted",
+          "offer_declined",
+          "offer_unanswered",
+          "job_scheduled",
+          "job_started",
+          "progress_photos",
+          "incident_reported",
+          "job_finished",
+          "balance_due",
+          "job_cancelled",
+          "refund_issued",
+          "refund_completed",
+          "payment_dispute",
+          "payout_paid",
+          "account_deletion_requested",
+          "reviews_overdue",
+          "painter_documents_expiring"
+        ]
+      },
       "Occupancy": {
         "enum": [
           "empty",
@@ -8062,6 +8339,35 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ClientJobListItem"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PagedOfNotificationDto": {
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "total"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotificationDto"
             }
           },
           "page": {
@@ -9415,6 +9721,36 @@
               "type": "string",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "PushPublicKey": {
+        "required": [
+          "publicKey"
+        ],
+        "type": "object",
+        "properties": {
+          "publicKey": {
+            "type": "string"
+          }
+        }
+      },
+      "PushSubscriptionRequest": {
+        "required": [
+          "endpoint",
+          "p256dh",
+          "auth"
+        ],
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "p256dh": {
+            "type": "string"
+          },
+          "auth": {
+            "type": "string"
           }
         }
       },
@@ -10919,6 +11255,18 @@
           }
         }
       },
+      "UnreadCount": {
+        "required": [
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "UpdateAccountRequest": {
         "required": [
           "name",
@@ -11264,6 +11612,9 @@
     },
     {
       "name": "Media"
+    },
+    {
+      "name": "Notifications"
     },
     {
       "name": "Admin finance"

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="RequestReceived" xml:space="preserve"><value>New request {code} from {name}</value></data>
+  <data name="ClientQuestion" xml:space="preserve"><value>{name} has a question about {code}</value></data>
+  <data name="QuoteConfirmed" xml:space="preserve"><value>The price for {code} is ready</value></data>
+  <data name="QuoteRejected" xml:space="preserve"><value>{name} turned down the price for {code}</value></data>
+  <data name="QuoteExpiring" xml:space="preserve"><value>The price for {code} expires in 3 days</value></data>
+  <data name="QuoteExpired" xml:space="preserve"><value>The price for {code} has expired</value></data>
+  <data name="RequestRejected" xml:space="preserve"><value>We can't take on request {code}</value></data>
+  <data name="SiteVisitScheduled" xml:space="preserve"><value>Site visit for {code} scheduled</value></data>
+  <data name="SiteVisitAssigned" xml:space="preserve"><value>You have a site visit: {code}</value></data>
+  <data name="SiteVisitReported" xml:space="preserve"><value>{name} sent the site visit report for {code}</value></data>
+  <data name="MultibancoReference" xml:space="preserve"><value>Multibanco reference for {code} ready</value></data>
+  <data name="PaymentReceived" xml:space="preserve"><value>Payment received for {code}</value></data>
+  <data name="DepositPaid" xml:space="preserve"><value>{name} paid the deposit for {code}</value></data>
+  <data name="BalancePaid" xml:space="preserve"><value>{code} paid in full and closed</value></data>
+  <data name="OfferReceived" xml:space="preserve"><value>New job offer: {code}</value></data>
+  <data name="OfferWithdrawn" xml:space="preserve"><value>The offer for {code} is no longer available</value></data>
+  <data name="OfferAccepted" xml:space="preserve"><value>{name} accepted {code}</value></data>
+  <data name="OfferDeclined" xml:space="preserve"><value>{name} declined {code}</value></data>
+  <data name="OfferUnanswered" xml:space="preserve"><value>{name} hasn't answered {code} in 48 h</value></data>
+  <data name="JobScheduled" xml:space="preserve"><value>{code} scheduled with {name}</value></data>
+  <data name="JobStarted" xml:space="preserve"><value>{name} started {code}</value></data>
+  <data name="ProgressPhotos" xml:space="preserve"><value>New progress photos on {code}</value></data>
+  <data name="IncidentReported" xml:space="preserve"><value>Incident on {code}</value></data>
+  <data name="JobFinished" xml:space="preserve"><value>{name} finished {code}</value></data>
+  <data name="BalanceDue" xml:space="preserve"><value>{code} is finished: the balance is due</value></data>
+  <data name="JobCancelled" xml:space="preserve"><value>{code} was cancelled</value></data>
+  <data name="RefundIssued" xml:space="preserve"><value>Refund for {code} on its way</value></data>
+  <data name="RefundCompleted" xml:space="preserve"><value>Refund for {code} completed</value></data>
+  <data name="PaymentDispute" xml:space="preserve"><value>Payment dispute on {code}</value></data>
+  <data name="PayoutPaid" xml:space="preserve"><value>Payout for {code} transferred</value></data>
+  <data name="AccountDeletionRequested" xml:space="preserve"><value>{name} asked to delete their account</value></data>
+  <data name="ReviewsOverdue" xml:space="preserve"><value>{count} requests past their review deadline</value></data>
+  <data name="PainterDocumentsExpiring" xml:space="preserve"><value>{count} painter documents expire soon</value></data>
+</root>

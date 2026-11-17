@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Pinta.Modules.Notifications.Contracts;
+using Pinta.Modules.Notifications.Domain;
+using Pinta.Modules.Notifications.Features.Push;
 using Pinta.Modules.Payments.Stripe;
 using Testcontainers.Minio;
 using Testcontainers.PostgreSql;
@@ -29,6 +31,8 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
 
     public FakeStripe Stripe { get; } = new();
 
+    public FakePushTransport Push { get; } = new();
+
     public async ValueTask InitializeAsync()
     {
         await Task.WhenAll(_postgres.StartAsync(), _minio.StartAsync());
@@ -49,10 +53,14 @@ public sealed class PintaApiFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseSetting("RateLimits:UploadsPerMinute", "1000");
         builder.UseSetting("Web:BaseUrl", "http://web.test");
         builder.UseSetting("Stripe:WebhookSecret", FakeStripe.WebhookSecret);
+        // Push on, with a transport that records instead of calling the push services.
+        builder.UseSetting("Push:PublicKey", "test-public-key");
+        builder.UseSetting("Push:PrivateKey", "test-private-key");
         builder.ConfigureTestServices(services =>
         {
             services.AddSingleton<IEmailQueue>(Emails);
             services.AddSingleton<IStripeGateway>(Stripe);
+            services.AddSingleton<IPushTransport>(Push);
         });
     }
 
@@ -77,4 +85,25 @@ public sealed class InMemoryEmailQueue : IEmailQueue
 
     public IReadOnlyList<T> To<T>(string address) where T : Email =>
         _emails.OfType<T>().Where(e => e.To == address).ToList();
+}
+
+/// <summary>Records web push messages; endpoints listed in <see cref="Gone"/> answer as expired subscriptions.</summary>
+public sealed class FakePushTransport : IPushTransport
+{
+    private readonly ConcurrentQueue<(string Endpoint, string Payload)> _sent = new();
+
+    public ConcurrentDictionary<string, bool> Gone { get; } = new();
+
+    public Task<PushOutcome> SendAsync(PushSubscription subscription, string payload, CancellationToken cancellationToken)
+    {
+        if (Gone.ContainsKey(subscription.Endpoint))
+        {
+            return Task.FromResult(PushOutcome.Gone);
+        }
+
+        _sent.Enqueue((subscription.Endpoint, payload));
+        return Task.FromResult(PushOutcome.Delivered);
+    }
+
+    public IReadOnlyList<string> To(string endpoint) => [.. _sent.Where(s => s.Endpoint == endpoint).Select(s => s.Payload)];
 }
