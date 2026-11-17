@@ -102,6 +102,16 @@ export function useAssignablePainters(jobId: string, enabled: boolean) {
   });
 }
 
+/** A3.2: withdraws the open offer before the painter answers. */
+export function useWithdrawOffer(jobId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (assignmentId: string) =>
+      orThrow(await api.POST("/api/admin/jobs/{id}/assignments/{assignmentId}/withdraw", { params: { path: { id: jobId, assignmentId } } })),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["admin", "job", jobId] }),
+  });
+}
+
 export function useOfferJob(jobId: string) {
   const queryClient = useQueryClient();
   return useMutation({

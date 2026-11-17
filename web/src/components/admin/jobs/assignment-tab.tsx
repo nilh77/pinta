@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Send } from "lucide-react";
+import { Hourglass, Loader2, Send, Undo2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
@@ -10,7 +10,8 @@ import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import type { AdminJobDetail } from "@/lib/jobs/api";
 import { formatCents, formatDate, formatDateTime } from "@/lib/format";
-import { useAssignablePainters, useOfferJob } from "@/lib/painter/use-admin-painters";
+import { useAssignablePainters, useOfferJob, useWithdrawOffer } from "@/lib/painter/use-admin-painters";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { cn } from "@/lib/utils";
 
 const fieldClass =
@@ -28,6 +29,8 @@ const TONES = {
 export function AssignmentTab({ job }: { job: AdminJobDetail }) {
   const t = useTranslations("admin.job.assignment");
   const locale = useLocale();
+  // One open offer at a time (A3.2): while it waits, the form gives way to «Retirar oferta».
+  const openOffer = job.assignments.find((a) => a.status === "offered");
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -59,7 +62,13 @@ export function AssignmentTab({ job }: { job: AdminJobDetail }) {
           </ul>
         )}
       </section>
-      {job.status === "deposit_paid" ? <OfferForm job={job} /> : <p className="text-sm text-muted-foreground">{t("onlyPaid")}</p>}
+      {job.status !== "deposit_paid" ? (
+        <p className="text-sm text-muted-foreground">{t("onlyPaid")}</p>
+      ) : openOffer ? (
+        <OpenOffer job={job} offer={openOffer} />
+      ) : (
+        <OfferForm job={job} />
+      )}
     </div>
   );
 }
@@ -73,7 +82,6 @@ function OfferForm({ job }: { job: AdminJobDetail }) {
   const [painterId, setPainterId] = useState("");
   const [scheduledOn, setScheduledOn] = useState(job.preferredDates.from && job.preferredDates.from >= today ? job.preferredDates.from : today);
   const server = offer.error instanceof ApiError ? offer.error.problem?.errors : undefined;
-  const open = job.assignments.some((a) => a.status === "offered");
 
   return (
     <form
@@ -119,7 +127,6 @@ function OfferForm({ job }: { job: AdminJobDetail }) {
             <DateInput min={today} value={scheduledOn} onChange={setScheduledOn} className={fieldClass} invalid={!!server?.scheduledOn} />
             {server?.scheduledOn && <span className="text-sm font-normal text-destructive">{server.scheduledOn[0]}</span>}
           </label>
-          {open && <p className="text-xs text-accent-ink">{t("replaces")}</p>}
           <Button type="submit" disabled={!painterId || !scheduledOn || offer.isPending}>
             {offer.isPending ? <Loader2 aria-hidden="true" className="animate-spin" /> : <Send aria-hidden="true" />}
             {t("submit")}
@@ -127,5 +134,49 @@ function OfferForm({ job }: { job: AdminJobDetail }) {
         </>
       )}
     </form>
+  );
+}
+
+/** The offer waiting for the painter (A3.2): who, which date, since when, and «Retirar oferta». */
+function OpenOffer({ job, offer }: { job: AdminJobDetail; offer: AdminJobDetail["assignments"][number] }) {
+  const t = useTranslations("admin.job.assignment");
+  const locale = useLocale();
+  const errorText = useErrorText();
+  const withdraw = useWithdrawOffer(job.id);
+  const [confirming, setConfirming] = useState(false);
+
+  return (
+    <section aria-labelledby="open-offer-title" className="flex flex-col gap-3 rounded-[20px] border-2 border-accent bg-card p-4">
+      <h3 id="open-offer-title" className="flex items-center gap-2 text-sm font-bold">
+        <Hourglass aria-hidden="true" className="size-4 text-accent-ink" />
+        {t("waiting")}
+      </h3>
+      <p className="text-sm">
+        {t("waitingBody", {
+          name: offer.painterName,
+          date: formatDate(locale, offer.scheduledOn, true),
+          offered: formatDateTime(locale, offer.offeredAt),
+        })}
+      </p>
+      <p className="text-xs text-muted-foreground">{t("oneAtATime")}</p>
+      <Button variant="outline" className="self-start text-destructive" pending={withdraw.isPending} onClick={() => setConfirming(true)}>
+        <Undo2 aria-hidden="true" />
+        {t("withdraw")}
+      </Button>
+      <ConfirmDialog
+        open={confirming}
+        onOpenChange={setConfirming}
+        title={t("withdrawTitle", { name: offer.painterName })}
+        description={t("withdrawBody")}
+        confirmLabel={t("withdraw")}
+        cancelLabel={t("keep")}
+        onConfirm={() =>
+          withdraw.mutate(offer.id, {
+            onSuccess: () => toast.success(t("withdrawn", { name: offer.painterName })),
+            onError: (e) => toast.error(errorText(e)),
+          })
+        }
+      />
+    </section>
   );
 }

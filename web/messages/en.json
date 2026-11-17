@@ -211,7 +211,8 @@
     "quote_expired": "This price has expired. Ask for a new one.",
     "payment_already_made": "This payment has already been made.",
     "payment_provider_error": "Payments are unavailable right now. Please try later.",
-    "assignment_taken": "This offer is no longer available."
+    "assignment_taken": "This offer is no longer available.",
+    "offer_open": "This job already has an open offer. Withdraw it before sending another."
   },
   "admin": {
     "loading": "Loading the dashboard…",
@@ -660,7 +661,14 @@
         "painter": "Painter",
         "choose": "Choose a painter",
         "date": "Start date",
-        "replaces": "An offer is waiting: the new one withdraws it.",
+        "waiting": "Offer waiting for an answer",
+        "waitingBody": "Sent to {name} for {date} ({offered}).",
+        "oneAtATime": "Only one offer can be open. To offer it to another painter, withdraw this one first.",
+        "withdraw": "Withdraw offer",
+        "withdrawTitle": "Withdraw the offer to {name}?",
+        "withdrawBody": "The painter is notified and no longer sees it. You can then send a new one.",
+        "keep": "Keep",
+        "withdrawn": "Offer to {name} withdrawn.",
         "submit": "Send offer",
         "sent": "Offer sent to {name}."
       },

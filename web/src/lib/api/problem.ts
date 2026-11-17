@@ -17,6 +17,7 @@ export const KNOWN_ERROR_CODES = [
   "payment_already_made",
   "payment_provider_error",
   "assignment_taken",
+  "offer_open",
   "validation_failed",
   "rate_limited",
   "internal_error",
