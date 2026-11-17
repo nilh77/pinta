@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { formatTaxId, maskTaxId, optionalTaxId } from "@/lib/tax-id";
 import { FormError } from "@/components/auth/form-error";
 import { FormField } from "@/components/form-field";
 import { Button } from "@/components/ui/button";
@@ -23,10 +24,7 @@ const profileSchema = z.object({
     .trim()
     .min(1, "validation.required")
     .refine((v) => /^\+[1-9]\d{7,14}$/.test(v.replace(/\s/g, "")), "validation.phone"),
-  taxId: z
-    .string()
-    .trim()
-    .refine((v) => v === "" || /^\d{9}$/.test(v), "painter.onboarding.errors.taxId"),
+  taxId: optionalTaxId("painter.onboarding.errors.taxId"),
   municipalities: z.array(z.string()).min(1, "painter.onboarding.errors.zones"),
   iban: z
     .string()
@@ -42,7 +40,8 @@ export function PainterOnboarding({ userId, token }: { userId?: string; token?: 
   const t = useTranslations("painter.onboarding");
   const accept = useAcceptInvite();
   const [password, setPassword] = useState<string | null>(null);
-  const form = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), defaultValues: { password: "" } });
+  const form = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), defaultValues: { password: "", confirmPassword: "" } });
+  const tCommon = useTranslations("common");
   const invalidLink = !userId || !token || (accept.error instanceof ApiError && accept.error.problem?.errors?.token !== undefined);
 
   if (password) return <ProfileStep password={password} />;
@@ -79,6 +78,14 @@ export function PainterOnboarding({ userId, token }: { userId?: string; token?: 
         error={form.formState.errors.password ?? (serverPasswordError ? { type: "server", message: serverPasswordError } : undefined)}
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
+      />
+      <FormField
+        id="confirm-password"
+        type="password"
+        autoComplete="new-password"
+        label={tCommon("confirmPassword")}
+        error={form.formState.errors.confirmPassword}
+        {...form.register("confirmPassword")}
       />
       <Button pending={accept.isPending} type="submit" size="lg" disabled={accept.isPending} className="mt-2 w-full">
         {t("continue")}
@@ -117,7 +124,7 @@ function ProfileForm({ profile, password }: { profile: PainterProfile; password:
   const save = useUpdatePainterProfile();
   const form = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { phone: profile.phone ?? "", taxId: profile.taxId ?? "", municipalities: [...profile.municipalities], iban: "" },
+    defaultValues: { phone: profile.phone ?? "", taxId: formatTaxId(profile.taxId ?? ""), municipalities: [...profile.municipalities], iban: "" },
   });
   const { errors } = form.formState;
   const server = save.error instanceof ApiError ? save.error.problem?.errors : undefined;
@@ -130,7 +137,7 @@ function ProfileForm({ profile, password }: { profile: PainterProfile; password:
     save.mutate(
       {
         phone: values.phone.replace(/\s/g, ""),
-        taxId: values.taxId.trim() || null,
+        taxId: values.taxId || null,
         municipalities: values.municipalities,
         iban: values.iban.trim() ? compact(values.iban) : null,
         currentPassword: values.iban.trim() && profile.ibanMasked ? password : null,
@@ -157,7 +164,7 @@ function ProfileForm({ profile, password }: { profile: PainterProfile; password:
         inputMode="numeric"
         label={t("taxId")}
         error={errors.taxId ?? serverError("taxId")}
-        {...form.register("taxId")}
+        {...maskTaxId(form.register("taxId"))}
       />
       <Controller
         control={form.control}

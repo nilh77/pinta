@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { useDeferredValue, useState } from "react";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
 import { CardListSkeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
@@ -113,11 +114,11 @@ export function JobsBoard() {
         </label>
         <label className="flex flex-col text-xs font-semibold">
           <span className="sr-only">{t("from")}</span>
-          <input type="date" aria-label={t("from")} className={fieldClass} value={filters.from} onChange={(e) => update({ from: e.target.value })} />
+          <DateInput aria-label={t("from")} placeholder={t("from")} className={fieldClass} value={filters.from} onChange={(from) => update({ from })} />
         </label>
         <label className="flex flex-col text-xs font-semibold">
           <span className="sr-only">{t("to")}</span>
-          <input type="date" aria-label={t("to")} className={fieldClass} value={filters.to} min={filters.from || undefined} onChange={(e) => update({ to: e.target.value })} />
+          <DateInput aria-label={t("to")} placeholder={t("to")} className={fieldClass} value={filters.to} min={filters.from || undefined} onChange={(to) => update({ to })} />
         </label>
         {active && (
           <button type="button" className="justify-self-start text-sm font-semibold text-primary sm:col-span-2 lg:col-span-6" onClick={() => update(EMPTY_FILTERS)}>

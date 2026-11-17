@@ -6,6 +6,24 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Mejoras de la revisión
+
+#### Añadido
+
+- Contraseñas con un botón de ojo para mostrarlas u ocultarlas, y un campo «Repetir contraseña» que debe coincidir al crear o cambiar una contraseña: registro, cuenta del cotizador, nueva contraseña, alta del pintor y «Cambiar contraseña» en la cuenta. La repetición solo se comprueba en la web: la API no la recibe.
+- El NIF se escribe con máscara («123 456 789») y se envía con sus 9 dígitos: cotizador, cuenta del cliente, alta del pintor y ficha del pintor en el admin.
+- Calendario propio de Pinta en todos los campos de fecha, en lugar del selector del navegador: fechas preferidas del cotizador; filtros de trabajos, asignación, programación, costes, pagos y documentos del pintor en el admin. Muestra la fecha escrita en el idioma, respeta mínimo y máximo y se maneja con teclado (`docs/screens.md`, «Formularios»).
+- «Hacer foto»: en móviles y tabletas, cada bloque de fotos abre la cámara directamente, además de «Elegir archivos». Funciona en las fotos del cliente (C3.1) y en las del pintor: avance, incidencias, resultado y visita.
+- Ilustración en las páginas 404 y 500: una brocha triste junto a una gota de pintura (404) o junto al bote volcado (500), con los colores del tema.
+
+#### Cambiado
+
+- Entrar, crear cuenta, recuperar, nueva contraseña y alta del pintor tienen una presentación nueva. En escritorio hay un panel de marca con la casa, el titular y tres promesas junto a la tarjeta del formulario; en el móvil, solo la tarjeta.
+- El logo lleva al inicio de cada rol cuando hay sesión: Mis trabajos para el cliente, los trabajos del pintor o Revisión para el admin. Sin sesión, lleva a la portada.
+- Al cancelar, el diálogo del cliente muestra primero y en grande el importe que se devuelve, sobre un panel verde si es toda la señal y ámbar si es una parte, con la regla aplicada debajo (C5.6).
+- En el trabajo del pintor, las fotos de avance y las incidencias van primero, y las fotos del resultado con «Marcar como terminado», al final. «Enviar fotos» es ahora un botón principal (P2).
+- Los textos de las peticiones llegan a la API sin espacios al principio ni al final: el filtro de validación los recorta antes de validar, salvo contraseñas, tokens y secretos. La web también recorta los emails pegados.
+
 ### Arreglos del recorrido en Railway
 
 #### Cambiado

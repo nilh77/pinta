@@ -16,6 +16,7 @@ import { useAskQuestion, useCancelJob, useCancellationPreview, useMyJob, useReje
 import { useJobPayments, type Payment } from "@/lib/payments/use-payments";
 import { PaymentsList } from "@/components/payments/payments-list";
 import { daysUntil, formatArea, formatCents, formatDate, formatDateTime } from "@/lib/format";
+import { cn } from "@/lib/utils";
 import { JobProgress } from "./job-progress";
 import { JobStatusBadge } from "./job-status-badge";
 
@@ -440,7 +441,6 @@ function RejectButton({ id }: { id: string }) {
 function CancelButton({ job }: { job: ClientJobDetail }) {
   const t = useTranslations("myJobs.detail.cancelJob");
   const errorText = useErrorText();
-  const locale = useLocale();
   const fieldId = useId();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
@@ -467,7 +467,7 @@ function CancelButton({ job }: { job: ClientJobDetail }) {
               {t("calculating")}
             </span>
           ) : preview.data && preview.data.depositPaidCents > 0 ? (
-            t("refund", { amount: formatCents(locale, preview.data.refundCents) })
+            t("refundIntro")
           ) : (
             t("noPayment")
           )
@@ -487,6 +487,10 @@ function CancelButton({ job }: { job: ClientJobDetail }) {
           })
         }
       >
+        {preview.data && preview.data.depositPaidCents > 0 && (
+          // C5.6: the refund comes first and largest, so nobody confirms without seeing it (docs/screens.md, pantalla 10).
+          <RefundAmount paidCents={preview.data.depositPaidCents} refundCents={preview.data.refundCents} />
+        )}
         <TextAreaField id={fieldId} label={t("reason")} hint={t("optional")} value={reason} onChange={setReason} max={500} />
         <label className="flex min-h-11 items-center gap-3 text-sm font-medium">
           <input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} className="size-5 accent-[var(--destructive)]" />
@@ -494,6 +498,23 @@ function CancelButton({ job }: { job: ClientJobDetail }) {
         </label>
       </FormDialog>
     </>
+  );
+}
+
+function RefundAmount({ paidCents, refundCents }: { paidCents: number; refundCents: number }) {
+  const t = useTranslations("myJobs.detail.cancelJob");
+  const locale = useLocale();
+  const full = refundCents >= paidCents;
+  const paid = formatCents(locale, paidCents);
+
+  return (
+    <div role="status" className={cn("flex flex-col gap-1 rounded-2xl border-2 p-4", full ? "border-primary bg-primary-soft" : "border-accent bg-accent-soft")}>
+      <p className="text-sm font-semibold">{t("refundLabel")}</p>
+      <p className="text-4xl font-extrabold tracking-tight text-foreground tabular-nums">{formatCents(locale, refundCents)}</p>
+      <p className="text-sm text-muted-foreground">
+        {full ? t("refundFull", { paid }) : t("refundPartial", { paid, percent: Math.round((refundCents / paidCents) * 100) })}
+      </p>
+    </div>
   );
 }
 

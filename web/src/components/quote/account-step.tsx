@@ -17,6 +17,7 @@ import { useMe, useRegister, useSignIn } from "@/lib/auth/use-auth";
 import { toEstimateRequest, type DraftDetails } from "@/lib/quote/draft";
 import { toSubmitRequest, validateBilling } from "@/lib/quote/request";
 import { rememberLastRequest, useSubmitJob } from "@/lib/quote/use-submit";
+import { formatTaxId, taxIdDigits } from "@/lib/tax-id";
 import { cn } from "@/lib/utils";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
 import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
@@ -52,7 +53,7 @@ function AccountForm({ draft, info, update }: QuoteContext) {
   const [showBillingErrors, setShowBillingErrors] = useState(false);
   const registerForm = useForm<RegisterInput, unknown, RegisterValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: "", email: "", phone: "+351 ", password: "", acceptTerms: false, marketingConsent: false },
+    defaultValues: { name: "", email: "", phone: "+351 ", password: "", confirmPassword: "", acceptTerms: false, marketingConsent: false },
   });
   const loginForm = useForm<SignInValues>({ resolver: zodResolver(signInSchema), defaultValues: { email: "", password: "" } });
   const body = useMemo(() => (draft ? toSubmitRequest(draft, info) : null), [draft, info]);
@@ -193,6 +194,14 @@ function AccountForm({ draft, info, update }: QuoteContext) {
                 errorValues={{ min: PASSWORD_MIN_LENGTH }}
                 {...registerForm.register("password")}
               />
+              <FormField
+                id="confirm-password"
+                type="password"
+                autoComplete="new-password"
+                label={tRoot("common.confirmPassword")}
+                error={registerForm.formState.errors.confirmPassword}
+                {...registerForm.register("confirmPassword")}
+              />
               {billing}
               {(["acceptTerms", "marketingConsent"] as const).map((name) => (
                 <Controller
@@ -256,7 +265,7 @@ function Billing({ billing, errors, onChange }: { billing: DraftDetails["billing
       </label>
       {billing.wanted && (
         <div className="grid grid-cols-2 gap-2.5">
-          <Field label={t("taxId")} value={billing.taxId} inputMode="numeric" error={errors.taxId && tRoot(errors.taxId as never)} onChange={(taxId) => onChange({ taxId: taxId.replace(/\D/g, "").slice(0, 9) })} />
+          <Field label={t("taxId")} value={formatTaxId(billing.taxId)} inputMode="numeric" error={errors.taxId && tRoot(errors.taxId as never)} onChange={(taxId) => onChange({ taxId: taxIdDigits(taxId) })} />
           <Field label={t("companyName")} value={billing.companyName} error={errors.companyName && tRoot(errors.companyName as never)} onChange={(companyName) => onChange({ companyName })} />
         </div>
       )}

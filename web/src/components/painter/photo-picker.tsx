@@ -1,10 +1,11 @@
 "use client";
 
-import { ImagePlus, Trash2 } from "lucide-react";
+import { Camera, ImagePlus, Trash2, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useRef, type ChangeEvent } from "react";
 import { toast } from "@/lib/toast";
 import { prepareImage } from "@/lib/quote/uploads";
+import { useCoarsePointer } from "@/lib/use-coarse-pointer";
 
 const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
@@ -25,7 +26,14 @@ export function PhotoPicker({
   upload: (blob: Blob, contentType: string, onProgress: (percent: number) => void) => Promise<string>;
 }) {
   const t = useTranslations("painter.photos");
+  const tCommon = useTranslations("common");
   const input = useRef<HTMLInputElement>(null);
+  const camera = useRef<HTMLInputElement>(null);
+  const touch = useCoarsePointer();
+  const onPicked = (event: ChangeEvent<HTMLInputElement>) => {
+    void add(event.target.files);
+    event.target.value = "";
+  };
   const update = (key: string, change: Partial<PickedPhoto>) => onChange((all) => all.map((p) => (p.key === key ? { ...p, ...change } : p)));
 
   const add = async (files: FileList | null) => {
@@ -69,29 +77,32 @@ export function PhotoPicker({
           </button>
         </li>
       ))}
+      {touch && (
+        <li>
+          <AddTile icon={Camera} label={tCommon("takePhoto")} onClick={() => camera.current?.click()} />
+          {/* capture opens the camera straight away on phones (docs/screens.md, P2). */}
+          <input ref={camera} type="file" accept={PHOTO_TYPES.join(",")} capture="environment" hidden onChange={onPicked} />
+        </li>
+      )}
       <li>
-        <button
-          type="button"
-          onClick={() => input.current?.click()}
-          className="grid aspect-square w-full place-items-center rounded-xl border-2 border-dashed border-border text-sm font-semibold text-primary hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
-        >
-          <span className="flex flex-col items-center gap-1">
-            <ImagePlus aria-hidden="true" className="size-6" />
-            {t("add")}
-          </span>
-        </button>
-        <input
-          ref={input}
-          type="file"
-          accept={PHOTO_TYPES.join(",")}
-          multiple
-          hidden
-          onChange={(event) => {
-            void add(event.target.files);
-            event.target.value = "";
-          }}
-        />
+        <AddTile icon={ImagePlus} label={touch ? tCommon("chooseFiles") : t("add")} onClick={() => input.current?.click()} />
+        <input ref={input} type="file" accept={PHOTO_TYPES.join(",")} multiple hidden onChange={onPicked} />
       </li>
     </ul>
+  );
+}
+
+function AddTile({ icon: Icon, label, onClick }: { icon: LucideIcon; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="grid aspect-square w-full place-items-center rounded-xl border-2 border-dashed border-border px-1 text-center text-sm font-semibold text-primary hover:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none"
+    >
+      <span className="flex flex-col items-center gap-1">
+        <Icon aria-hidden="true" className="size-6" />
+        {label}
+      </span>
+    </button>
   );
 }

@@ -6,12 +6,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Pinta.SharedKernel.Http;
 
-/// <summary>Validates the <typeparamref name="T"/> argument with its FluentValidation validator; returns 422 <c>validation_failed</c>.</summary>
+/// <summary>
+/// Trims the <typeparamref name="T"/> argument's text (<see cref="TrimmedStrings"/>) and validates it with its
+/// FluentValidation validator; returns 422 <c>validation_failed</c>.
+/// </summary>
 public sealed class ValidationFilter<T> : IEndpointFilter
 {
     public async ValueTask<object?> InvokeAsync(EndpointFilterInvocationContext context, EndpointFilterDelegate next)
     {
         var argument = context.Arguments.OfType<T>().FirstOrDefault();
+        TrimmedStrings.Trim(argument);
         var validator = context.HttpContext.RequestServices.GetService<IValidator<T>>();
         if (argument is null || validator is null)
         {

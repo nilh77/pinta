@@ -284,9 +284,10 @@ function Actions({ job }: { job: PainterJobDetail }) {
     case "in_progress":
       return (
         <>
-          <ResultPhotos job={job} />
+          {/* Progress and incidents first; the result photos and «finish» last, so they are not mixed up (docs/screens.md, P2). */}
           <Progress job={job} />
           <Incident job={job} />
+          <ResultPhotos job={job} />
         </>
       );
     case "finished":
@@ -325,7 +326,6 @@ function Progress({ job }: { job: PainterJobDetail }) {
       {job.progressFiles.length > 0 && <FileGrid files={job.progressFiles} />}
       <PhotoPicker photos={photos} onChange={setPhotos} upload={(blob, type, progress) => uploadResultPhoto(job.id, blob, type, progress, "progress")} />
       <Button pending={add.isPending}
-        variant="outline"
         className="self-start"
         disabled={ready.length === 0 || uploading || add.isPending}
         onClick={() =>

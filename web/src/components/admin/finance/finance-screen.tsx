@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormDialog } from "@/components/ui/form-dialog";
@@ -298,7 +299,7 @@ function CostDialog({ cost, month, onClose }: { cost: CostDto | null; month: str
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-[13px] font-semibold">
           {t("date")}
-          <input type="date" value={date} max={today} onChange={(e) => setDate(e.target.value)} className={fieldClass} aria-invalid={!!fieldErrors.date} />
+          <DateInput value={date} max={today} onChange={setDate} className={fieldClass} invalid={!!fieldErrors.date} />
           {fieldErrors.date && <span className="text-sm font-normal text-destructive">{fieldErrors.date[0]}</span>}
         </label>
         <label className="flex flex-col gap-1 text-[13px] font-semibold">
@@ -398,7 +399,7 @@ function MarkPaidDialog({ payout, painter, onClose }: { payout: MonthSummary["pe
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-[13px] font-semibold">
           {t("paidOn")}
-          <input type="date" value={paidOn} max={today} onChange={(e) => setPaidOn(e.target.value)} className={fieldClass} />
+          <DateInput value={paidOn} max={today} onChange={setPaidOn} className={fieldClass} />
         </label>
         <label className="flex flex-col gap-1 text-[13px] font-semibold">
           {t("reference")}

@@ -16,7 +16,8 @@ import { FormError } from "./form-error";
 export function ResetPasswordForm({ userId, token }: { userId?: string; token?: string }) {
   const t = useTranslations("resetPassword");
   const reset = useResetPassword();
-  const form = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), defaultValues: { password: "" } });
+  const form = useForm<ResetPasswordValues>({ resolver: zodResolver(resetPasswordSchema), defaultValues: { password: "", confirmPassword: "" } });
+  const tCommon = useTranslations("common");
   const invalidLink = !userId || !token || (reset.error instanceof ApiError && reset.error.problem?.errors?.token !== undefined);
 
   if (reset.isSuccess) {
@@ -66,6 +67,14 @@ export function ResetPasswordForm({ userId, token }: { userId?: string; token?: 
         error={form.formState.errors.password ?? (serverPasswordError ? { type: "server", message: serverPasswordError } : undefined)}
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
+      />
+      <FormField
+        id="confirm-password"
+        type="password"
+        autoComplete="new-password"
+        label={tCommon("confirmPassword")}
+        error={form.formState.errors.confirmPassword}
+        {...form.register("confirmPassword")}
       />
       <Button pending={reset.isPending} type="submit" size="lg" disabled={reset.isPending} className="mt-2 w-full">
         {t("submit")}

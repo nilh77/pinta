@@ -14,8 +14,23 @@
     },
     "loading": "Loading…",
     "skipToContent": "Skip to content",
+    "showPassword": "Show password",
+    "confirmPassword": "Repeat the password",
+    "takePhoto": "Take a photo",
+    "chooseFiles": "Choose files",
+    "calendar": {
+      "choose": "Choose a date",
+      "previous": "Previous month",
+      "next": "Next month"
+    },
     "changeLanguage": "{code}, change language",
     "darkTheme": "Dark theme"
+  },
+  "authPanel": {
+    "title": "Your home painted, without the hassle.",
+    "price": "An estimated price right away, VAT included",
+    "painters": "Verified painters across the Lisbon district",
+    "material": "Materials included and secure payment"
   },
   "nav": {
     "signIn": "Sign in",
@@ -176,6 +191,7 @@
     "email": "Enter a valid email.",
     "phone": "Enter the number with its country code, for example +351 912 345 678.",
     "passwordLength": "Use at least {min} characters.",
+    "passwordMismatch": "The passwords don't match.",
     "acceptTerms": "You need to accept the Terms and the Privacy policy.",
     "tooLong": "Too long."
   },
@@ -1421,7 +1437,10 @@
         "open": "Cancel job",
         "title": "Cancel {code}?",
         "calculating": "Working out the refund…",
-        "refund": "We'll refund {amount}.",
+        "refundIntro": "Before you confirm, see how much we'll refund.",
+        "refundLabel": "We'll refund",
+        "refundFull": "All the deposit you paid ({paid}).",
+        "refundPartial": "{percent}% of the deposit you paid ({paid}), because the start date is close.",
         "noPayment": "You haven't paid anything yet: there's nothing to refund.",
         "reason": "Reason",
         "optional": "Optional",

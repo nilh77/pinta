@@ -14,8 +14,23 @@
     },
     "loading": "A carregar…",
     "skipToContent": "Saltar para o conteúdo",
+    "showPassword": "Mostrar a palavra-passe",
+    "confirmPassword": "Repetir a palavra-passe",
+    "takePhoto": "Tirar foto",
+    "chooseFiles": "Escolher ficheiros",
+    "calendar": {
+      "choose": "Escolher data",
+      "previous": "Mês anterior",
+      "next": "Mês seguinte"
+    },
     "changeLanguage": "{code}, mudar o idioma",
     "darkTheme": "Tema escuro"
+  },
+  "authPanel": {
+    "title": "A sua casa pintada, sem complicações.",
+    "price": "Preço estimado na hora, com IVA",
+    "painters": "Pintores verificados no distrito de Lisboa",
+    "material": "Material incluído e pagamento seguro"
   },
   "nav": {
     "signIn": "Entrar",
@@ -176,6 +191,7 @@
     "email": "Introduza um email válido.",
     "phone": "Introduza o número com indicativo, por exemplo +351 912 345 678.",
     "passwordLength": "Use pelo menos {min} caracteres.",
+    "passwordMismatch": "As palavras-passe não coincidem.",
     "acceptTerms": "Tem de aceitar os Termos e a Política de privacidade.",
     "tooLong": "Texto demasiado longo."
   },
@@ -1421,7 +1437,10 @@
         "open": "Cancelar trabalho",
         "title": "Cancelar {code}?",
         "calculating": "A calcular o reembolso…",
-        "refund": "Devolvemos {amount}.",
+        "refundIntro": "Antes de confirmar, veja quanto lhe devolvemos.",
+        "refundLabel": "Devolvemos",
+        "refundFull": "Todo o sinal que pagou ({paid}).",
+        "refundPartial": "{percent}% do sinal que pagou ({paid}), porque falta pouco para começar.",
         "noPayment": "Ainda não pagou nada: não há reembolso a fazer.",
         "reason": "Motivo",
         "optional": "Opcional",

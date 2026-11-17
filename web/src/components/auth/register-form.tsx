@@ -23,7 +23,7 @@ export function RegisterForm() {
   const register = useRegister();
   const form = useForm<RegisterInput, unknown, RegisterValues>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: "", email: "", phone: "+351 ", password: "", acceptTerms: false, marketingConsent: false },
+    defaultValues: { name: "", email: "", phone: "+351 ", password: "", confirmPassword: "", acceptTerms: false, marketingConsent: false },
   });
   const { errors } = form.formState;
   const emailTaken = register.error instanceof ApiError && register.error.code === "email_taken";
@@ -83,6 +83,14 @@ export function RegisterForm() {
         error={errors.password}
         errorValues={{ min: PASSWORD_MIN_LENGTH }}
         {...form.register("password")}
+      />
+      <FormField
+        id="confirm-password"
+        type="password"
+        autoComplete="new-password"
+        label={t("common.confirmPassword")}
+        error={errors.confirmPassword}
+        {...form.register("confirmPassword")}
       />
       <CheckboxField id="acceptTerms" label={t("register.acceptTerms")} control={form.control} name="acceptTerms" />
       <CheckboxField id="marketingConsent" label={t("register.marketing")} control={form.control} name="marketingConsent" />
