@@ -6,6 +6,17 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Avisos: arreglos tras probarlos en Railway
+
+#### Añadido
+
+- Invitación a activar los avisos: en móviles y tabletas con sesión, si el push se puede activar y aún no lo está, aparece una vez la tarjeta «¿Te avisamos en este móvil?», con un texto para cada rol. «Activar avisos» lanza el permiso del sistema, que el navegador solo enseña tras un toque, y «Ahora no» la oculta 14 días (`docs/screens.md`, «Avisos»).
+
+#### Corregido
+
+- No llegaba ninguna notificación push: el servicio rechazaba el `Push__Subject` de Railway porque era un email sin `mailto:`. Ahora se le añade el prefijo, un valor no válido se cambia por `mailto:hello@pinta.pt` y se recortan los espacios de las claves.
+- Al pulsar en el pintor un aviso de oferta, de oferta retirada o de trabajo cancelado, se abría el detalle, que dice «no encontrado» porque la oferta aún no es su trabajo. Ahora lleva a sus trabajos, en la pestaña Ofertas, tanto desde la campanita como desde el push.
+
 ### Avisos: campanita y notificaciones push
 
 #### Añadido
