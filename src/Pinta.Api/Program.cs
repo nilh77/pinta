@@ -15,7 +15,6 @@ using Pinta.Modules.Painters;
 using Pinta.Modules.Payments;
 using Pinta.Modules.Quoting;
 using Pinta.SharedKernel.Events;
-using Pinta.SharedKernel.Http;
 using Pinta.SharedKernel.Idempotency;
 using Serilog;
 
@@ -39,7 +38,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
     // Numbers travel as JSON numbers only (amounts in cents, measures in metres), so the OpenAPI types are plain numbers.
     options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
-    TrimmedStrings.Apply(options.SerializerOptions);
 });
 builder.Services.AddPintaOpenApi();
 builder.Services.AddRequestLocalization(options =>
