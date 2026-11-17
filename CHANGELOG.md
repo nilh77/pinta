@@ -8,6 +8,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ### Avisos: arreglos tras probarlos en Railway
 
+#### Corregido (segunda tanda)
+
+- El push seguía sin llegar porque el servidor no tenía registrado ningún dispositivo. Restablecer la demo vacía las suscripciones, pero el móvil conserva la suya, así que el interruptor seguía en «activado» sin que nada se enviara. Ahora, al abrir la app, el dispositivo vuelve a registrar su suscripción si tiene permiso (sin duplicarla), y cada envío queda en el log con el número de dispositivos.
+
 #### Añadido
 
 - Invitación a activar los avisos: en móviles y tabletas con sesión, si el push se puede activar y aún no lo está, aparece una vez la tarjeta «¿Te avisamos en este móvil?», con un texto para cada rol. «Activar avisos» lanza el permiso del sistema, que el navegador solo enseña tras un toque, y «Ahora no» la oculta 14 días (`docs/screens.md`, «Avisos»).

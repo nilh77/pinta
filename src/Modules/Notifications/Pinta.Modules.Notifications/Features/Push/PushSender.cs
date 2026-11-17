@@ -7,6 +7,7 @@ using Lib.Net.Http.WebPush.Authentication;
 using PushSubscription = Pinta.Modules.Notifications.Domain.PushSubscription;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Notifications.Data;
@@ -90,7 +91,7 @@ internal sealed class WebPushTransport(HttpClient http, PushOptions options) : I
 /// Hangfire job: sends one notice to every device of its user, in the user's language, and forgets the devices the
 /// push service reports gone. Retried up to 5 times like the emails.
 /// </summary>
-public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, IPushTransport transport)
+public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, IPushTransport transport, ILogger<PushSender> logger)
 {
     private static readonly ResourceManager Texts = new("Pinta.Modules.Notifications.Resources.Notices", typeof(PushSender).Assembly);
 
@@ -118,14 +119,20 @@ public sealed class PushSender(NotificationsDbContext db, IUserDirectory users, 
             tag = notification.Id,
         });
 
+        var gone = 0;
         foreach (var subscription in subscriptions)
         {
             if (await transport.SendAsync(subscription, payload, CancellationToken.None) == PushOutcome.Gone)
             {
                 // Idempotent: a retry, or another job for the same user, may already have removed it.
                 await db.PushSubscriptions.Where(s => s.Id == subscription.Id).ExecuteDeleteAsync();
+                gone++;
             }
         }
+
+        // No personal data: the notice id and the device counts only.
+        logger.LogInformation("Push {NotificationId} ({Kind}) sent to {Devices} device(s), {Gone} gone",
+            notification.Id, notification.Kind, subscriptions.Count - gone, gone);
     }
 
     /// <summary>The notice's sentence in <paramref name="locale"/>, with its code and data filled in.</summary>
