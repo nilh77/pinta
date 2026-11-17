@@ -1688,6 +1688,9 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+            painterOffered: boolean;
+            /** Format: date-time */
+            lastActivityAt: string;
         };
         AdminQuote: {
             /** Format: uuid */

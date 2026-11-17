@@ -702,6 +702,8 @@
       "next": "Next",
       "page": "Page {page} of {pages}",
       "boardTruncated": "Showing the {count} most recent. Use the filters to see others.",
+      "noPainter": "No painter",
+      "offeredTo": "{name} · offer",
       "columns": {
         "code": "Code",
         "client": "Client",
