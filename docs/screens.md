@@ -105,7 +105,7 @@ Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` t
 ### Entrar
 
 - **Ruta**: `/{locale}/entrar?next=…`. \[S1\]
-- **Acciones**: `POST /api/auth/login`; después vuelve a `next` (solo rutas internas) o al inicio. Enlace a «Crear cuenta».
+- **Acciones**: `POST /api/auth/login`; después vuelve a `next` (solo rutas internas) o, sin `next`, va directamente al inicio de su rol: cliente a Mis trabajos, pintor a sus trabajos y admin a Revisión (decisión de 2026-11-17). Enlace a «Crear cuenta».
 - **Estados**: `invalid_credentials` como error general; cuenta bloqueada tras 5 intentos (mismo mensaje genérico).
 
 ### Crear cuenta
@@ -227,7 +227,7 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
 ### Tablero de trabajos (no dibujado)
 
 - **Ruta**: `/{locale}/admin/trabajos`. \[A3.1–A3.5\]
-- **Datos**: tabla filtrable por estado, fechas, localidad, pintor y Premium, con búsqueda por código, cliente o email. Columnas: código, cliente, localidad, estado, total, margen, pintor, fecha programada y última actividad. Exportar a CSV.
+- **Datos**: tabla filtrable por estado, fechas, localidad, pintor y Premium, con búsqueda por código, cliente o email. Columnas: código, cliente, localidad, estado, total, margen, pintor (el asignado o, si solo hay una oferta abierta, ese pintor marcado «oferta»), fecha programada y última actividad. Exportar a CSV. La lista y el tablero se ordenan por la última actividad, de la más reciente a la más antigua: cualquier cosa que se haga con el trabajo (estado, oferta o respuesta del pintor, fotos de avance, incidencia, borrador de precio, pregunta del cliente) lo sube arriba (`docs/data-model.md`, «Actividad del trabajo»). Las tarjetas del tablero y del móvil muestran también el pintor y la última actividad (decisión de 2026-11-17).
 - **Acciones**: abrir el detalle (el mismo de A2 con pestañas Cotización, Versiones, Pagos, Asignación, Archivos e Historial); asignar u ofrecer a un pintor (`POST …/assignments`); programar fecha (en H5, al pasar a «Programado» el admin indica la fecha; en H6 viene de la asignación); forzar transición con motivo (`POST …/transition`, solo transiciones válidas de la tabla de estados); pestaña Pagos con pagos, reembolsos y justificantes; cancelar con reembolso calculado (`POST …/cancel`); cerrar el trabajo.
 - **Estados**: transición inválida → `invalid_transition` traducido.
 
