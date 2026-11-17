@@ -111,6 +111,7 @@ Desde 2026-11-17, además de los emails, cada evento importante crea un **aviso*
   - Con claves VAPID: `Push__PublicKey`, `Push__PrivateKey` y `Push__Subject` (un `mailto:` o `https:` de contacto; un email sin `mailto:` se completa solo, y un valor no válido se cambia por `mailto:hello@pinta.pt`). En local van en `dotnet user-secrets`; en el entorno Demo, en las variables de Railway.
   - Sin claves, el push queda desactivado y la campanita funciona igual.
   - El texto del push va en el idioma del usuario.
+  - La notificación lleva el icono de la app (la «p» blanca sobre verde) y, en la barra de Android, un icono pequeño monocromo: la «p» con el punto, en blanco sobre transparente (`web/public/icons/badge-96.png`, generado por `tools/pwa_icons.py`). Android solo usa la silueta de ese icono, así que uno a color sale como un cuadrado blanco. Vibra dos veces.
 - **Dónde funciona.**
   - Chrome, Edge y Firefox en escritorio y Android, y Safari en macOS.
   - En iPhone y iPad solo con la PWA instalada en la pantalla de inicio (iOS 16.4 o posterior).

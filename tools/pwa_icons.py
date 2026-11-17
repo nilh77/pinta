@@ -14,10 +14,11 @@ YELLOW = (0xF2, 0xB7, 0x05)
 SAMPLES = 4  # supersampling per axis, for smooth edges
 
 
-def png(path, size, pixels):
+def png(path, size, pixels, alpha=False):
     raw = b"".join(b"\x00" + bytes(row) for row in pixels)
     chunk = lambda kind, data: struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
-    path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, 2, 0, 0, 0))
+    color_type = 6 if alpha else 2  # RGBA or RGB
+    path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", size, size, 8, color_type, 0, 0, 0))
                      + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
 
 
@@ -53,7 +54,26 @@ def icon(name, size, scale):
     print(OUT / name)
 
 
+def badge(name, size):
+    """The notification badge (docs/integrations.md, push): Android keeps only the shape and paints it white, so the
+    glyph is white on transparent; a full-colour icon there shows as a white square."""
+    rows = []
+    for py in range(size):
+        row = bytearray()
+        for px in range(size):
+            hits = 0
+            for sy in range(SAMPLES):
+                for sx in range(SAMPLES):
+                    if color_at((px + (sx + 0.5) / SAMPLES) / size, (py + (sy + 0.5) / SAMPLES) / size, 1.0) != TEAL:
+                        hits += 1
+            row += bytes((255, 255, 255, round(255 * hits / SAMPLES ** 2)))
+        rows.append(row)
+    png(OUT / name, size, rows, alpha=True)
+    print(OUT / name)
+
+
 OUT.mkdir(parents=True, exist_ok=True)
+badge("badge-96.png", 96)
 icon("icon-192.png", 192, 0.9)
 icon("icon-512.png", 512, 0.9)
 icon("icon-maskable-512.png", 512, 0.7)
