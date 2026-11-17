@@ -21,6 +21,12 @@
     "changeLanguage": "{code}, change language",
     "darkTheme": "Dark theme"
   },
+  "authPanel": {
+    "title": "Your home painted, without the hassle.",
+    "price": "An estimated price right away, VAT included",
+    "painters": "Verified painters across the Lisbon district",
+    "material": "Materials included and secure payment"
+  },
   "nav": {
     "signIn": "Sign in",
     "signOut": "Sign out",

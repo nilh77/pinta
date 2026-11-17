@@ -100,7 +100,7 @@ Reglas comunes a todas las pantallas:
 
 ## Acceso (sin board)
 
-Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` traducidos). Entrar, crear cuenta, recuperar y nueva contraseña comparten una presentación propia (decisión de 2026-11-17): en escritorio, a la izquierda un panel de marca con la ilustración de la casa y tres frases de lo que ofrece Pinta (precio al momento, pintores verificados, material incluido), y a la derecha el formulario; en el móvil, la ilustración pequeña sobre el formulario.
+Las rutas son las mismas en los tres idiomas (decisión de H8: sin `pathnames` traducidos). Entrar, crear cuenta, recuperar y nueva contraseña comparten una presentación propia (decisión de 2026-11-17): en escritorio, a la izquierda un panel de marca con la ilustración de la casa y tres frases de lo que ofrece Pinta (precio al momento, pintores verificados, material incluido), y a la derecha el formulario en una tarjeta; en el móvil solo la tarjeta, para que el formulario sea lo primero en pantalla.
 
 ### Entrar
 

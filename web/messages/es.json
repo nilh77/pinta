@@ -21,6 +21,12 @@
     "changeLanguage": "{code}, cambiar el idioma",
     "darkTheme": "Tema oscuro"
   },
+  "authPanel": {
+    "title": "Tu casa pintada, sin complicaciones.",
+    "price": "Precio estimado al momento, con IVA",
+    "painters": "Pintores verificados en el distrito de Lisboa",
+    "material": "Material incluido y pago seguro"
+  },
   "nav": {
     "signIn": "Entrar",
     "signOut": "Salir",
