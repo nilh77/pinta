@@ -59,6 +59,8 @@ internal static class AssignmentEndpoints
         admin.MapGet("/assignable-painters", AssignableAsync).WithName("ListAssignablePainters");
         admin.MapPost("/assignments", OfferAsync).WithValidation<OfferJobRequest>().WithName("OfferJob")
             .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
+        admin.MapPost("/assignments/{assignmentId:guid}/withdraw", WithdrawAsync).WithName("WithdrawOffer")
+            .ProducesProblem(StatusCodes.Status404NotFound).ProducesProblem(StatusCodes.Status409Conflict);
 
         var painter = app.MapGroup("/api/painter").WithTags("Painter")
             .RequireAuthorization(policy => policy.RequireRole(RoleNames.Painter));
@@ -80,8 +82,8 @@ internal static class AssignmentEndpoints
     }
 
     /// <summary>
-    /// A3.2: the job must have its deposit paid; the painter must be active and cover the concelho; a previous open
-    /// offer is withdrawn. The date and the painter's pay are frozen in the offer.
+    /// A3.2: the job must have its deposit paid and no open offer (withdraw it first: one offer at a time); the painter
+    /// must be active and cover the concelho. The date and the painter's pay are frozen in the offer.
     /// </summary>
     private static async Task<Results<Ok<AssignmentDto>, ProblemHttpResult>> OfferAsync(
         Guid id, OfferJobRequest request, JobsDbContext db, IPainterDirectory painters, IQuoteVersions quotes, IUserDirectory users,
@@ -103,6 +105,11 @@ internal static class AssignmentEndpoints
             return JobProblems.ConcurrencyConflict();
         }
 
+        if (await db.Assignments.AnyAsync(a => a.JobId == job.Id && a.Status == AssignmentStatus.Offered, cancellationToken))
+        {
+            return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.OfferOpen);
+        }
+
         var painter = await painters.FindAsync(request.PainterId, cancellationToken);
         if (painter is null || painter.Status != PainterStatus.Active || !painter.Municipalities.Contains(job.Municipality))
         {
@@ -115,11 +122,6 @@ internal static class AssignmentEndpoints
         }
 
         var now = clock.GetUtcNow();
-        foreach (var open in await db.Assignments.Where(a => a.JobId == job.Id && a.Status == AssignmentStatus.Offered).ToListAsync(cancellationToken))
-        {
-            open.Status = AssignmentStatus.Withdrawn;
-            open.RespondedAt = now;
-        }
 
         var quote = (await quotes.GetAdminAsync(job.CurrentQuoteVersionId, cancellationToken))!;
         var assignment = new Assignment
@@ -171,6 +173,36 @@ internal static class AssignmentEndpoints
             [.. items.Where(i => i.Status == AssignmentStatus.Accepted && i.JobStatus == JobStatus.InProgress)],
             [.. items.Where(i => i.Status == AssignmentStatus.Completed || i.JobStatus is JobStatus.Finished or JobStatus.Closed).OrderByDescending(i => i.ScheduledOn)],
             await PainterVisitEndpoints.ListAsync(painter.UserId, db, quotes, cancellationToken)));
+    }
+
+    /// <summary>A3.2: the admin withdraws the open offer before the painter answers; the painter is told (JobNotices).</summary>
+    private static async Task<Results<NoContent, ProblemHttpResult>> WithdrawAsync(
+        Guid id, Guid assignmentId, JobsDbContext db, TimeProvider clock, CancellationToken cancellationToken)
+    {
+        var assignment = await db.Assignments.SingleOrDefaultAsync(a => a.Id == assignmentId && a.JobId == id, cancellationToken);
+        if (assignment is null)
+        {
+            return JobProblems.NotFound();
+        }
+
+        if (assignment.Status != AssignmentStatus.Offered)
+        {
+            return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.AssignmentTaken);
+        }
+
+        assignment.Status = AssignmentStatus.Withdrawn;
+        assignment.RespondedAt = clock.GetUtcNow();
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // The painter answered at the same moment.
+            return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.AssignmentTaken);
+        }
+
+        return TypedResults.NoContent();
     }
 
     /// <summary>P1.2: accepting schedules the job with the offer's date; an offer no longer open is <c>assignment_taken</c>.</summary>

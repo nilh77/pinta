@@ -93,7 +93,7 @@ public class AssignmentTests(PintaApiFactory factory)
     }
 
     [Fact]
-    public async Task P1_2_a_new_offer_withdraws_the_previous_one_and_declining_notifies_the_admins()
+    public async Task A3_2_P1_2_one_open_offer_at_a_time_withdrawable_and_declining_notifies_the_admins()
     {
         var s = await TestAssignments.ReadyAsync(factory);
         var (otherId, _, otherLink) = await TestPainterAccounts.CreateAsync(factory, s.Admin);
@@ -101,12 +101,20 @@ public class AssignmentTests(PintaApiFactory factory)
 
         await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, s.PainterId);
         var first = await TestAssignments.OfferIdAsync(s.Painter);
+        var second = await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, otherId);
+        var withdrawn = await s.Admin.PostAsJsonAsync($"/api/admin/jobs/{s.Job.JobId}/assignments/{first}/withdraw", new { }, ApiClient.Json);
+        var again = await s.Admin.PostAsJsonAsync($"/api/admin/jobs/{s.Job.JobId}/assignments/{first}/withdraw", new { }, ApiClient.Json);
+        var painterOffers = (await (await s.Painter.GetAsync("/api/painter/jobs")).ReadJsonAsync()).GetProperty("offers").GetArrayLength();
         await TestAssignments.OfferAsync(s.Admin, s.Job.JobId, otherId);
         var late = await s.Painter.PostAsJsonAsync($"/api/painter/assignments/{first}/accept", new { }, ApiClient.Json);
         var foreign = await s.Painter.PostAsJsonAsync($"/api/painter/assignments/{await TestAssignments.OfferIdAsync(other)}/accept", new { }, ApiClient.Json);
         var noReason = await other.PostAsJsonAsync($"/api/painter/assignments/{await TestAssignments.OfferIdAsync(other)}/decline", new { reason = "" }, ApiClient.Json);
         var declined = await other.PostAsJsonAsync($"/api/painter/assignments/{await TestAssignments.OfferIdAsync(other)}/decline", new { reason = "Estou de férias." }, ApiClient.Json);
 
+        await ProblemAssert.HasCodeAsync(second, HttpStatusCode.Conflict, "offer_open");
+        Assert.Equal(HttpStatusCode.NoContent, withdrawn.StatusCode);
+        await ProblemAssert.HasCodeAsync(again, HttpStatusCode.Conflict, "assignment_taken");
+        Assert.Equal(0, painterOffers);
         await ProblemAssert.HasCodeAsync(late, HttpStatusCode.Conflict, "assignment_taken");
         await ProblemAssert.HasCodeAsync(foreign, HttpStatusCode.NotFound, "not_found");
         await ProblemAssert.HasCodeAsync(noReason, HttpStatusCode.UnprocessableEntity, "validation_failed");

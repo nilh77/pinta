@@ -16,6 +16,9 @@ public static class ErrorCodes
     public const string IdempotencyConflict = "idempotency_conflict";
     public const string EmailTaken = "email_taken";
     public const string AssignmentTaken = "assignment_taken";
+
+    /// <summary>The job already has an open offer: withdraw it before sending another (A3.2).</summary>
+    public const string OfferOpen = "offer_open";
     public const string QuoteExpired = "quote_expired";
     public const string FileTooLarge = "file_too_large";
     public const string UnsupportedMediaType = "unsupported_media_type";
