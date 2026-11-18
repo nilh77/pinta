@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, resetAntiforgeryToken } from "@/lib/api/client";
 import { ApiError, type Problem } from "@/lib/api/problem";
+import { forgetThisDevice, PUSH_STATUS_KEY } from "@/lib/push";
 import type { components } from "@/lib/api/schema";
 
 export type Me = components["schemas"]["MeResponse"];
@@ -55,6 +56,8 @@ function useSessionChange() {
     signedOutOnPurpose = me === null;
     resetAntiforgeryToken();
     queryClient.setQueryData(meQueryKey, me);
+    // Read the device's push state again: whoever signs in gets this device registered to them.
+    queryClient.removeQueries({ queryKey: PUSH_STATUS_KEY });
   };
 }
 
@@ -78,6 +81,8 @@ export function useSignOut() {
   const onSessionChange = useSessionChange();
   return useMutation({
     mutationFn: async () => {
+      // First, while the session still exists: this device stops getting this account's notices.
+      await forgetThisDevice();
       orThrow(await api.POST("/api/auth/logout"));
     },
     onSuccess: () => onSessionChange(null),

@@ -37,6 +37,22 @@ function environment(): Env {
   };
 }
 
+/** The query key of this device's push state; dropped on every session change so it is read (and registered) again. */
+export const PUSH_STATUS_KEY = ["push-status"] as const;
+
+/**
+ * Before signing out: this device stops receiving the account's notices (docs/integrations.md, «Avisos y
+ * notificaciones push»). Only the server's link goes; the browser keeps its subscription and permission, so the next
+ * person who signs in here gets it registered to them. Never holds sign-out up for more than two seconds.
+ */
+export async function forgetThisDevice(): Promise<void> {
+  const unlink = (async () => {
+    const subscription = await (await registration())?.pushManager.getSubscription();
+    if (subscription) await api.DELETE("/api/push/subscriptions", { params: { query: { endpoint: subscription.endpoint } } });
+  })().catch(() => undefined);
+  await Promise.race([unlink, new Promise((resolve) => setTimeout(resolve, 2000))]);
+}
+
 async function registration() {
   return "serviceWorker" in navigator ? navigator.serviceWorker.getRegistration() : undefined;
 }
@@ -68,13 +84,12 @@ async function saveSubscription(subscription: PushSubscription) {
   orThrow(await api.POST("/api/push/subscriptions", { body: { endpoint: endpoint!, p256dh: keys!.p256dh, auth: keys!.auth } }));
 }
 
-const PUSH_KEY = ["push-status"] as const;
 
 export function usePush() {
   const queryClient = useQueryClient();
-  const state = useQuery({ queryKey: PUSH_KEY, queryFn: readStatus, staleTime: Infinity, retry: false });
+  const state = useQuery({ queryKey: PUSH_STATUS_KEY, queryFn: readStatus, staleTime: Infinity, retry: false });
   const status: PushStatus = state.isError ? "unsupported" : (state.data ?? "loading");
-  const setStatus = useCallback((next: PushStatus) => queryClient.setQueryData(PUSH_KEY, next), [queryClient]);
+  const setStatus = useCallback((next: PushStatus) => queryClient.setQueryData(PUSH_STATUS_KEY, next), [queryClient]);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 

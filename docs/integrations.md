@@ -117,6 +117,7 @@ Desde 2026-11-17, además de los emails, cada evento importante crea un **aviso*
   - En iPhone y iPad solo con la PWA instalada en la pantalla de inicio (iOS 16.4 o posterior).
   - El service worker solo se registra en el build de producción, así que en `pnpm dev` no hay push.
 - **Sin filtros por tipo** en el MVP: cada usuario activa o desactiva el push por dispositivo.
+- **El push sigue a la sesión** (decisión de 2026-11-18): al cerrar sesión, la web borra en el servidor la suscripción de ese dispositivo antes de salir, así que deja de recibir los avisos de esa cuenta. El navegador conserva su suscripción y el permiso, y al volver a entrar, con la misma cuenta o con otra, el dispositivo se registra de nuevo a nombre de quien entra. Una sesión que caduca sin cerrarse mantiene el vínculo hasta que alguien entre o salga en ese dispositivo.
 
 | Tipo (`NotificationKind`) | Admin | Pintor | Cliente | Cuándo |
 | --- | --- | --- | --- | --- |
