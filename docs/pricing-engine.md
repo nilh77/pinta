@@ -39,10 +39,10 @@ Valores de ejemplo para la demo y los tests. Todos se editan en el admin; los ca
 
 | Clave | Nombre | €/litro | Rendimiento m²/L | Manos | Sugerida en |
 | --- | --- | --- | --- | --- | --- |
-| `matte` | Plástica mate | 8,00 | 10 | 2 | Sala, dormitorio, pasillo, otra |
-| `satin` | Plástica satinada | 11,00 | 10 | 2 | Cocina |
+| `matte` | Mate | 8,00 | 10 | 2 | Sala, dormitorio, pasillo, otra |
+| `satin` | Satinada | 11,00 | 10 | 2 | Cocina |
 | `anti_damp` | Anti-humedad | 16,00 | 8 | 2 | Baño |
-| `exterior` | Exterior acrílica | 14,00 | 9 | 2 | Fachada |
+| `exterior` | Plástica de exterior | 14,00 | 9 | 2 | Fachada |
 
 **Superficies**
 
