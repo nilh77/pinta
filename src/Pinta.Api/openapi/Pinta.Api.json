@@ -6265,7 +6265,8 @@
           "defaultHeight",
           "reviewDeadlineBusinessDays",
           "quoteValidityDays",
-          "minLeadBusinessDays"
+          "minLeadBusinessDays",
+          "vatPct"
         ],
         "type": "object",
         "properties": {
@@ -6308,6 +6309,10 @@
           "minLeadBusinessDays": {
             "type": "integer",
             "format": "int32"
+          },
+          "vatPct": {
+            "type": "number",
+            "format": "double"
           }
         }
       },

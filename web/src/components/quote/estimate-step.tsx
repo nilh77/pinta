@@ -9,7 +9,7 @@ import { formatArea } from "@/lib/format";
 import { displayNames, elementAreaOf, toEstimateRequest, validateElement } from "@/lib/quote/draft";
 import { useEstimate } from "@/lib/quote/use-quote-data";
 import { cn } from "@/lib/utils";
-import { PriceRange } from "./price-range";
+import { PriceRange, WithoutVat } from "./price-range";
 import { QuoteShell, type QuoteContext } from "./quote-shell";
 
 /** Screen 4 · Estimación (board Estimacion) [C2.8]. Only range, areas and flags: never rates, material or margin. */
@@ -81,6 +81,7 @@ function EstimateView({ draft, catalog, info, update }: QuoteContext) {
                 className={cn("mt-2 block font-display text-[34px] leading-tight font-extrabold tracking-tight tabular-nums transition-opacity motion-reduce:transition-none", isStale && "opacity-50")}
               />
               <p className="mt-1 text-[13px] text-muted-foreground">{t("vatIncluded")}</p>
+              <WithoutVat minCents={estimate.rangeMinCents} maxCents={estimate.rangeMaxCents} className="mt-0.5 text-[13px]" />
             </>
           )}
           <ul aria-label={t("badgesLabel")} className="mt-3.5 flex flex-wrap gap-1.5">

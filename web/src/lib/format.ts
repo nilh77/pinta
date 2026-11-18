@@ -43,6 +43,11 @@ export function formatCents(locale: string, cents: number): string {
   return formatEuros(locale, cents / 100);
 }
 
+/** A VAT-inclusive amount without its VAT, rounded to the cent: 12300 at 23 % → 10000. */
+export function withoutVatCents(cents: number, vatPct: number): number {
+  return Math.round(cents / (1 + vatPct / 100));
+}
+
 /** A date without time from the API ("2026-11-06") as "6 de novembro de 2026"; `short` drops the year. */
 export function formatDate(locale: string, isoDate: string, short = false): string {
   return new Intl.DateTimeFormat(dateLocale(locale), { day: "numeric", month: "long", ...(short ? {} : { year: "numeric" }), timeZone: "UTC" }).format(

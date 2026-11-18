@@ -14,6 +14,7 @@
     },
     "loading": "Loading…",
     "skipToContent": "Skip to content",
+    "withoutVat": "{amount} excluding VAT",
     "showPassword": "Show password",
     "confirmPassword": "Repeat the password",
     "takePhoto": "Take a photo",
@@ -1259,7 +1260,11 @@
       "send": "Send for review",
       "signInAndSend": "Sign in and send",
       "billing": {
-        "wanted": "Invoice to a company",
+        "title": "Invoice",
+        "consumer": "Without a tax number",
+        "consumerHint": "The invoice goes to «consumidor final» (end consumer). Nothing else to fill in.",
+        "wanted": "To a company",
+        "wantedHint": "With the company's NIF and legal name.",
         "taxId": "Tax number (NIF)",
         "companyName": "Company name"
       },

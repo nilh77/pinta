@@ -6,6 +6,19 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Precios sin IVA y factura sin NIF
+
+#### Añadido
+
+- **Precio sin IVA** debajo del precio con IVA, en pequeño, para que se vea más accesible: en la barra del constructor, en la estimación, en «Solicitud enviada», en Mis trabajos y en el precio cerrado. El precio con IVA sigue siendo la cifra principal, porque la ley portuguesa de indicación de precios lo exige a particulares.
+  - En los rangos estimados se calcula con el IVA del catálogo: `GET /api/catalog` devuelve ahora `vatPct`.
+  - En el precio cerrado es exacto: el total menos su IVA.
+  - Ver `docs/screens.md`, «Precios con y sin IVA».
+
+#### Cambiado
+
+- **Factura sin NIF.** El paso de la cuenta pregunta «Factura» con dos opciones: «Sin NIF», marcada por defecto, que emite la factura a nombre de consumidor final sin pedir más datos, y «A nombre de una empresa», que pide NIF y nombre fiscal. Antes había una sola casilla. Toda venta lleva factura (`docs/screens.md`, pantalla 7).
+
 ### Nombres de las pinturas
 
 #### Cambiado

@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatEuros, formatMetres, daysUntil, formatCents, formatDate, formatPlace } from "./format";
+import { formatArea, formatEuros, formatMetres, daysUntil, formatCents, formatDate, formatPlace, withoutVatCents } from "./format";
+
+describe("withoutVatCents (docs/screens.md, «Precios con y sin IVA»)", () => {
+  it("takes the VAT out, to the cent", () => {
+    expect(withoutVatCents(12300, 23)).toBe(10000);
+    expect(withoutVatCents(44000, 23)).toBe(35772);
+    expect(withoutVatCents(0, 23)).toBe(0);
+  });
+});
 
 // Intl uses narrow no-break spaces; compare with plain spaces.
 const plain = (text: string) => text.replace(/[  ]/g, " ");

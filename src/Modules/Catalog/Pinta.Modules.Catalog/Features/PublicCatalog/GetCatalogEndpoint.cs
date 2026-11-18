@@ -23,7 +23,9 @@ public sealed record CatalogResponse(
     decimal DefaultHeight,
     int ReviewDeadlineBusinessDays,
     int QuoteValidityDays,
-    int MinLeadBusinessDays);
+    int MinLeadBusinessDays,
+    /// <summary>The VAT percentage, so the client also sees prices without VAT (docs/screens.md, «Precios con y sin IVA»).</summary>
+    decimal VatPct);
 
 /// <summary>
 /// GET /api/catalog — what the quote builder offers, in the request language, plus the review deadline and price
@@ -45,7 +47,7 @@ internal static class GetCatalogEndpoint
             .OrderBy(m => m.Factor)
             .ToListAsync(cancellationToken);
         var settings = await db.Settings.AsNoTracking()
-            .Select(s => new { s.DefaultHeight, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.MinLeadBusinessDays })
+            .Select(s => new { s.DefaultHeight, s.ReviewDeadlineBusinessDays, s.QuoteValidityDays, s.MinLeadBusinessDays, s.VatPct })
             .SingleAsync(cancellationToken);
 
         return TypedResults.Ok(new CatalogResponse(
@@ -64,6 +66,7 @@ internal static class GetCatalogEndpoint
             settings.DefaultHeight,
             settings.ReviewDeadlineBusinessDays,
             settings.QuoteValidityDays,
-            settings.MinLeadBusinessDays));
+            settings.MinLeadBusinessDays,
+            settings.VatPct));
     }
 }

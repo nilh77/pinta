@@ -14,6 +14,7 @@
     },
     "loading": "Cargando…",
     "skipToContent": "Saltar al contenido",
+    "withoutVat": "{amount} sin IVA",
     "showPassword": "Mostrar la contraseña",
     "confirmPassword": "Repetir la contraseña",
     "takePhoto": "Hacer foto",
@@ -1259,7 +1260,11 @@
       "send": "Enviar a revisión",
       "signInAndSend": "Entrar y enviar",
       "billing": {
-        "wanted": "Factura a nombre de una empresa",
+        "title": "Factura",
+        "consumer": "Sin NIF",
+        "consumerHint": "La factura sale a «consumidor final». No tienes que dar ningún dato más.",
+        "wanted": "A nombre de una empresa",
+        "wantedHint": "Con el NIF y el nombre fiscal de la empresa.",
         "taxId": "NIF",
         "companyName": "Nombre fiscal"
       },

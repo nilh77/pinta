@@ -12,7 +12,7 @@ import { formatArea, formatCents, formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { JobProgress } from "./job-progress";
 import { JobStatusBadge } from "./job-status-badge";
-import { PriceRange } from "@/components/quote/price-range";
+import { PriceRange, WithoutVat } from "@/components/quote/price-range";
 import { rovingTabIndex, tabListKeyDown } from "@/lib/arrow-keys";
 
 /** Screen 9 · Mis trabajos (board MisTrabajos) [C5.1]. */
@@ -133,9 +133,15 @@ function JobCard({ job }: { job: ClientJobListItem }) {
       <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
         <span className="font-semibold">
           {job.totalCents != null ? (
-            formatCents(locale, job.totalCents)
+            <>
+              {formatCents(locale, job.totalCents)}
+              <WithoutVat minCents={job.totalCents} />
+            </>
           ) : job.rangeMinCents != null && job.rangeMaxCents != null ? (
-            <PriceRange minCents={job.rangeMinCents} maxCents={job.rangeMaxCents} />
+            <>
+              <PriceRange minCents={job.rangeMinCents} maxCents={job.rangeMaxCents} />
+              <WithoutVat minCents={job.rangeMinCents} maxCents={job.rangeMaxCents} />
+            </>
           ) : (
             t("customQuote")
           )}
