@@ -19,6 +19,17 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 - **Factura sin NIF.** El paso de la cuenta pregunta «Factura» con dos opciones: «Sin NIF», marcada por defecto, que emite la factura a nombre de consumidor final sin pedir más datos, y «A nombre de una empresa», que pide NIF y nombre fiscal. Antes había una sola casilla. Toda venta lleva factura (`docs/screens.md`, pantalla 7).
 
+### Nombres de las pinturas
+
+#### Cambiado
+
+- Las pinturas de interior pierden «plástica» y la de exterior la gana, porque es la que protege de la humedad (feedback del 18-11-2026):
+  - «Plástica mate» → «Mate» (pt «Tinta mate», en «Matte paint»);
+  - «Plástica satinada» → «Satinada» (pt «Tinta acetinada», en «Satin paint»);
+  - «Exterior acrílica» → «Plástica de exterior» (pt «Tinta plástica de exterior», en «Exterior plastic paint»).
+
+  Cambian el catálogo sembrado y `docs/pricing-engine.md`. Los precios no cambian. En Railway, los nombres nuevos aparecen al restablecer la demo, o se editan a mano en Admin › Precios › Pinturas.
+
 ### Icono de las notificaciones
 
 #### Corregido
