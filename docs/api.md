@@ -38,7 +38,7 @@ Contrato HTTP de la API de Pinta: convenciones comunes, todos los endpoints por 
 | POST | `/api/auth/forgot-password` | Público | Pide enlace de recuperación | S1 |
 | POST | `/api/auth/reset-password` | Público | Fija nueva contraseña con token | S1 |
 | POST | `/api/auth/accept-invite` | Público | Pintor fija contraseña con la invitación (válida 72 h) y entra | A4.2 |
-| GET | `/api/catalog` | Público | Tipos de estancia con tallas, pinturas, tipos de superficie y ocupaciones (sin tarifas) | C2.x |
+| GET | `/api/catalog` | Público | Tipos de estancia con tallas, pinturas, tipos de superficie y ocupaciones (sin tarifas), y `vatPct` para mostrar los precios también sin IVA | C2.x |
 | GET | `/api/coverage/check?postalCode=` | Público | Comprueba si el código postal está cubierto | C4.1 |
 | POST | `/api/coverage/waitlist` | Público | Deja email para zonas sin cobertura | C4.1 |
 | POST | `/api/quotes/estimate` | Público, límite 60/min | Calcula área, rango y marcas | C2.8 |

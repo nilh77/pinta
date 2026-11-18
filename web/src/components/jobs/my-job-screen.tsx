@@ -4,7 +4,7 @@ import { ArrowLeft, BadgeCheck, CalendarClock, CircleAlert, CircleCheck, Clock, 
 import { useLocale, useTranslations } from "next-intl";
 import { useId, useState } from "react";
 import { toast } from "@/lib/toast";
-import { PriceRange } from "@/components/quote/price-range";
+import { PriceRange, WithoutVat } from "@/components/quote/price-range";
 import { Button } from "@/components/ui/button";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
 import { DetailSkeleton } from "@/components/ui/skeleton";
@@ -294,7 +294,10 @@ function QuoteCard({ job }: { job: ClientJobDetail }) {
           <dt className="font-bold">
             {t("total")} <span className="font-normal text-muted-foreground">{t("vatIncluded")}</span>
           </dt>
-          <dd className="text-2xl font-extrabold">{formatCents(locale, quote.totalCents)}</dd>
+          <dd className="text-right">
+            <span className="block text-2xl font-extrabold">{formatCents(locale, quote.totalCents)}</span>
+            <WithoutVat netCents={quote.totalCents - quote.vatCents} />
+          </dd>
         </div>
         {job.rangeMinCents != null && job.rangeMaxCents != null && (
           <div className="flex justify-between gap-3 text-muted-foreground">

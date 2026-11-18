@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { formatArea } from "@/lib/format";
 import type { Estimate } from "@/lib/quote/use-quote-data";
 import { cn } from "@/lib/utils";
-import { PriceRange } from "./price-range";
+import { PriceRange, WithoutVat } from "./price-range";
 
 type EstimateBarProps = {
   described: number;
@@ -49,7 +49,10 @@ export function EstimateSummary({ described, total, area, estimate, isStale, isE
             {estimate.overMax || estimate.rangeMinCents == null || estimate.rangeMaxCents == null ? (
               <span className="text-base">{t("custom")}</span>
             ) : (
-              <PriceRange minCents={estimate.rangeMinCents} maxCents={estimate.rangeMaxCents} />
+              <>
+                <PriceRange minCents={estimate.rangeMinCents} maxCents={estimate.rangeMaxCents} />
+                <WithoutVat minCents={estimate.rangeMinCents} maxCents={estimate.rangeMaxCents} />
+              </>
             )}
           </div>
         )}

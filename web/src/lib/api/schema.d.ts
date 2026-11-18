@@ -1892,6 +1892,8 @@ export interface components {
             quoteValidityDays: number;
             /** Format: int32 */
             minLeadBusinessDays: number;
+            /** Format: double */
+            vatPct: number;
         };
         CatalogRoomSize: {
             size: components["schemas"]["RoomSize"];

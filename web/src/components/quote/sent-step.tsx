@@ -15,7 +15,7 @@ import { useResendConfirmation } from "@/lib/auth/use-auth";
 import { formatArea } from "@/lib/format";
 import { setDraft } from "@/lib/quote/use-quote-draft";
 import { readLastRequest } from "@/lib/quote/use-submit";
-import { PriceRange } from "./price-range";
+import { PriceRange, WithoutVat } from "./price-range";
 
 /** Screen 8 · Confirmación (board Confirmacion) [C4.4, C4.5]. The draft is cleared on arrival. */
 export function SentStep({ code }: { code: string }) {
@@ -97,7 +97,10 @@ export function SentStep({ code }: { code: string }) {
                 data.overMax || data.rangeMinCents == null || data.rangeMaxCents == null ? (
                   t("summary.custom")
                 ) : (
-                  <PriceRange minCents={data.rangeMinCents} maxCents={data.rangeMaxCents} />
+                  <>
+                    <PriceRange minCents={data.rangeMinCents} maxCents={data.rangeMaxCents} />
+                    <WithoutVat minCents={data.rangeMinCents} maxCents={data.rangeMaxCents} />
+                  </>
                 )
               }
             />

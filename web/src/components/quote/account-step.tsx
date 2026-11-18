@@ -257,12 +257,39 @@ function Billing({ billing, errors, onChange }: { billing: DraftDetails["billing
   const t = useTranslations("quote.account.billing");
   const tRoot = useTranslations();
   const id = useId();
+  // Every job is invoiced; without a NIF the invoice goes to «consumidor final» (docs/screens.md, pantalla 7).
+  const options = [
+    [false, t("consumer"), t("consumerHint")],
+    [true, t("wanted"), t("wantedHint")],
+  ] as const;
   return (
     <div className="flex flex-col gap-3">
-      <label htmlFor={id} className="flex min-h-12 items-center gap-3 rounded-xl border border-border bg-card px-3.5 text-sm font-medium">
-        <Checkbox id={id} checked={billing.wanted} onCheckedChange={(checked) => onChange({ wanted: checked === true })} className="size-5" />
-        {t("wanted")}
-      </label>
+      <fieldset className="flex flex-col gap-2">
+        <legend className="mb-1 text-[13px] font-semibold">{t("title")}</legend>
+        {options.map(([wanted, label, hint]) => (
+          <label
+            key={String(wanted)}
+            htmlFor={`${id}-${wanted}`}
+            className={cn(
+              "flex min-h-12 cursor-pointer items-start gap-3 rounded-xl border bg-card px-3.5 py-2.5 text-sm",
+              billing.wanted === wanted ? "border-primary bg-primary-soft" : "border-border",
+            )}
+          >
+            <input
+              id={`${id}-${wanted}`}
+              type="radio"
+              name={`${id}-billing`}
+              checked={billing.wanted === wanted}
+              onChange={() => onChange({ wanted })}
+              className="mt-0.5 size-5 accent-[var(--primary)]"
+            />
+            <span className="flex flex-col">
+              <span className="font-medium">{label}</span>
+              <span className="text-xs text-muted-foreground">{hint}</span>
+            </span>
+          </label>
+        ))}
+      </fieldset>
       {billing.wanted && (
         <div className="grid grid-cols-2 gap-2.5">
           <Field label={t("taxId")} value={formatTaxId(billing.taxId)} inputMode="numeric" error={errors.taxId && tRoot(errors.taxId as never)} onChange={(taxId) => onChange({ taxId: taxIdDigits(taxId) })} />

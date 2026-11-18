@@ -60,7 +60,7 @@ Reglas comunes a todas las pantallas:
 ### 4 · Estimación
 
 - **Ruta y board**: `/{locale}/cotizar/estimacion` · Estimacion.dc.html. \[C2.8\]
-- **Datos**: rango «entre X € y Y € IVA incluido», m² totales, lista de elementos con su m², qué incluye (material, mano de obra, protección y limpieza) y qué sigue (revisión humana en 2 días laborables y precio cerrado válido 15 días). Insignias: «Mínimo aplicado», «Trabajo Premium» y «Rango amplio por tallas o daños».
+- **Datos**: rango «entre X € y Y € IVA incluido» y, debajo, más pequeño, el mismo rango sin IVA (ver «Precios con y sin IVA» en Estados globales), m² totales, lista de elementos con su m², qué incluye (material, mano de obra, protección y limpieza) y qué sigue (revisión humana en 2 días laborables y precio cerrado válido 15 días). Insignias: «Mínimo aplicado», «Trabajo Premium» y «Rango amplio por tallas o daños».
 - **Acciones**: «Añadir fotos y enviar» → pantalla 5 (en H2 se muestra desactivado con «Disponible en breve»; se activa en H3); «Editar» → pantalla 2.
 - **Validaciones**: si `overMax`, no hay rango: se muestra «Este trabajo necesita un presupuesto a medida» y se puede enviar igualmente.
 - **Estados**: el rango nunca se muestra desactualizado; durante el recálculo aparece atenuado.
@@ -86,7 +86,7 @@ Reglas comunes a todas las pantallas:
 ### 7 · Cuenta
 
 - **Ruta y board**: `/{locale}/cotizar/cuenta` · Cuenta.dc.html. \[C4.3\]
-- **Datos**: pestañas «Crear cuenta» y «Ya tengo cuenta». Campos: nombre, email, teléfono (+351 por defecto), contraseña, NIF y razón social opcionales («Necesito factura con NIF»), aceptación de términos y privacidad y consentimiento opcional de marketing.
+- **Datos**: pestañas «Crear cuenta» y «Ya tengo cuenta». Campos: nombre, email, teléfono (+351 por defecto), contraseña, factura: por defecto «Sin NIF (consumidor final)», o «A nombre de una empresa» con NIF y razón social (decisión de 2026-11-18: toda venta lleva factura; sin NIF sale a consumidor final), aceptación de términos y privacidad y consentimiento opcional de marketing.
 - **Acciones**: `POST /api/auth/register` o `POST /api/auth/login`, y a continuación `POST /api/jobs` con `Idempotency-Key` generada al entrar en la pantalla. Google OAuth aparece solo si está configurado.
 - **Validaciones**: email válido; contraseña de 10 o más caracteres, repetida en «Repetir contraseña» (solo en la web; la API no la recibe); teléfono E.164; NIF portugués de 9 dígitos con dígito de control; términos obligatorios. Ver «Formularios» en Estados globales.
 - **Estados**: `email_taken` → enlace a «Ya tengo cuenta» con el email precargado. Si el registro funciona pero el envío falla, se reintenta con la misma clave sin duplicar.
@@ -299,6 +299,8 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
   - El interruptor explica, según el caso: el navegador no admite push; el permiso está bloqueado (con cómo reactivarlo en el navegador); en iPhone hace falta instalar la app en la pantalla de inicio (enlace a la invitación de instalar); o el servidor no tiene el push configurado (sin claves VAPID), y entonces el interruptor no aparece.
 
 ### Estados globales
+
+- **Precios con y sin IVA** (decisión de 2026-11-18): al cliente se le muestra siempre el precio con IVA como cifra principal, porque la ley portuguesa de indicación de precios lo exige a particulares, y debajo, más pequeño, «X € sin IVA». Se aplica a la estimación (barra del constructor, pantalla 4 y pantalla 8), a la lista de Mis trabajos y al precio cerrado de la pantalla 10. En los rangos estimados el importe sin IVA se calcula con el IVA del catálogo (`vatPct` en `GET /api/catalog`); en el precio cerrado es el total menos su IVA.
 
 - **Toasts**: éxito (3 s), error (8 s, con botón para cerrarlo antes) y deshacer (5 s). Todos se pausan mientras el puntero está encima. Arriba en móvil y abajo a la derecha en escritorio.
 - **Sesión caducada**: un 401 en cualquier petición de una pantalla con sesión (no en entrar, registro ni recuperar) → diálogo «Tu sesión ha caducado» con «Entrar», que vuelve a la misma página; el borrador local se conserva.
