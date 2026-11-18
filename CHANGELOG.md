@@ -6,6 +6,12 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### El push sigue a la sesión
+
+#### Corregido
+
+- Tras cerrar sesión, el móvil seguía recibiendo los avisos push de la cuenta con la que se había activado. Ahora, al cerrar sesión, la web borra en el servidor la suscripción de ese dispositivo antes de salir. Al volver a entrar, con esa cuenta o con otra, el dispositivo se registra de nuevo a nombre de quien entra, sin volver a pedir permiso (`docs/integrations.md`).
+
 ### Precios sin IVA y factura sin NIF
 
 #### Añadido
