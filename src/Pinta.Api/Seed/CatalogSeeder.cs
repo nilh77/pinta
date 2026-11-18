@@ -37,10 +37,11 @@ public static class CatalogSeeder
             return;
         }
 
-        var matte = Paint("matte", "Tinta plástica mate", "Plástica mate", "Matte emulsion", 8.00m, 10m);
-        var satin = Paint("satin", "Tinta plástica acetinada", "Plástica satinada", "Satin emulsion", 11.00m, 10m);
+        var matte = Paint("matte", "Tinta mate", "Mate", "Matte paint", 8.00m, 10m);
+        var satin = Paint("satin", "Tinta acetinada", "Satinada", "Satin paint", 11.00m, 10m);
         var antiDamp = Paint("anti_damp", "Tinta anti-humidade", "Anti-humedad", "Anti-damp paint", 16.00m, 8m);
-        var exterior = Paint("exterior", "Tinta acrílica de exterior", "Exterior acrílica", "Acrylic exterior paint", 14.00m, 9m);
+        // «Plástica» goes with the exterior paint: it is the one that keeps damp out (feedback of 2026-11-18).
+        var exterior = Paint("exterior", "Tinta plástica de exterior", "Plástica de exterior", "Exterior plastic paint", 14.00m, 9m);
         Paint[] paints = [matte, satin, antiDamp, exterior];
 
         SurfaceType[] surfaces =
