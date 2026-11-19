@@ -173,6 +173,8 @@ internal static class JobProtocolEndpoints
 
         protocol.RecordReceipt(userId, user.Name, clock.GetUtcNow(), fileIds);
         await db.SaveChangesAsync(ct);
+        // Return PostgreSQL's stored timestamp so the original response and retries agree.
+        await db.Entry(protocol).ReloadAsync(ct);
         await transaction.CommitAsync(ct);
         return TypedResults.Ok(ToReceipt(protocol, finished: true, files));
     }
