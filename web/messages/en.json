@@ -1,4 +1,27 @@
 {
+  "jobProtocol": {
+    "title": "Work agreement and handover",
+    "status": {
+      "pending": "Awaiting receipt",
+      "uploaded": "Received in the app",
+      "received_in_person": "Received in person"
+    },
+    "signing": "Print the PDF and collect signatures before work begins and at handover. Then upload the signed document or hand it to Pinta.",
+    "download": "Download PDF",
+    "recorded": "Recorded by {name} on {date}",
+    "signedPdf": "View signed PDF",
+    "signedPhoto": "View photo {number}",
+    "choose": "Signed document",
+    "fileHelp": "One PDF or up to four JPEG, PNG or WebP photos, up to 10 MB per file.",
+    "invalidFiles": "Check the file type, number and size.",
+    "upload": "Upload signed document",
+    "markReceived": "Mark as received in person",
+    "confirmReceipt": "Confirm that you received the signed paper document.",
+    "confirm": "Confirm receipt",
+    "cancel": "Cancel",
+    "loading": "Loading the work agreement…",
+    "retry": "Try again"
+  },
   "metadata": {
     "title": "Pinta — home painting in the Lisbon district",
     "description": "Tell us what you want painted and see an estimated price in a minute. Materials included, vetted painters."

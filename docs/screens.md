@@ -163,7 +163,7 @@ Requiere sesión con rol `client`. Sin sesión, redirige a `/{locale}/entrar?nex
 
 ## Pintor
 
-Zona `/{locale}/pintor`, rol `painter`. El pintor nunca ve el precio al cliente, el margen ni datos de otros pintores; solo su pago por trabajo.
+Zona `/{locale}/pintor`, rol `painter`. El pintor ve su remuneración y puede descargar el protocolo de su trabajo, que incluye el total aprobado al cliente. El margen y los datos de otros pintores se reservan para administración.
 
 ### Alta por invitación
 
@@ -314,3 +314,9 @@ Zona `/{locale}/admin`, rol `admin`, pensada para escritorio (usable en tablet).
   - Fechas con un calendario propio con el estilo de Pinta (en lugar del selector nativo del navegador): campo con la fecha escrita en el idioma, y un panel con el mes, flechas y días; respeta mínimo y máximo, y se maneja con teclado (flechas, Re Pág/Av Pág, Inicio/Fin, Escape).
 - **Tema**: el del sistema por defecto. El botón de la cabecera pasa al contrario del que se ve (claro ↔ oscuro) y esa elección se guarda en el navegador de ese dispositivo (`localStorage`, no es una cookie). La página se pinta ya en el tema elegido, sin destello. El manifiesto PWA y los emails siguen en claro. Paleta y contrastes en `plans/011-dark-mode.md` y `web/src/app/globals.css`.
 - **Cookies**: solo técnicas en el MVP (sesión, antiforgery e idioma); banner informativo sin opciones de seguimiento.
+
+## Protocolo de trabajo y entrega
+
+Al aceptar la oferta se genera el PDF de Pinta en el idioma del cliente con el trabajo, la fecha prevista, las partes, la dirección, el alcance y el total aprobado con IVA. Se firma antes de arrancar y otra vez al entregar, con una lista de comprobación y espacio para observaciones. El pintor puede descargarlo desde el detalle de su trabajo. El administrador puede descargarlo en la pestaña Asignación.
+
+Tras finalizar el trabajo, el pintor puede adjuntar un PDF o hasta cuatro fotos del documento firmado (10 MB por archivo). Si lo entrega en papel, un administrador confirma «Recibido en persona». La ficha muestra el canal, quién lo registró y cuándo, y permite abrir los archivos subidos. La recepción es independiente del ciclo del trabajo, incluidos el cierre y el cobro del saldo. Se aplica a las nuevas aceptaciones.

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Protocolo de trabalho e entrega</value></data>
+  <data name="Agreement" xml:space="preserve"><value>Conformidade com o serviço</value></data>
+  <data name="Before" xml:space="preserve"><value>Confirmem o serviço acordado e assinem antes de iniciar o trabalho.</value></data>
+  <data name="Client" xml:space="preserve"><value>Cliente</value></data>
+  <data name="Painter" xml:space="preserve"><value>Pintor</value></data>
+  <data name="Address" xml:space="preserve"><value>Morada do serviço</value></data>
+  <data name="Scheduled" xml:space="preserve"><value>Data prevista</value></data>
+  <data name="Scope" xml:space="preserve"><value>Trabalhos acordados</value></data>
+  <data name="WorkSummary" xml:space="preserve"><value>Pintura conforme o orçamento aprovado (versão {2}) · Áreas a pintar: {0} · Superfície: {1:0.##} m².</value></data>
+  <data name="ApprovedTotal" xml:space="preserve"><value>Total aprovado com IVA</value></data>
+  <data name="Payment" xml:space="preserve"><value>Os pagamentos seguem o orçamento aprovado na Pinta.</value></data>
+  <data name="Date" xml:space="preserve"><value>Data</value></data>
+  <data name="ClientSignature" xml:space="preserve"><value>Assinatura do cliente</value></data>
+  <data name="PainterSignature" xml:space="preserve"><value>Assinatura do pintor</value></data>
+  <data name="Handover" xml:space="preserve"><value>Verificação e receção da obra</value></data>
+  <data name="After" xml:space="preserve"><value>No fim do trabalho, assinalem os pontos verificados, registem as observações e assinem.</value></data>
+  <data name="Finish" xml:space="preserve"><value>Acabamento uniforme, sem manchas, riscos ou falhas visíveis.</value></data>
+  <data name="Edges" xml:space="preserve"><value>Remates limpos em cantos, rodapés e à volta de tomadas e caixilhos.</value></data>
+  <data name="Protection" xml:space="preserve"><value>Pavimentos, móveis e superfícies próximas foram protegidos.</value></data>
+  <data name="Primer" xml:space="preserve"><value>Preparação e primário aplicados quando previstos no orçamento.</value></data>
+  <data name="Cleaning" xml:space="preserve"><value>Resíduos e proteções removidos e zona de trabalho limpa.</value></data>
+  <data name="ScopeCheck" xml:space="preserve"><value>Respeitados o âmbito e a tinta acordados.</value></data>
+  <data name="Notes" xml:space="preserve"><value>Observações ou pontos por resolver</value></data>
+</root>

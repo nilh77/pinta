@@ -14,6 +14,7 @@ using Pinta.Modules.Jobs.Features.Assignments;
 using Pinta.Modules.Jobs.Features.Client;
 using Pinta.Modules.Jobs.Features.Expiry;
 using Pinta.Modules.Jobs.Features.Payments;
+using Pinta.Modules.Jobs.Features.Protocols;
 using Pinta.Modules.Jobs.Features.Review;
 using Pinta.Modules.Jobs.Features.Shared;
 using Pinta.Modules.Jobs.Features.Submit;
@@ -60,6 +61,7 @@ public static class JobsModule
         AssignmentEndpoints.Map(app);
         PainterJobEndpoints.Map(app);
         PainterVisitEndpoints.Map(app);
+        JobProtocolEndpoints.Map(app);
         return app;
     }
 }

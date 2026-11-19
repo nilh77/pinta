@@ -3954,6 +3954,305 @@
         }
       }
     },
+    "/api/admin/jobs/{id}/protocol": {
+      "get": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "GetAdminJobProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobProtocolReceipt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/jobs/{id}/protocol/pdf": {
+      "get": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "DownloadAdminJobProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/jobs/{id}/protocol/receive-in-person": {
+      "post": {
+        "tags": [
+          "Admin jobs"
+        ],
+        "operationId": "ReceiveJobProtocolInPerson",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobProtocolReceipt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/protocol": {
+      "get": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "GetPainterJobProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobProtocolReceipt"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/protocol/pdf": {
+      "get": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "DownloadPainterJobProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/protocol/upload-url": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "CreateJobProtocolUpload",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProtocolUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedUpload"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload Too Large",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/painter/jobs/{id}/protocol/submit": {
+      "post": {
+        "tags": [
+          "Painter"
+        ],
+        "operationId": "SubmitJobProtocol",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProtocolSubmission"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobProtocolReceipt"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/painters": {
       "get": {
         "tags": [
@@ -7860,6 +8159,43 @@
           }
         }
       },
+      "JobProtocolReceipt": {
+        "required": [
+          "status",
+          "receivedAt",
+          "receivedBy",
+          "canReceive",
+          "files"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/ProtocolStatus"
+          },
+          "receivedAt": {
+            "type": [
+              "null",
+              "string"
+            ],
+            "format": "date-time"
+          },
+          "receivedBy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "canReceive": {
+            "type": "boolean"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StoredFile"
+            }
+          }
+        }
+      },
       "JobStatus": {
         "enum": [
           "pending_email",
@@ -7947,7 +8283,8 @@
           "result",
           "painter_document",
           "progress",
-          "incident"
+          "incident",
+          "signed_protocol"
         ]
       },
       "MediaFileDto": {
@@ -9779,6 +10116,44 @@
               "type": "string",
               "format": "uuid"
             }
+          }
+        }
+      },
+      "ProtocolStatus": {
+        "enum": [
+          "pending",
+          "uploaded",
+          "received_in_person"
+        ]
+      },
+      "ProtocolSubmission": {
+        "required": [
+          "fileIds"
+        ],
+        "type": "object",
+        "properties": {
+          "fileIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "ProtocolUploadRequest": {
+        "required": [
+          "contentType",
+          "sizeBytes"
+        ],
+        "type": "object",
+        "properties": {
+          "contentType": {
+            "type": "string"
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },

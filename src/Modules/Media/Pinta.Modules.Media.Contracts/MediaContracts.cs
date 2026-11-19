@@ -14,6 +14,9 @@ public enum MediaContext
 
     /// <summary>Photos of an incident the painter reports; only the admins see them (P2).</summary>
     Incident,
+
+    /// <summary>The signed work protocol, available only through the job protocol endpoints.</summary>
+    SignedProtocol,
 }
 
 /// <summary>Serialized as <c>image</c>, <c>video</c>, <c>document</c>.</summary>

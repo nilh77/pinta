@@ -37,7 +37,7 @@ Visual reference for screens: design canvas at https://claude.ai/artifact/QXmJ1w
 5. Side effects across modules go through in-process domain events; slow or failure-prone work (emails, Stripe calls, expirations) runs in Hangfire with retries.
 6. The `Job` state machine lives in the Jobs domain and implements exactly `docs/states.md`. Any other transition returns `409 invalid_transition`.
 7. `Pinta.Pricing` has no dependencies, no I/O and no clock. It takes the frozen price snapshot plus elements and returns an immutable breakdown.
-8. Responses are shaped per role on the server. A painter never receives client price, material breakdown or margin; a client never receives rates, painter pay or margin.
+8. Responses are shaped per role on the server. Only the assigned painter can download the signed-work protocol, which includes the approved customer total. The remaining painter responses omit customer pricing, and all omit internal rates and margin. Client responses omit internal rates, painter pay and margin.
 
 ## Conventions
 

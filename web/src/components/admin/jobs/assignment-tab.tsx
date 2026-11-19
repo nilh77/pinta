@@ -6,6 +6,7 @@ import { useState } from "react";
 import { toast } from "@/lib/toast";
 import { DateInput } from "@/components/ui/date-input";
 import { Button } from "@/components/ui/button";
+import { JobProtocol } from "@/components/jobs/job-protocol";
 import { ApiError } from "@/lib/api/problem";
 import { useErrorText } from "@/lib/api/use-error-text";
 import type { AdminJobDetail } from "@/lib/jobs/api";
@@ -68,6 +69,11 @@ export function AssignmentTab({ job }: { job: AdminJobDetail }) {
         <OpenOffer job={job} offer={openOffer} />
       ) : (
         <OfferForm job={job} />
+      )}
+      {job.assignments.some((offer) => offer.status === "accepted" || offer.status === "completed") && (
+        <div className="lg:col-span-2">
+          <JobProtocol id={job.id} audience="admin" finished={job.status === "finished" || job.status === "closed"} />
+        </div>
       )}
     </div>
   );

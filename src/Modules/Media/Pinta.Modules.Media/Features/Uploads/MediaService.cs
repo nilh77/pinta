@@ -25,7 +25,7 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
     public async Task<(SignedUpload? Upload, UploadRefusal? Refusal)> CreateOwnedUploadAsync(OwnedUploadRequest request, CancellationToken cancellationToken = default)
     {
         var contentType = request.ContentType.Trim().ToLowerInvariant();
-        if (!DocumentTypes.TryGetValue(contentType, out var type) || (request.Context != MediaContext.PainterDocument && type.Kind != MediaKind.Image))
+        if (!DocumentTypes.TryGetValue(contentType, out var type) || (request.Context is not (MediaContext.PainterDocument or MediaContext.SignedProtocol) && type.Kind != MediaKind.Image))
         {
             return (null, UploadRefusal.UnsupportedType);
         }
@@ -35,7 +35,7 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
             return (null, UploadRefusal.TooLarge);
         }
 
-        var folder = request.PainterId is { } painterId ? $"painters/{painterId:N}" : $"jobs/{request.JobId:N}/{request.Context switch { MediaContext.Result => "result", MediaContext.SiteVisit => "visit", MediaContext.Progress => "progress", MediaContext.Incident => "incident", _ => "files" }}";
+        var folder = request.PainterId is { } painterId ? $"painters/{painterId:N}" : $"jobs/{request.JobId:N}/{request.Context switch { MediaContext.Result => "result", MediaContext.SiteVisit => "visit", MediaContext.Progress => "progress", MediaContext.Incident => "incident", MediaContext.SignedProtocol => "protocol", _ => "files" }}";
         var file = new MediaFile
         {
             UploadedBy = request.UploadedBy,
@@ -61,6 +61,12 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
         var files = await db.Files
             .Where(f => fileIds.Contains(f.Id) && f.UploadedBy == uploadedBy && f.JobId == jobId && f.PainterId == painterId && f.Context == context)
             .ToListAsync(cancellationToken);
+        if (context == MediaContext.SignedProtocol
+            && (files.Count != fileIds.Count || (files.Count != 1 && files.Any(f => f.Kind != MediaKind.Image))))
+        {
+            return [];
+        }
+
         var confirmed = new List<MediaFile>();
         foreach (var file in files)
         {
@@ -78,6 +84,11 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
             }
 
             confirmed.Add(file);
+        }
+
+        if (context == MediaContext.SignedProtocol && confirmed.Count != files.Count)
+        {
+            return [];
         }
 
         await db.SaveChangesAsync(cancellationToken);
@@ -109,7 +120,7 @@ internal sealed class MediaService(MediaDbContext db, ObjectStorage storage, Tim
     public async Task<IReadOnlyList<JobFile>> ListForJobAsync(Guid jobId, CancellationToken cancellationToken = default)
     {
         var files = await db.Files.AsNoTracking()
-            .Where(f => f.JobId == jobId && f.Confirmed)
+            .Where(f => f.JobId == jobId && f.Confirmed && f.Context != MediaContext.SignedProtocol)
             .OrderBy(f => f.CreatedAt)
             .ToListAsync(cancellationToken);
         return files.Select(f =>

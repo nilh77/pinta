@@ -44,7 +44,7 @@ Estas reglas evitan que el monolito se convierta en una maraña; un test de arqu
 3. **Un módulo solo usa los `.Contracts` de otro** (interfaces, DTOs y eventos públicos), nunca su interior.
 4. **Eventos internos para los efectos secundarios.** Ejemplo: `JobFinished` hace que Pagos solicite el resto y que Notificaciones envíe el email. Lo lento o lo que puede fallar va por Hangfire, con reintentos.
 5. **La máquina de estados vive en el dominio de Trabajos.** Una transición no permitida la rechaza el código, no solo la interfaz.
-6. **Respuestas distintas por rol.** El pintor recibe objetos sin precio al cliente ni margen: esos datos nunca salen de la API para él.
+6. **Respuestas distintas por rol.** El pintor asignado puede descargar el protocolo de su trabajo con el total aprobado para que lo firmen ambas partes. Las demás respuestas del pintor omiten el precio al cliente. El margen y las tarifas internas se reservan para administración.
 
 ## Flujos clave
 

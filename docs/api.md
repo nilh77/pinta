@@ -304,3 +304,15 @@ Toda respuesta de error es ProblemDetails con un `code` estable. El frontend tra
 | 500 | `internal_error` | Error inesperado; se registra con `traceId` |
 
 Todas las respuestas incluyen `traceId` para cruzarlas con los logs de Serilog.
+
+## Protocolo de trabajo y entrega
+
+| Método | Ruta | Uso |
+| --- | --- | --- |
+| GET | `/api/{admin o painter}/jobs/{id}/protocol` | Estado `pending`, `uploaded` o `received_in_person`, momento, responsable y URLs temporales de los archivos. |
+| GET | `/api/{admin o painter}/jobs/{id}/protocol/pdf` | PDF A4 generado al aceptar la oferta. |
+| POST | `/api/painter/jobs/{id}/protocol/upload-url` | Sube por URL firmada con `contentType` y `sizeBytes`. Admite PDF, JPEG, PNG y WebP de hasta 10 MB por archivo. |
+| POST | `/api/painter/jobs/{id}/protocol/submit` | Registra `fileIds` propios del trabajo. Admite un PDF o hasta cuatro fotos. |
+| POST | `/api/admin/jobs/{id}/protocol/receive-in-person` | Registra la recepción presencial. |
+
+El protocolo y sus archivos son privados para el pintor asignado y administración. Los trabajos sin protocolo devuelven 404. Solo se registra la recepción en trabajos terminados o cerrados. Un canal distinto al registrado devuelve 409 `concurrency_conflict`.
