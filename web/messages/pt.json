@@ -1,4 +1,27 @@
 {
+  "jobProtocol": {
+    "title": "Protocolo de trabalho e entrega",
+    "status": {
+      "pending": "Pendente de receção",
+      "uploaded": "Recebido pela app",
+      "received_in_person": "Recebido em mão"
+    },
+    "signing": "Imprima o PDF e recolha as assinaturas antes de começar e na entrega. Depois, envie o documento pela app ou entregue o papel à Pinta.",
+    "download": "Descarregar PDF",
+    "recorded": "Registado por {name} em {date}",
+    "signedPdf": "Ver PDF assinado",
+    "signedPhoto": "Ver foto {number}",
+    "choose": "Documento assinado",
+    "fileHelp": "Um PDF ou até quatro fotos em JPEG, PNG ou WebP, até 10 MB por ficheiro.",
+    "invalidFiles": "Verifique o formato, o número e o tamanho dos ficheiros.",
+    "upload": "Enviar documento assinado",
+    "markReceived": "Marcar como recebido em mão",
+    "confirmReceipt": "Confirme que recebeu em papel o documento com as assinaturas.",
+    "confirm": "Confirmar receção",
+    "cancel": "Cancelar",
+    "loading": "A carregar o protocolo…",
+    "retry": "Tentar novamente"
+  },
   "metadata": {
     "title": "Pinta — pintura de casas no distrito de Lisboa",
     "description": "Diga o que quer pintar e veja um preço estimado num minuto. Material incluído e pintores verificados."

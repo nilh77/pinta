@@ -316,3 +316,7 @@ Esta tabla es la especificación de la máquina de estados: cualquier transició
 | Cualquiera antes de En curso | Cancelado | Cliente / admin | Reembolso de la señal según la política: 100% hasta 7 días antes, 50% después |
 
 Cada transición escribe una fila en el historial (quién, cuándo, motivo) y publica un evento interno que dispara emails y pagos.
+
+## Protocolo de trabajo y entrega
+
+`jobs.job_protocols` guarda un PDF por trabajo, asociado al pintor que aceptó la oferta. El original se genera junto con la aceptación y permanece fijo. La recepción guarda el usuario, su nombre en ese momento, la fecha y los identificadores de los archivos cuando hay entrega por la app. Los archivos se guardan en Media con el contexto privado `signed_protocol`. La primera recepción queda registrada y un reintento de la misma operación devuelve el registro existente.

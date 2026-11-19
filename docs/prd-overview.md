@@ -48,7 +48,8 @@ Cuatro roles. La API comprueba siempre el rol y, además, la pertenencia del rec
 | Registrarse e iniciar sesión | Sí | — | Por invitación | Semilla |
 | Enviar solicitud | Al crear cuenta | Sí | — | — |
 | Ver sus trabajos, aceptar o rechazar precio, pagar, cancelar | — | Solo los suyos | — | — |
-| Ver precio al cliente, margen y tarifas internas | — | Solo su precio | Nunca | Sí |
+| Ver el precio al cliente | — | Solo su precio | Total aprobado, en el protocolo de su trabajo | Sí |
+| Ver margen y tarifas internas | — | — | — | Sí |
 | Ver trabajos asignados, aceptar, iniciar, finalizar | — | — | Solo los suyos | Todos |
 | Registrar visita técnica | — | — | Solo las suyas | Sí |
 | Ver sus pagos como pintor | — | — | Solo los suyos | Todos |

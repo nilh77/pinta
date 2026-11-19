@@ -1,4 +1,27 @@
 {
+  "jobProtocol": {
+    "title": "Protocolo de trabajo y entrega",
+    "status": {
+      "pending": "Pendiente de recibir",
+      "uploaded": "Recibido por la app",
+      "received_in_person": "Recibido en persona"
+    },
+    "signing": "Imprime el PDF y recoge las firmas antes de empezar y al entregar el trabajo. Después, sube el documento a la app o entrega el papel a Pinta.",
+    "download": "Descargar PDF",
+    "recorded": "Registrado por {name} el {date}",
+    "signedPdf": "Ver PDF firmado",
+    "signedPhoto": "Ver foto {number}",
+    "choose": "Documento firmado",
+    "fileHelp": "Un PDF o hasta cuatro fotos JPG, PNG o WebP, de hasta 10 MB por archivo.",
+    "invalidFiles": "Revisa el formato, el número y el tamaño de los archivos.",
+    "upload": "Subir documento firmado",
+    "markReceived": "Marcar como recibido en persona",
+    "confirmReceipt": "Confirma que recibiste en papel el documento con las firmas.",
+    "confirm": "Confirmar recepción",
+    "cancel": "Cancelar",
+    "loading": "Cargando el protocolo…",
+    "retry": "Reintentar"
+  },
   "metadata": {
     "title": "Pinta — pintura de viviendas en el distrito de Lisboa",
     "description": "Di lo que quieres pintar y ve un precio estimado en un minuto. Material incluido y pintores verificados."

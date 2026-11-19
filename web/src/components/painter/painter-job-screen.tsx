@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { toast } from "@/lib/toast";
 import { JobStatusBadge } from "@/components/jobs/job-status-badge";
+import { JobProtocol } from "@/components/jobs/job-protocol";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { FormDialog, TextAreaField } from "@/components/ui/form-dialog";
@@ -80,6 +81,7 @@ export function PainterJobScreen({ id }: { id: string }) {
       </header>
 
       <Actions job={data} />
+      <JobProtocol id={data.id} audience="painter" finished={data.status === "finished" || data.status === "closed"} />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title={t("address.title")}>

@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
 using Pinta.Modules.Jobs.Data;
 using Pinta.Modules.Jobs.Domain;
 using Pinta.Modules.Jobs.Features.Shared;
+using Pinta.Modules.Jobs.Features.Protocols;
 using Pinta.Modules.Jobs.Resources;
 using Pinta.Modules.Notifications.Contracts;
 using Pinta.Modules.Painters.Contracts;
@@ -208,7 +210,7 @@ internal static class AssignmentEndpoints
     /// <summary>P1.2: accepting schedules the job with the offer's date; an offer no longer open is <c>assignment_taken</c>.</summary>
     private static async Task<Results<NoContent, ProblemHttpResult>> AcceptAsync(
         Guid id, HttpContext http, JobsDbContext db, IPainterDirectory painters, IUserDirectory users, IEmailQueue emails, WebLinks links,
-        TimeProvider clock, CancellationToken cancellationToken)
+        IQuoteVersions quotes, TimeProvider clock, CancellationToken cancellationToken)
     {
         var (assignment, painter, problem) = await FindOwnAsync(id, http, db, painters, cancellationToken);
         if (problem is not null)
@@ -222,23 +224,43 @@ internal static class AssignmentEndpoints
             return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.AssignmentTaken);
         }
 
+        var client = await users.FindAsync(job.ClientId, cancellationToken);
+        var quote = await quotes.GetAdminAsync(job.CurrentQuoteVersionId, cancellationToken);
+        if (client is null || quote?.ConfirmedAt is null)
+        {
+            return JobProblems.InvalidTransition();
+        }
+
         var now = clock.GetUtcNow();
+        db.Protocols.Add(new JobProtocol
+        {
+            JobId = job.Id,
+            JobCode = job.Code,
+            PainterId = painter!.Id,
+            GeneratedAt = now,
+            Pdf = JobProtocolDocument.Render(job, assignment.ScheduledOn, client, painter, quote),
+        });
         assignment.Status = AssignmentStatus.Accepted;
         assignment.RespondedAt = now;
         job.ScheduledOn = assignment.ScheduledOn;
         job.TransitionTo(JobStatus.Scheduled, JobActor.Painter, http.User.GetUserId(), null, now);
-        if (!await db.TrySaveAsync(job, null, cancellationToken))
+        try
         {
+            if (!await db.TrySaveAsync(job, null, cancellationToken))
+            {
+                return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.AssignmentTaken);
+            }
+        }
+        catch (DbUpdateException error) when (error.InnerException is PostgresException
+            { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "pk_job_protocols" })
+        {
+            // A concurrent acceptance inserted the protocol before this save reached the job's row version check.
             return ApiProblem.Create(StatusCodes.Status409Conflict, ErrorCodes.AssignmentTaken);
         }
 
-        var client = await users.FindAsync(job.ClientId, cancellationToken);
-        if (client is not null)
-        {
-            await emails.EnqueueAsync(new JobScheduledEmail(
-                client.Email, client.Locale, client.Name, job.Code, assignment.ScheduledOn, FirstName(painter!.Name), links.ClientJob(job.Id, client.Locale))
-            { JobId = job.Id }, cancellationToken);
-        }
+        await emails.EnqueueAsync(new JobScheduledEmail(
+            client.Email, client.Locale, client.Name, job.Code, assignment.ScheduledOn, FirstName(painter.Name), links.ClientJob(job.Id, client.Locale))
+        { JobId = job.Id }, cancellationToken);
 
         return TypedResults.NoContent();
     }

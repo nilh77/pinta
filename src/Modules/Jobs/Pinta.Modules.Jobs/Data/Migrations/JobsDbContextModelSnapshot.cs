@@ -326,6 +326,60 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                     b.ToTable("incidents", "jobs");
                 });
 
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobProtocol", b =>
+                {
+                    b.Property<Guid>("JobId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("job_id");
+
+                    b.PrimitiveCollection<Guid[]>("FileIds")
+                        .IsRequired()
+                        .HasColumnType("uuid[]")
+                        .HasColumnName("file_ids");
+
+                    b.Property<DateTimeOffset>("GeneratedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("generated_at");
+
+                    b.Property<string>("JobCode")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)")
+                        .HasColumnName("job_code");
+
+                    b.Property<Guid>("PainterId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("painter_id");
+
+                    b.Property<byte[]>("Pdf")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("pdf");
+
+                    b.Property<DateTimeOffset?>("ReceivedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("received_at");
+
+                    b.Property<string>("ReceivedBy")
+                        .HasColumnType("text")
+                        .HasColumnName("received_by");
+
+                    b.Property<Guid?>("ReceivedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("received_by_user_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("JobId")
+                        .HasName("pk_job_protocols");
+
+                    b.ToTable("job_protocols", "jobs");
+                });
+
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobStatusChange", b =>
                 {
                     b.Property<Guid>("Id")
@@ -403,6 +457,16 @@ namespace Pinta.Modules.Jobs.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_incidents_jobs_job_id");
+                });
+
+            modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobProtocol", b =>
+                {
+                    b.HasOne("Pinta.Modules.Jobs.Domain.Job", null)
+                        .WithOne()
+                        .HasForeignKey("Pinta.Modules.Jobs.Domain.JobProtocol", "JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_job_protocols_jobs_job_id");
                 });
 
             modelBuilder.Entity("Pinta.Modules.Jobs.Domain.JobStatusChange", b =>

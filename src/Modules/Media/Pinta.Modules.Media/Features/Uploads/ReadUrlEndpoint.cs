@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Pinta.Modules.Identity.Contracts;
 using Pinta.Modules.Jobs.Contracts;
+using Pinta.Modules.Media.Contracts;
 using Pinta.Modules.Media.Data;
 using Pinta.Modules.Media.Storage;
 using Pinta.SharedKernel;
@@ -28,7 +29,7 @@ internal static class ReadUrlEndpoint
     {
         var file = await db.Files.AsNoTracking().SingleOrDefaultAsync(f => f.Id == fileId && f.Confirmed, cancellationToken);
         var userId = user.GetUserId();
-        if (file is null || userId is null
+        if (file is null || file.Context == MediaContext.SignedProtocol || userId is null
             || !(user.IsInRole(RoleNames.Admin) || (file.JobId is { } jobId && await jobs.IsClientOfAsync(jobId, userId.Value, cancellationToken))))
         {
             return ApiProblem.Create(StatusCodes.Status404NotFound, ErrorCodes.NotFound);

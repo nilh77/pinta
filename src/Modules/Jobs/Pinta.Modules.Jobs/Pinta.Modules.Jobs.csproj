@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="Hangfire.Core" />
+    <PackageReference Include="QuestPDF" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <ProjectReference Include="..\..\Painters\Pinta.Modules.Painters.Contracts\Pinta.Modules.Painters.Contracts.csproj" />
     <ProjectReference Include="..\..\Payments\Pinta.Modules.Payments.Contracts\Pinta.Modules.Payments.Contracts.csproj" />

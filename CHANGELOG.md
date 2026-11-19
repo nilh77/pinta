@@ -6,6 +6,10 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). S
 
 ## Sin publicar
 
+### Protocolo de trabajo y entrega
+
+- Al aceptar una oferta se genera un PDF de Pinta con el trabajo acordado, las firmas iniciales y la lista de comprobación y firmas de entrega. El pintor puede subirlo una vez firmado o entregarlo en persona para que administración confirme su recepción. El documento funciona de forma independiente al cierre y al cobro.
+
 ### El push sigue a la sesión
 
 #### Corregido

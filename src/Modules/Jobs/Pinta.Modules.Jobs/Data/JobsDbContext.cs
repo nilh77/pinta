@@ -13,6 +13,8 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
 
     public DbSet<Assignment> Assignments => Set<Assignment>();
 
+    public DbSet<JobProtocol> Protocols => Set<JobProtocol>();
+
     public DbSet<JobIncident> Incidents => Set<JobIncident>();
 
     public DbSet<JobActivity> Activity => Set<JobActivity>();
@@ -81,6 +83,14 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
             assignment.Property(a => a.DeclineReason).HasMaxLength(500);
             assignment.Property(a => a.Version).IsRowVersion();
             assignment.HasOne<Job>().WithMany().HasForeignKey(a => a.JobId);
+        });
+        modelBuilder.Entity<JobProtocol>(protocol =>
+        {
+            protocol.ToTable("job_protocols");
+            protocol.HasKey(p => p.JobId);
+            protocol.HasOne<Job>().WithOne().HasForeignKey<JobProtocol>(p => p.JobId);
+            protocol.Property(p => p.JobCode).HasMaxLength(12);
+            protocol.Property(p => p.Version).IsRowVersion();
         });
         modelBuilder.Entity<JobCodeCounter>(counter =>
         {
@@ -156,6 +166,9 @@ public sealed class JobsDbContext(DbContextOptions<JobsDbContext> options) : DbC
                     break;
                 case Assignment assignment:
                     Touch(assignment.JobId, assignment.RespondedAt ?? assignment.OfferedAt);
+                    break;
+                case JobProtocol protocol:
+                    Touch(protocol.JobId, protocol.ReceivedAt ?? protocol.GeneratedAt);
                     break;
                 case JobIncident incident:
                     Touch(incident.JobId, incident.CreatedAt);

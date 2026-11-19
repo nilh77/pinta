@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms</value></resheader>
+  <data name="Title" xml:space="preserve"><value>Work agreement and handover</value></data>
+  <data name="Agreement" xml:space="preserve"><value>Work agreement</value></data>
+  <data name="Before" xml:space="preserve"><value>Confirm the agreed work and sign before work begins.</value></data>
+  <data name="Client" xml:space="preserve"><value>Customer</value></data>
+  <data name="Painter" xml:space="preserve"><value>Painter</value></data>
+  <data name="Address" xml:space="preserve"><value>Work address</value></data>
+  <data name="Scheduled" xml:space="preserve"><value>Scheduled date</value></data>
+  <data name="Scope" xml:space="preserve"><value>Agreed work</value></data>
+  <data name="WorkSummary" xml:space="preserve"><value>Painting as agreed in the approved quote (version {2}) · Areas: {0} · Surface: {1:0.##} m².</value></data>
+  <data name="ApprovedTotal" xml:space="preserve"><value>Approved total incl. VAT</value></data>
+  <data name="Payment" xml:space="preserve"><value>Payments follow the approved Pinta quote.</value></data>
+  <data name="Date" xml:space="preserve"><value>Date</value></data>
+  <data name="ClientSignature" xml:space="preserve"><value>Customer signature</value></data>
+  <data name="PainterSignature" xml:space="preserve"><value>Painter signature</value></data>
+  <data name="Handover" xml:space="preserve"><value>Handover and inspection</value></data>
+  <data name="After" xml:space="preserve"><value>At handover, tick the items you checked, record any observations and sign.</value></data>
+  <data name="Finish" xml:space="preserve"><value>Even finish with no visible streaks, scratches or defects.</value></data>
+  <data name="Edges" xml:space="preserve"><value>Clean edges around corners, skirting, sockets and frames.</value></data>
+  <data name="Protection" xml:space="preserve"><value>Floors, furniture and nearby surfaces were protected.</value></data>
+  <data name="Primer" xml:space="preserve"><value>Preparation and primer applied where specified in the quote.</value></data>
+  <data name="Cleaning" xml:space="preserve"><value>Waste and coverings removed and work area left clean.</value></data>
+  <data name="ScopeCheck" xml:space="preserve"><value>Agreed scope and paint were used.</value></data>
+  <data name="Notes" xml:space="preserve"><value>Observations or outstanding items</value></data>
+</root>
